@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.saiten.model.MstScorerQuestion" table="mst_scorer_question" catalog="saiten_master">
+        <composite-id name="id" class="com.saiten.model.MstScorerQuestionId">
+            <key-property name="scorerId" type="string">
+                <column name="scorer_id" length="7" />
+            </key-property>
+            <key-property name="questionSeq" type="int">
+                <column name="question_seq" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="mstScorer" class="com.saiten.model.MstScorer" update="false" insert="false" fetch="select">
+            <column name="scorer_id" length="7" not-null="true" />
+        </many-to-one>
+        <many-to-one name="mstQuestion" class="com.saiten.model.MstQuestion" update="false" insert="false" fetch="select">
+            <column name="question_seq" not-null="true" />
+        </many-to-one>
+        <property name="deleteFlag" type="java.lang.Character">
+            <column name="delete_flag" length="1" />
+        </property>
+        <property name="updatePersonId" type="string">
+            <column name="update_person_id" length="7" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

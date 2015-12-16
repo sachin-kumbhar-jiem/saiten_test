@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/context
+  http://www.springframework.org/schema/context/spring-context.xsd"
+        >
+    
+    <bean id="userRegistration" class="rest.webservices.java.UserRegistration" scope="request">
+     	<property name="saitenTransactionManager" ref="saitenTransactionManager"></property>
+     	<property name="mstScorerDAO" ref="mstScorerDAO"></property>
+     	<property name="mstQuestionDAO" ref="mstQuestionDAO"></property>
+     	<property name="mstScorerQuestionDAO" ref="mstScorerQuestionDAO"></property>
+     </bean>
+
+    <bean class="rest.webservices.java.CustomExceptionMapper"/>
+    
+    <bean id="globalProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+ 		 <property name="location">
+     		<value>WEB-INF/classes/global.properties</value>
+   		 </property>
+	</bean>
+
+</beans>

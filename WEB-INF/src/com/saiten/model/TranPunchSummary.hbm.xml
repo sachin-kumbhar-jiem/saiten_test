@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 1, 2014 11:56:18 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.saiten.model.TranPunchSummary" table="tran_punch_summary">
+        <id name="punchSummarySeq" type="int">
+            <column name="punch_summary_seq" />
+            <generator class="assigned" />
+        </id>
+        <property name="questionSeq" type="java.lang.Integer">
+            <column name="question_seq" />
+        </property>
+        <property name="punchText" type="string">
+            <column name="punch_text" length="256" />
+        </property>
+        <property name="gradeSeq" type="java.lang.Integer">
+            <column name="grade_seq" />
+        </property>
+        <property name="bitValue" type="java.lang.Double">
+            <column name="bit_value" precision="22" scale="0" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

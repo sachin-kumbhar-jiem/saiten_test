@@ -1,0 +1,503 @@
+thead tr {
+	border-left: 1px solid #999;
+	background-color: #436593;
+	border-bottom: 1px solid #999;
+	border-right: 1px solid #999;
+	border-top: 1px solid #999;
+	color: white;	
+}
+
+th.sorted {
+	background-color: #436593;
+	border:1px solid #666;
+	color: white;
+}
+
+th a,th a:visited {
+	color: #0000FF;
+}
+
+th a:hover {
+	text-decoration: underline;
+	color: #000000;
+}
+
+th.sorted a,th.sortable a {
+	background-position: right;
+	display: block;
+	width: 100%;
+}
+
+th.sortable a {
+	
+}
+
+th.order1 a {
+	
+}
+
+th.order2 a {
+	
+}
+
+tr.odd {
+	background-color: #fff;
+	cursor: pointer;
+	height: 20px;
+}
+tr.odd:hover {
+	background-color: orange;
+}
+
+tr.tableRowEven,tr.even {
+	background-color: #eee;
+	cursor: pointer;
+	height: 20px;
+}
+tr.even:hover {
+	background-color: orange;
+}
+div.exportlinks {
+	background-color: #eee;
+	border: 1px dotted #999;
+	padding: 2px 4px 2px 4px;
+	margin: 2px 0 10px 0;
+	width: 79%;
+}
+
+span.export {
+	padding: 2px 4px 2px 4px;
+	display: inline;
+	display: inline-block;
+	cursor: pointer;
+}
+
+span.excel {
+	background-image: url(../img/ico_file_excel.png);
+}
+
+span.csv {
+	background-image: url(../img/ico_file_csv.png);
+}
+
+span.xml {
+	background-image: url(../img/ico_file_xml.png);
+}
+
+span.pdf {
+	background-image: url(../img/ico_file_pdf.png);
+}
+
+span.rtf {
+	background-image: url(../img/ico_file_rtf.png);
+}
+
+span.pagebanner {
+	background-color: #eee;
+	border: 1px solid #ccc;
+	padding: 1px 1px 1px 1px;
+	width: 98.5%;
+	margin-top: 10px;
+	display: block;
+	border-bottom: 1px;
+	text-align: left;
+	height: 20px;
+	border-collapse: separate;
+	border-spacing: 1px;
+}
+
+span.pagelinks {
+	background-color: white;
+	border: 1px solid #ccc;
+	padding: 1px 1px 1px 1px;
+	width: 98.5%;
+	display: block;
+	border-top: none;
+	margin-bottom: -5px;
+	text-align: left;
+	height: 25px;
+	vertical-align: middle;
+	border-collapse: separate;
+	border-spacing: 1px;
+}
+
+.group-1 {
+	font-weight: bold;
+	padding-bottom: 10px;
+	border-top: 1px solid black;
+}
+
+.group-2 {
+	font-style: italic;
+	border-top: 1px solid black;
+}
+
+.subtotal-sum,.grandtotal-sum {
+	font-weight: bold;
+	text-align: right;
+}
+
+.subtotal-header {
+	padding-bottom: 0px;
+	border-top: 1px solid white;
+}
+
+.subtotal-label,.grandtotal-label {
+	border-top: 1px solid white;
+	font-weight: bold;
+}
+
+.grouped-table tr.even {
+	background-color: #fff;
+}
+
+.grouped-table tr.odd {
+	background-color: #fff;
+}
+
+.grandtotal-row {
+	border-top: 2px solid black;
+}
+
+tr.rowMouseOver {
+	background-repeat: repeat-x;
+	background-color: #ffff99;
+}
+
+.displayColumn{
+	border-left: 0.1px solid #eee;
+	border-bottom: 0.1px solid #eee;
+	border-right: 0.1px solid #eee;
+	border-top: 0.1px solid #eee;
+	border-color: #999;
+	
+}
+.displayColumnNum{
+	width: 2%;
+	text-align: center;
+	color: black;
+}
+.displayColumnNum a {
+	display: block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnNum a:VISITED{
+	display: block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnChk{
+	width: 3%;
+	text-align: center;
+	color: black;
+}
+.displayColumnChk a {
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnChk a:VISITED{
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnChkSubject{
+	width: 6%; 
+	text-align: center;
+	font-style: normal;
+	color: black;	
+}
+.displayColumnChkSubject a {
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnChkSubject a:VISITED{
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnChkSubjectQNum{
+	width: 3%;
+	text-align: center;
+	color: black;
+}
+.displayColumnChkSubjectQNum a {
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnChkSubjectQNum a:VISITED{
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnAnsNum{
+	width: 6%;
+	text-align: center;
+	color: black;	
+}
+.displayColumnAnsNum a {
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnAnsNum a:VISITED{
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnStatus{
+	width: 11%;
+	text-align: center;
+	color: black;
+}
+.displayColumnStatus a {
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnStatus a:VISITED{
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnDate{
+	width: 10%;
+	text-align: center;
+	color: black;
+}
+.displayColumnDate a {
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnDate a:VISITED{
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnType{
+	width: 3%; 
+	text-align: center;
+	color: black;
+}
+.displayColumnType a {
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnType a:VISITED{
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnVarid{
+	width: 3%;
+	text-align: center;
+	color: black;
+}
+.displayColumnVarid a {
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnVarid a:VISITED{
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnPendingCategory{
+	width: 5%;
+	text-align: center;
+	color: black;
+}
+.displayColumnPendingCategory a {
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnPendingCategory a:VISITED{
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnComment{
+	width: 25%;
+	text-align: left;
+	max-width: 40px;
+	word-wrap: break-word;
+	color: black;
+}
+.displayColumnComment a {
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnComment a:VISITED{
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnCommentCount{
+	width: 6%;
+	text-align: left;
+	max-width: 40px;
+	word-wrap: break-word;
+	color: black;
+}
+.displayColumnCommentCount a {
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnCommentCount a:VISITED{
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnCheckPoints{
+	width: 10%;
+	text-align: left;
+	color: black;	
+}
+.displayColumnCheckPoints a {
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayColumnCheckPoints a:VISITED{
+	display:block;
+	text-decoration: none;
+	color: black;
+}
+.displayTable{
+	border-collapse: separate;
+	border-spacing: 1px;
+	background-color: #CCCCCC;
+	width: 99%;
+	table-layout: auto;
+}
+.displayTable thead tr th {
+	border: none;
+}
+.bookmarkClass{
+	background-image:url(../img/bookmark.png);
+	background-position: center;
+}
+.displayColumnNum A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.displayColumnCommentCount A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.displayColumnComment A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.displayColumnPendingCategory A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.displayColumnVarid A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.displayColumnType A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.displayColumnDate A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.displayColumnStatus A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.displayColumnAnsNum A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.displayColumnChkSubjectQNum A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.displayColumnChkSubject A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.displayColumnChk A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.displayColumnCheckPoints A:hover{
+	text-decoration: none;
+	border: none;
+	color: black;
+}
+.tooltip {
+ display:none;
+ background: #B5D3EF;
+ border: solid 2px #4E89D8;
+ font-size:12px;
+ max-width:250px;
+ max-height:100px;
+ color:#000;
+ padding: 5px;
+ text-align:left;
+ overflow: auto;
+ /*
+ border-radius:5px;
+ -moz-border-radius: 10px;
+ -webkit-border-radius: 10px;
+ -ms-border-radius: 10px;
+ -webkit-box-shadow: #59698F 1px 1px 2px;
+ -moz-box-shadow: #59698F 1px 1px 2px;*/
+ box-shadow: #59698F 1px 1px 2px;
+}
+
+
+.displayTableTest{
+	border-collapse: separate;
+	border-spacing: 1px;
+	background-color: #CCCCCC;
+	width: 99%;
+	table-layout: auto;
+}
+.displayTableTest thead tr th {
+	border: none;
+}
+
+.displayTableTest tbody tr:nth-child(odd) {
+	background-color: #fff;
+	cursor: default;
+	height: 20px;
+}
+.displayTableTest tbody tr:nth-child(even)  {
+	background-color: #eee;
+	cursor: default;
+	height: 20px;
+}
+.displayTableTest tbody tr:nth-child(odd):hover {
+	background-color: orange;
+}
+.displayTableTest tbody tr:nth-child(even):hover {
+	background-color: orange;
+}
+

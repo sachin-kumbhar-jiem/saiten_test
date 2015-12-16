@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.saiten.model.MstSamplingStateCond" table="mst_sampling_state_cond" catalog="saiten_master">
+        <composite-id name="id" class="com.saiten.model.MstSamplingStateCondId">
+            <key-property name="screenId" type="string">
+                <column name="screen_id" length="50" />
+            </key-property>
+            <key-property name="scoringState" type="short">
+                <column name="scoring_state" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="mstScoringStateList" class="com.saiten.model.MstScoringStateList" update="false" insert="false" fetch="select">
+            <column name="scoring_state" not-null="true" />
+        </many-to-one>
+        <property name="defaultValue" type="java.lang.Character">
+            <column name="default_value" length="1" />
+        </property>
+        <property name="displayIndex" type="java.lang.Integer">
+            <column name="display_index" />
+        </property>
+        <property name="deleteFlag" type="java.lang.Character">
+            <column name="delete_flag" length="1" />
+        </property>
+        <property name="updatePersonId" type="string">
+            <column name="update_person_id" length="7" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

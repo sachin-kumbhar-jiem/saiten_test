@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 3, 2012 11:32:07 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.saiten.info.FindAnswerInfo" table="tran_desc_score">
+        <id name="answerSeq" type="int">
+            <column name="answer_seq" />
+            <generator class="identity" />
+        </id>
+        <property name="answerFormNum" type="string">
+            <column name="answer_form_num" length="13" />
+        </property>
+        
+        
+        <property name="gradeSeq" type="java.lang.Integer">
+            <column name="grade_seq" />
+        </property>
+        <property name="bitValue" type="java.lang.Double">
+            <column name="bit_value" precision="22" scale="0" />
+        </property>
+       
+        
+        <property name="imageFileName" type="string">
+            <column name="image_file_name" length="128" />
+        </property>
+       <property name="questionSeq" type="java.lang.Integer">
+            <column name="question_seq" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        
+        <property name="markValue" type="string">
+            <column name="mark_value" length="17" />
+        </property>        
+        <property name="latestScreenScorerId" type="string">
+            <column name="latest_screen_scorer_id" length="7" />
+        </property>
+        <property name="secondLatestScreenScorerId" type="string">
+            <column name="second_latest_screen_scorer_id" length="7" />
+        </property>
+        
+    </class>
+  <sql-query name="fetchAnswerPassByRandomNumber" callable="true">
+    	  <return class="com.saiten.info.FindAnswerInfo">
+    		<return-property name="answerSeq"  column="answer_seq"></return-property>
+    		<return-property name="answerFormNum" column="answer_form_num"></return-property>
+    		<return-property name="imageFileName" column="image_file_name"></return-property>
+    		<return-property name="gradeSeq" column="grade_seq"></return-property>
+    		<return-property name="bitValue" column="bit_value"></return-property>
+    		<return-property name="questionSeq" column="question_seq"></return-property>
+    		<return-property name="updateDate" column="update_date"></return-property>
+    		<return-property name="markValue" column="mark_value"></return-property>
+    		<return-property name="latestScreenScorerId" column="latest_screen_scorer_id"></return-property>
+    		<return-property name="secondLatestScreenScorerId" column="second_latest_screen_scorer_id"></return-property>
+    	</return>
+    	{ CALL fetch_answer_pass_by_random_number(?,?,?,?,?,?,?,?,?,?,?,?)} 
+    	
+    	
+    	<!-- <return alias="tranDescScore" class="com.saiten.model.TranDescScore"/>
+		<![CDATA[ CALL fetch_random_answer(?,?,?,?,?,?,?,?)]]> -->
+    </sql-query>
+    <sql-query name="fetchAnswerOrderByRandom" callable="true">
+    	  <return class="com.saiten.info.FindAnswerInfo">
+    		<return-property name="answerSeq"  column="answer_seq"></return-property>
+    		<return-property name="answerFormNum" column="answer_form_num"></return-property>
+    		<return-property name="imageFileName" column="image_file_name"></return-property>
+    		<return-property name="gradeSeq" column="grade_seq"></return-property>
+    		<return-property name="bitValue" column="bit_value"></return-property>
+    		<return-property name="questionSeq" column="question_seq"></return-property>
+    		<return-property name="updateDate" column="update_date"></return-property>
+    		<return-property name="markValue" column="mark_value"></return-property>
+    		<return-property name="latestScreenScorerId" column="latest_screen_scorer_id"></return-property>
+    		<return-property name="secondLatestScreenScorerId" column="second_latest_screen_scorer_id"></return-property>
+    	</return>
+    	{ CALL fetch_answer_order_by_random(?,?,?,?,?,?,?,?,?,?,?)} 
+    	
+    	
+    	<!-- <return alias="tranDescScore" class="com.saiten.model.TranDescScore"/>
+		<![CDATA[ CALL fetch_random_answer(?,?,?,?,?,?,?,?)]]> -->
+    </sql-query>
+</hibernate-mapping>

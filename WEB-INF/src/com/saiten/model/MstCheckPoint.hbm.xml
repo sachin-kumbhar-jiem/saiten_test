@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.saiten.model.MstCheckPoint" table="mst_check_point" catalog="saiten_master">
+        <id name="checkPointSeq" type="int">
+            <column name="check_point_seq" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="mstQuestion" class="com.saiten.model.MstQuestion" fetch="select">
+            <column name="question_seq" />
+        </many-to-one>
+        <many-to-one name="mstCheckPointGroup" class="com.saiten.model.MstCheckPointGroup" fetch="select">
+            <column name="check_point_group_seq" />
+        </many-to-one>
+        <property name="checkPoint" type="java.lang.Short">
+            <column name="check_point" />
+        </property>
+        <property name="checkPointDescription" type="string">
+            <column name="check_point_description" length="512" />
+        </property>
+        <property name="deleteFlag" type="java.lang.Character">
+            <column name="delete_flag" length="1" />
+        </property>
+        <property name="updatePersonId" type="string">
+            <column name="update_person_id" length="7" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

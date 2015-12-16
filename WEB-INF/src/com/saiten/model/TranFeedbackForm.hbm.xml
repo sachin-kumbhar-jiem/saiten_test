@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 1, 2014 11:56:18 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.saiten.model.TranFeedbackForm" table="tran_feedback_form">
+        <id name="answerSeq" type="java.lang.Integer">
+            <column name="answer_seq" />
+            <generator class="identity" />
+        </id>
+        <property name="answerFormNum" type="string">
+            <column name="answer_form_num" length="13" not-null="true" />
+        </property>
+        <property name="questionSeq" type="java.lang.Integer">
+            <column name="question_seq" />
+        </property>
+        <property name="markValue" type="string">
+            <column name="mark_value" length="17" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+        <property name="schoolCode" type="string">
+            <column name="school_code" length="9" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

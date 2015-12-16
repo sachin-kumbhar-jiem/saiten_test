@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns:b="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.springframework.org/schema/security"
+        xmlns:oauth="http://www.springframework.org/schema/security/oauth"
+        xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd http://www.springframework.org/schema/security/oauth http://www.springframework.org/schema/security/spring-security-oauth.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+        
+ <!-- Global Security Settings -->
+    <global-method-security pre-post-annotations="enabled" />
+    
+     <http auto-config="true">
+    		<session-management >
+    			<concurrency-control max-sessions="1" expired-url="/indexLogin" session-registry-ref="sessionRegistry" />
+			</session-management>
+    </http>
+    
+    <!-- Authentication Providers for Form Login -->
+    <authentication-manager alias="authenticationManager">
+        <!-- ADD THE AUTHENTICATION PROVIDERS HERE -->
+    </authentication-manager>
+    
+    <b:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" ></b:bean>
+</b:beans>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+   xmlns:aop="http://www.springframework.org/schema/aop"
+   xmlns:util="http://www.springframework.org/schema/util"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+   http://www.springframework.org/schema/tx
+   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+   http://www.springframework.org/schema/aop
+   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+   http://www.springframework.org/schema/util
+   http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+   
+   	<!-- Login bean configuration  -->
+  	<bean id="login" class="com.saiten.action.LoginAction" scope="request">
+		<property name="loginService" ref="loginService"></property>
+		<property name="saitenGlobalProperties" ref="saitenGlobalProperties" />
+   	</bean>
+	
+   	<bean id="loginService" class="com.saiten.service.impl.LoginServiceImpl">
+		<property name="mstScorerDAO" ref="mstScorerDAO"></property>
+   	</bean>
+   	
+   	<bean id="mstScorerDAO" class="com.saiten.dao.impl.MstScorerDAOImpl" />
+	
+	<!-- UserMenu bean configuration  -->
+	<bean id="userMenu" class="com.saiten.action.UserMenuAction" scope="request">
+		<property name="userMenuService" ref="userMenuService"></property>
+	</bean>
+	
+	<bean id="userMenuService" class="com.saiten.service.impl.UserMenuServiceImpl">
+		<property name="mstMenuRoleDAO" ref="mstMenuRoleDAO"></property>
+	</bean>
+	
+   	<bean id="mstMenuRoleDAO" class="com.saiten.dao.impl.MstMenuRoleDAOImpl" />
+   	
+   	<!-- Question selection bean configuration  -->
+   	<bean id="questionSelectionAction" class="com.saiten.action.QuestionSelectionAction" scope="request">
+		<property name="questionSelectionService" ref="questionSelectionService"></property>
+   	</bean>
+	
+   	<bean id="questionSelectionService" class="com.saiten.service.impl.QuestionSelectionServiceImpl">
+		<property name="mstScorerQuestionDAO" ref="mstScorerQuestionDAO" />
+		<property name="mstQuestionDAO" ref="mstQuestionDAO" />
+		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO" />
+   	</bean>
+   	
+   	<bean id="mstQuestionDAO" class="com.saiten.dao.impl.MstQuestionDAOImpl" />
+	
+   	<bean id="mstScorerQuestionDAO" class="com.saiten.dao.impl.MstScorerQuestionDAOImpl" />
+   
+   	<bean id="tranDescScoreHistoryDAO" class="com.saiten.dao.impl.TranDescScoreHistoryDAOImpl" />
+   
+   	<bean id="questionInfo" class="com.saiten.info.QuestionInfo" scope="request" />
+   	
+   	<bean id="mstScorerInfo" class="com.saiten.info.MstScorerInfo"/>
+    
+    <bean id="gradeInfo" class="com.saiten.info.GradeInfo"/>
+   	
+   	<bean id="scoringStateKey" class="com.saiten.bean.ScoringStateKey" scope="request" />
+   	
+   	<!-- Scoring bean configuration  -->
+   	<bean id="scoreAction" class="com.saiten.action.ScoreAction" scope="request">
+		<property name="scoreService" ref="scoreService" />
+		<property name="saitenGlobalProperties" ref="saitenGlobalProperties" />
+   	</bean>
+   	
+   	<bean id="scoreService" class="com.saiten.service.impl.ScoreServiceImpl">
+		<property name="tranDescScoreDAO" ref="tranDescScoreDAO" />
+		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO" />
+   	</bean>
+   	
+   	<bean id="tranDescScoreDAO" class="com.saiten.dao.impl.TranDescScoreDAOImpl" />
+   	
+   	<bean id="answerInfo" class="com.saiten.info.AnswerInfo" scope="request" />
+   	
+   	<bean id="tranDescScoreInfo" class="com.saiten.info.TranDescScoreInfo" scope="request"/>
+   	
+   	<!-- History Listing bean configuration  -->
+   	<bean id="historyListing" class="com.saiten.action.HistoryListingAction" scope="request">
+   		<property name="historyListingService" ref="historyListingService"></property>
+   		<property name="saitenGlobalProperties" ref="saitenGlobalProperties" />
+   	</bean>
+	
+	<bean id="historyPagination" class="com.saiten.action.HistoryListingAction" scope="request">
+   		<property name="historyListingService" ref="historyListingService"></property>
+   		<property name="saitenGlobalProperties" ref="saitenGlobalProperties" />
+   	</bean>
+   	
+	<bean id="historyListingService" class="com.saiten.service.impl.HistoryListingServiceImpl">
+		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO"></property>
+	</bean>
+	
+	<!-- Confirm score bean configuration  -->
+   	<bean id="confirmScore" class="com.saiten.action.ConfirmScoreAction" scope="request">
+   		<property name="confirmScoreService" ref="confirmScoreService"></property>
+   	</bean>
+   	
+   	<bean id="confirmScoreService" class="com.saiten.service.impl.ConfirmScoreServiceImpl" />
+   	
+   	<!-- Confirm pending bean configuration  -->
+   	<bean id="confirmPending" class="com.saiten.action.ConfirmPendingAction" scope="request" />
+	
+	<!-- Bookmark Listing bean configuration  -->
+	<bean id="bookmarkListing" class="com.saiten.action.BookmarkListingAction" scope="request">
+   		<property name="bookmarkListingService" ref="bookmarkListingService"></property>
+   		<property name="saitenGlobalProperties" ref="saitenGlobalProperties" />
+   	</bean>
+   	
+   	<bean id="bookmarkPagination" class="com.saiten.action.BookmarkListingAction" scope="request">
+   		<property name="bookmarkListingService" ref="bookmarkListingService"></property>
+   		<property name="saitenGlobalProperties" ref="saitenGlobalProperties" />
+   	</bean>
+   	
+   	<bean id="deleteBookmarks" class="com.saiten.action.BookmarkListingAction" scope="request">
+   		<property name="bookmarkListingService" ref="bookmarkListingService"></property>
+   		<property name="saitenGlobalProperties" ref="saitenGlobalProperties" />
+   	</bean>
+   	
+   	
+   	<bean id="bookmarkListingService" class="com.saiten.service.impl.BookmarkListingServiceImpl">
+		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO"></property>
+	</bean>
+	
+	<!-- Register score bean configuration  -->
+	<bean id="registerScore" class="com.saiten.action.RegisterScoreAction" scope="request">
+   		<property name="registerScoreService" ref="registerScoreService"></property>
+   		<property name="saitenTransactionManager" ref="saitenTransactionManager"></property>
+   	</bean>
+   	
+   	<bean id="registerScoreService" class="com.saiten.service.impl.RegisterScoreServiceImpl">
+		<property name="tranDescScoreDAO" ref="tranDescScoreDAO"></property>
+		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO"></property>
+	</bean>
+	
+	<!-- Register pending bean configuration  -->
+	<bean id="registerPending" class="com.saiten.action.RegisterPendingAction" scope="request">
+   		<property name="registerPendingService" ref="registerPendingService"></property>
+   		<property name="saitenTransactionManager" ref="saitenTransactionManager"></property>
+   	</bean>
+   	
+   	<bean id="registerPendingService" class="com.saiten.service.impl.RegisterPendingServiceImpl">
+		<property name="tranDescScoreDAO" ref="tranDescScoreDAO"></property>
+		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO"></property>
+	</bean>
+	
+	<!-- LogOut bean configuration  -->
+	<bean id="logOut" class="com.saiten.action.LogOutAction" scope="request" />
+   	
+   	<!-- SaitenConfig bean configuration  -->
+   	<bean id="mstGradeDAO" class="com.saiten.dao.impl.MstGradeDAOImpl" />
+   	
+   	<bean id="mstScoringStateListDAO" class="com.saiten.dao.impl.MstScoringStateListDAOImpl" />
+   	
+   	<bean id="mstPendingCategoryDAO" class="com.saiten.dao.impl.MstPendingCategoryDAOImpl" />
+   	
+   	<bean id="saitenConfig" class="com.saiten.bean.SaitenConfig" />
+   
+   	<bean id="createSaitenConfigLogic" class="com.saiten.logic.CreateSaitenConfigLogic">
+   		<property name="mstGradeDAO" ref="mstGradeDAO" />
+   		<property name="mstQuestionDAO" ref="mstQuestionDAO" />
+   		<property name="mstScoringStateListDAO" ref="mstScoringStateListDAO" />
+   		<property name="mstPendingCategoryDAO" ref="mstPendingCategoryDAO" />
+   		<property name="saitenConfig" ref="saitenConfig" />
+   		<property name="saitenTransactionManager" ref="saitenTransactionManager" />
+   		<property name="saitenGlobalProperties" ref="saitenGlobalProperties" />
+   	</bean>
+   	
+   	<!-- database.properties bean configuration  -->
+   	<util:properties id="saitenDbProperties" location="classpath:test/config/database/properties/database.properties" />
+   	
+   	<!-- global.properties bean configuration  -->
+   	<util:properties id="saitenGlobalProperties" location="classpath:global.properties" />
+   	
+   	<!-- application.properties bean configuration  -->
+   	<util:properties id="saitenApplicationProperties" location="classpath:application.properties" />
+ 
+</beans>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE tiles-definitions PUBLIC
+	"-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"struts-2.3.dtd">
+
+<tiles-definitions> 
+
+	<definition name="baseLayout" template="/jsp/tiles/baselayout.jsp">
+		<put-attribute name="head-title" type="string"><![CDATA[]]></put-attribute>
+		<put-attribute name="head-addition" type="string"><![CDATA[]]></put-attribute>
+		<put-attribute name="body-header" value="/jsp/tiles/header.jsp" />
+		<put-attribute name="body-main" type="string"><![CDATA[]]></put-attribute>
+		<put-attribute name="body-footer" value="/jsp/tiles/footer.jsp" />
+	</definition>
+
+</tiles-definitions>
+
+

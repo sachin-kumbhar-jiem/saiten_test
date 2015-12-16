@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.saiten.model.MstScorerRole" table="mst_scorer_role" catalog="saiten_master">
+        <id name="roleId" type="byte">
+            <column name="role_id" />
+            <generator class="assigned" />
+        </id>
+        <property name="roleDescription" type="string">
+            <column name="role_description" length="45" />
+        </property>
+        <property name="deleteFlag" type="java.lang.Character">
+            <column name="delete_flag" length="1" />
+        </property>
+        <property name="updatePersonId" type="string">
+            <column name="update_person_id" length="7" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+        <set name="mstScorers" inverse="true">
+            <key>
+                <column name="role_id" not-null="true" />
+            </key>
+            <one-to-many class="com.saiten.model.MstScorer" />
+        </set>
+        <set name="mstMenuRoles" inverse="true">
+            <key>
+                <column name="role_id" not-null="true" />
+            </key>
+            <one-to-many class="com.saiten.model.MstMenuRole" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 19, 2015 2:30:02 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.saiten.model.TranDescScoreHistory" table="tran_desc_score_history">
+        <id name="historySeq" type="java.lang.Integer">
+            <column name="history_seq" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tranDescScore" class="com.saiten.model.TranDescScore" fetch="select">
+            <column name="answer_seq" not-null="true" />
+        </many-to-one>
+        <property name="questionSeq" type="java.lang.Integer">
+            <column name="question_seq" />
+        </property>
+        <property name="scorerId" type="string">
+            <column name="scorer_id" length="7" />
+        </property>
+        <property name="scorerRoleId" type="java.lang.Byte">
+            <column name="scorer_role_id" />
+        </property>
+        <property name="gradeSeq" type="java.lang.Integer">
+            <column name="grade_seq" />
+        </property>
+        <property name="gradeNum" type="java.lang.Integer">
+            <column name="grade_num" />
+        </property>
+        <property name="bitValue" type="java.lang.Double">
+            <column name="bit_value" precision="22" scale="0" />
+        </property>
+        <property name="eventId" type="java.lang.Short">
+            <column name="event_id" />
+        </property>
+        <property name="scoringState" type="java.lang.Short">
+            <column name="scoring_state" />
+        </property>
+        <property name="pendingCategorySeq" type="java.lang.Integer">
+            <column name="pending_category_seq" />
+        </property>
+        <property name="pendingCategory" type="java.lang.Short">
+            <column name="pending_category" />
+        </property>
+        <property name="scorerComment" type="string">
+            <column name="scorer_comment" length="512" />
+        </property>
+        <property name="bookMarkFlag" type="java.lang.Character">
+            <column name="book_mark_flag" length="1" />
+        </property>
+        <property name="inspectFlag" type="java.lang.Character">
+            <column name="inspect_flag" length="1" />
+        </property>
+        <property name="samplingFlag" type="java.lang.Character">
+            <column name="sampling_flag" length="1" />
+        </property>
+        <property name="answerFormNum" type="string">
+            <column name="answer_form_num" length="13" />
+        </property>
+        <property name="validFlag" type="java.lang.Character">
+            <column name="valid_flag" length="1" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+        <property name="latestScreenScorerId" type="string">
+            <column name="latest_screen_scorer_id" length="7" />
+        </property>
+        <property name="secondLatestScreenScorerId" type="string">
+            <column name="second_latest_screen_scorer_id" length="7" />
+        </property>
+        <property name="thirdLatestScreenScorerId" type="string">
+            <column name="third_latest_screen_scorer_id" length="7" />
+        </property>
+        <property name="qualityCheckFlag" type="java.lang.Character">
+            <column name="quality_check_flag" length="1" />
+        </property>
+        <property name="neighbourMatchFlag" type="java.lang.Character">
+            <column name="neighbour_match_flag" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

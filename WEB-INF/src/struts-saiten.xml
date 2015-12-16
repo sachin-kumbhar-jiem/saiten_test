@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"struts-2.0.dtd"> -->
+	<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "struts-2.3.dtd">
+	
+	
+<struts>
+	<package name="default" extends="json-default, struts-default"
+		namespace="/">
+		
+		<interceptors>
+			
+			<interceptor name="login" class="com.saiten.interceptor.LoginInterceptor" />
+			
+			<interceptor name="sessionInvalidateInterceptor" class="com.saiten.interceptor.SessionInvalidateInterceptor"/>
+			
+			<interceptor name="updateSessionRegistryInterceptor" class="com.saiten.interceptor.UpdateSessionRegistryInterceptor"></interceptor>
+			
+			<interceptor name="refreshSessionRegistryInterceptor" class="com.saiten.interceptor.RefreshSessionRegistryInterceptor"></interceptor>
+			
+			<interceptor name="logFilter"
+				class="com.saiten.interceptor.LogFilterInterceptor" />
+				
+				<interceptor name="buildMstScorerQuestion"
+				class="com.saiten.interceptor.BuildMstScorerQuestionInterceptor" />
+
+			<interceptor-stack name="logFilterStack">
+ 				<interceptor-ref name="logFilter" />
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="login" />
+			</interceptor-stack>
+
+		</interceptors>
+
+		<!-- Make the defaultLoginStack the default one used for all actions unless 
+			otherwise configured. -->
+		<default-interceptor-ref name="logFilterStack" />
+		
+		<global-results>
+			<result name="login" type="redirectAction">redirectToLogin</result>
+			<result name="logout">/jsp/logOut.jsp</result>
+			<result name="error">/error/error.jsp</result>
+		</global-results>
+		
+		<action name="index" class="index">
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirectAction">${redirectURL}</result>
+		</action>
+		
+		<action name="indexLogin">
+			<interceptor-ref name="defaultStack" />
+			<result>login.jsp</result>
+		</action>
+		
+		<action name="indexError">
+			<interceptor-ref name="defaultStack" />
+			<result>loginError.jsp</result>
+		</action>
+		
+		<action name="redirectToLogin" class="loginServiceAction" method="redirectToLoginPage">
+			<interceptor-ref name="defaultStack" />
+			<result name="success" type="redirect">
+				<param name="location">${loginPageUrl}</param>
+			</result>
+		</action>
+		
+		<action name="userMenu"
+			class="userMenu" method="showUserMenu">
+			<interceptor-ref name="logFilterStack" />
+			<interceptor-ref name="buildMstScorerQuestion" />
+			<!-- <result name="success">/jsp/userMenu.jsp</result> -->
+			<result name="saiten-success">/jsp/saiten_user_menu.jsp</result>
+			<result name="shineigo-success">/jsp/shineigo_user_menu.jsp</result>
+		</action>
+		
+		<action name="login"
+			class="login" method="processLogin">
+			<interceptor-ref name="logFilterStack" />
+			<!-- <interceptor-ref name="refreshSessionRegistryInterceptor"/> -->
+			<interceptor-ref name="updateSessionRegistryInterceptor"></interceptor-ref>
+			<interceptor-ref name="sessionInvalidateInterceptor"/>
+			<result name="input">login.jsp</result>
+			<result name="success" type="redirectAction">userMenu</result>
+		</action>
+		
+		<action name="remoteLogin"
+			class="loginServiceAction" method="processLogin">
+			<interceptor-ref name="defaultStack" />
+			<!-- <interceptor-ref name="logFilterStack" /> -->
+			<!-- <interceptor-ref name="refreshSessionRegistryInterceptor"/> -->
+			<!-- <interceptor-ref name="updateSessionRegistryInterceptor"></interceptor-ref>
+			<interceptor-ref name="sessionInvalidateInterceptor"/> -->
+			<result name="input" type="redirect">
+				<param name="location">${saitenLMSUrl}</param>
+			</result>
+			<result name="success" type="redirectAction">redirectToMenu</result>
+		</action>
+		
+		<action name="redirectToMenu">
+			<interceptor-ref name="logFilterStack" />
+			<interceptor-ref name="refreshSessionRegistryInterceptor"/>
+			<interceptor-ref name="updateSessionRegistryInterceptor"></interceptor-ref>
+			<interceptor-ref name="sessionInvalidateInterceptor"/>
+			<result type="redirectAction">userMenu</result>
+		</action>
+		
+		
+		<action name="questionSelection" class="questionSelectionAction" method="onLoad">
+			<result name="success">/jsp/questionSelection.jsp</result>
+		</action>
+		
+		<action name="gradeSelection" class="gradeSelection" method="onLoad">
+			<result name="success">/jsp/gradeSelection.jsp</result>
+		</action>
+		
+		<action name="pendingCategorySelection" class="pendingCategorySelection" method="onLoad">
+			<result name="success">/jsp/pendingCategorySelection.jsp</result>
+		</action>
+		
+		<action name="showScoringPage" class="questionSelectionAction" method="fetchDbInstanceInfo">
+			<interceptor-ref name="logFilterStack" />
+			<interceptor-ref name="updateSessionRegistryInterceptor" />
+			<result name="input">/jsp/gradeSelection.jsp</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">scoreAction</param>
+				<param name="gradeNum">${gradeNum}</param>
+				<param name="pendingCategory">${pendingCategory}</param>
+			</result>
+		</action>
+		
+		<action name="scoreAction" class="scoreAction" method="findAnswer">
+			<result name="success">/jsp/scoring.jsp</result>
+			<result name="failure">/error/answerNotAvailable.jsp</result>
+		</action>
+		
+		<action name="historyScoreAction" class="scoreAction" method="findHistoryAnswer">
+			<result name="success">/jsp/scoring.jsp</result>
+			<result name="failure">/error/answerNotAvailable.jsp</result>
+		</action>
+		
+		<action name="registerScore" class="registerScore" method="doRegister">
+			<result name="success" type="redirectAction">scoreAction</result>
+			<result name="scoreSampling" type="redirectAction">scoreSampling</result>
+			<result name="specialSampling" type="redirectAction">specialSampling</result>
+			<result name="backToForcedScoringList" type="redirectAction">backToForcedScoringList</result>
+			<result name="failure" type="redirectAction">
+				<param name="actionName">showScoringError</param>
+				<param name="lockFlag">${lockFlag}</param>
+			</result>
+		</action>
+		
+		<action name="registerPending" class="registerPending" method="doRegister">
+			<result name="success" type="redirectAction">scoreAction</result>
+			<result name="scoreSampling" type="redirectAction">scoreSampling</result>
+			<result name="backToForcedScoringList" type="redirectAction">backToForcedScoringList</result>
+			<result name="failure" type="redirectAction">
+				<param name="actionName">showScoringError</param>
+				<param name="lockFlag">${lockFlag}</param>
+			</result>
+		</action>
+		
+		<action name="historyListing" class="historyListing" method="loadHistory">
+			<result name="success">/jsp/historyList.jsp</result>
+		</action>
+		
+		<action name="historyPagination" class="historyListing" method="pagination">
+			<result name="success">/jsp/historyList.jsp</result>
+		</action>
+		
+		<action name="omrEnlargeHistoryPagination" class="historyListing" method="omrEnlargePagination">
+			<result name="success">/jsp/historyList.jsp</result>
+		</action>
+		
+		<action name="confirmScore" class="confirmScore" method="confirmScore">
+			<interceptor-ref name="defaultStack" />
+			<result type="json">
+				<param name="root">result</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		
+		<action name="confirmPending" class="confirmPending" method="confirmPending">
+			<interceptor-ref name="defaultStack" />
+			<result type="json">
+				<param name="root">result</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		
+		<action name="bookmarkListing" class="bookmarkListing" method="loadBookmarkList">
+			<result name="success">/jsp/bookmarkList.jsp</result>
+		</action>
+		
+		<action name="bookmarkPagination" class="bookmarkPagination" method="pagination">
+			<result name="success">/jsp/bookmarkList.jsp</result>
+		</action>
+		
+		<action name="omrEnlargeBookmarkPagination" class="bookmarkPagination" method="omrEnlargePagination">
+			<result name="success">/jsp/bookmarkList.jsp</result>
+		</action>
+
+		<action name="deleteBookmarks" class="deleteBookmarks" method="deleteBookmarks">
+			<result name="success"  type="redirectAction">
+			    <param name="actionName">bookmarkPagination</param>
+    			<param name="d-1857439-p">${#attr['pageNumber']}</param>
+			</result>
+			<result name="omrEnlargePagination" type="redirectAction">
+				<param name="actionName">omrEnlargeBookmarkPagination</param>
+    			<param name="d-1857439-p">${#attr['pageNumber']}</param>
+			</result>
+		</action>
+		
+		<action name="showBookmark" class="scoreAction" method="findBookmarkAnswer">
+			<result name="success">/jsp/scoring.jsp</result>
+			<result name="failure">/error/answerNotAvailable.jsp</result>
+		</action>
+		
+		<action name="showPrevOrNextHistory" class="scoreAction" method="findPrevOrNextHistoryAnswer">
+			<result name="success" type="redirectAction">
+				<param name="actionName">showHistory</param>
+				<param name="gradeNum">${gradeInfo.gradeNum}</param>
+				<param name="result">${gradeInfo.result}</param>
+				<param name="prevOrNextFlag">${prevOrNextFlag}</param>
+			</result>
+			<result name="failure">/error/answerNotAvailable.jsp</result>	
+		</action>
+		
+		<action name="showHistory">
+			<result name="success">/jsp/scoring.jsp</result>
+		</action>
+		
+		<action name="logOut" class="logOut" method="logOut">
+			<result name="input">login.jsp</result>
+			<result name="success" type="redirect">
+				<param name="location">${saitenLMSUrl}</param>
+			</result>
+		</action>
+		
+		<action name="backToSaitenLms" class="logOut" method="logOut">
+			<param name="backToLms">true</param>
+			<result name="success" type="redirect">
+				<param name="location">${saitenLMSUrl}</param>
+			</result>
+		</action>
+		
+		<action name="resetScoreHistory" class="scoreAction" method="resetHistory">
+			<result name="success" type="redirectAction">
+				<param name="actionName">scoreAction</param>
+				<param name="backToScoringFlag">${#parameters['backToScoringFlag']}</param>
+			</result>
+		</action>
+		
+		<action name="showSaitenMenu" class="scoreAction" method="showSaitenMenu">
+			<result name="success" type="redirectAction">userMenu</result>
+		</action>
+		
+		<action name="showScoringError">
+			<result name="success">/error/answerNotAvailable.jsp</result>
+		</action>
+		
+		<action name="answerImagePopup">
+			<result name="success">/jsp/include/answerImagePopup.jsp</result>
+		</action>
+		
+		<action name="answerPaperPopup" class="answerPaperPopupAction" method="showAnswerPaperPopup">
+			<result name="success">/jsp/include/answerPaperPopup.jsp</result>
+		</action>
+		
+		<action name="scoreSearch" class="scoreSearch" method="onLoad">
+			<result name="saiten-success">/jsp/scoreSearch.jsp</result>
+			<result name="shineigo-success">/jsp/shinEigoScoreSearch.jsp</result>
+		</action>
+		
+		<action name="validateQuestionNum" class="scoreSearch" method="validateQuestionNum">
+			<interceptor-ref name="defaultStack" />
+			<result type="json">
+				<param name="root">result</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		<action name="showScoreSearch" class="scoreSearch" method="search">
+			<interceptor-ref name="logFilterStack" />
+			<interceptor-ref name="updateSessionRegistryInterceptor" />
+			<result name="success" type="redirectAction">
+				<param name="actionName">showHistory</param>
+				<param name="gradeNum">${gradeInfo.gradeNum}</param>
+				<param name="result">${gradeInfo.result}</param>
+			</result>	
+			<result name="failure">/error/answerNotAvailable.jsp</result>
+		</action>
+		
+		<action name="showAnswerDetails" class="scoreSearch" method="findPrevOrNextAnswer">
+			<result name="success" type="redirectAction">
+				<param name="actionName">showHistory</param>
+				<param name="gradeNum">${gradeInfo.gradeNum}</param>
+				<param name="result">${gradeInfo.result}</param>
+			</result>
+		</action>
+		
+		<action name="specialScoreSearch" class="scoreSearch" method="onLoad">
+			<result name="saiten-success">/jsp/specialScoreSearch.jsp</result>
+			<result name="shineigo-success">/jsp/specialScoreSearch.jsp</result>
+		</action>
+		
+		<action name="showSpecialScoreSearch" class="scoreSearch" method="specialScoreSearch">
+			<interceptor-ref name="logFilterStack" />
+			<interceptor-ref name="updateSessionRegistryInterceptor" />
+			<result name="success" type="redirectAction">
+				<param name="actionName">showHistory</param>
+				<param name="gradeNum">${gradeInfo.gradeNum}</param>
+				<param name="result">${gradeInfo.result}</param>
+			</result>
+			<result name="failure">/error/answerNotAvailable.jsp</result>
+		</action>
+		
+		<action name="showOmrEnlargeScoreSearch" class="scoreSearch" method="omrEnlargeScoreSearch">
+			<interceptor-ref name="logFilterStack" />
+			<interceptor-ref name="updateSessionRegistryInterceptor" />
+			<result name="success" type="redirectAction">
+				<param name="actionName">showHistory</param>
+				<param name="gradeNum">${gradeInfo.gradeNum}</param>
+				<param name="result">${gradeInfo.result}</param>
+			</result>
+			<result name="failure" type="redirectAction">
+				<param name="actionName">showScoringError</param>
+			</result>
+			<result name="decline" type="redirectAction">
+				<param name="actionName">showScoringError</param>
+				<param name="decline">${decline}</param>
+			</result>
+		</action>
+		
+		<action name="scoreSampling" class="scoreSearch" method="findAnswer">
+			<result name="success" type="redirectAction">
+				<param name="actionName">showHistory</param>
+				<param name="gradeNum">${gradeInfo.gradeNum}</param>
+				<param name="result">${gradeInfo.result}</param>
+			</result>
+			<result name="failure">/error/answerNotAvailable.jsp</result>
+		</action>
+		
+		<action name="specialSampling" class="scoreSearch" method="findAnswer">
+			<interceptor-ref name="logFilterStack" />
+			<interceptor-ref name="updateSessionRegistryInterceptor" />
+			<result name="success" type="redirectAction">
+				<param name="actionName">showHistory</param>
+				<param name="gradeNum">${gradeInfo.gradeNum}</param>
+				<param name="result">${gradeInfo.result}</param>
+			</result>
+			<result name="failure">/error/answerNotAvailable.jsp</result>
+		</action>
+		
+		<action name="updateSpecialScoringMap" class="scoreSearch" method="updateSpecialScoringMap">
+			<result name="success" type="redirectAction">
+				<param name="actionName">specialScoreSearch?selectedMenuId=SPECIAL_SAMP_INSPECTION_MENU_ID</param>
+			</result>
+		</action>
+		
+		<action name="searchCount" class="scoreSearch" method="fetchRecordsCount">
+			<result name="success">/jsp/searchCount.jsp</result>
+			<result name="failure">/error/answerNotAvailable.jsp</result>
+		</action>
+		
+		<action name="loadForcedScoringList" class="scoreSearch" method="loadForcedScoringList">
+			<result name="success">/jsp/searchList.jsp</result>
+		</action>
+		
+		<action name="forcedScoring" class="scoreSearch" method="findForcedScoringAnswer">
+			<interceptor-ref name="logFilterStack" />
+			<interceptor-ref name="updateSessionRegistryInterceptor"></interceptor-ref>
+			<result name="success" >/jsp/scoring.jsp</result>
+			<result name="failure" type="redirectAction">
+				<param name="actionName">showScoringError</param>
+				<param name="lockFlag">${answerAlreadyScoredFlag}</param>
+			</result>
+		</action>
+		
+		<action name="forcedScoringPagination" class="scoreSearch" method="forcedScoringPagination">
+			<result name="success">/jsp/searchList.jsp</result>
+		</action>
+		
+		<action name="backToForcedScoringList" class="scoreSearch" method="backToForcedScoringList">
+			<result name="success"  type="redirectAction">
+			    <param name="actionName">forcedScoringPagination</param>
+    			<param name="d-7500665-p">${#attr['pageNumber']}</param>
+    			<param name="forceAndStateTransitionFlag">${#attr['forceAndStateTransitionFlag']}</param>
+			</result>
+		</action>
+		
+		<action name="showSearchList" class="scoreSearch" method="loadForcedScoringList">
+			<result name="success">/jsp/searchList.jsp</result>
+		</action>
+		
+		<action name="stateTranPagination">
+			<result name="success">/jsp/searchList.jsp</result>
+		</action>
+		
+		<action name="selectAll" class="scoreSearch" method="selectAll">
+			<result type="json">
+				<param name="root">result</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		
+		<action name="update" class="registerScore" method="update">
+			<result name="success">/error/answerNotAvailable.jsp</result>
+		</action>
+		<action name="dailyStatusReportSearch" class="dailyStatusSearch" method="onLoad">
+			<result name="success">/jsp/dailyStatusSearch.jsp</result>
+		</action>
+		<action name="dailyStatusReportSearchList" class="dailyStatusSearch" method="dailyStatusSearchList">
+			<result name="success">/jsp/dailyStatusSearchList.jsp</result>
+		</action>
+		
+		<action name="selectScoringType" class="questionSelectionAction" method="fetchScoringType">
+			<result name="markValueSelection" type="redirectAction">
+				<param name="actionName">markValueSelection</param>
+			</result>
+			<result name="pendingCategorySelection" type="redirectAction">
+				<param name="actionName">pendingCategorySelection</param>
+			</result>
+			<result name="gradeSelection" type="redirectAction">
+				<param name="actionName">gradeSelection</param>
+			</result>
+			<result name="showScoringPage" type="redirectAction">
+				<param name="actionName">showScoringPage</param>
+			</result>
+		</action>
+		
+		<action name="markValueSelection" class="questionSelectionAction" method="fetchMarkValues">
+			<result name="input">/jsp/markValueSelection.jsp</result>
+			<result name="success">/jsp/markValueSelection.jsp</result>
+		</action>
+		
+		<action name="findProcessDetails" class="scoreSearch" method="findProcessDetails">
+			<result name="success">/jsp/processDetailsList.jsp</result>
+		</action>
+		
+		<action name="dailyStatusQuestionDetails" class="dailyStatusSearch" method="dailyStatusQusetionDetails">
+			<result name="success">/jsp/dailyStatusQuestionWiseReport.jsp</result>
+		</action>
+		
+		<action name="markLookAfterwords" class="lookAfterwards" method="doMark">
+			<!-- <interceptor-ref name="defaultStack" /> -->
+			<result type="json">
+				<param name="root">result</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		
+		<action name="unmarkLookAfterwards" class="lookAfterwards" method="doUnmark">
+			<!-- <interceptor-ref name="defaultStack" /> -->
+			<result type="json">
+				<param name="root">result</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		
+		<action name="unmarkAllLookAfterwards" class="lookAfterwards" method="unmarkAll">
+			<!-- <interceptor-ref name="defaultStack" /> -->
+			<result type="json">
+				<param name="root">result</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		
+		<action name="dailyScoringReportInit" class="dailyScoringReport" method="onLoad">
+			<result name="success">/jsp/dailyScoringReport.jsp</result>
+		</action>
+		<action name="dailyScoringReportDownload" class="dailyScoringReport" method="download">
+         	<result name="success" type="stream">
+                <param name="contentType">application/octet-stream</param>
+                <param name="inputName">inputStream</param>
+                <param name="contentDisposition">attachment;filename="${fileName}"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+            <result name="input">/jsp/dailyScoringReport.jsp</result>
+         </action>
+	</package>
+	
+</struts>	
+		

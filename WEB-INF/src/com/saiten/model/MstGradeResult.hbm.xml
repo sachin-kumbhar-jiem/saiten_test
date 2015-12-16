@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.saiten.model.MstGradeResult" table="mst_grade_result" catalog="saiten_master">
+        <composite-id name="id" class="com.saiten.model.MstGradeResultId">
+            <key-property name="questionSeq" type="int">
+                <column name="question_seq" />
+            </key-property>
+            <key-property name="gradeNum" type="int">
+                <column name="grade_num" />
+            </key-property>
+        </composite-id>
+        <property name="gradeDescription" type="string">
+            <column name="grade_description" length="256" />
+        </property>
+        <property name="result" type="java.lang.Character">
+            <column name="result" length="1" />
+        </property>
+        <property name="deleteFlag" type="java.lang.Character">
+            <column name="delete_flag" length="1" />
+        </property>
+        <property name="updatePersonId" type="string">
+            <column name="update_person_id" length="7" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+        <set name="mstGrades" inverse="true">
+            <key>
+                <column name="question_seq" />
+                <column name="grade_num" />
+            </key>
+            <one-to-many class="com.saiten.model.MstGrade" />
+        </set>
+    </class>
+</hibernate-mapping>

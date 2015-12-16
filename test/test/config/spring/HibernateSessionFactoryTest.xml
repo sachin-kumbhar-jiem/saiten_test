@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+ 
+<!-- Hibernate masterdb session factory -->
+<bean id="saitenMasterDbSessionFactory" 
+    class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+ 
+    <property name="dataSource">
+      <ref bean="saitenMasterDbDataSource"/>
+    </property>
+ 
+    <property name="hibernateProperties">
+       <props>
+         <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+         <prop key="hibernate.show_sql">true</prop>
+         <prop key="hibernate.format_sql">true</prop>
+         <prop key="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</prop>
+		 <prop key="hibernate.connection.autoReconnect">true</prop>
+    	 <prop key="hibernate.connection.autoReconnectForPools">true</prop>
+         <prop key="hibernate.connection.is-connection-validation-required">true</prop>
+        
+         <prop key="hibernate.c3p0.acquire_increment">1</prop>
+		 <prop key="hibernate.c3p0.idle_test_period">14400</prop> <!-- seconds -->
+		 <prop key="hibernate.c3p0.max_size">5</prop>
+		 <prop key="hibernate.c3p0.min_size">2</prop>
+		 <prop key="hibernate.c3p0.timeout">300</prop> <!-- seconds -->
+            
+		 <prop key="hibernate.cache.use_query_cache">false</prop>
+         <prop key="hibernate.cache.use_second_level_cache">false</prop>
+		 <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+         <prop key="hibernate.jdbc.batch_size">20</prop>
+       </props>
+    </property>
+ 
+    <property name="mappingResources">
+		<list>
+         	
+         	 <value>com/saiten/model/MstDbInstance.hbm.xml</value>
+         	 <value>com/saiten/model/MstSubject.hbm.xml</value>
+         	 <value>com/saiten/model/MstSamplingStateCond.hbm.xml</value>
+         	 <value>com/saiten/model/MstQuestionType.hbm.xml</value>
+         	 <value>com/saiten/model/MstCheckPointGroup.hbm.xml</value>
+         	 <value>com/saiten/model/MstScorerRole.hbm.xml</value>
+         	 <value>com/saiten/model/MstScoringStateList.hbm.xml</value>
+         	 <value>com/saiten/model/MstGradeResult.hbm.xml</value>
+         	 <value>com/saiten/model/MstQuestion.hbm.xml</value>
+         	 <value>com/saiten/model/MstGrade.hbm.xml</value>
+         	 <value>com/saiten/model/MstScorer.hbm.xml</value>
+         	 <value>com/saiten/model/MstPendingCategory.hbm.xml</value>
+         	 <value>com/saiten/model/MstScoringEventList.hbm.xml</value>
+         	 <value>com/saiten/model/MstEvaluation.hbm.xml</value>
+         	 <value>com/saiten/model/MstCheckPoint.hbm.xml</value>
+         	 <value>com/saiten/model/MstSchool.hbm.xml</value>
+         	 <value>com/saiten/model/MstScorerQuestion.hbm.xml</value>
+         	 <value>com/saiten/model/MstMenuRole.hbm.xml</value>
+         	 <value>com/saiten/model/MstSamplingEventCond.hbm.xml</value>
+         	           	
+		</list>
+    </property>	
+ 
+</bean>
+ 
+<!-- Hibernate transaction db1 session factory -->
+<bean id="saitenTranDb1SessionFactory" 
+    class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+ 
+    <property name="dataSource">
+      <ref bean="saitenTranDb1DataSource"/>
+    </property>
+ 
+    <property name="hibernateProperties">
+       <props>
+         <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+         <prop key="hibernate.show_sql">true</prop>
+         <prop key="hibernate.format_sql">true</prop>
+         <prop key="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</prop>
+		 <prop key="hibernate.connection.autoReconnect">true</prop>
+    	 <prop key="hibernate.connection.autoReconnectForPools">true</prop>
+         <prop key="hibernate.connection.is-connection-validation-required">true</prop>
+        
+         <prop key="hibernate.c3p0.acquire_increment">1</prop>
+		 <prop key="hibernate.c3p0.idle_test_period">14400</prop> <!-- seconds -->
+		 <prop key="hibernate.c3p0.max_size">5</prop>
+		 <prop key="hibernate.c3p0.min_size">2</prop>
+		 <prop key="hibernate.c3p0.timeout">300</prop> <!-- seconds -->
+            
+		 <prop key="hibernate.cache.use_query_cache">false</prop>
+         <prop key="hibernate.cache.use_second_level_cache">false</prop>
+		 <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+         <prop key="hibernate.jdbc.batch_size">20</prop>
+       </props>
+    </property>
+ 
+   <property name="mappingResources">
+		<list>
+          	
+         	 <value>com/saiten/model/TranPunchSummary.hbm.xml</value>
+         	 <value>com/saiten/model/TranObjScore.hbm.xml</value>
+         	 <value>com/saiten/model/TranAnswerForm.hbm.xml</value>
+         	 <value>com/saiten/model/TranDescScoreHistory.hbm.xml</value>
+         	 <value>com/saiten/model/TranFeedbackForm.hbm.xml</value>
+         	 <value>com/saiten/model/TranDescScore.hbm.xml</value>
+         	 <value>com/saiten/info/TranQualitycheckScore.hbm.xml</value>
+		</list>
+    </property>	
+ 
+</bean>
+
+<!-- Hibernate transaction db2 session factory -->
+<bean id="saitenTranDb2SessionFactory" 
+    class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+ 
+    <property name="dataSource">
+      <ref bean="saitenTranDb2DataSource"/>
+    </property>
+ 
+    <property name="hibernateProperties">
+       <props>
+         <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+         <prop key="hibernate.show_sql">true</prop>
+         <prop key="hibernate.format_sql">true</prop>
+         <prop key="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</prop>
+		 <prop key="hibernate.connection.autoReconnect">true</prop>
+    	 <prop key="hibernate.connection.autoReconnectForPools">true</prop>
+         <prop key="hibernate.connection.is-connection-validation-required">true</prop>
+        
+         <prop key="hibernate.c3p0.acquire_increment">1</prop>
+		 <prop key="hibernate.c3p0.idle_test_period">14400</prop> <!-- seconds -->
+		 <prop key="hibernate.c3p0.max_size">5</prop>
+		 <prop key="hibernate.c3p0.min_size">2</prop>
+		 <prop key="hibernate.c3p0.timeout">300</prop> <!-- seconds -->
+            
+		 <prop key="hibernate.cache.use_query_cache">false</prop>
+         <prop key="hibernate.cache.use_second_level_cache">false</prop>
+		 <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+         <prop key="hibernate.jdbc.batch_size">20</prop>
+       </props>
+    </property>
+ 
+    <property name="mappingResources">
+		<list>
+          	 
+         	 <value>com/saiten/model/TranPunchSummary.hbm.xml</value>
+         	 <value>com/saiten/model/TranObjScore.hbm.xml</value>
+         	 <value>com/saiten/model/TranAnswerForm.hbm.xml</value>
+         	 <value>com/saiten/model/TranDescScoreHistory.hbm.xml</value>
+         	 <value>com/saiten/model/TranFeedbackForm.hbm.xml</value>
+         	 <value>com/saiten/model/TranDescScore.hbm.xml</value>
+         	 <value>com/saiten/info/TranQualitycheckScore.hbm.xml</value>
+         	 
+		</list>
+    </property>	
+ 
+</bean>
+
+</beans>

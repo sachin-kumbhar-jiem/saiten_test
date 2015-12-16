@@ -1,0 +1,37 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+ 
+ <bean 
+   class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+   <property name="location">
+     <value>/test/config/database/properties/database.properties</value>
+   </property>
+ </bean>
+ 
+ <bean id="saitenMasterDbDataSource" 
+         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<property name="driverClassName" value="${saiten.masterdb.driverClassName}" />
+	<property name="url" value="${saiten.masterdb.url}?useUnicode=true&amp;characterEncoding=UTF-8" />
+	<property name="username" value="${saiten.masterdb.username}" />
+	<property name="password" value="${saiten.masterdb.password}" />
+ </bean>
+  
+ <bean id="saitenTranDb1DataSource" 
+         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<property name="driverClassName" value="${saiten.transactiondb1.driverClassName}" />
+	<property name="url" value="${saiten.transactiondb1.url}?useUnicode=true&amp;characterEncoding=UTF-8" />
+	<property name="username" value="${saiten.transactiondb1.username}" />
+	<property name="password" value="${saiten.transactiondb1.password}" />
+ </bean>
+  
+ <bean id="saitenTranDb2DataSource" 
+         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<property name="driverClassName" value="${saiten.transactiondb2.driverClassName}" />
+	<property name="url" value="${saiten.transactiondb2.url}?useUnicode=true&amp;characterEncoding=UTF-8" />
+	<property name="username" value="${saiten.transactiondb2.username}" />
+	<property name="password" value="${saiten.transactiondb2.password}" />
+ </bean>
+ 
+</beans>

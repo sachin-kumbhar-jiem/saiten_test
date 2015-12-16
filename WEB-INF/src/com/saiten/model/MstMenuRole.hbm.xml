@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.saiten.model.MstMenuRole" table="mst_menu_role" catalog="saiten_master">
+        <composite-id name="id" class="com.saiten.model.MstMenuRoleId">
+            <key-property name="menuId" type="string">
+                <column name="menu_id" length="45" />
+            </key-property>
+            <key-property name="roleId" type="byte">
+                <column name="role_id" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="mstScorerRole" class="com.saiten.model.MstScorerRole" update="false" insert="false" fetch="select">
+            <column name="role_id" not-null="true" />
+        </many-to-one>
+        <property name="enable" type="java.lang.Character">
+            <column name="enable" length="1" />
+        </property>
+        <property name="deleteFlag" type="java.lang.Character">
+            <column name="delete_flag" length="1" />
+        </property>
+        <property name="updatePersonId" type="string">
+            <column name="update_person_id" length="7" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

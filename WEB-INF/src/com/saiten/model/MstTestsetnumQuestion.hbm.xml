@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 17 Mar, 2015 5:08:08 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.saiten.model.MstTestsetnumQuestion" table="mst_testsetnum_question">
+        <id name="testsetnumSeq" type="java.lang.Integer">
+            <column name="testsetnum_seq" />
+            <generator class="identity" />
+        </id>
+        <property name="testsetCode" type="string">
+            <column name="testset_code" length="5" />
+        </property>
+        <property name="testsetNum" type="java.lang.Short">
+            <column name="testset_num" />
+        </property>
+        <property name="questionSeq" type="java.lang.Integer">
+            <column name="question_seq" />
+        </property>
+        <property name="deleteFlag" type="java.lang.Character">
+            <column name="delete_flag" length="1" />
+        </property>
+        <property name="side" type="java.lang.Character">
+            <column name="side" length="1" />
+        </property>
+        <property name="updatePersonId" type="string">
+            <column name="update_person_id" length="7" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="0" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="0" />
+        </property>
+    </class>
+</hibernate-mapping>

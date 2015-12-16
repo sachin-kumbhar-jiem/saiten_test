@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.saiten.model.MstScorer" table="mst_scorer" catalog="saiten_master">
+        <id name="scorerId" type="string">
+            <column name="scorer_id" length="7" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="mstScorerRole" class="com.saiten.model.MstScorerRole" fetch="select">
+            <column name="role_id" not-null="true" />
+        </many-to-one>
+        <property name="password" type="string">
+            <column name="password" length="256" />
+        </property>
+        <property name="scorerName" type="string">
+            <column name="scorer_name" length="32" />
+        </property>
+        <property name="noDbUpdate" type="java.lang.Character">
+            <column name="no_db_update" length="1" />
+        </property>
+        <property name="deleteFlag" type="java.lang.Character">
+            <column name="delete_flag" length="1" />
+        </property>
+        <property name="updatePersonId" type="string">
+            <column name="update_person_id" length="7" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+        <set name="mstScorerQuestions" inverse="true">
+            <key>
+                <column name="scorer_id" length="7" not-null="true" />
+            </key>
+            <one-to-many class="com.saiten.model.MstScorerQuestion" />
+        </set>
+    </class>
+</hibernate-mapping>

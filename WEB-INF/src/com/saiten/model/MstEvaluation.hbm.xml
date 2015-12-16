@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.saiten.model.MstEvaluation" table="mst_evaluation" catalog="saiten_master">
+        <id name="evalSeq" type="int">
+            <column name="eval_seq" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="mstQuestionType" class="com.saiten.model.MstQuestionType" fetch="select">
+            <column name="question_type" length="1" />
+        </many-to-one>
+        <property name="csvQuestionType" type="java.lang.Character">
+            <column name="csv_question_type" length="1" />
+        </property>
+        <property name="scoreType" type="java.lang.Character">
+            <column name="score_type" length="1" />
+        </property>
+        <property name="deleteFlag" type="java.lang.Character">
+            <column name="delete_flag" length="1" />
+        </property>
+        <property name="updatePersonId" type="string">
+            <column name="update_person_id" length="7" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+        <set name="mstQuestions" inverse="true">
+            <key>
+                <column name="eval_seq" />
+            </key>
+            <one-to-many class="com.saiten.model.MstQuestion" />
+        </set>
+    </class>
+</hibernate-mapping>

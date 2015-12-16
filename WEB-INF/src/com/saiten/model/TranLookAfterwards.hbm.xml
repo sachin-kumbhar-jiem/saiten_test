@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 Mar, 2015 10:24:13 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.saiten.model.TranLookAfterwards" table="tran_look_afterwards" >
+        <id name="lookAftSeq" type="java.lang.Integer">
+            <column name="look_aft_seq" />
+            <generator class="identity" />
+        </id>
+        <property name="answerSeq" type="java.lang.Integer">
+            <column name="answer_seq" />
+        </property>
+        <property name="updatePersonId" type="string">
+            <column name="update_person_id" length="7" />
+        </property>
+        <property name="lookAftFlag" type="java.lang.Character">
+            <column name="look_aft_flag" length="1" />
+        </property>
+        <property name="resolvedBy" type="string">
+            <column name="resolved_by" length="7" />
+        </property>
+        <property name="resolvedFlag" type="java.lang.Character">
+            <column name="resolved_flag" length="1"/>
+        </property>
+        <property name="comment" type="string">
+            <column name="comment" length="512" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

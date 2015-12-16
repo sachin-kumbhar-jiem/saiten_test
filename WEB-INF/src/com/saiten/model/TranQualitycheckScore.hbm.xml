@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 1, 2014 11:56:18 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.saiten.model.TranQualitycheckScore" table="tran_qualitycheck_score">
+        <id name="qcSeq" type="java.lang.Integer">
+            <column name="qc_seq" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tranDescScore" class="com.saiten.model.TranDescScore" fetch="select">
+            <column name="answer_seq" not-null="true" />
+        </many-to-one>
+        <property name="questionSeq" type="java.lang.Integer">
+            <column name="question_seq" />
+        </property>
+        <property name="scorerId" type="string">
+            <column name="scorer_id" length="7" not-null="true" />
+        </property>
+        <property name="gradeSeq" type="java.lang.Integer">
+            <column name="grade_seq" />
+        </property>
+        <property name="gradeNum" type="java.lang.Integer">
+            <column name="grade_num" />
+        </property>
+        <property name="bitValue" type="java.lang.Double">
+            <column name="bit_value" precision="22" scale="0" />
+        </property>
+        <property name="pendingCategorySeq" type="java.lang.Integer">
+            <column name="pending_category_seq" />
+        </property>
+        <property name="pendingCategory" type="java.lang.Short">
+            <column name="pending_category" />
+        </property>
+        <property name="validFlag" type="java.lang.Character">
+            <column name="valid_flag" length="1" />
+        </property>
+        <property name="refFlag" type="java.lang.Character">
+            <column name="ref_flag" length="1" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+        <property name="scoringState" type="java.lang.Short">
+            <column name="scoring_state" />
+        </property>
+        <property name="scorerComment" type="string">
+            <column name="scorer_comment" length="512" />
+        </property>
+        <property name="answerFormNum" type="string">
+            <column name="answer_form_num" length="13" />
+        </property>
+    </class>
+</hibernate-mapping>

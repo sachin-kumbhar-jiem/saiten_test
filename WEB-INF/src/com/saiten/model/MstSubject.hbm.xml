@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2012 12:02:39 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.saiten.model.MstSubject" table="mst_subject" catalog="saiten_master">
+        <id name="subjectCode" type="string">
+            <column name="subject_code" length="2" />
+            <generator class="assigned" />
+        </id>
+        <property name="schoolType" type="string">
+            <column name="school_type" length="2" />
+        </property>
+        <property name="subjectShortName" type="string">
+            <column name="subject_short_name" length="20" />
+        </property>
+        <property name="subjectName" type="string">
+            <column name="subject_name" length="20" />
+        </property>
+        <property name="scoreFlag" type="java.lang.Character">
+            <column name="score_flag" length="1">
+                <comment>If scoring is required then T else F.</comment>
+            </column>
+        </property>
+        <property name="docFlag" type="java.lang.Character">
+            <column name="doc_flag" length="1" />
+        </property>
+        <property name="deleteFlag" type="java.lang.Character">
+            <column name="delete_flag" length="1" />
+        </property>
+        <property name="updatePersonId" type="string">
+            <column name="update_person_id" length="7" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+        <set name="mstQuestions" inverse="true">
+            <key>
+                <column name="subject_code" length="1" />
+            </key>
+            <one-to-many class="com.saiten.model.MstQuestion" />
+        </set>
+    </class>
+</hibernate-mapping>

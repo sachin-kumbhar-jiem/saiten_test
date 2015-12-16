@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+   xmlns:aop="http://www.springframework.org/schema/aop"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-4.1.xsd 
+   http://www.springframework.org/schema/tx
+   http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+   http://www.springframework.org/schema/aop
+   http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
+
+	<!-- Transaction Management bean -->
+   	<bean id="saitenTransactionManager" class="com.saiten.manager.SaitenTransactionManager" />
+   
+   	<!-- Transaction Managers specific to DB -->
+    <bean id="saitenMasterDbTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    	 <property name="sessionFactory" ref="saitenMasterDbSessionFactory" />
+   	</bean>	
+   
+  	<bean id="saitenTranDb1TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+   	 	 <property name="sessionFactory" ref="saitenTranDb1SessionFactory" />
+  	</bean>	
+   
+  	<bean id="saitenTranDb2TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+      	<property name="sessionFactory" ref="saitenTranDb2SessionFactory" />
+   	</bean>
+   	
+   	<bean id="saitenTranDb3TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+      	<property name="sessionFactory" ref="saitenTranDb3SessionFactory" />
+   	</bean>
+   	
+   	<bean id="saitenTranDb4TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+      	<property name="sessionFactory" ref="saitenTranDb4SessionFactory" />
+   	</bean>
+   	
+   	<bean id="saitenTranDb5TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+      	<property name="sessionFactory" ref="saitenTranDb5SessionFactory" />
+   	</bean>
+ 
+</beans>

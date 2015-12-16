@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.saiten.model.MstQuestion" table="mst_question" catalog="saiten_master">
+        <id name="questionSeq" type="int">
+            <column name="question_seq" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="mstSubject" class="com.saiten.model.MstSubject" fetch="select">
+            <column name="subject_code" length="1" />
+        </many-to-one>
+        <many-to-one name="mstEvaluation" class="com.saiten.model.MstEvaluation" fetch="select">
+            <column name="eval_seq" />
+        </many-to-one>
+        <many-to-one name="mstDbInstance" class="com.saiten.model.MstDbInstance" fetch="select">
+            <column name="db_instance_seq" />
+        </many-to-one>
+        <property name="questionNum" type="java.lang.Short">
+            <column name="question_num" />
+        </property>
+        <property name="questionContents" type="string">
+            <column name="question_contents" length="256" />
+        </property>
+        <property name="side" type="java.lang.Character">
+            <column name="side" length="1" />
+        </property>
+        <property name="imageHeight" type="java.lang.Short">
+            <column name="image_height" />
+        </property>
+        <property name="imageWidth" type="java.lang.Short">
+            <column name="image_width" />
+        </property>
+        <property name="manualFileName" type="string">
+            <column name="manual_file_name" length="128" />
+        </property>
+        <property name="questionFileName" type="string">
+            <column name="question_file_name" length="128" />
+        </property>
+        <property name="objectiveMax" type="java.lang.Short">
+            <column name="objective_max">
+                <comment>In the current spec, the max value for this field is 9.\nTo know the max vale for the possible values for the objective type questions. \nFor Long &amp;
+                Short description type questions, this value is neglected(0).\n</comment>
+            </column>
+        </property>
+        <property name="deleteFlag" type="java.lang.Character">
+            <column name="delete_flag" length="1" />
+        </property>
+        <property name="updatePersonId" type="string">
+            <column name="update_person_id" length="7" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+        <set name="mstScorerQuestions" inverse="true">
+            <key>
+                <column name="question_seq" not-null="true" />
+            </key>
+            <one-to-many class="com.saiten.model.MstScorerQuestion" />
+        </set>
+        <set name="mstCheckPoints" inverse="true">
+            <key>
+                <column name="question_seq" />
+            </key>
+            <one-to-many class="com.saiten.model.MstCheckPoint" />
+        </set>
+        <set name="mstPendingCategories" inverse="true">
+            <key>
+                <column name="question_seq" />
+            </key>
+            <one-to-many class="com.saiten.model.MstPendingCategory" />
+        </set>
+        <set name="mstGrades" inverse="true">
+            <key>
+                <column name="question_seq" />
+            </key>
+            <one-to-many class="com.saiten.model.MstGrade" />
+        </set>
+        <property name="attribute1" type="string">
+            <column name="attribute1" length="256" />
+        </property>
+    </class>
+</hibernate-mapping>

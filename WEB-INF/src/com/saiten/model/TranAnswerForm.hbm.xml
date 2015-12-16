@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jul 1, 2014 11:56:18 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.saiten.model.TranAnswerForm" table="tran_answer_form">
+        <composite-id name="id" class="com.saiten.model.TranAnswerFormId">
+            <key-property name="answerFormNum" type="string">
+                <column name="answer_form_num" length="13" />
+            </key-property>
+            <key-property name="schoolCode" type="string">
+                <column name="school_code" length="9" />
+            </key-property>
+            <key-property name="subjectCode" type="string">
+                <column name="subject_code" length="2" />
+            </key-property>
+        </composite-id>
+        <property name="classNum" type="string">
+            <column name="class_num" length="2" not-null="true" />
+        </property>
+        <property name="answerPaperType" type="java.lang.Character">
+            <column name="answer_paper_type" length="1" />
+        </property>
+        <property name="gender" type="java.lang.Character">
+            <column name="gender" length="1" />
+        </property>
+        <property name="summaryFlag" type="java.lang.Character">
+            <column name="summary_flag" length="1" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+        <property name="schoolComment" type="string">
+            <column name="school_comment" length="50" />
+        </property>
+    </class>
+</hibernate-mapping>
