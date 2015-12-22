@@ -411,7 +411,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("tranDescScoreHistory.gradeSeq, tranDescScoreHistory.bitValue, ");
 		query.append("tranDescScoreHistory.updateDate, tranDescScoreHistory.pendingCategorySeq, ");
 		query.append("tranDescScoreHistory.scoringState, tranDescScoreHistory.questionSeq, ");
-		query.append("tranDescScoreHistory.qualityCheckFlag, tranDescScoreHistory.historySeq ");
+		query.append("tranDescScoreHistory.qualityCheckFlag, tranDescScoreHistory.historySeq, 0 as tb1  ");
 		query.append("FROM TranDescScoreHistory as tranDescScoreHistory ");
 		query.append("WHERE tranDescScoreHistory.questionSeq = :QUESTION_SEQUENCE ");
 		query.append("AND tranDescScoreHistory.validFlag = :VALID_FLAG ");
