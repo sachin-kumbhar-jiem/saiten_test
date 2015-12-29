@@ -526,7 +526,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append(" UNION ");
 		query.append("SELECT tq.answer_seq As seq,tq.answer_form_num, ");
 		query.append("ts.image_file_name,tq.ref_flag,tq.scorer_comment, ");
-		query.append("tq.grade_seq,tq.bit_value,tq.update_date,tq.pending_category_seq, ");
+		query.append("tq.grade_seq,tq.bit_value,tq.create_date,tq.pending_category_seq, "); // Change made to bring create date instead of update date from tran_qualitycheck table
 		query.append("tq.scoring_state,tq.question_seq,tq.ref_flag As flag1,tq.qc_seq As seq1,1 As tbl ");
 		query.append("FROM tran_qualitycheck_score tq  join tran_desc_score ts ");
 		query.append("ON tq.answer_seq = ts.answer_seq ");
@@ -2152,6 +2152,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 				.getHistoryGradeSeqList() : null;
 		final List historyPendingCategorySeqList = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryPendingCategorySeqList() : null;
+		final List historyDenyCategorySeqList = scoreHistoryInfo != null ? scoreHistoryInfo
+				.getHistoryDenyCategorySeqList() : null;
 		final String historyIncludeCheckPoints = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryIncludeCheckPoints() : null;
 		final String historyExcludeCheckPoints = scoreHistoryInfo != null ? scoreHistoryInfo
@@ -2179,6 +2181,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 				.getCurrentGradeSeqList() : null;
 		final List currentPendingCategorySeqList = scoreCurrentInfo != null ? scoreCurrentInfo
 				.getCurrentPendingCategorySeqList() : null;
+		final List currentDenyCategorySeqList = scoreCurrentInfo != null ? scoreCurrentInfo
+				.getCurrentDenyCategorySeqList() : null;
 		final String currentIncludeCheckPoints = scoreCurrentInfo != null ? scoreCurrentInfo
 				.getCurrentIncludeCheckPoints() : null;
 		final String currentExcludeCheckPoints = scoreCurrentInfo != null ? scoreCurrentInfo
@@ -2219,6 +2223,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								}
 								query.append("t.punch_text AS punchText, ");
 								query.append("t.pending_category_seq AS pendingCategorySeq, t.latest_scoring_state, ");
+								query.append("t.deny_category_seq AS denyCategorySeq, ");
 								if (((forceAndStateTransitionFlag != null) && (forceAndStateTransitionFlag == WebAppConst.TRUE))
 										|| (menuId
 												.equals(WebAppConst.REFERENCE_SAMP_MENU_ID) && (forceAndStateTransitionFlag == null))) {
@@ -2441,6 +2446,12 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 													.isEmpty()) {
 										countSubQuery
 												.append("AND t1.pending_category_seq IN :HISTORY_PENDING_CATEGORY_SEQ_LIST ");
+									} else if (historyCategoryType != null
+											&& historyCategoryType == 5
+											&& !historyDenyCategorySeqList
+													.isEmpty()) {
+										countSubQuery
+												.append("AND t1.deny_category_seq IN :HISTORY_DENY_CATEGORY_SEQ_LIST ");
 									}
 
 									if (!StringUtils
@@ -2545,6 +2556,12 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 													.isEmpty()) {
 										countSubQuery
 												.append("AND t.pending_category_seq IN :CURRENT_PENDING_CATEGORY_SEQ_LIST ");
+									} else if (currentCategoryType != null
+											&& currentCategoryType == 5
+											&& !currentDenyCategorySeqList
+													.isEmpty()) {
+										countSubQuery
+												.append("AND t.deny_category_seq IN :CURRENT_DENY_CATEGORY_SEQ_LIST ");
 									}
 
 									if (!StringUtils
@@ -2626,6 +2643,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 											.append("AND t.answer_paper_type NOT IN ( :ANSWER_PAPER_TYPES ) ");
 									countSubQuery
 											.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
+									countSubQuery
+										.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
 								}
 								
 								if(searchByScorerRoleId==true){
@@ -2736,6 +2755,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										&& !historyPendingCategorySeqList
 												.isEmpty()) {
 									query.append("AND tranDescScoreHistory.pending_category_seq IN :HISTORY_PENDING_CATEGORY_SEQ_LIST ");
+								} else if (historyCategoryType != null
+										&& historyCategoryType == 5
+										&& !historyDenyCategorySeqList
+												.isEmpty()) {
+									query.append("AND tranDescScoreHistory.deny_category_seq IN :HISTORY_DENY_CATEGORY_SEQ_LIST ");
 								}
 
 								if (!StringUtils
@@ -2822,6 +2846,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										&& !currentPendingCategorySeqList
 												.isEmpty()) {
 									query.append("AND tranDescScore.pending_category_seq IN :CURRENT_PENDING_CATEGORY_SEQ_LIST ");
+								} else if (currentCategoryType != null
+										&& currentCategoryType == 5
+										&& !currentDenyCategorySeqList
+												.isEmpty()) {
+									query.append("AND tranDescScore.deny_category_seq IN :CURRENT_DENY_CATEGORY_SEQ_LIST ");
 								}
 
 								if (!StringUtils
@@ -2888,6 +2917,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								query.append("AND tranDescScore.answer_paper_type NOT IN ( :ANSWER_PAPER_TYPES ) ");
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
+								query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 							}
 
 							if(searchByScorerRoleId==true){
@@ -2956,6 +2986,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								queryObj.setParameterList("ANSWER_PAPER_TYPES",
 										WebAppConst.ANSWER_PAPER_TYPES);
 								queryObj.setParameterList("PENDING_CATEGORIES",
+										WebAppConst.PENDING_CATEGORIES);
+								queryObj.setParameterList("DENY_CATEGORIES",
 										WebAppConst.PENDING_CATEGORIES);
 							}
 
@@ -3053,20 +3085,16 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									&& scoreCurrentInfo.isCurrentBlock()) {
 
 								if (!StringUtils.isBlank(punchText)) {
-									String exactMatch=getPropertyFromPropertyFile(WebAppConst.GLOBAL_PROPERTIES,WebAppConst.PUNCH_TEXT_CONDITION_EXACT_MATCH);
-									String forwordMatch=getPropertyFromPropertyFile(WebAppConst.GLOBAL_PROPERTIES,WebAppConst.PUNCH_TEXT_CONDITION_FORWORD_MATCH);
-									String backwordMatch=getPropertyFromPropertyFile(WebAppConst.GLOBAL_PROPERTIES,WebAppConst.PUNCH_TEXT_CONDITION_BACKWORD_MATCH);
-									String partialMatch=getPropertyFromPropertyFile(WebAppConst.GLOBAL_PROPERTIES,WebAppConst.PUNCH_TEXT_CONDITION_PARTIAL_MATCH);
-									if(punchTextCondition == null || punchTextCondition.equals(exactMatch)) {
+									if(punchTextCondition == null || punchTextCondition.equals("0")) {
 										queryObj.setParameter("PUNCH_TEXT",
 												punchText);
-									} else if(punchTextCondition.equals(forwordMatch)) {
+									} else if(punchTextCondition.equals("1")) {
 										queryObj.setParameter("PUNCH_TEXT",
 												punchText+"%");
-									} else if(punchTextCondition.equals(backwordMatch)) {
+									} else if(punchTextCondition.equals("2")) {
 										queryObj.setParameter("PUNCH_TEXT",
 												"%"+punchText);
-									} else if(punchTextCondition.equals(partialMatch)) {
+									} else if(punchTextCondition.equals("3")) {
 										queryObj.setParameter("PUNCH_TEXT",
 												"%"+punchText+"%");
 									}
@@ -3131,6 +3159,14 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 											"CURRENT_PENDING_CATEGORY_SEQ_LIST",
 											scoreCurrentInfo
 													.getCurrentPendingCategorySeqList());
+								} else if (currentCategoryType != null
+										&& currentCategoryType == 5
+										&& !currentDenyCategorySeqList
+												.isEmpty()) {
+
+									queryObj.setParameterList(
+											"CURRENT_DENY_CATEGORY_SEQ_LIST",
+											currentDenyCategorySeqList);
 								}
 
 								if (!StringUtils
@@ -3265,6 +3301,14 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									queryObj.setParameterList(
 											"HISTORY_PENDING_CATEGORY_SEQ_LIST",
 											historyPendingCategorySeqList);
+								} else if (historyCategoryType != null
+										&& historyCategoryType == 5
+										&& !historyDenyCategorySeqList
+												.isEmpty()) {
+
+									queryObj.setParameterList(
+											"HISTORY_DENY_CATEGORY_SEQ_LIST",
+											historyDenyCategorySeqList);
 								}
 
 								if (!StringUtils
@@ -4704,6 +4748,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 				.getHistoryGradeSeqList() : null;
 		final List historyPendingCategorySeqList = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryPendingCategorySeqList() : null;
+		final List historyDenyCategorySeqList = scoreHistoryInfo != null ? scoreHistoryInfo
+						.getHistoryDenyCategorySeqList() : null;
 		final String historyIncludeCheckPoints = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryIncludeCheckPoints() : null;
 		final String historyExcludeCheckPoints = scoreHistoryInfo != null ? scoreHistoryInfo
@@ -4732,6 +4778,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 				.getCurrentGradeSeqList() : null;
 		final List currentPendingCategorySeqList = scoreCurrentInfo != null ? scoreCurrentInfo
 				.getCurrentPendingCategorySeqList() : null;
+		final List currentDenyCategorySeqList = scoreCurrentInfo != null ? scoreCurrentInfo
+				.getCurrentDenyCategorySeqList() : null;
 		final String currentIncludeCheckPoints = scoreCurrentInfo != null ? scoreCurrentInfo
 				.getCurrentIncludeCheckPoints() : null;
 		final String currentExcludeCheckPoints = scoreCurrentInfo != null ? scoreCurrentInfo
@@ -4779,6 +4827,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 								query.append("t.punch_text AS punchText, ");
 								query.append("t.pending_category_seq AS pendingCategorySeq, t.latest_scoring_state, ");
+								query.append("t.deny_category_seq AS denyCategorySeq, ");
 								if (((forceAndStateTransitionFlag != null) && (forceAndStateTransitionFlag == WebAppConst.TRUE))
 										|| (menuId
 												.equals(WebAppConst.REFERENCE_SAMP_MENU_ID) && (forceAndStateTransitionFlag == null))) {
@@ -4922,6 +4971,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										&& !historyPendingCategorySeqList
 												.isEmpty()) {
 									query.append("AND tranDescScoreHistory.pending_category_seq IN :HISTORY_PENDING_CATEGORY_SEQ_LIST ");
+								}else if (historyCategoryType != null
+										&& historyCategoryType == 5
+										&& !historyDenyCategorySeqList
+												.isEmpty()) {
+									query.append("AND tranDescScoreHistory.deny_category_seq IN :HISTORY_DENY_CATEGORY_SEQ_LIST ");
 								}
 
 								if (!StringUtils
@@ -5007,6 +5061,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										&& !currentPendingCategorySeqList
 												.isEmpty()) {
 									query.append("AND tranDescScore.pending_category_seq IN :CURRENT_PENDING_CATEGORY_SEQ_LIST ");
+								} else if (currentCategoryType != null
+										&& currentCategoryType == 5
+										&& !currentDenyCategorySeqList
+												.isEmpty()) {
+									query.append("AND tranDescScore.deny_category_seq IN :CURRENT_DENY_CATEGORY_SEQ_LIST ");
 								}
 
 								if (!StringUtils
@@ -5073,6 +5132,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								query.append("AND tranDescScore.answer_paper_type NOT IN ( :ANSWER_PAPER_TYPES ) ");
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
+								query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 							}
 							
 							if(searchByScorerRoleId==true){
@@ -5131,6 +5191,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								queryObj.setParameterList("ANSWER_PAPER_TYPES",
 										WebAppConst.ANSWER_PAPER_TYPES);
 								queryObj.setParameterList("PENDING_CATEGORIES",
+										WebAppConst.PENDING_CATEGORIES);
+								queryObj.setParameterList("DENY_CATEGORIES",
 										WebAppConst.PENDING_CATEGORIES);
 							}
 
@@ -5246,20 +5308,16 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									&& scoreCurrentInfo.isCurrentBlock()) {
 
 								if (!StringUtils.isBlank(punchText)) {
-									String exactMatch=getPropertyFromPropertyFile(WebAppConst.GLOBAL_PROPERTIES,WebAppConst.PUNCH_TEXT_CONDITION_EXACT_MATCH);
-									String forwordMatch=getPropertyFromPropertyFile(WebAppConst.GLOBAL_PROPERTIES,WebAppConst.PUNCH_TEXT_CONDITION_FORWORD_MATCH);
-									String backwordMatch=getPropertyFromPropertyFile(WebAppConst.GLOBAL_PROPERTIES,WebAppConst.PUNCH_TEXT_CONDITION_BACKWORD_MATCH);
-									String partialMatch=getPropertyFromPropertyFile(WebAppConst.GLOBAL_PROPERTIES,WebAppConst.PUNCH_TEXT_CONDITION_PARTIAL_MATCH);
-									if(punchTextCondition == null || punchTextCondition.equals(exactMatch)) {
+									if(punchTextCondition == null || punchTextCondition.equals("0")) {
 										queryObj.setParameter("PUNCH_TEXT",
 												punchText);
-									} else if(punchTextCondition.equals(forwordMatch)) {
+									} else if(punchTextCondition.equals("1")) {
 										queryObj.setParameter("PUNCH_TEXT",
 												punchText+"%");
-									} else if(punchTextCondition.equals(backwordMatch)) {
+									} else if(punchTextCondition.equals("2")) {
 										queryObj.setParameter("PUNCH_TEXT",
 												"%"+punchText);
-									} else if(punchTextCondition.equals(partialMatch)) {
+									} else if(punchTextCondition.equals("3")) {
 										queryObj.setParameter("PUNCH_TEXT",
 												"%"+punchText+"%");
 									}
@@ -5323,6 +5381,15 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 											"CURRENT_PENDING_CATEGORY_SEQ_LIST",
 											scoreCurrentInfo
 													.getCurrentPendingCategorySeqList());
+								} else if (currentCategoryType != null
+										&& currentCategoryType == 5
+										&& !currentDenyCategorySeqList
+												.isEmpty()) {
+
+									queryObj.setParameterList(
+											"CURRENT_DENY_CATEGORY_SEQ_LIST",
+											scoreCurrentInfo
+													.getCurrentDenyCategorySeqList());
 								}
 
 								if (!StringUtils
@@ -5459,6 +5526,14 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									queryObj.setParameterList(
 											"HISTORY_PENDING_CATEGORY_SEQ_LIST",
 											historyPendingCategorySeqList);
+								} else if (historyCategoryType != null
+										&& historyCategoryType == 5
+										&& !historyDenyCategorySeqList
+												.isEmpty()) {
+
+									queryObj.setParameterList(
+											"HISTORY_DENY_CATEGORY_SEQ_LIST",
+											historyDenyCategorySeqList);
 								}
 
 								if (!StringUtils

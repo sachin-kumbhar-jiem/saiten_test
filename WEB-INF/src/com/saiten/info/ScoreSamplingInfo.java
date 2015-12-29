@@ -22,6 +22,7 @@ public class ScoreSamplingInfo {
 	private Short pendingCategory;
 	private String comments;
 	private List<Short> markValueList;
+	private Short denyCategory;
 
 	/**
 	 * @return the answerSeq
@@ -251,6 +252,14 @@ public class ScoreSamplingInfo {
 	 */
 	public void setMarkValueList(List<Short> markValueList) {
 		this.markValueList = markValueList;
+	}
+
+	public Short getDenyCategory() {
+		return denyCategory;
+	}
+
+	public void setDenyCategory(Short denyCategory) {
+		this.denyCategory = denyCategory;
 	}
 
 	@Override

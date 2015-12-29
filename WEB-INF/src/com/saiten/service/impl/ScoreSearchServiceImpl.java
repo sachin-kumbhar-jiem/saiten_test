@@ -475,7 +475,7 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 				}
 
 				Integer gradeNum = null;
-				int questionSeq = (Integer) scoreSamplingInfoObj[9];
+				int questionSeq = (Integer) scoreSamplingInfoObj[10];
 				scoreSamplingInfo.setSubjectName(SaitenUtil
 						.getSubjectNameByQuestionSequence(questionSeq));
 
@@ -514,17 +514,60 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 							.setPendingCategory(SaitenUtil
 									.getPendingCategoryByPendingCategorySeq((Integer) scoreSamplingInfoObj[7]));
 				}
+				if (scoreSamplingInfoObj[9] != null) {
+					answerInfo.setDenyCategorySeq(Integer
+							.valueOf(scoreSamplingInfoObj[9].toString()));
+					scoreSamplingInfo
+							.setDenyCategory(SaitenUtil
+									.getDenyCategoryByDenyCategorySeq((Integer) scoreSamplingInfoObj[9]));
+				}
 
 				scoreSamplingInfo.setScoringState(Short
 						.valueOf(scoreSamplingInfoObj[8].toString()));
 
 				scoreSamplingInfo
-						.setLatestScreenScorerId((String) scoreSamplingInfoObj[10]);
+						.setLatestScreenScorerId((String) scoreSamplingInfoObj[11]);
 
 				if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 					scoreSamplingInfo
-							.setCommentCount(((BigInteger) scoreSamplingInfoObj[11])
+							.setCommentCount(((BigInteger) scoreSamplingInfoObj[12])
 									.longValue());
+					String markValues = (String) scoreSamplingInfoObj[13];
+					if (markValues != null && markValues.length() > 0) {
+						String[] markValueArray = markValues.split(",");
+						Short[] intMarkValues = new Short[markValueArray.length];
+						for (int i = 0; i < markValueArray.length; i++) {
+							intMarkValues[i] = Short
+									.parseShort(markValueArray[i]);
+						}
+						List<Short> markValueList = Arrays
+								.asList(intMarkValues);
+						scoreSamplingInfo.setMarkValueList(markValueList);
+					}
+
+					scoreSamplingInfo
+							.setUpdateDate((Date) scoreSamplingInfoObj[14]);
+					answerInfo.setUpdateDate((Date) scoreSamplingInfoObj[14]);
+					if (scoreSamplingInfoObj[15] != null) {
+						answerInfo
+								.setQualityCheckFlag((Character) scoreSamplingInfoObj[15]);
+					}
+
+					if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
+						if (scoreSamplingInfoObj[16] != null) {
+							answerInfo
+									.setLookAftSeq((Integer) scoreSamplingInfoObj[16]);
+						}
+						if(scoreSamplingInfoObj[17] != null){
+							answerInfo.setLatestScreenScorerId((String) scoreSamplingInfoObj[17]);
+						}
+						if(scoreSamplingInfoObj[18] != null){
+							answerInfo.setSecondLatestScreenScorerId((String) scoreSamplingInfoObj[18]);
+						}
+
+					}
+
+				} else if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 					String markValues = (String) scoreSamplingInfoObj[12];
 					if (markValues != null && markValues.length() > 0) {
 						String[] markValueArray = markValues.split(",");
@@ -537,44 +580,8 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 								.asList(intMarkValues);
 						scoreSamplingInfo.setMarkValueList(markValueList);
 					}
-
 					scoreSamplingInfo
 							.setUpdateDate((Date) scoreSamplingInfoObj[13]);
-					answerInfo.setUpdateDate((Date) scoreSamplingInfoObj[13]);
-					if (scoreSamplingInfoObj[14] != null) {
-						answerInfo
-								.setQualityCheckFlag((Character) scoreSamplingInfoObj[14]);
-					}
-
-					if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
-						if (scoreSamplingInfoObj[15] != null) {
-							answerInfo
-									.setLookAftSeq((Integer) scoreSamplingInfoObj[15]);
-						}
-						if(scoreSamplingInfoObj[16] != null){
-							answerInfo.setLatestScreenScorerId((String) scoreSamplingInfoObj[16]);
-						}
-						if(scoreSamplingInfoObj[17] != null){
-							answerInfo.setSecondLatestScreenScorerId((String) scoreSamplingInfoObj[17]);
-						}
-
-					}
-
-				} else if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-					String markValues = (String) scoreSamplingInfoObj[11];
-					if (markValues != null && markValues.length() > 0) {
-						String[] markValueArray = markValues.split(",");
-						Short[] intMarkValues = new Short[markValueArray.length];
-						for (int i = 0; i < markValueArray.length; i++) {
-							intMarkValues[i] = Short
-									.parseShort(markValueArray[i]);
-						}
-						List<Short> markValueList = Arrays
-								.asList(intMarkValues);
-						scoreSamplingInfo.setMarkValueList(markValueList);
-					}
-					scoreSamplingInfo
-							.setUpdateDate((Date) scoreSamplingInfoObj[12]);
 				}
 
 				scoreSamplingInfo
