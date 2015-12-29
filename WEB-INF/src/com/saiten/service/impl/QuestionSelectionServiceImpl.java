@@ -19,6 +19,7 @@ import com.saiten.info.CheckPointInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.model.MstCheckPoint;
 import com.saiten.model.MstCheckPointGroup;
+import com.saiten.model.MstDenyCategory;
 import com.saiten.model.MstPendingCategory;
 import com.saiten.model.MstQuestion;
 import com.saiten.service.QuestionSelectionService;
@@ -538,6 +539,43 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 		return pendingCategoryGroupMap;
 	}
 
+	@Override
+	public Map<Integer, String> findDenyCategories(int questionSeq) {
+		Map<Integer, String> denyCategoryGroupMap = null;
+		
+		try {
+			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = SaitenUtil
+					.getSaitenConfigObject().getMstQuestionMap();
+			
+			// Get Set<MstDenyCategory> from saitenConfigObject
+			Set<MstDenyCategory> mstDenyCategorySet = mstQuestionMap.get(
+					questionSeq).getMstDenyCategories();
+			
+			if(!mstDenyCategorySet.isEmpty()) {
+				//Build denyCategoryGroupMap for selected question
+				
+				denyCategoryGroupMap = new LinkedHashMap<Integer, String>();
+				
+				for (MstDenyCategory mstDenyCategory:mstDenyCategorySet) {
+					
+					StringBuilder denyCategoryDescription = new StringBuilder();
+					
+					denyCategoryDescription.append(mstDenyCategory.getDenyCategory());
+					denyCategoryDescription.append(WebAppConst.DOT);
+					denyCategoryDescription.append(mstDenyCategory
+							.getDenyDescription());
+					
+					denyCategoryGroupMap.put(mstDenyCategory
+							.getDenyCategorySeq(), denyCategoryDescription
+							.toString());
+				}
+			}
+		}catch (Exception e) {
+			throw new SaitenRuntimeException(
+					ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
+		}
+		return denyCategoryGroupMap;
+	}
 	/**
 	 * @param mstScorerQuestionDAO
 	 */

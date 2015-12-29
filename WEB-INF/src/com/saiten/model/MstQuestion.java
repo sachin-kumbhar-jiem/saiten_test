@@ -38,6 +38,8 @@ public class MstQuestion implements java.io.Serializable {
 	private Set<MstPendingCategory> mstPendingCategories = new HashSet<MstPendingCategory>(
 			0);
 	private Set<MstGrade> mstGrades = new HashSet<MstGrade>(0);
+	private Set<MstDenyCategory> mstDenyCategories = new HashSet<MstDenyCategory>(
+			0);
 
 	public MstQuestion() {
 	}
@@ -55,7 +57,8 @@ public class MstQuestion implements java.io.Serializable {
 			Set<MstScorerQuestion> mstScorerQuestions,
 			Set<MstCheckPoint> mstCheckPoints,
 			Set<MstPendingCategory> mstPendingCategories,
-			Set<MstGrade> mstGrades, String attribute1) {
+			Set<MstGrade> mstGrades, String attribute1,
+			Set<MstDenyCategory> mstDenyCategories) {
 		this.questionSeq = questionSeq;
 		this.mstSubject = mstSubject;
 		this.mstEvaluation = mstEvaluation;
@@ -77,6 +80,7 @@ public class MstQuestion implements java.io.Serializable {
 		this.mstPendingCategories = mstPendingCategories;
 		this.mstGrades = mstGrades;
 		this.attribute1 = attribute1;
+		this.mstDenyCategories = mstDenyCategories;
 	}
 
 	public int getQuestionSeq() {
@@ -248,4 +252,11 @@ public class MstQuestion implements java.io.Serializable {
 		this.attribute1 = attribute1;
 	}
 
+	public Set<MstDenyCategory> getMstDenyCategories() {
+		return mstDenyCategories;
+	}
+
+	public void setMstDenyCategories(Set<MstDenyCategory> mstDenyCategories) {
+		this.mstDenyCategories = mstDenyCategories;
+	}
 }

@@ -656,6 +656,18 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 			}
 			scoreHistoryInfo
 					.setHistoryPendingCategorySeqList(historyPendingCategorySeqList);
+			
+			List historyDenyCategorySeqList = buildDenyCategorySeqList (
+					questionSeq, historyCategoryType,
+					scoreHistoryInfo.getHistoryDenyCategory());
+			if(historyDenyCategorySeqList != null
+					&& historyDenyCategorySeqList.isEmpty()) {
+				historyDenyCategorySeqList.add(WebAppConst.MINUS_ONE);
+			}
+			scoreHistoryInfo
+			.setHistoryDenyCategorySeqList(historyDenyCategorySeqList);
+			System.out.println(historyDenyCategorySeqList);
+			System.out.println(scoreHistoryInfo.getHistoryDenyCategory());
 		}
 	}
 
@@ -687,6 +699,16 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 			}
 			scoreCurrentInfo
 					.setCurrentPendingCategorySeqList(currentPendingCategorySeqList);
+			
+			List currentDenyCategorySeqList = buildDenyCategorySeqList (
+					questionSeq, currentCategoryType,
+					scoreCurrentInfo.getCurrentDenyCategory());
+			if (currentDenyCategorySeqList != null
+					&& currentDenyCategorySeqList.isEmpty()){
+				currentDenyCategorySeqList.add(WebAppConst.MINUS_ONE);
+			}
+			scoreCurrentInfo.setCurrentDenyCategorySeqList(currentDenyCategorySeqList);
+			System.out.println(currentDenyCategorySeqList);
 		}
 	}
 
@@ -1117,6 +1139,29 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 
 		return pendingCategorySeqList;
 	}
+	
+	/**
+	 * @param questionSeq
+	 * @param categoryType
+	 * @param denyCategoryString
+	 * @return List
+	 */
+	@SuppressWarnings("rawtypes")
+	private List buildDenyCategorySeqList(Integer questionSeq,
+			Integer categoryType, String denyCategoryString) {
+		List pendingCategorySeqList = null;
+		if (categoryType != null && categoryType == 5) {
+			String[] denyCategoryArray = denyCategoryString
+					.split(WebAppConst.COMMA);
+
+			Short[] denyCategory = buildDenyCategoryArray(denyCategoryArray);
+
+			pendingCategorySeqList = scoreSearchService
+					.findDenyCategorySeqList(questionSeq, denyCategory);
+		}
+
+		return pendingCategorySeqList;
+	}
 
 	/**
 	 * @param questionSeq
@@ -1148,6 +1193,20 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 		}
 
 		return pendingCategory;
+	}
+	
+	/**
+	 * @param denyCategoryArray
+	 * @return Short[]
+	 */
+	private Short[] buildDenyCategoryArray(String[] denyCategoryArray) {
+		Short[] denyCategory = new Short[denyCategoryArray.length];
+
+		for (int i = 0; i < denyCategoryArray.length; i++) {
+			denyCategory[i] = Short.valueOf(denyCategoryArray[i]);
+		}
+
+		return denyCategory;
 	}
 
 	public String omrEnlargeScoreSearch() {

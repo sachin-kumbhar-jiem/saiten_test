@@ -220,6 +220,7 @@
 		<property name="mstPendingCategoryDAO" ref="mstPendingCategoryDAO" />
 		<property name="confirmScoreService" ref="confirmScoreService"></property>
 		<property name="tranDescScoreDAO" ref="tranDescScoreDAO"></property>
+		<property name="mstDenyCategoryDAO" ref="mstDenyCategoryDAO" />
 	</bean>
 	
 	<bean id="mstSubjectDAO" class="com.saiten.dao.impl.MstSubjectDAOImpl" />
@@ -240,6 +241,8 @@
    	<bean id="mstScoringStateListDAO" class="com.saiten.dao.impl.MstScoringStateListDAOImpl" />
    	
    	<bean id="mstPendingCategoryDAO" class="com.saiten.dao.impl.MstPendingCategoryDAOImpl" />
+   	
+   	<bean id="mstDenyCategoryDAO" class="com.saiten.dao.impl.MstDenyCategoryDAOImpl" />
    	
    	<bean id="saitenConfig" class="com.saiten.bean.SaitenConfig" />
    	
@@ -262,6 +265,7 @@
    		<property name="saitenMasterUtil" ref="saitenMasterUtil"></property>
    	   	<property name="mstScorerDAO" ref="mstScorerDAO"></property>
    	   	<property name="mstMarkValueDAO" ref="mstMarkValueDAO"></property>
+   	   	<property name="mstDenyCategoryDAO" ref="mstDenyCategoryDAO"></property>
    	</bean>
    	
     <bean id="dailyStatusSearch" class="com.saiten.action.DailyStatusSearchAction" scope="request">
@@ -299,6 +303,31 @@
    		<property name="scoreService" ref="scoreService" />
    	</bean>
    	
+   	<!-- Confirm deny bean configuration  -->
+   	<bean id="confirmDeny" class="com.saiten.action.ConfirmDenyAction" scope="request" >
+   		<property name="confirmScoreService" ref="confirmScoreService"></property>
+   	</bean>
+   	
+   	<bean id="registerDeny" class="com.saiten.action.RegisterDenyAction" scope="request">
+   		<property name="registerDenyService" ref="registerDenyService"></property>
+   		<property name="saitenTransactionManager" ref="saitenTransactionManager"></property>
+   	</bean>
+   	
+   	<bean id="registerDenyService" class="com.saiten.service.impl.RegisterDenyServiceImpl">
+   		<property name="tranDescScoreDAO" ref="tranDescScoreDAO"></property>
+		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO"></property>
+		<property name="tranQualitycheckScoreDAO" ref="tranQualitycheckScoreDAO"></property>
+   	</bean>
+   	
+   	<bean id="denyCategorySelection" class="com.saiten.action.DenyCategorySelectionAction" scope="request">
+		<property name="denyCategorySelectionService" ref="denyCategorySelectionService"></property>
+   	</bean>
+   	
+   	<bean id="denyCategorySelectionService" class="com.saiten.service.impl.DenyCategorySelectionServiceImpl">
+		<property name="mstDenyCategoryDAO" ref="mstDenyCategoryDAO" />
+   	</bean>
+  	
+  	
   	<!-- database.properties bean configuration  -->
    	<util:properties id="saitenDbProperties" location="classpath:config/database/properties/database.properties" />
    	

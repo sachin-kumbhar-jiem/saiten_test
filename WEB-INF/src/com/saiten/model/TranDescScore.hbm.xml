@@ -86,5 +86,11 @@
         <property name="markValue" type="string">
             <column name="mark_value" length="17" />
         </property>
+        <property name="denyCategorySeq" type="java.lang.Integer">
+            <column name="deny_category_seq" />
+        </property>
+        <property name="denyCategory" type="java.lang.Short">
+            <column name="deny_category" />
+        </property>
     </class>
 </hibernate-mapping>

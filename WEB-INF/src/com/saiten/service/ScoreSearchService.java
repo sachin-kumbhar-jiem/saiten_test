@@ -61,6 +61,27 @@ public interface ScoreSearchService {
 	@SuppressWarnings("rawtypes")
 	public List findPendingCategorySeqList(Integer questionSeq,
 			Short[] pendingCategoryList);
+	
+	/**
+	 * 
+	 * @param questionSeq
+	 * @param denyCategoryList
+	 * @return List
+	 */
+	@SuppressWarnings("rawtypes")
+	public List findDenyCategorySeqList(Integer questionSeq,
+			Short[] denyCategoryList);
+	/**
+	 * 
+	 * @param quetionSeqList
+	 * @param menuId
+	 * @param scorerId
+	 * @param connectionString
+	 * @param answerFormNum
+	 * @param historyRecordCount
+	 * @param roleId
+	 * @return
+	 */
 
 	public List<TranDescScoreInfo> findSpecialScoringAnswerRecords(
 			List<Integer> quetionSeqList, String menuId, String scorerId,

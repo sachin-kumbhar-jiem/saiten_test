@@ -24,6 +24,9 @@ public class ScoreHistoryInfo {
 	private String historyPendingCategory;
 	@SuppressWarnings("rawtypes")
 	private List historyPendingCategorySeqList;
+	private String historyDenyCategory;
+	@SuppressWarnings("rawtypes")
+	private List historyDenyCategorySeqList;
 	private String historyIncludeCheckPoints;
 	private Integer historyIncludeBitValue;
 	private String historyExcludeCheckPoints;
@@ -390,6 +393,24 @@ public class ScoreHistoryInfo {
 	 */
 	public Integer[] getHistoryScorerRole() {
 		return historyScorerRole;
+	}
+
+	public String getHistoryDenyCategory() {
+		return historyDenyCategory;
+	}
+
+	public void setHistoryDenyCategory(String historyDenyCategory) {
+		this.historyDenyCategory = historyDenyCategory;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public List getHistoryDenyCategorySeqList() {
+		return historyDenyCategorySeqList;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public void setHistoryDenyCategorySeqList(List historyDenyCategorySeqList) {
+		this.historyDenyCategorySeqList = historyDenyCategorySeqList;
 	}
 
 	/**

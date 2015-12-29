@@ -262,7 +262,8 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 									<tr>
 										<th class="partition">
 											<s:text name="label.scoresearch.historygrade" /><br>
-											<s:text name="label.scoresearch.historycategorypending" />
+											<s:text name="label.scoresearch.historycategorypending" /><br>
+											<s:text name="label.scoresearch.historycategorydeny"/>
 											<input type="button" name="processCheckButton" value="<s:text name="label.scoresearch.selectall" />"
 											 onclick="changeCheckBox('scoreInputInfo.scoreHistoryInfo.historyGradeNum', true)">
 											<input type="button" name="processCheckButton" value="<s:text name="label.scoresearch.cancelall" />" onclick="changeCheckBox('scoreInputInfo.scoreHistoryInfo.historyGradeNum', false)">
@@ -430,8 +431,25 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 												 	</td>	
 												 	<td colspan="10" class="inner" style="vertical-align: top;">
 												 		<s:textfield id="historyPendingCategory" name="scoreInputInfo.scoreHistoryInfo.historyPendingCategory" cssClass="disable_bg" size="30" disabled="true" value="%{#session.scoreInputInfo.scoreHistoryInfo.historyPendingCategory}" />
+												 		<input type="text" id="historyPendingCategoryHidden" name="historyPendingCategoryHidden" style="border: none;background-color: transparent;color: red;width: 00px;" readonly="readonly">
 												 	</td>
 												</tr>
+												<tr>
+													<td class="inner" style="vertical-align: top;">
+													<s:if test="#session.scoreInputInfo.scoreHistoryInfo.historyCategoryType == 5">
+														<input type="radio" name="scoreInputInfo.scoreHistoryInfo.historyCategoryType" id="historyCategoryType5" checked="checked"
+													 			value="5" onclick="changeHistoryCategoryType(true, false)" onkeypress="changeHistoryCategoryType(true, false)"/>&nbsp;<s:text name="label.scoresearch.denycategory" />&nbsp;
+													</s:if>
+													<s:else>
+												 		<input type="radio" name="scoreInputInfo.scoreHistoryInfo.historyCategoryType" id="historyCategoryType5"
+													 			value="5" onclick="changeHistoryCategoryType(true, false)" onkeypress="changeHistoryCategoryType(true, false)"/>&nbsp;<s:text name="label.scoresearch.denycategory" />&nbsp;
+													 </s:else>
+													</td>
+													<td colspan="10" class="inner" style="vertical-align: top;">
+												 		<s:textfield id="historyDenyCategory" name="scoreInputInfo.scoreHistoryInfo.historyDenyCategory" cssClass="disable_bg" size="30" disabled="true" value="%{#session.scoreInputInfo.scoreHistoryInfo.historyDenyCategory}" />
+												 		<input type="text" id="historyDenyCategoryHidden" name="historyDenyCategoryHidden" style="border: none;background-color: transparent;color: red;width: 00px;" readonly="readonly">
+												 	</td>
+												 </tr>
 											</table>
 										</td>
 									</tr>
@@ -467,7 +485,8 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 												<tr>
 													<td colspan="6" class="inner">
 														<!-- For displaying ErrorMessage : Same checkPoint should not enter into 'historyIncludeCheckPoints' and 'historyExcludeCheckPoints' -->
-														<s:hidden id="historyCheckPointHidden" name="historyCheckPointHidden"></s:hidden>	
+														<%-- <s:hidden id="historyCheckPointHidden" name="historyCheckPointHidden"></s:hidden> --%>
+														<input type="text" id="historyCheckPointHidden" name="historyCheckPointHidden" style="border: none;background-color: transparent;color: red;width: 400px;" readonly="readonly">	
 													</td>
 												</tr>
 											</table>
@@ -656,7 +675,7 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 										</th>
 										<td colspan="5" style="padding-left: 20px;">
 											<s:textfield id="punchText" name="scoreInputInfo.scoreCurrentInfo.punchText" maxlength="256" size="60" value="%{#session.scoreInputInfo.scoreCurrentInfo.punchText}" />
-											<s:select id="punchTextData" list="scoreSearchInfo.punchTextMap" name="scoreInputInfo.scoreCurrentInfo.punchTextData"></s:select>			
+											<s:select id="punchTextData" list="scoreSearchInfo.punchTextMap" name="scoreInputInfo.scoreCurrentInfo.punchTextData" value="%{#session.scoreInputInfo.scoreCurrentInfo.punchTextData}"></s:select>			
 										</td>
 									</tr>
 									<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID">
@@ -690,7 +709,8 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 									<tr>
 										<th class="partition">
 											<s:text name="label.scoresearch.currentanswertype1" /><br>
-											<s:text name="label.scoresearch.currentanswertype2" />
+											<s:text name="label.scoresearch.currentanswertype2" /><br>
+											<s:text name="label.scoresearch.currentcategorydeny" />
 											<input type="button" name="currentGradeCheckButton" value="<s:text name="label.scoresearch.selectall" />" 
 											onclick="changeCheckBox('scoreInputInfo.scoreCurrentInfo.currentGradeNum', true)">
 											<input type="button" name="currentGradeCheckButton" value="<s:text name="label.scoresearch.cancelall" />"
@@ -859,8 +879,25 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 													</td>	
 													<td colspan="10" class="inner" style="vertical-align: top;">
 														<s:textfield id="currentPendingCategory" name="scoreInputInfo.scoreCurrentInfo.currentPendingCategory" cssClass="disable_bg" size="30" disabled="true" value="%{#session.scoreInputInfo.scoreCurrentInfo.currentPendingCategory}" />
+														<input type="text" id="currentPendingCategoryHidden" name="currentPendingCategoryHidden" style="border: none;background-color: transparent;color: red;width: 00px;" readonly="readonly">
 													</td>
 												</tr>
+												<tr>
+													<td class="inner" style="vertical-align: top;">
+													<s:if test="#session.scoreInputInfo.scoreCurrentInfo.currentCategoryType == 5">
+														<input type="radio" name="scoreInputInfo.scoreCurrentInfo.currentCategoryType" id="currentCategoryType5" checked="checked"
+													 			value="5" onclick="changeCategoryType(true, false)" onkeypress="changeCategoryType(true, false)"/>&nbsp;<s:text name="label.scoresearch.denycategory" />&nbsp;
+													</s:if>
+													<s:else>
+												 		<input type="radio" name="scoreInputInfo.scoreCurrentInfo.currentCategoryType" id="currentCategoryType5"
+													 			value="5" onclick="changeCategoryType(true, false)" onkeypress="changeCategoryType(true, false)"/>&nbsp;<s:text name="label.scoresearch.denycategory" />&nbsp;
+													</s:else>
+													</td>
+													<td colspan="10" class="inner" style="vertical-align: top;">
+												 		<s:textfield id="currentDenyCategory" name="scoreInputInfo.scoreCurrentInfo.currentDenyCategory" cssClass="disable_bg" size="30" disabled="true" value="%{#session.scoreInputInfo.scoreCurrentInfo.currentDenyCategory}" />
+												 		<input type="text" id="currentDenyCategoryHidden" name="currentDenyCategoryHidden" style="border: none;background-color: transparent;color: red;width: 00px;" readonly="readonly">
+												 	</td>
+												 </tr>
 											</table>
 										</td>
 									</tr>
@@ -898,7 +935,8 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 												<tr>
 													<td colspan="6" class="inner">
 														<!-- For displaying ErrorMessage : Same check point should not selected into 'currentIncludeCheckPoints' and 'currentExcludeCheckPoints' -->
-														<s:hidden id="currentCheckPointHidden" name="currentCheckPointHidden"></s:hidden>		
+														<%-- <s:hidden id="currentCheckPointHidden" name="currentCheckPointHidden"></s:hidden> --%>
+														<input type="text" id="currentCheckPointHidden" name="currentCheckPointHidden" style="border: none;background-color: transparent;color: red;width: 400px;" readonly="readonly">			
 													</td>
 												</tr>
 											</table>

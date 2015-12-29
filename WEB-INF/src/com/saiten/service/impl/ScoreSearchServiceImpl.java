@@ -15,6 +15,7 @@ import org.apache.struts2.ServletActionContext;
 import org.hibernate.HibernateException;
 
 import com.saiten.bean.SaitenConfig;
+import com.saiten.dao.MstDenyCategoryDAO;
 import com.saiten.dao.MstGradeDAO;
 import com.saiten.dao.MstPendingCategoryDAO;
 import com.saiten.dao.MstQuestionDAO;
@@ -54,6 +55,7 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 	private MstPendingCategoryDAO mstPendingCategoryDAO;
 	private ConfirmScoreService confirmScoreService;
 	private TranDescScoreDAO tranDescScoreDAO;
+	private MstDenyCategoryDAO mstDenyCategoryDAO;
 
 	/*
 	 * (non-Javadoc)
@@ -335,7 +337,7 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 				answerInfo.setAnswerSeq(Integer.valueOf(answerRecordObj[0]
 						.toString()));
 				if (!menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
-					String markValues = (String) answerRecordObj[10];
+					String markValues = (String) answerRecordObj[11];
 					if (markValues != null && markValues.length() > 0) {
 						String[] markValueArray = markValues.split(",");
 						Short[] intMarkValues = new Short[markValueArray.length];
@@ -347,25 +349,25 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 								.asList(intMarkValues);
 						tranDescScoreInfo.setMarkValueList(markValueList);
 					}
-					answerInfo.setUpdateDate((Date) answerRecordObj[11]);
+					answerInfo.setUpdateDate((Date) answerRecordObj[12]);
 					if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
-						if (answerRecordObj[12] != null) {
+						if (answerRecordObj[13] != null) {
 							answerInfo
-									.setLookAftSeq((Integer) answerRecordObj[12]);
+									.setLookAftSeq((Integer) answerRecordObj[13]);
 						}
 					}
 					if(menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)){
-						if (answerRecordObj[12] != null) {
-							answerInfo.setLatestScreenScorerId((String) answerRecordObj[12]);
-						}
 						if (answerRecordObj[13] != null) {
-							answerInfo.setSecondLatestScreenScorerId((String) answerRecordObj[13]);
+							answerInfo.setLatestScreenScorerId((String) answerRecordObj[13]);
+						}
+						if (answerRecordObj[14] != null) {
+							answerInfo.setSecondLatestScreenScorerId((String) answerRecordObj[14]);
 						}
 					}
 				} else {
 					tranDescScoreInfo
-							.setLatestScreenScorerId((String) answerRecordObj[11]);
-					String markValues = (String) answerRecordObj[12];
+							.setLatestScreenScorerId((String) answerRecordObj[12]);
+					String markValues = (String) answerRecordObj[13];
 					if (markValues != null && markValues.length() > 0) {
 						String[] markValueArray = markValues.split(",");
 						Short[] intMarkValues = new Short[markValueArray.length];
@@ -377,11 +379,11 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 								.asList(intMarkValues);
 						tranDescScoreInfo.setMarkValueList(markValueList);
 					}
-					answerInfo.setUpdateDate((Date) answerRecordObj[13]);
+					answerInfo.setUpdateDate((Date) answerRecordObj[14]);
 					if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
-						if (answerRecordObj[14] != null) {
+						if (answerRecordObj[15] != null) {
 							answerInfo
-									.setLookAftSeq((Integer) answerRecordObj[14]);
+									.setLookAftSeq((Integer) answerRecordObj[15]);
 						}
 					}
 				}
@@ -419,6 +421,11 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 				if (answerRecordObj[8] != null) {
 					answerInfo.setPendingCategorySeq(Integer
 							.valueOf(answerRecordObj[8].toString()));
+				}
+				
+				if (answerRecordObj[10] != null) {
+					answerInfo.setDenyCategorySeq(Integer
+							.valueOf(answerRecordObj[10].toString()));
 				}
 
 				tranDescScoreInfo.setScoringState(Short
@@ -1044,6 +1051,21 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 		}
 		return processDetailsList;
 	}
+	
+	@Override
+	public List findDenyCategorySeqList(Integer questionSeq,
+			Short[] denyCategoryList) {
+		try {
+			return getMstDenyCategoryDAO().findDenyCategorySeqList(questionSeq,
+					denyCategoryList);
+		} catch (HibernateException he) {
+			throw new SaitenRuntimeException(
+					ErrorCode.SCORE_SEARCH_HIBERNATE_EXCEPTION, he);
+		} catch (Exception e) {
+			throw new SaitenRuntimeException(
+					ErrorCode.SCORE_SEARCH_SERVICE_EXCEPTION, e);
+		}
+	}
 
 	public MstSubjectDAO getMstSubjectDAO() {
 		return mstSubjectDAO;
@@ -1147,5 +1169,14 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 	public void setTranDescScoreDAO(TranDescScoreDAO tranDescScoreDAO) {
 		this.tranDescScoreDAO = tranDescScoreDAO;
 	}
+
+	public MstDenyCategoryDAO getMstDenyCategoryDAO() {
+		return mstDenyCategoryDAO;
+	}
+
+	public void setMstDenyCategoryDAO(MstDenyCategoryDAO mstDenyCategoryDAO) {
+		this.mstDenyCategoryDAO = mstDenyCategoryDAO;
+	}
+
 
 }

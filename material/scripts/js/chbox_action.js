@@ -14,20 +14,38 @@ function changeCategoryType(checkDisable, textDisable) {
 	var currentPendingCategory = document.getElementsByName("scoreInputInfo.scoreCurrentInfo.currentPendingCategory");
 	var currentIncludeCheckPoints = document.getElementsByName('scoreInputInfo.scoreCurrentInfo.currentIncludeCheckPoints');
 	var currentExcludeCheckPoints = document.getElementsByName('scoreInputInfo.scoreCurrentInfo.currentExcludeCheckPoints');
+	var currentDenyCategory = document.getElementsByName("scoreInputInfo.scoreCurrentInfo.currentDenyCategory");
+	var radio = document.getElementsByName('scoreInputInfo.scoreCurrentInfo.currentCategoryType');
 	
-	currentPendingCategory.item(0).disabled = textDisable;
-	currentIncludeCheckPoints.item(0).disabled = !textDisable;
-	currentExcludeCheckPoints.item(0).disabled = !textDisable;
-	
-	if (textDisable) {
+	if (radio[4].checked) {
+		currentDenyCategory.item(0).disabled = textDisable;
+		currentDenyCategory.item(0).className = "";
+		currentPendingCategory.item(0).disabled = !textDisable;
+		currentIncludeCheckPoints.item(0).disabled = !textDisable;
+		currentExcludeCheckPoints.item(0).disabled = !textDisable;
 		currentPendingCategory.item(0).className = "disable_bg";
-		currentIncludeCheckPoints.item(0).className = "";
-		currentExcludeCheckPoints.item(0).className = "";
-	} else {
-		currentPendingCategory.item(0).className = "";
 		currentIncludeCheckPoints.item(0).className = "disable_bg";
 		currentExcludeCheckPoints.item(0).className = "disable_bg";
+		
+	}else {
+		currentPendingCategory.item(0).disabled = textDisable;
+		currentIncludeCheckPoints.item(0).disabled = !textDisable;
+		currentExcludeCheckPoints.item(0).disabled = !textDisable;
+		currentDenyCategory.item(0).disabled = !textDisable;
+		currentDenyCategory.item(0).className = "disable_bg";
+		
+		if (textDisable) {
+			currentPendingCategory.item(0).className = "disable_bg";
+			currentIncludeCheckPoints.item(0).className = "";
+			currentExcludeCheckPoints.item(0).className = "";
+		} else {
+			currentPendingCategory.item(0).className = "";
+			currentIncludeCheckPoints.item(0).className = "disable_bg";
+			currentExcludeCheckPoints.item(0).className = "disable_bg";
+		}
 	}
+	
+	
 	
 	for(i=0; i < document.getElementsByName('currentGradeCheckButton').length; i++) {
 		document.getElementsByName('currentGradeCheckButton')[i].disabled = checkDisable;
@@ -47,12 +65,22 @@ function changeCurrentBlock(checkDisable, textDisable, currentBlockDisable) {
 	var currentExcludeCheckPoints = document.getElementsByName('scoreInputInfo.scoreCurrentInfo.currentExcludeCheckPoints');
 	var radio = document.getElementsByName('scoreInputInfo.scoreCurrentInfo.currentCategoryType');
 	var currentBlock = document.getElementsByName('scoreInputInfo.scoreCurrentInfo.currentBlock');
+	var currentDenyCategory = document.getElementsByName("scoreInputInfo.scoreCurrentInfo.currentDenyCategory");
 	
 	if (!(radio[3].checked)) {
 		currentPendingCategory.item(0).value='';
 	}
 
 	if((radio[3].checked) || !currentBlock[0].checked){
+		currentIncludeCheckPoints.item(0).value='';
+		currentExcludeCheckPoints.item(0).value='';
+	}
+	
+	if (!(radio[4].checked)) {
+		currentDenyCategory.item(0).value='';
+	}
+
+	if((radio[4].checked) || !currentBlock[0].checked){
 		currentIncludeCheckPoints.item(0).value='';
 		currentExcludeCheckPoints.item(0).value='';
 	}
@@ -97,22 +125,37 @@ function changeHistoryCategoryType(checkDisable, textDisable) {
 	var historyPendingCategory = document.getElementsByName('scoreInputInfo.scoreHistoryInfo.historyPendingCategory');
 	var historyIncludeCheckPoints = document.getElementsByName('scoreInputInfo.scoreHistoryInfo.historyIncludeCheckPoints');
 	var historyExcludeCheckPoints = document.getElementsByName('scoreInputInfo.scoreHistoryInfo.historyExcludeCheckPoints');
+	var historyDenyCategory = document.getElementsByName('scoreInputInfo.scoreHistoryInfo.historyDenyCategory');
+	var radio = document.getElementsByName('scoreInputInfo.scoreHistoryInfo.historyCategoryType');
 	
-	historyPendingCategory.item(0).disabled = textDisable;
-	historyIncludeCheckPoints.item(0).disabled = !textDisable;
-	historyExcludeCheckPoints.item(0).disabled = !textDisable;
-	
-	if (textDisable) {
+	if (radio[4].checked) {
+		historyDenyCategory.item(0).disabled = textDisable;
+		historyDenyCategory.item(0).className = "";
+		historyPendingCategory.item(0).disabled = !textDisable;
+		historyIncludeCheckPoints.item(0).disabled = !textDisable;
+		historyExcludeCheckPoints.item(0).disabled = !textDisable;
 		historyPendingCategory.item(0).className = "disable_bg";
-		
-		historyIncludeCheckPoints.item(0).className = "";
-		historyExcludeCheckPoints.item(0).className = "";
-	} else {
-		historyPendingCategory.item(0).className = "";
-		
 		historyIncludeCheckPoints.item(0).className = "disable_bg";
 		historyExcludeCheckPoints.item(0).className = "disable_bg";
+	} else {
+		historyPendingCategory.item(0).disabled = textDisable;
+		historyIncludeCheckPoints.item(0).disabled = !textDisable;
+		historyExcludeCheckPoints.item(0).disabled = !textDisable;
+		historyDenyCategory.item(0).disabled = !textDisable;
+		historyDenyCategory.item(0).className = "disable_bg";
+		if (textDisable) {
+			historyPendingCategory.item(0).className = "disable_bg";
+			
+			historyIncludeCheckPoints.item(0).className = "";
+			historyExcludeCheckPoints.item(0).className = "";
+		} else {
+			historyPendingCategory.item(0).className = "";
+			
+			historyIncludeCheckPoints.item(0).className = "disable_bg";
+			historyExcludeCheckPoints.item(0).className = "disable_bg";
+		}
 	}
+	
 	
 	for(i=0; i < document.getElementsByName('processCheckButton').length; i++) {
 		document.getElementsByName('processCheckButton')[i].disabled = checkDisable;
@@ -132,12 +175,22 @@ function changeHistoryBlock(checkDisable, textDisable, historyBlockDisable) {
 	var historyExcludeCheckPoints = document.getElementsByName('scoreInputInfo.scoreHistoryInfo.historyExcludeCheckPoints');
 	var radio = document.getElementsByName('scoreInputInfo.scoreHistoryInfo.historyCategoryType');
 	var historyBlock = document.getElementsByName('scoreInputInfo.scoreHistoryInfo.historyBlock');
+	var historyDenyCategory = document.getElementsByName('scoreInputInfo.scoreHistoryInfo.historyDenyCategory');
 	
 	if (!(radio[3].checked)) {
 		historyPendingCategory.item(0).value='';
 	}
 	
 	if((radio[3].checked || !historyBlock[0].checked)){
+		historyIncludeCheckPoints.item(0).value='';
+		historyExcludeCheckPoints.item(0).value='';
+	}
+	
+	if (!(radio[4].checked)) {
+		historyDenyCategory.item(0).value='';
+	}
+	
+	if((radio[4].checked || !historyBlock[0].checked)){
 		historyIncludeCheckPoints.item(0).value='';
 		historyExcludeCheckPoints.item(0).value='';
 	}
@@ -179,7 +232,9 @@ function defaultValidation() {
 		changeCategoryType(false, true);
 	} else if (radio[3].checked) {
 		changeCategoryType(true, false);
-	} else {
+	} else if (radio[4].checked) {
+		changeCategoryType(true, false);
+	}else {
 		changeCategoryType(true, true);
 	}
 }
@@ -189,6 +244,8 @@ function defaultValidationPast() {
 	if (radio[2].checked) {
 		changeHistoryCategoryType(false, true);
 	} else if (radio[3].checked) {
+		changeHistoryCategoryType(true, false);
+	} else if (radio[4].checked) {
 		changeHistoryCategoryType(true, false);
 	} else {
 		changeHistoryCategoryType(true, true);
@@ -265,6 +322,8 @@ function toggleStateSearch() {
 	
 	form.currentPendingCategory.disabled = isDisable;
 	form.currentPendingCategory.className = bgClass;
+	form.currentDenyCategory.disabled = isDisable;
+	form.currentDenyCategory.className = bgClass;
 	form.currentIncludeCheckPoints.disabled = isDisable;
 	form.currentIncludeCheckPoints.className = bgClass;
 	form.currentExcludeCheckPoints.disabled = isDisable;
@@ -389,6 +448,9 @@ function toggleProcessSearch() {
 	
 	form.historyPendingCategory.disabled = isDisable;
 	form.historyPendingCategory.className = bgClass;
+	
+	form.historyDenyCategory.disabled = isDisable;
+	form.historyDenyCategory.className = bgClass;
 	
 	form.historyUpdateDateStartYear.disabled = isDisable;
 	form.historyUpdateDateStartMonth.disabled = isDisable;

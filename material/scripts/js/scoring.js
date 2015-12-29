@@ -1,14 +1,20 @@
 ﻿
 //Our validation script will go here.
 $(function () {
-	if(($('#score').length>0) || ($('#approve').length>0) || ($('#deny').length>0)){
-		$('#popup-wrapper').modalPopLite({ openButton: '#score', approveButton: '#approve', denyButton: '#deny', closeButton: '#cancel', isModal: true, callBack: cancelScoring });
+	if(($('#score').length>0) || ($('#approve').length>0)){
+		$('#popup-wrapper').modalPopLite({ openButton: '#score', approveButton: '#approve', closeButton: '#cancel', isModal: true, callBack: cancelScoring });
 	}
 });
 
 $(function () {
 	if(($('#pending').length>0)){
 		$('#pendingpopup-wrapper').modalPopLite({ openButton: '#pending', closeButton: '#close', isModal: true, callBack: cancelPending });
+	}
+});
+
+$(function () {
+	if(($('#deny').length>0)){
+		$('#denypopup-wrapper').modalPopLite({ openButton: '#deny', closeButton: '#close', isModal: true, callBack: cancelDeny });
 	}
 });
 
@@ -631,6 +637,14 @@ $(document).ready(function() {
 		
 		$("#deny").click(function() {
 			buildGroupTypeArray();
+			
+var 		denyCategorySeq = $('#denyCategorySeq').val();
+			
+			if(denyCategorySeq != '') {
+				$('input:radio[name=denyCategory]').filter('[value='+denyCategorySeq+']').attr('checked', true);
+			} else {
+				$("input:radio[name=denyCategory]:first").attr('checked', true);
+			}
 		});
 });
 

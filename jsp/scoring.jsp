@@ -236,20 +236,20 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				</span>
 				
 				<s:if test="bookmarkScreenFlag != true && !(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID)">
-					<span style="cursor:pointer;padding-right:6px;">
+					<span style="cursor:pointer;padding-right:8px;float:right">
 						<s:if test="#session.questionInfo.prevRecordCount > @com.saiten.util.WebAppConst@ZERO || #session.prevRecordCount > @com.saiten.util.WebAppConst@ZERO">
-							<img id="prev" name="prev" src="./material/img/action_back.gif" alt="<s:text name="label.scoring.alt.previousgrading"/>"
+							<img style="padding-right:6px" id="prev" name="prev" src="./material/img/action_back.gif" alt="<s:text name="label.scoring.alt.previousgrading"/>"
 							onclick="javascript:location.href='showPrevOrNextHistory.action?prevOrNextFlag=<s:property value="%{@com.saiten.util.WebAppConst@TRUE}" />';">
 						</s:if>
 						<s:else>
 							<img />
 						</s:else>
-					</span>	
+					<%-- </span>	
 					
-					<%-- <span class="box_content_left_pane_image_forward arrow_image_align_left_pane1">  --%>
-                    <span style="cursor:pointer">
+					<span class="box_content_left_pane_image_forward arrow_image_align_left_pane1"> 
+                    <span style="cursor:pointer"> --%>
 						<s:if test="#session.questionInfo.nextRecordCount > @com.saiten.util.WebAppConst@ZERO || #session.nextRecordCount > @com.saiten.util.WebAppConst@ZERO">
-							<img id="next" name="next" src="./material/img/action_forward.gif" alt="<s:text name="label.scoring.alt.nextgrading" />"
+							<img style="float:right" id="next" name="next" src="./material/img/action_forward.gif" alt="<s:text name="label.scoring.alt.nextgrading" />"
 							onclick="javascript:location.href='showPrevOrNextHistory.action?prevOrNextFlag=<s:property value="%{@com.saiten.util.WebAppConst@FALSE}" />';">
 						</s:if>
 					</span>	
@@ -635,6 +635,25 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 									<jsp:include page="include/confirmPending.jsp"/>
 								</div>
 							</s:if> 
+							<%-- <s:if test="!(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_BLIND_TYPE_MENU_ID || 
+							#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID || 
+							#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID  || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_MENU_ID || 
+							#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SECOND_SCORING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@PENDING_MENU_ID ||
+							#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID) || #session.questionInfo.menuId =  @com.saiten.util.WebAppConst@DENY_MENU_ID"> 
+								<div id="denypopup-wrapper" style="background-color:#2D2D2D;">
+									<jsp:include page="include/confirmDeny.jsp"/>
+								</div>
+							</s:if> --%>
+							<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID">
+								<div id="denypopup-wrapper" style="background-color:#2D2D2D;">
+									<jsp:include page="include/confirmDeny.jsp"/>
+								</div>
+							</s:if>
+							<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID">
+								<div id="denypopup-wrapper" style="background-color:#2D2D2D;">
+									<jsp:include page="include/confirmDeny.jsp"/>
+								</div>
+							</s:if>
 						</div>
 				   <table><tr><td style="border-bottom: none;">	
 				 	<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID">

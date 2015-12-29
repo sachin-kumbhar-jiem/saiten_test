@@ -162,6 +162,28 @@
 			</result>
 		</action>
 		
+		<action name="confirmDeny" class="confirmDeny" method="confirmDeny">
+			<interceptor-ref name="defaultStack" />
+			<result type="json">
+				<param name="root">result</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		
+		<action name="registerDeny" class="registerDeny" method="doRegister">
+			<result name="success" type="redirectAction">scoreAction</result>
+			<result name="scoreSampling" type="redirectAction">scoreSampling</result>
+			<result name="backToForcedScoringList" type="redirectAction">backToForcedScoringList</result>
+			<result name="failure" type="redirectAction">
+				<param name="actionName">showScoringError</param>
+				<param name="lockFlag">${lockFlag}</param>
+			</result>
+		</action>
+		
+		<action name="denyCategorySelection" class="denyCategorySelection" method="onLoad">
+			<result name="success">/jsp/denyCategorySelection.jsp</result>
+		</action>
+		
 		<action name="historyListing" class="historyListing" method="loadHistory">
 			<result name="success">/jsp/historyList.jsp</result>
 		</action>
@@ -427,6 +449,9 @@
 			</result>
 			<result name="showScoringPage" type="redirectAction">
 				<param name="actionName">showScoringPage</param>
+			</result>
+			<result name="denyCategorySelection" type="redirectAction">
+				<param name="actionName">denyCategorySelection</param>
 			</result>
 		</action>
 		

@@ -704,18 +704,17 @@ public class SaitenUtil {
 	
 	public static Map<String, String> getPunchTextMap(List <String> punchTextList) {
 		Map<String, String> punchTextMap = new LinkedHashMap<String, String>();
-		/*String str=getPropertyFromPropertyFile(WebAppConst.GLOBAL_PROPERTIES,WebAppConst.PUNCH_TEXT_CONDITION_EXACT_MATCH);
-		System.out.println(str);
-		punchTextMap.put(str,str);
-		str=getPropertyFromPropertyFile(WebAppConst.GLOBAL_PROPERTIES,WebAppConst.PUNCH_TEXT_CONDITION_FORWORD_MATCH);
-		punchTextMap.put(str,str);
-		str=getPropertyFromPropertyFile(WebAppConst.GLOBAL_PROPERTIES,WebAppConst.PUNCH_TEXT_CONDITION_BACKWORD_MATCH);
-		punchTextMap.put(str,str);
-		str=getPropertyFromPropertyFile(WebAppConst.GLOBAL_PROPERTIES,WebAppConst.PUNCH_TEXT_CONDITION_PARTIAL_MATCH);
-		punchTextMap.put(str,str);*/
+		int i=0;
 		for (String str : punchTextList) {
-			punchTextMap.put(str, str);
+			punchTextMap.put(Integer.toString(i), str);
+			i++;
 		}
 		return punchTextMap;
+	}
+	public static Short getDenyCategoryByDenyCategorySeq(
+			Integer denyCategorySeq) {
+		LinkedHashMap<Integer, Short> CategoryMap = getSaitenConfigObject()
+				.getDenyCategoryMap();
+		return CategoryMap.get(denyCategorySeq);
 	}
 }

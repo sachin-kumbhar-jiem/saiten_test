@@ -17,6 +17,7 @@ public class AnswerInfo {
 	private String scorerComment;
 	private Date updateDate;
 	private Integer pendingCategorySeq;
+	private Integer denyCategorySeq;
 	private String latestScorerId;
 	private String punchText;
 	private int questionSeq;
@@ -197,6 +198,14 @@ public class AnswerInfo {
 
 	public void setSecondLatestScreenScorerId(String secondLatestScreenScorerId) {
 		this.secondLatestScreenScorerId = secondLatestScreenScorerId;
+	}
+
+	public Integer getDenyCategorySeq() {
+		return denyCategorySeq;
+	}
+
+	public void setDenyCategorySeq(Integer denyCategorySeq) {
+		this.denyCategorySeq = denyCategorySeq;
 	}
 
 	@Override

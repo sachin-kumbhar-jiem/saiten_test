@@ -25,6 +25,9 @@ public class ScoreCurrentInfo {
 	private String currentPendingCategory;
 	@SuppressWarnings("rawtypes")
 	private List currentPendingCategorySeqList;
+	private String currentDenyCategory;
+	@SuppressWarnings("rawtypes")
+	private List currentDenyCategorySeqList;
 	private String currentIncludeCheckPoints;
 	private Integer currentIncludeBitValue;
 	private String currentExcludeCheckPoints;
@@ -353,6 +356,23 @@ public class ScoreCurrentInfo {
 	 */
 	public void setCurrentScorerRole(Integer[] currentScorerRole) {
 		this.currentScorerRole = currentScorerRole;
+	}
+	
+
+	public String getCurrentDenyCategory() {
+		return currentDenyCategory;
+	}
+
+	public void setCurrentDenyCategory(String currentDenyCategory) {
+		this.currentDenyCategory = currentDenyCategory;
+	}
+	@SuppressWarnings("rawtypes")
+	public List getCurrentDenyCategorySeqList() {
+		return currentDenyCategorySeqList;
+	}
+	@SuppressWarnings("rawtypes")
+	public void setCurrentDenyCategorySeqList(List currentDenyCategorySeqList) {
+		this.currentDenyCategorySeqList = currentDenyCategorySeqList;
 	}
 
 	@Override

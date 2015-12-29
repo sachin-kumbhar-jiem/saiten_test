@@ -64,5 +64,12 @@ public interface QuestionSelectionService {
 	public int findQcHistoryRecordCount(String scorerId,
 			List<Integer> questionSeq, String connectionString,
 			List<Short> scoringStateList);
+	
+	/**
+	 * 
+	 * @param QuestionSeq
+	 * @return Map<Integer, String>
+	 */
+	public Map<Integer, String> findDenyCategories (int QuestionSeq);
 
 }

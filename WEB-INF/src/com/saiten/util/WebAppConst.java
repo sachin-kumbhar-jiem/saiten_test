@@ -517,4 +517,10 @@ public interface WebAppConst {
 	public static final char PERCENTAGE_CHARACTER = '%';
 	
 	public static final char ESCAPE_CHARACTER = '!';
+	
+	public static final String ERROR_NO_DENY_CATEGORY_AVAILABLE_FOR_SELECTED_QUESTION = "error.no.deny.category.available.for.selected.question";
+	
+	public static final int KENSHU_ROLE_ID = 6;
+	
+	public static final String KENSHU_SAMPLING_MENU_ID = "KENSHU_SAMPLING_MENU_ID";
 }

@@ -252,7 +252,7 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 										</th>
 										<td colspan="5" style="padding-left: 20px;">
 											<s:textfield id="punchText" name="scoreInputInfo.scoreCurrentInfo.punchText" maxlength="256" size="60" value="%{#session.scoreInputInfo.scoreCurrentInfo.punchText}" />	
-											<s:select id="punchTextData" list="scoreSearchInfo.punchTextMap" name="scoreInputInfo.scoreCurrentInfo.punchTextData"></s:select>		
+											<s:select id="punchTextData" list="scoreSearchInfo.punchTextMap" name="scoreInputInfo.scoreCurrentInfo.punchTextData" value="%{#session.scoreInputInfo.scoreCurrentInfo.punchTextData}"></s:select>		
 										</td>
 									</tr>
 									<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID">
@@ -455,6 +455,7 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 													</td>	
 													<td colspan="10" class="inner" style="vertical-align: top;">
 														<s:textfield id="currentPendingCategory" name="scoreInputInfo.scoreCurrentInfo.currentPendingCategory" cssClass="disable_bg" size="30" disabled="true" value="%{#session.scoreInputInfo.scoreCurrentInfo.currentPendingCategory}" />
+														<input type="text" id="currentPendingCategoryHidden" name="currentPendingCategoryHidden" style="border: none;background-color: transparent;color: red;width: 400px;" readonly="readonly">
 													</td>
 												</tr>
 											</table>
@@ -494,7 +495,8 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 												<tr>
 													<td colspan="6" class="inner">
 														<!-- For displaying ErrorMessage : Same check point should not selected into 'currentIncludeCheckPoints' and 'currentExcludeCheckPoints' -->
-														<s:hidden id="currentCheckPointHidden" name="currentCheckPointHidden"></s:hidden>		
+														<%-- <s:hidden id="currentCheckPointHidden" name="currentCheckPointHidden"></s:hidden> --%>
+														<input type="text" id="currentCheckPointHidden" name="currentCheckPointHidden" style="border: none;background-color: transparent;color: red;width: 400px;" readonly="readonly">			
 													</td>
 												</tr>
 											</table>
@@ -863,6 +865,7 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 												 	</td>	
 												 	<td colspan="10" class="inner" style="vertical-align: top;">
 												 		<s:textfield id="historyPendingCategory" name="scoreInputInfo.scoreHistoryInfo.historyPendingCategory" cssClass="disable_bg" size="30" disabled="true" value="%{#session.scoreInputInfo.scoreHistoryInfo.historyPendingCategory}" />
+												 		<input type="text" id="historyPendingCategoryHidden" name="historyPendingCategoryHidden" style="border: none;background-color: transparent;color: red;width: 400px;" readonly="readonly">
 												 	</td>
 												</tr>
 											</table>
@@ -900,7 +903,8 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 												<tr>
 													<td colspan="6" class="inner">
 														<!-- For displaying ErrorMessage : Same checkPoint should not enter into 'historyIncludeCheckPoints' and 'historyExcludeCheckPoints' -->
-														<s:hidden id="historyCheckPointHidden" name="historyCheckPointHidden"></s:hidden>	
+														<%-- <s:hidden id="historyCheckPointHidden" name="historyCheckPointHidden"></s:hidden> --%>
+														<input type="text" id="historyCheckPointHidden" name="historyCheckPointHidden" style="border: none;background-color: transparent;color: red;width: 400px;" readonly="readonly">	
 													</td>
 												</tr>
 											</table>

@@ -59,6 +59,24 @@ $(document).ready(function(){
 	//custom validation for current State selection
 	$.validator.addMethod("checkCurrentStateSelected", currentStateSelectionValidation, "");
 	
+	//custom validation for checking length of history check point
+	$.validator.addMethod("historyCheckLengthForCheckpoints", historyCheckLengthForCheckpoints, "");
+	
+	//custom validation for checking length of current check point
+	$.validator.addMethod("currentCheckLengthForCheckpoints", currentCheckLengthForCheckpoints, "");
+	
+	//custom validation for checking length of pending categories
+	$.validator.addMethod("checkHistoryPendingCategoryLength", checkHistoryPendingCategoryLength, "");
+	
+	// custom validation for checking length of current pending category
+	$.validator.addMethod("checkCurrentPendingCategoryLength", checkCurrentPendingCategoryLength, "");
+	
+	// custom validation for checking length of history deny category
+	$.validator.addMethod("checkHistoryDenyCategoryLength", checkHistoryDenyCategoryLength, "");
+	
+	// custom validation for checking length of current deny category
+	$.validator.addMethod("checkCurrentDenyCategoryLength", checkCurrentDenyCategoryLength, "");
+	
 	//date validations
 	$.validator.addMethod("checkForFromValidDayVal", checkForFromValidDay, DURATION_CHECK_LEAPYEAR_FROM_DATE); 
 	$.validator.addMethod("checkForToValidDayVal", checkForToValidDay, DURATION_CHECK_LEAPYEAR_TO_DATE); 
@@ -149,6 +167,14 @@ $(document).ready(function(){
 				required: true,
 				numericComma: true
 			},
+			"scoreInputInfo.scoreHistoryInfo.historyDenyCategory" :{
+				required: true,
+				numericComma: true
+			},
+			"scoreInputInfo.scoreCurrentInfo.currentDenyCategory" :{
+				required: true,
+				numericComma: true
+			},
 			"scoreInputInfo.scoreHistoryInfo.historyIncludeCheckPoints" :{
 				numericComma: true
 			},
@@ -162,9 +188,11 @@ $(document).ready(function(){
 				numericComma: true
 			},
 			"historyCheckPointHidden" :{
+				historyCheckLengthForCheckpoints: true,
 				historyCheckPointValidation: true
 			},
 			"currentCheckPointHidden" :{
+				currentCheckLengthForCheckpoints: true,
 				currentCheckPointValidation: true
 			},
 			"selectHistoryEvent" :{
@@ -202,7 +230,19 @@ $(document).ready(function(){
 	     		checkFebruaryMonthFromDateToDateval: true,
 	     		checkFromDateFebruaryMonthVal: true,
 	     		checkToDateFebruaryMonthVal: true
-	     	}
+	     	},
+	     	"historyPendingCategoryHidden" : {
+	     		checkHistoryPendingCategoryLength: true
+	     	},
+			"currentPendingCategoryHidden": {
+				checkCurrentPendingCategoryLength: true
+			},
+			"historyDenyCategoryHidden" :{
+				checkHistoryDenyCategoryLength: true
+			},
+			"currentDenyCategoryHidden" :{
+				checkCurrentDenyCategoryLength: true
+			}
 	    },
 	    messages: {
 			
@@ -278,6 +318,14 @@ $(document).ready(function(){
 				required: PENDING_CATEGORY_REQUIRED,
 				numericComma: PENDING_CATEGORY_NUMERIC_AND_COMMA_ALLOWED
 			},
+			"scoreInputInfo.scoreHistoryInfo.historyDenyCategory" :{
+				required: PENDING_CATEGORY_REQUIRED,
+				numericComma: PENDING_CATEGORY_NUMERIC_AND_COMMA_ALLOWED
+			},
+			"scoreInputInfo.scoreCurrentInfo.currentDenyCategory" :{
+				required: PENDING_CATEGORY_REQUIRED,
+				numericComma: PENDING_CATEGORY_NUMERIC_AND_COMMA_ALLOWED
+			},
 			"scoreInputInfo.scoreHistoryInfo.historyIncludeCheckPoints" :{
 				numericComma: INCLUDE_CHECKPOINT_NUMERIC_AND_COMMA_ALLOWED
 			},
@@ -291,10 +339,24 @@ $(document).ready(function(){
 				numericComma: EXCLUDE_CHECKPOINT_NUMERIC_AND_COMMA_ALLOWED
 			},
 			"historyCheckPointHidden" :{
+				historyCheckLengthForCheckpoints : MAX_LENGTH_CHECKPONTS_5,
 				historyCheckPointValidation: INVALID_CHECK_POINTS
 			},
 			"currentCheckPointHidden" :{
+				currentCheckLengthForCheckpoints : MAX_LENGTH_CHECKPONTS_5,
 				currentCheckPointValidation: INVALID_CHECK_POINTS
+			},
+			"historyPendingCategoryHidden": {
+				checkHistoryPendingCategoryLength: MAX_LENGTH_PENDING_CATEGORY_6
+			},
+			"currentPendingCategoryHidden": {
+				checkCurrentPendingCategoryLength: MAX_LENGTH_PENDING_CATEGORY_6
+			},
+			"historyDenyCategoryHidden" :{
+				checkHistoryDenyCategoryLength: MAX_LENGTH_DENY_CATEGORY_5
+			},
+			"currentDenyCategoryHidden" :{
+				checkCurrentDenyCategoryLength: MAX_LENGTH_DENY_CATEGORY_5
 			}
 	    }	    
 	
@@ -370,6 +432,24 @@ $(document).ready(function(){
 	});*/
 	
 	$('#currentPendingCategory').bind('keypress', function (e) {
+		var regex = new RegExp("^[0-9,]+$");
+	    var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+	    if (regex.test(str)) {
+	        return true;
+	    }
+	    return false;
+	});
+	
+	$('#historyDenyCategory').bind('keypress', function (e) {
+		var regex = new RegExp("^[0-9,]+$");
+	    var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+	    if (regex.test(str)) {
+	        return true;
+	    }
+	    return false;
+	});
+	
+	$('#currentDenyCategory').bind('keypress', function (e) {
 		var regex = new RegExp("^[0-9,]+$");
 	    var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
 	    if (regex.test(str)) {
@@ -603,6 +683,76 @@ function questionNumMaxRangeValidation(value, element){
 	}
 }
 
+function checkHistoryPendingCategoryLength (value, element) {
+	var historyPendingCategoryString= $('#historyPendingCategory').val();
+	
+	var historyPendingCategoryArray;
+	var i;
+	if(historyPendingCategoryString!='') {
+		historyPendingCategoryArray= splitStringByComma(historyPendingCategoryString);
+		for (i=0;i<historyPendingCategoryArray.length;i++) {
+			if(historyPendingCategoryArray[i].length>5) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+function checkCurrentPendingCategoryLength(value, element) {
+
+	var currentPendingCategoryString= $('#currentPendingCategory').val();
+
+	var currentPendingCategoryArray;
+	var i;
+
+	if(currentPendingCategoryString!='') {
+		currentPendingCategoryArray= splitStringByComma(currentPendingCategoryString);
+
+		for (i=0;i<currentPendingCategoryArray.length;i++) {
+			if(currentPendingCategoryArray[i].length>5) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+function checkHistoryDenyCategoryLength (value, element) {
+	var historyDenyCategoryString= $('#historyDenyCategory').val();
+	
+	var historyDenyCategoryArray;
+	var i;
+	if(historyDenyCategoryString!='') {
+		historyDenyCategoryArray= splitStringByComma(historyDenyCategoryString);
+		for (i=0;i<historyDenyCategoryArray.length;i++) {
+			if(historyDenyCategoryArray[i].length>5) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+function checkCurrentDenyCategoryLength(value, element) {
+
+	var currentDenyCategoryString= $('#currentDenyCategory').val();
+
+	var currentDenyCategoryArray;
+	var i;
+
+	if(currentDenyCategoryString!='') {
+		currentDenyCategoryArray= splitStringByComma(currentDenyCategoryString);
+
+		for (i=0;i<currentDenyCategoryArray.length;i++) {
+			if(currentDenyCategoryArray[i].length>5) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 function historyCheckPointValidation(value, element){
 	var includeCheckPoints= $('#historyIncludeCheckPoints').val();
 	var excludeCheckPoints= $('#historyExcludeCheckPoints').val();
@@ -642,6 +792,68 @@ function checkPointValidation(includeCheckPoints, excludeCheckPoints){
 		return true;
 	}
 	
+}
+function historyCheckLengthForCheckpoints (value, element) {
+	var includeCheckPoints= $('#historyIncludeCheckPoints').val();
+	var excludeCheckPoints= $('#historyExcludeCheckPoints').val();
+	
+	
+	var includeCheckPointArray= [];
+	var excludeCheckPointArray= [];
+
+	
+	var i;
+	
+	if(includeCheckPoints!=''){
+		includeCheckPointArray = splitStringByComma(includeCheckPoints);
+		
+		for (i=0; i<includeCheckPointArray.length; i++) {
+			if (includeCheckPointArray[i].length>5) {
+				return false;
+			}
+		}
+	}
+	if (excludeCheckPoints!='') {
+		excludeCheckPointArray = splitStringByComma(excludeCheckPoints);
+		
+		for (i=0; i<excludeCheckPointArray.length; i++) {
+			if (excludeCheckPointArray[i].length>5) {
+				return false;
+			}
+		}
+	}
+	
+	return true;
+}
+
+function currentCheckLengthForCheckpoints(value, element) {
+	var includeCheckPoints= $('#currentIncludeCheckPoints').val();
+	var excludeCheckPoints= $('#currentExcludeCheckPoints').val();
+	
+	var includeCheckPointArray= [];
+	var excludeCheckPointArray= [];
+	
+	var i;
+	
+	if(includeCheckPoints!=''){
+		includeCheckPointArray = splitStringByComma(includeCheckPoints);
+		
+		for (i=0; i<includeCheckPointArray.length; i++) {
+			if (includeCheckPointArray[i].length>5) {
+				return false;
+			}
+		}
+	}
+	if (excludeCheckPoints!='') {
+		excludeCheckPointArray = splitStringByComma(excludeCheckPoints);
+		
+		for (i=0; i<excludeCheckPointArray.length; i++) {
+			if (excludeCheckPointArray[i].length>5) {
+				return false;
+			}
+		}
+	}
+return true;
 }
 
 function splitStringByComma(str){

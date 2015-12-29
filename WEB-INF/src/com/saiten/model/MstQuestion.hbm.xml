@@ -80,6 +80,12 @@
             </key>
             <one-to-many class="com.saiten.model.MstGrade" />
         </set>
+        <set name="mstDenyCategories" inverse="true">
+            <key>
+                <column name="question_seq" />
+            </key>
+            <one-to-many class="com.saiten.model.MstDenyCategory" />
+        </set>
         <property name="attribute1" type="string">
             <column name="attribute1" length="256" />
         </property>

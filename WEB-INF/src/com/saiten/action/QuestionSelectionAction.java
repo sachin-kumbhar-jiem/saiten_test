@@ -29,9 +29,8 @@ import com.saiten.util.WebAppConst;
 public class QuestionSelectionAction extends ActionSupport implements
 		SessionAware {
 
-	private static Logger log = Logger
-			.getLogger(QuestionSelectionAction.class);
-	
+	private static Logger log = Logger.getLogger(QuestionSelectionAction.class);
+
 	/**
 	 * 
 	 */
@@ -55,8 +54,17 @@ public class QuestionSelectionAction extends ActionSupport implements
 			QuestionInfo sessionQuestionInfo = (QuestionInfo) session
 					.get("questionInfo");
 			questionSeq = sessionQuestionInfo.getQuestionSeq();
-			MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
-			log.info(scorerInfo.getScorerId()+"-"+sessionQuestionInfo.getMenuId()+"-"+"After Question,Grade,Pending Category,Mark Value Selection."+"-{ Question Sequence: "+sessionQuestionInfo.getQuestionSeq()+", Grade Num: "+gradeNum+", Pending Category: "+pendingCategory+", Mark Value: "+selectedMarkValue+"}");
+			MstScorerInfo scorerInfo = ((MstScorerInfo) session
+					.get("scorerInfo"));
+			log.info(scorerInfo.getScorerId()
+					+ "-"
+					+ sessionQuestionInfo.getMenuId()
+					+ "-"
+					+ "After Question,Grade,Pending Category,Mark Value Selection."
+					+ "-{ Question Sequence: "
+					+ sessionQuestionInfo.getQuestionSeq() + ", Grade Num: "
+					+ gradeNum + ", Pending Category: " + pendingCategory
+					+ ", Mark Value: " + selectedMarkValue + "}");
 			// mark value selected if score type is 4(objective+screen).
 			if ((session.get("selectedMarkValue") == null)
 					&& (sessionQuestionInfo.getScoreType() == WebAppConst.SCORE_TYPE[3])) {
@@ -106,7 +114,10 @@ public class QuestionSelectionAction extends ActionSupport implements
 			String menuId = sessionQuestionInfo.getMenuId();
 			if ((menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID) || menuId
 					.equals(WebAppConst.SECOND_SCORING_MENU_ID))
-					/*&& (questionType == WebAppConst.SPEAKING_TYPE || questionType == WebAppConst.WRITING_TYPE)*/) {
+			/*
+			 * && (questionType == WebAppConst.SPEAKING_TYPE || questionType ==
+			 * WebAppConst.WRITING_TYPE)
+			 */) {
 				qcRecordsCount = questionSelectionService
 						.findQcHistoryRecordCount(scorerId,
 								questionSequenceList,
@@ -131,12 +142,18 @@ public class QuestionSelectionAction extends ActionSupport implements
 			questionInfo.setPendingCategoryGroupMap(questionSelectionService
 					.findPendingCategories(questionSeq));
 
+			questionInfo.setDenyCategoryGroupMap(questionSelectionService
+					.findDenyCategories(questionSeq));
+
 			// Update questionInfo with the data fetched.
 			updateQuestionInfo();
-			
+
 			if ((menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID) || menuId
 					.equals(WebAppConst.SECOND_SCORING_MENU_ID))
-					/*&& (questionType == WebAppConst.SPEAKING_TYPE || questionType == WebAppConst.WRITING_TYPE)*/) {
+			/*
+			 * && (questionType == WebAppConst.SPEAKING_TYPE || questionType ==
+			 * WebAppConst.WRITING_TYPE)
+			 */) {
 				session.put("loadQcListFlag", true);
 			}
 
@@ -155,7 +172,9 @@ public class QuestionSelectionAction extends ActionSupport implements
 
 			MstScorerInfo scorerInfo = ((MstScorerInfo) session
 					.get("scorerInfo"));
-			log.info(scorerInfo.getScorerId()+"-"+"Question Selection Onload. Selected Menu: "+selectedMenuId);
+			log.info(scorerInfo.getScorerId() + "-"
+					+ "Question Selection Onload. Selected Menu: "
+					+ selectedMenuId);
 			String scorerId = scorerInfo.getScorerId();
 			int roleId = scorerInfo.getRoleId();
 
@@ -169,7 +188,8 @@ public class QuestionSelectionAction extends ActionSupport implements
 
 			// Start building questionInfo with selected menuId
 			buildQuestionInfo();
-			log.info(scorerInfo.getScorerId()+"-"+selectedMenuId+"-"+"Loaded Question Selection Screen.");
+			log.info(scorerInfo.getScorerId() + "-" + selectedMenuId + "-"
+					+ "Loaded Question Selection Screen.");
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -181,17 +201,19 @@ public class QuestionSelectionAction extends ActionSupport implements
 	}
 
 	public String fetchScoringType() {
-		//HttpServletRequest request = ServletActionContext.getRequest();
+		// HttpServletRequest request = ServletActionContext.getRequest();
 		try {
 			// Fetch selected questionSeq
-			String[] selectedQuestion = questionList
-					.split(WebAppConst.COLON);
+			String[] selectedQuestion = questionList.split(WebAppConst.COLON);
 			int questionSeq = Integer.valueOf(selectedQuestion[0]);
 			MstScorerInfo scorerInfo = ((MstScorerInfo) session
 					.get("scorerInfo"));
 			QuestionInfo sessionQuestionInfo = (QuestionInfo) session
 					.get("questionInfo");
-			log.info(scorerInfo.getScorerId()+"-"+sessionQuestionInfo.getMenuId()+"-"+"Question Selection. Fetch Scoring Type."+"-{ Question Sequence: "+questionSeq+"}");
+			log.info(scorerInfo.getScorerId() + "-"
+					+ sessionQuestionInfo.getMenuId() + "-"
+					+ "Question Selection. Fetch Scoring Type."
+					+ "-{ Question Sequence: " + questionSeq + "}");
 			List<Integer> questionSeqList = new ArrayList<Integer>();
 			questionSeqList.add(questionSeq);
 
@@ -223,12 +245,13 @@ public class QuestionSelectionAction extends ActionSupport implements
 					.getScoreType()) || WebAppConst.SCORE_TYPE[1]
 					.equals(questionInfo.getScoreType()))
 					&& ((sessionQuestionInfo.getMenuId()
-							.equals(WebAppConst.CHECKING_MENU_ID))
-							|| (sessionQuestionInfo.getMenuId()
-									.equals(WebAppConst.INSPECTION_MENU_ID)) || (sessionQuestionInfo
-							.getMenuId().equals(WebAppConst.DENY_MENU_ID)))) {
+							.equals(WebAppConst.CHECKING_MENU_ID)) || (sessionQuestionInfo
+							.getMenuId().equals(WebAppConst.INSPECTION_MENU_ID)))) {
 				return "gradeSelection";
-			} else {
+			} else if (sessionQuestionInfo.getMenuId().equals(
+					WebAppConst.DENY_MENU_ID)) {
+				return "denyCategorySelection";
+			}else {
 				return "showScoringPage";
 			}
 		} catch (SaitenRuntimeException we) {
@@ -267,8 +290,12 @@ public class QuestionSelectionAction extends ActionSupport implements
 			subjectShortName = selectedQuestion[1];
 			session.put("selectedQuestionMarkValueMap",
 					selectedQuestionMarkValueMap);
-			MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
-			log.info(scorerInfo.getScorerId()+"-"+questionInfo.getMenuId()+"-"+"Loaded Mark Value Selection Screen."+"-{ Question Sequence: "+questionInfo.getQuestionSeq()+"}");
+			MstScorerInfo scorerInfo = ((MstScorerInfo) session
+					.get("scorerInfo"));
+			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
+					+ "-" + "Loaded Mark Value Selection Screen."
+					+ "-{ Question Sequence: " + questionInfo.getQuestionSeq()
+					+ "}");
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -314,6 +341,8 @@ public class QuestionSelectionAction extends ActionSupport implements
 				.getPendingCategoryGroupMap());
 		sessionQuestionInfo.setSide(questionInfo.getSide());
 		sessionQuestionInfo.setQuestionType(questionInfo.getQuestionType());
+		sessionQuestionInfo.setDenyCategoryGroupMap(questionInfo
+				.getDenyCategoryGroupMap());
 		if (sessionQuestionInfo.getScoreType() == null) {
 			sessionQuestionInfo.setScoreType(questionInfo.getScoreType());
 		}

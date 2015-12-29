@@ -37,6 +37,8 @@ public class TranDescScore implements java.io.Serializable {
 	private String secondLatestScreenScorerId;
 	private String thirdLatestScreenScorerId;
 	private Integer testsetnumSeq;
+	private Integer denyCategorySeq;
+	private Short denyCategory;
 
 	public TranDescScore() {
 	}
@@ -49,7 +51,10 @@ public class TranDescScore implements java.io.Serializable {
 			Character samplingFlag, Character answerPaperType, String lockBy,
 			Character validFlag, Date updateDate, Date createDate,
 			String latestScreenScorerId, Character qualityCheckFlag,
-			Character neighbourMatchFlag, String markValue, String secondLatestScreenScorerId, String thirdLatestScreenScorerId, Integer testsetnumSeq) {
+			Character neighbourMatchFlag, String markValue,
+			String secondLatestScreenScorerId,
+			String thirdLatestScreenScorerId, Integer testsetnumSeq,
+			Integer denyCategorySeq, Short denyCategory) {
 		this.answerFormNum = answerFormNum;
 		this.questionSeq = questionSeq;
 		this.latestScorerId = latestScorerId;
@@ -76,6 +81,8 @@ public class TranDescScore implements java.io.Serializable {
 		this.secondLatestScreenScorerId = secondLatestScreenScorerId;
 		this.thirdLatestScreenScorerId = thirdLatestScreenScorerId;
 		this.testsetnumSeq = testsetnumSeq;
+		this.denyCategorySeq = denyCategorySeq;
+		this.denyCategory = denyCategory;
 	}
 
 	public Integer getAnswerSeq() {
@@ -285,7 +292,7 @@ public class TranDescScore implements java.io.Serializable {
 	public void setThirdLatestScreenScorerId(String thirdLatestScreenScorerId) {
 		this.thirdLatestScreenScorerId = thirdLatestScreenScorerId;
 	}
-	
+
 	public Integer getTestsetnumSeq() {
 		return testsetnumSeq;
 	}
@@ -294,5 +301,19 @@ public class TranDescScore implements java.io.Serializable {
 		this.testsetnumSeq = testsetnumSeq;
 	}
 
+	public Integer getDenyCategorySeq() {
+		return denyCategorySeq;
+	}
 
+	public void setDenyCategorySeq(Integer denyCategorySeq) {
+		this.denyCategorySeq = denyCategorySeq;
+	}
+
+	public Short getDenyCategory() {
+		return denyCategory;
+	}
+
+	public void setDenyCategory(Short denyCategory) {
+		this.denyCategory = denyCategory;
+	}
 }

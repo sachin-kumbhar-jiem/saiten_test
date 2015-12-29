@@ -35,6 +35,8 @@ public class TranDescScoreHistory implements java.io.Serializable {
 	private Character neighbourMatchFlag;
 	private String secondLatestScreenScorerId;
 	private String thirdLatestScreenScorerId;
+	private Integer denyCategorySeq;
+	private Short denyCategory;
 
 	public TranDescScoreHistory() {
 	}
@@ -43,15 +45,17 @@ public class TranDescScoreHistory implements java.io.Serializable {
 		this.tranDescScore = tranDescScore;
 	}
 
-	public TranDescScoreHistory(TranDescScore tranDescScore, Integer questionSeq,
-			String scorerId, Byte scorerRoleId, Integer gradeSeq,
-			Integer gradeNum, Double bitValue, Short eventId,
+	public TranDescScoreHistory(TranDescScore tranDescScore,
+			Integer questionSeq, String scorerId, Byte scorerRoleId,
+			Integer gradeSeq, Integer gradeNum, Double bitValue, Short eventId,
 			Short scoringState, Integer pendingCategorySeq,
 			Short pendingCategory, String scorerComment,
 			Character bookMarkFlag, Character inspectFlag,
 			Character samplingFlag, String answerFormNum, Character validFlag,
 			Date updateDate, Date createDate, String latestScreenScorerId,
-			Character qualityCheckFlag, Character neighbourMatchFlag, String secondLatestScreenScorerId, String thirdLatestScreenScorerId) {
+			Character qualityCheckFlag, Character neighbourMatchFlag,
+			String secondLatestScreenScorerId, String thirdLatestScreenScorerId,
+			Integer denyCategorySeq, Short denyCategory) {
 		this.tranDescScore = tranDescScore;
 		this.questionSeq = questionSeq;
 		this.scorerId = scorerId;
@@ -76,6 +80,8 @@ public class TranDescScoreHistory implements java.io.Serializable {
 		this.neighbourMatchFlag = neighbourMatchFlag;
 		this.secondLatestScreenScorerId = secondLatestScreenScorerId;
 		this.thirdLatestScreenScorerId = thirdLatestScreenScorerId;
+		this.denyCategorySeq = denyCategorySeq;
+		this.denyCategory = denyCategory;
 	}
 
 	public Integer getHistorySeq() {
@@ -93,7 +99,7 @@ public class TranDescScoreHistory implements java.io.Serializable {
 	public void setTranDescScore(TranDescScore tranDescScore) {
 		this.tranDescScore = tranDescScore;
 	}
-	
+
 	public Integer getQuestionSeq() {
 		return this.questionSeq;
 	}
@@ -276,6 +282,22 @@ public class TranDescScoreHistory implements java.io.Serializable {
 
 	public void setThirdLatestScreenScorerId(String thirdLatestScreenScorerId) {
 		this.thirdLatestScreenScorerId = thirdLatestScreenScorerId;
+	}
+	
+	public Integer getDenyCategorySeq() {
+		return denyCategorySeq;
+	}
+
+	public void setDenyCategorySeq(Integer denyCategorySeq) {
+		this.denyCategorySeq = denyCategorySeq;
+	}
+
+	public Short getDenyCategory() {
+		return denyCategory;
+	}
+
+	public void setDenyCategory(Short denyCategory) {
+		this.denyCategory = denyCategory;
 	}
 
 }

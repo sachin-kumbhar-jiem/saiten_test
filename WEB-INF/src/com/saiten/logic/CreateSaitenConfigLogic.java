@@ -14,12 +14,14 @@ import com.saiten.bean.GradeNumKey;
 import com.saiten.bean.GradeResultKey;
 import com.saiten.bean.SaitenConfig;
 import com.saiten.bean.ScoringStateKey;
+import com.saiten.dao.MstDenyCategoryDAO;
 import com.saiten.dao.MstGradeDAO;
 import com.saiten.dao.MstMarkValueDAO;
 import com.saiten.dao.MstPendingCategoryDAO;
 import com.saiten.dao.MstScorerDAO;
 import com.saiten.dao.MstScoringStateListDAO;
 import com.saiten.manager.SaitenTransactionManager;
+import com.saiten.model.MstDenyCategory;
 import com.saiten.model.MstGrade;
 import com.saiten.model.MstGradeResult;
 import com.saiten.model.MstGradeResultId;
@@ -54,6 +56,8 @@ public class CreateSaitenConfigLogic {
 	private MstScorerDAO mstScorerDAO;
 
 	private MstMarkValueDAO mstMarkValueDAO;
+
+	private MstDenyCategoryDAO mstDenyCategoryDAO;
 
 	public SaitenConfig buildSaitenConfigObject() {
 
@@ -132,6 +136,9 @@ public class CreateSaitenConfigLogic {
 
 			LinkedHashMap<Integer, LinkedHashMap<Integer, Short>> mstMarkValueMap = buildMstMarkValueMap();
 			saitenConfig.setMstMarkValueMap(mstMarkValueMap);
+			
+			LinkedHashMap<Integer, Short> denyCategoryMap = buildDenyCategoryMap();
+			saitenConfig.setDenyCategoryMap(denyCategoryMap);
 
 		} catch (Exception e) {
 			log.error(e.getCause());
@@ -560,6 +567,33 @@ public class CreateSaitenConfigLogic {
 		return questionWiseMarkValuesMap;
 	}
 
+	@SuppressWarnings("rawtypes")
+	private LinkedHashMap<Integer, Short> buildDenyCategoryMap() {
+		LinkedHashMap<Integer, Short> denyCategoryMap = null;
+		List denyCategoryList = null;
+		try {
+			// Fetch pendingCategoryList
+			denyCategoryList = getMstDenyCategoryDAO()
+					.findDenyCategoryList();
+
+			if (denyCategoryList != null) {
+				denyCategoryMap = new LinkedHashMap<Integer, Short>();
+				for (Object object : denyCategoryList) {
+					Object[] denyCategoryInfoObject = (Object[]) object;
+
+					// key - pendingCategorySeq, value - pendingCategory
+					denyCategoryMap.put(
+							(Integer) denyCategoryInfoObject[0],
+							(Short) denyCategoryInfoObject[1]);
+				}
+			}
+		} catch (Exception e) {
+			log.error("============ Building DenyCategoryMap Error ============");
+			log.error(e.getCause());
+		}
+		return denyCategoryMap;
+	}
+
 	/**
 	 * 
 	 * @param saitenGlobalProperties
@@ -671,6 +705,14 @@ public class CreateSaitenConfigLogic {
 	 */
 	public void setMstScorerDAO(MstScorerDAO mstScorerDAO) {
 		this.mstScorerDAO = mstScorerDAO;
+	}
+
+	public MstDenyCategoryDAO getMstDenyCategoryDAO() {
+		return mstDenyCategoryDAO;
+	}
+
+	public void setMstDenyCategoryDAO(MstDenyCategoryDAO mstDenyCategoryDAO) {
+		this.mstDenyCategoryDAO = mstDenyCategoryDAO;
 	}
 
 }

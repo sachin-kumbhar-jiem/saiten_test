@@ -30,6 +30,7 @@ public class QuestionInfo {
 	private String side;
 	private Character questionType;
 	private Character scoreType;
+	private Map<Integer,String>denyCategoryGroupMap;
 
 	public Map<Integer, String> getPendingCategoryGroupMap() {
 		return pendingCategoryGroupMap;
@@ -268,5 +269,13 @@ public class QuestionInfo {
 
 	public void setSubjectName(String subjectName) {
 		this.subjectName = subjectName;
+	}
+	
+	public Map<Integer, String> getDenyCategoryGroupMap() {
+		return denyCategoryGroupMap;
+	}
+
+	public void setDenyCategoryGroupMap(Map<Integer, String> denyCategoryGroupMap) {
+		this.denyCategoryGroupMap = denyCategoryGroupMap;
 	}
 }

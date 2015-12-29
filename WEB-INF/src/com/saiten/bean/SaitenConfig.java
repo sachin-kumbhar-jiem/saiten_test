@@ -51,6 +51,8 @@ public class SaitenConfig {
 	private LinkedHashMap<String, HashMap> mstScorerQuestionsAndFlagsMap;
 
 	private LinkedHashMap<Integer, LinkedHashMap<Integer, Short>> mstMarkValueMap;
+	
+	private LinkedHashMap<Integer, Short> denyCategoryMap;
 
 	public Map<SpecialScoringKey, String> getSpecialScoringMap() {
 		return specialScoringMap;
@@ -267,6 +269,14 @@ public class SaitenConfig {
 	public void setMstTestsetnumQuestionMap(
 			LinkedHashMap<Integer, MstTestsetnumQuestion> mstTestsetnumQuestionMap) {
 		this.mstTestsetnumQuestionMap = mstTestsetnumQuestionMap;
+	}
+
+	public LinkedHashMap<Integer, Short> getDenyCategoryMap() {
+		return denyCategoryMap;
+	}
+
+	public void setDenyCategoryMap(LinkedHashMap<Integer, Short> denyCategoryMap) {
+		this.denyCategoryMap = denyCategoryMap;
 	}
 
 }

@@ -134,5 +134,9 @@ public interface ErrorCode {
 	public static final String DOWNLOAD_DAILY_SCORING_SUMMARY_REPORT_REPORT_SERVICE_EXCEPTION = "S001803";
 	
 	public static final String DOWNLOAD_REPORT_ONLOAD_ACTION_EXCEPTION = "S001811";
+	
+	public static final String REGISTER_DENY_HIBERNATE_EXCEPTION = "S002000";
+	
+	public static final String REGISTER_DENY_SERVICE_EXCEPTION = "S002001";
 
 }

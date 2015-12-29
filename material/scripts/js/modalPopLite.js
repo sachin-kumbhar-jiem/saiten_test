@@ -61,7 +61,7 @@
             	e.preventDefault();
                 selectedButtonId = $(this).attr("id");
                
-            	if(((selectedButtonId=='pending' || selectedButtonId=='score') && $('form').valid())){
+            	if(((selectedButtonId=='pending' || selectedButtonId=='score'||selectedButtonId=='deny') && $('form').valid())){
             		var isSuccess = true;
             		
             		if(selectedButtonId=='score'){
@@ -72,7 +72,11 @@
             			$('#pending').prop('disabled', true);
             			$("#registerPending").focus();
             			isSuccess = confirmPending();
-            		} 
+            		} else if(selectedButtonId=='deny') {
+            			$('#deny').prop('disabled', true);
+            			$("#registerDeny").focus();
+            			isSuccess = confirmDeny();
+            		}
             		
             		if(isSuccess){
             			if((questionType == '3' || questionType == '4' ) && selectedButtonId=='score'){
@@ -153,13 +157,13 @@
             		
             		if(selectedButtonId=='deny'){
             			$('#deny').prop('disabled', true);
-            			$("#registerScore").focus();
+            			$("#registerDeny").focus();
             			$("#approveOrDeny").val("deny");
-            			$("#registerScore").attr('value', DENY);
+            			$("#registerDeny").attr('value', DENY);
             			$("#scorePopupHeading").attr('value', DENY_HEADING);
             			$("#popup-wrapper").css('background-color','red');
             			$("#scorePopupHeading").css('background-color','red');
-            			isSuccess = confirmScore();
+            			isSuccess = confirmDeny();
             			
             		}
             		

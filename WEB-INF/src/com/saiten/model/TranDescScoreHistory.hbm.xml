@@ -80,5 +80,11 @@
         <property name="neighbourMatchFlag" type="java.lang.Character">
             <column name="neighbour_match_flag" length="1" />
         </property>
+        <property name="denyCategorySeq" type="java.lang.Integer">
+            <column name="deny_category_seq" />
+        </property>
+        <property name="denyCategory" type="java.lang.Short">
+            <column name="deny_category" />
+        </property>
     </class>
 </hibernate-mapping>
