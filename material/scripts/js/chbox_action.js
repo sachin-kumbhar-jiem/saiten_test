@@ -31,7 +31,7 @@ function changeCategoryType(checkDisable, textDisable) {
 		currentPendingCategory.item(0).disabled = textDisable;
 		currentIncludeCheckPoints.item(0).disabled = !textDisable;
 		currentExcludeCheckPoints.item(0).disabled = !textDisable;
-		currentDenyCategory.item(0).disabled = !textDisable;
+		currentDenyCategory.item(0).disabled = true;
 		currentDenyCategory.item(0).className = "disable_bg";
 		
 		if (textDisable) {
@@ -141,7 +141,7 @@ function changeHistoryCategoryType(checkDisable, textDisable) {
 		historyPendingCategory.item(0).disabled = textDisable;
 		historyIncludeCheckPoints.item(0).disabled = !textDisable;
 		historyExcludeCheckPoints.item(0).disabled = !textDisable;
-		historyDenyCategory.item(0).disabled = !textDisable;
+		historyDenyCategory.item(0).disabled = true;
 		historyDenyCategory.item(0).className = "disable_bg";
 		if (textDisable) {
 			historyPendingCategory.item(0).className = "disable_bg";
