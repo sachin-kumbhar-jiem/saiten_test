@@ -326,7 +326,15 @@
    	<bean id="denyCategorySelectionService" class="com.saiten.service.impl.DenyCategorySelectionServiceImpl">
 		<property name="mstDenyCategoryDAO" ref="mstDenyCategoryDAO" />
    	</bean>
-  	
+   	
+   	<!-- InspectGroupSeq bean configuration  -->
+   	<bean id="inspectionGroupSeqSelection" class="com.saiten.action.InspectionGroupSeqSelectionAction" scope="request">
+		<property name="inspectionGroupSeqSelectionService" ref="inspectionGroupSeqSelectionService" />
+   	</bean>
+	
+   	<bean id="inspectionGroupSeqSelectionService" class="com.saiten.service.impl.InspectionGroupSeqSelectionServiceImpl">
+		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO" />
+   	</bean>
   	
   	<!-- database.properties bean configuration  -->
    	<util:properties id="saitenDbProperties" location="classpath:config/database/properties/database.properties" />

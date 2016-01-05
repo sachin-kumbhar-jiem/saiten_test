@@ -161,7 +161,16 @@
 							<s:if test="updatedCount != totalRecordsCount">
 								<span class="errorMessage"><s:property value="updatedCount"/><s:text name="label.forwardslash"/><s:property value="totalRecordsCount"/><s:text name="label.statetransition.recordsUpdatedAndSomeRecordsInProgress" /></span>
 							</s:if><s:else>
-						<span class="errorMessage"><s:property value="updatedCount"/><s:text name="label.forwardslash"/><s:property value="totalRecordsCount"/><s:text name="label.statetransition.recordsUpdated" /></span>
+						<span class="errorMessage"><s:property value="updatedCount"/><s:text name="label.forwardslash"/><s:property value="totalRecordsCount"/><s:text name="label.statetransition.recordsUpdated" /></span><br>
+						<span class="errorMessage">
+							<s:set var="locale" value="getText('label.locale')"/>
+							<s:if test="#locale == 'ja'">
+								<s:text name="label.statetransition.inspectgroupseqmsg1" /><s:property value="#session.inspectGroupSeq"/><s:text name="label.statetransition.inspectgroupseqmsg2" />
+							</s:if>
+							<s:else>
+								<s:text name="label.statetransition.inspectgroupseqmsg" /><s:property value="@com.saiten.util.WebAppConst@SINGLE_SPACE"/><s:property value="#session.inspectGroupSeq"/>
+							</s:else>
+						</span>
 						</s:else>
 						<br><br>
 						<a href="showSearchList.action?forceAndStateTransitionFlag=<s:property value="%{@com.saiten.util.WebAppConst@TRUE}" />" id="back" name="back" class="btn btn-primary btn-xl"><!-- <img class="rollover" src="./material/img/button/search1_bn-login.gif" alt="%{getText('label.backtosearch')}" /> --><s:text name="label.alt.backtoList"></s:text></a>

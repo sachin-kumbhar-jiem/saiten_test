@@ -225,4 +225,13 @@ public interface TranDescScoreHistoryDAO {
 	 * @return
 	 */
 	public Object[] getDefectiveSciptCount(String connectionString);
+	
+	/**
+	 * @param questionSeq
+	 * @param scorerId
+	 * @param connectionString
+	 * @return
+	 */
+	public List<Object[]> fetchInspectionGroupSeqAndCount(int questionSeq,
+			String scorerId, String connectionString);
 }

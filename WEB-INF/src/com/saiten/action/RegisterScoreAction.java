@@ -244,9 +244,19 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 		 * (scoreInputInfo.getScoreCurrentInfo() != null) { currentStateList =
 		 * scoreInputInfo.getScoreCurrentInfo() .getCurrentStateList(); }
 		 */
-		updatedCount = registerScoreService.updateInspectFlag(answerSeq,
-				questionInfo, scoreSamplingInfoList, selectAllFlag,
-				scoreInputInfo);
+		
+		synchronized (RegisterScoreAction.class) {
+			Integer inspectGroupSeq = registerScoreService
+					.findMaxInspectGroupSeq(questionInfo.getQuestionSeq(),
+							questionInfo.getConnectionString());
+
+			updatedCount = registerScoreService.updateInspectFlag(answerSeq,
+					questionInfo, scoreSamplingInfoList, selectAllFlag,
+					scoreInputInfo, inspectGroupSeq);
+			
+			session.put("inspectGroupSeq", inspectGroupSeq);
+		}
+		
 		session.put("updatedCount", updatedCount);
 		session.remove("scoreSamplingInfoList");
 		return SUCCESS;
@@ -350,5 +360,4 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 	public void setTotalRecordsCount(Integer totalRecordsCount) {
 		this.totalRecordsCount = totalRecordsCount;
 	}
-
 }

@@ -39,6 +39,7 @@ public class TranDescScore implements java.io.Serializable {
 	private Integer testsetnumSeq;
 	private Integer denyCategorySeq;
 	private Short denyCategory;
+	private Integer inspectionGroupSeq;
 
 	public TranDescScore() {
 	}
@@ -54,7 +55,7 @@ public class TranDescScore implements java.io.Serializable {
 			Character neighbourMatchFlag, String markValue,
 			String secondLatestScreenScorerId,
 			String thirdLatestScreenScorerId, Integer testsetnumSeq,
-			Integer denyCategorySeq, Short denyCategory) {
+			Integer denyCategorySeq, Short denyCategory, Integer inspectionGroupSeq) {
 		this.answerFormNum = answerFormNum;
 		this.questionSeq = questionSeq;
 		this.latestScorerId = latestScorerId;
@@ -83,6 +84,7 @@ public class TranDescScore implements java.io.Serializable {
 		this.testsetnumSeq = testsetnumSeq;
 		this.denyCategorySeq = denyCategorySeq;
 		this.denyCategory = denyCategory;
+		this.inspectionGroupSeq = inspectionGroupSeq;
 	}
 
 	public Integer getAnswerSeq() {
@@ -315,5 +317,13 @@ public class TranDescScore implements java.io.Serializable {
 
 	public void setDenyCategory(Short denyCategory) {
 		this.denyCategory = denyCategory;
+	}
+	
+	public Integer getInspectionGroupSeq() {
+		return inspectionGroupSeq;
+	}
+
+	public void setInspectionGroupSeq(Integer inspectionGroupSeq) {
+		this.inspectionGroupSeq = inspectionGroupSeq;
 	}
 }

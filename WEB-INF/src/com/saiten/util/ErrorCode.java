@@ -135,6 +135,8 @@ public interface ErrorCode {
 	
 	public static final String DOWNLOAD_REPORT_ONLOAD_ACTION_EXCEPTION = "S001811";
 	
+	public static final String INSPECTION_GROUP_SEQ_SELECTION_ACTION_EXCEPTION = "S001901";
+	
 	public static final String REGISTER_DENY_HIBERNATE_EXCEPTION = "S002000";
 	
 	public static final String REGISTER_DENY_SERVICE_EXCEPTION = "S002001";

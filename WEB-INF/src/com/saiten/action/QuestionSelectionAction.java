@@ -234,7 +234,12 @@ public class QuestionSelectionAction extends ActionSupport implements
 			updateQuestionInfo();
 			session.put("questionList", questionList);
 			if (WebAppConst.SCORE_TYPE[3].equals(questionInfo.getScoreType())) {
-				return "markValueSelection";
+				if (sessionQuestionInfo.getMenuId().equals(
+						WebAppConst.INSPECTION_MENU_ID)) {
+					return "inspectionGroupSeqSelection";
+				} else {
+					return "markValueSelection";
+				}
 			} else if ((WebAppConst.SCORE_TYPE[2].equals(questionInfo
 					.getScoreType()) || WebAppConst.SCORE_TYPE[1]
 					.equals(questionInfo.getScoreType()))
@@ -247,7 +252,12 @@ public class QuestionSelectionAction extends ActionSupport implements
 					&& ((sessionQuestionInfo.getMenuId()
 							.equals(WebAppConst.CHECKING_MENU_ID)) || (sessionQuestionInfo
 							.getMenuId().equals(WebAppConst.INSPECTION_MENU_ID)))) {
-				return "gradeSelection";
+				if (sessionQuestionInfo.getMenuId().equals(
+						WebAppConst.INSPECTION_MENU_ID)) {
+					return "inspectionGroupSeqSelection";
+				} else {
+					return "gradeSelection";
+				}
 			} else if (sessionQuestionInfo.getMenuId().equals(
 					WebAppConst.DENY_MENU_ID)) {
 				return "denyCategorySelection";

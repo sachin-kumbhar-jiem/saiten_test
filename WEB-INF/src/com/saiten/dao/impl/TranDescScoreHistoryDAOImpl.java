@@ -6144,6 +6144,47 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 				.aliasToBean(DailyScoreInfo.class));
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Object[]> fetchInspectionGroupSeqAndCount(final int questionSeq,
+			final String scorerId, String connectionString) {
+
+		final StringBuilder query = new StringBuilder();
+		query.append("SELECT ");
+		query.append("tranDescScore.inspect_group_seq as inspectGroupSeq, count(*) as inspectGroupSeqCnt ");
+		query.append("FROM ");
+		query.append("tran_desc_score  tranDescScore left join ");
+		query.append("(select history.answer_seq from tran_desc_score_history history ");
+		query.append("where history.question_seq = :QUESTION_SEQ ");
+		query.append("AND history.scorer_id = :LOGGED_IN_SCORER_ID) temp ");
+		query.append("ON tranDescScore.answer_seq = temp.answer_seq ");
+		query.append("WHERE tranDescScore.question_seq = :QUESTION_SEQ ");
+		query.append("AND temp.answer_seq is null AND tranDescScore.valid_flag = :VALID_FLAG ");
+		query.append("AND tranDescScore.latest_scoring_state = :INSPECTION_STATE ");
+		query.append("AND (tranDescScore.latest_screen_scorer_id != :LOGGED_IN_SCORER_ID || tranDescScore.latest_screen_scorer_id is null) ");
+		query.append("AND tranDescScore.inspect_group_seq is not null ");
+		query.append("group by tranDescScore.inspect_group_seq ");
+		query.append("having count(*) > 0 ");
+		
+		try {
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<List<Object[]>>() {
+						public List<Object[]> doInHibernate(Session session)
+								throws HibernateException {
+							SQLQuery queryObj = session.createSQLQuery(query
+									.toString());
+							queryObj.setParameter("QUESTION_SEQ", questionSeq);
+							queryObj.setParameter("LOGGED_IN_SCORER_ID", scorerId);
+							queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+							queryObj.setParameter("INSPECTION_STATE", WebAppConst.INSPECTION_STATE);
+							
+							return queryObj.list();
+						}
+					});
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
+	
 	public static String getPropertyFromPropertyFile(String propertyFileName,
 			String key) {
 		return ResourceBundle.getBundle(propertyFileName).getString(key);

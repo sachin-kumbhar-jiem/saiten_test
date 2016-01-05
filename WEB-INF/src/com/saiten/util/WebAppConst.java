@@ -324,6 +324,8 @@ public interface WebAppConst {
 	public static final String ERROR_NO_QUESTIONS_ALLOCATED = "error.no.question.allocated";
 
 	public static final String ERROR_NO_GRADE_AVAILABLE_FOR_SELECTED_QUESTION = "error.no.grade.available.for.selected.question";
+	
+	public static final String ERROR_NO_INSPECTION_GROUP_SEQ_AVAILABLE_FOR_SELECTED_QUESTION = "error.no.inspection.group.seq.available.for.selected.question";
 
 	public static final String ERROR_NO_PENDING_CATEGORY_AVAILABLE_FOR_SELECTED_QUESTION = "error.no.pending.category.available.for.selected.question";
 
@@ -523,4 +525,10 @@ public interface WebAppConst {
 	public static final int KENSHU_ROLE_ID = 6;
 	
 	public static final String KENSHU_SAMPLING_MENU_ID = "KENSHU_SAMPLING_MENU_ID";
+	
+	public static final String OPENING_BRACKET = "(";
+	
+	public static final String CLOSING_BRACKET = ")";
+	
+	public static final int INSPECTION_STATE = 151;
 }

@@ -453,11 +453,28 @@
 			<result name="denyCategorySelection" type="redirectAction">
 				<param name="actionName">denyCategorySelection</param>
 			</result>
+			<result name="inspectionGroupSeqSelection" type="redirectAction">
+				<param name="actionName">inspectionGroupSeqSelection</param>
+			</result>
 		</action>
 		
 		<action name="markValueSelection" class="questionSelectionAction" method="fetchMarkValues">
 			<result name="input">/jsp/markValueSelection.jsp</result>
 			<result name="success">/jsp/markValueSelection.jsp</result>
+		</action>
+		
+		<action name="inspectionGroupSeqSelection" class="inspectionGroupSeqSelection" method="onLoad">
+			<result name="input">/jsp/inspectionGroupSeqSelection.jsp</result>
+			<result name="success">/jsp/inspectionGroupSeqSelection.jsp</result>
+		</action>
+		
+		<action name="showMarkValueOrGradeSelectionPage" class="inspectionGroupSeqSelection" method="execute">
+			<result name="markValueSelection" type="redirectAction">
+				<param name="actionName">markValueSelection</param>
+			</result>
+			<result name="gradeSelection" type="redirectAction">
+				<param name="actionName">gradeSelection</param>
+			</result>
 		</action>
 		
 		<action name="findProcessDetails" class="scoreSearch" method="findProcessDetails">

@@ -31,6 +31,7 @@ public class QuestionInfo {
 	private Character questionType;
 	private Character scoreType;
 	private Map<Integer,String>denyCategoryGroupMap;
+	private Integer inspectionGroupSeq;
 
 	public Map<Integer, String> getPendingCategoryGroupMap() {
 		return pendingCategoryGroupMap;
@@ -277,5 +278,20 @@ public class QuestionInfo {
 
 	public void setDenyCategoryGroupMap(Map<Integer, String> denyCategoryGroupMap) {
 		this.denyCategoryGroupMap = denyCategoryGroupMap;
+	}
+	
+	/**
+	 * @return the inspectionGroupSeq
+	 */
+	public Integer getInspectionGroupSeq() {
+		return inspectionGroupSeq;
+	}
+
+	/**
+	 * @param inspectionGroupSeq
+	 *            the inspectionGroupSeq to set
+	 */
+	public void setInspectionGroupSeq(Integer inspectionGroupSeq) {
+		this.inspectionGroupSeq = inspectionGroupSeq;
 	}
 }

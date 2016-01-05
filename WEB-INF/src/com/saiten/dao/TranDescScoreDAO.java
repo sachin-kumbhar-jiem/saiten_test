@@ -31,7 +31,7 @@ public interface TranDescScoreDAO {
 			String connectionString, Integer gradeNum, Short pendingCategory,
 			String answerFormNum, Integer historyRecordCount,
 			Integer randomNumberRange, boolean passByRandomFlag,
-			String selectedMarkValue, int roleId, boolean qualityFromPendingMenu);
+			String selectedMarkValue, int roleId, boolean qualityFromPendingMenu, Integer inspectGroupSeq);
 
 	/**
 	 * @param answerSeq
@@ -62,7 +62,7 @@ public interface TranDescScoreDAO {
 	 * @param questionInfo
 	 */
 	public int updateInspectFlag(List<Integer> answerSeq,
-			QuestionInfo questionInfo, boolean selectAllFlag, ScoreInputInfo scoreInputInfo);
+			QuestionInfo questionInfo, boolean selectAllFlag, ScoreInputInfo scoreInputInfo, Integer maxInspectGroupSeq);
 
 	/**
 	 * @param quetionSeq
@@ -145,5 +145,13 @@ public interface TranDescScoreDAO {
 	 * @return testsetnum_seq
 	 */
 	public List findTestsetNumSeq (Integer answerSeq,String connectionString);
+	
+	/**
+	 * 
+	 * @param questionSeq
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public List findMaxInspectGroupSeq (int questionSeq, String connectionString);
 
 }

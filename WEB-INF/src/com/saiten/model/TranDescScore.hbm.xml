@@ -92,5 +92,8 @@
         <property name="denyCategory" type="java.lang.Short">
             <column name="deny_category" />
         </property>
+        <property name="inspectionGroupSeq" type="java.lang.Integer">
+            <column name="inspect_group_seq" />
+        </property>
     </class>
 </hibernate-mapping>

@@ -39,7 +39,7 @@ public interface RegisterScoreService {
 	public int updateInspectFlag(List<Integer> answerSeq,
 			QuestionInfo questionInfo,
 			List<ScoreSamplingInfo> scoreSamplingInfoList,
-			boolean selectAllFlag, ScoreInputInfo scoreInputInfo);
+			boolean selectAllFlag, ScoreInputInfo scoreInputInfo, Integer maxInspectGroupSeq);
 
 	/**
 	 * @param questionInfo
@@ -55,5 +55,12 @@ public interface RegisterScoreService {
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo, Integer gradeSeq,
 			Integer gradeNum, String approveOrDeny, Date updateDate,
 			Integer historyRecordCount);
+	
+	/**
+	 * @param questionSeq
+	 * @param connectionString
+	 * @return
+	 */
+	public Integer findMaxInspectGroupSeq(int questionSeq, String connectionString);
 
 }

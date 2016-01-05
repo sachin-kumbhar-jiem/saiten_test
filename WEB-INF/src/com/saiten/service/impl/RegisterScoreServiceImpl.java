@@ -578,20 +578,40 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 	public int updateInspectFlag(List<Integer> answerSeq,
 			QuestionInfo questionInfo,
 			List<ScoreSamplingInfo> scoreSamplingInfoList,
-			boolean selectAllFlag, ScoreInputInfo scoreInputInfo) {
+			boolean selectAllFlag, ScoreInputInfo scoreInputInfo, Integer maxInspectGroupSeq) {	
 		int updatedCount = 0;
 		if (!selectAllFlag) {
 			if (answerSeq != null && !answerSeq.isEmpty()) {
 				updatedCount = tranDescScoreDAO.updateInspectFlag(answerSeq,
-						questionInfo, selectAllFlag, scoreInputInfo);
+						questionInfo, selectAllFlag, scoreInputInfo, maxInspectGroupSeq);
 
 			}
 		} else {
 			List<Integer> answerSeqList = new ArrayList<Integer>();
 			updatedCount = tranDescScoreDAO.updateInspectFlag(answerSeqList,
-					questionInfo, selectAllFlag, scoreInputInfo);
+					questionInfo, selectAllFlag, scoreInputInfo, maxInspectGroupSeq);
 		}
 		return updatedCount;
+	}
+	
+	public Integer findMaxInspectGroupSeq(int questionSeq,
+			String connectionString) {
+		@SuppressWarnings("rawtypes")
+		List maxInspectGroupSeqList = tranDescScoreDAO
+				.findMaxInspectGroupSeq(questionSeq, connectionString);
+		
+		Integer inspectGroupSeq = 1;
+		if (maxInspectGroupSeqList != null
+				&& maxInspectGroupSeqList.size() > 0) {
+			Integer maxInspectGroupSeqValue = (Integer) maxInspectGroupSeqList
+					.get(0);
+
+			if (maxInspectGroupSeqValue != null) {
+				inspectGroupSeq = maxInspectGroupSeqValue + 1;
+			}
+		}
+		
+		return inspectGroupSeq;
 	}
 
 	/**

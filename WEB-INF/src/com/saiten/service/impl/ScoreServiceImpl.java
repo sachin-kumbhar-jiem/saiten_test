@@ -112,7 +112,7 @@ public class ScoreServiceImpl implements ScoreService {
 							gradeNum, pendingCategory, answerFormNum,
 							historyRecordCount, randomNumberRange,
 							passByRandomFlag, selectedMarkValueObj, roleId,
-							qualityFromPendingMenu);
+							qualityFromPendingMenu, questionInfo.getInspectionGroupSeq());
 					if (!tranDescScoreInfoList.isEmpty()) {
 						break;
 					}

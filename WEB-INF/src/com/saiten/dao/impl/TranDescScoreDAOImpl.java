@@ -425,7 +425,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			String connectionString, Integer gradeNum, Short pendingCategory,
 			String answerFormNum, Integer historyRecordCount,
 			Integer randomNumberRange, boolean passByRandomFlag,
-			String selectedMarkValue, int roleId, boolean qualityFromPendingMenu) {
+			String selectedMarkValue, int roleId, boolean qualityFromPendingMenu, Integer inspectGroupSeq) {
 		List answerRecords;
 		String questionSeq = null;
 		/* String gradeSeq = null; */
@@ -458,14 +458,14 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 				answerRecords = hibernateTemplate.findByNamedQuery(
 						"fetchAnswerPassByRandomNumber", questionSeq,
 						randomNumber, scorerId,
-						menuIdAndScoringStateMap.get(menuId), gradeNum,
+						menuIdAndScoringStateMap.get(menuId), gradeNum, inspectGroupSeq,
 						pendingCategory, answerFormNum, selectedMarkValue,
 						date, roleId, qualityFromPendingMenu,
 						secondAndThirdLatestScorerIdFlag);
 			} else {
 				answerRecords = hibernateTemplate.findByNamedQuery(
 						"fetchAnswerOrderByRandom", questionSeq, scorerId,
-						menuIdAndScoringStateMap.get(menuId), gradeNum,
+						menuIdAndScoringStateMap.get(menuId), gradeNum, inspectGroupSeq,
 						pendingCategory, answerFormNum, selectedMarkValue,
 						date, roleId, qualityFromPendingMenu,
 						secondAndThirdLatestScorerIdFlag);
@@ -703,7 +703,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 	@Override
 	public int updateInspectFlag(final List<Integer> answerSeq,
 			final QuestionInfo questionInfo, final boolean selectAllFlag,
-			ScoreInputInfo scoreInputInfo) {
+			ScoreInputInfo scoreInputInfo, final Integer maxInspectGroupSeq) {
 		/*
 		 * final StringBuilder query = new StringBuilder();
 		 * query.append("UPDATE TranDescScore ");
@@ -1041,7 +1041,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 							query.append("AND tranDescScore.valid_flag = :VALID_FLAG ");
 							query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
 							query.append(") score ");
-							query.append("SET inspect_flag = :LOCK, update_date = :UPDATE_DATE ");
+							query.append("SET inspect_flag = :LOCK, inspect_group_seq = :INSPECTION_GROUP_SEQ, update_date = :UPDATE_DATE ");
 							query.append(" WHERE target.answer_seq = score.answerSeq ");
 
 							SQLQuery queryObj = session.createSQLQuery(query
@@ -1092,6 +1092,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 							queryObj.setCharacter("VALID_FLAG",
 									WebAppConst.VALID_FLAG);
 							queryObj.setParameter("LOCK", WebAppConst.LOCK);
+							queryObj.setParameter("INSPECTION_GROUP_SEQ", maxInspectGroupSeq);
 							queryObj.setParameter("UPDATE_DATE", new Date());
 
 							return queryObj.executeUpdate();
@@ -1743,5 +1744,29 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 		}catch (RuntimeException re) {
 			throw re;
 		}*/
+	}
+
+	/**
+	 * 
+	 * @param questionSeq
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public List findMaxInspectGroupSeq(final int questionSeq,
+			final String connectionString) {
+		final StringBuilder query = new StringBuilder();
+		query.append("SELECT max(tranDescScore.inspectionGroupSeq) as maxInspectGroupSeq ");
+		query.append("FROM TranDescScore as tranDescScore WHERE ");
+		query.append("tranDescScore.questionSeq = :QUESTION_SEQ  ");
+
+		return getHibernateTemplate(connectionString).execute(
+				new HibernateCallback<List>() {
+					public List doInHibernate(Session session)
+							throws HibernateException {
+						Query queryObj = session.createQuery(query.toString());
+						queryObj.setParameter("QUESTION_SEQ", questionSeq);
+						return queryObj.list();
+					}
+				});
 	}
 }
