@@ -37,10 +37,12 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 	private String subjectShortName;
 
 	private Short selectedMarkValue;
+	
+	private Short denyCategory;
 
 	public String onLoad() {
 		try {
-
+			System.out.println(denyCategory);
 			int questionSeq;
 			QuestionInfo sessionQuestionInfo = (QuestionInfo) session
 					.get("questionInfo");
@@ -100,6 +102,14 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 	 */
 	public void setQuestionList(String questionList) {
 		this.questionList = questionList;
+	}
+
+	public Short getDenyCategory() {
+		return denyCategory;
+	}
+
+	public void setDenyCategory(Short denyCategory) {
+		this.denyCategory = denyCategory;
 	}
 
 	public Map<String, Object> getSession() {

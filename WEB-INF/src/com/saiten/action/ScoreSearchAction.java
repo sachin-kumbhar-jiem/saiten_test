@@ -99,6 +99,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 	private List<String> loggedInScorerSubjectList;
 	private List<TranDescScoreInfo> processDetailsList;
 	private LookAfterwardsService lookAfterwardsService;
+	private Integer denyCategorySeq;
 
 	@SuppressWarnings("unchecked")
 	public String findPrevOrNextAnswer() {
@@ -220,13 +221,18 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 				scoreSearchInfo.setDaysList(SaitenUtil.getCalendardays());
 				scoreSearchInfo.setHoursList(SaitenUtil.getClockHours());
 				scoreSearchInfo.setMinutesList(SaitenUtil.getClockMinutes());
-				//Creating list for punch text 
-				List <String> punchTextList = new ArrayList<String>();
-				punchTextList.add(getText(WebAppConst.PUNCH_TEXT_CONDITION_EXACT_MATCH));
-				punchTextList.add(getText(WebAppConst.PUNCH_TEXT_CONDITION_FORWORD_MATCH));
-				punchTextList.add(getText(WebAppConst.PUNCH_TEXT_CONDITION_BACKWORD_MATCH));
-				punchTextList.add(getText(WebAppConst.PUNCH_TEXT_CONDITION_PARTIAL_MATCH));
-				scoreSearchInfo.setPunchTextMap(SaitenUtil.getPunchTextMap(punchTextList));
+				// Creating list for punch text
+				List<String> punchTextList = new ArrayList<String>();
+				punchTextList
+						.add(getText(WebAppConst.PUNCH_TEXT_CONDITION_EXACT_MATCH));
+				punchTextList
+						.add(getText(WebAppConst.PUNCH_TEXT_CONDITION_FORWORD_MATCH));
+				punchTextList
+						.add(getText(WebAppConst.PUNCH_TEXT_CONDITION_BACKWORD_MATCH));
+				punchTextList
+						.add(getText(WebAppConst.PUNCH_TEXT_CONDITION_PARTIAL_MATCH));
+				scoreSearchInfo.setPunchTextMap(SaitenUtil
+						.getPunchTextMap(punchTextList));
 
 				// Build scoringState - stateName map
 				Map<Short, String> currentStateList = scoreSearchService
@@ -376,15 +382,15 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 			log.info(scorerInfo.getScorerId() + "-"
 					+ sessionQuestionInfo.getMenuId() + "-"
 					+ "Search Criteria: -{ " + scoreInputInfo + "}");
-			//adding escape character before any % in punchText
-			String tempStr = scoreInputInfo.getScoreCurrentInfo() != null ? scoreInputInfo.getScoreCurrentInfo()
-					.getPunchText() : null;
+			// adding escape character before any % in punchText
+			String tempStr = scoreInputInfo.getScoreCurrentInfo() != null ? scoreInputInfo
+					.getScoreCurrentInfo().getPunchText() : null;
 			String inputString = tempStr;
-			if (tempStr!=null) {
-				StringBuilder sb =  new StringBuilder();
+			if (tempStr != null) {
+				StringBuilder sb = new StringBuilder();
 				sb.append(tempStr);
-				for (int i=0;i<tempStr.length();i++) {
-					if(tempStr.charAt(i)== WebAppConst.PERCENTAGE_CHARACTER) {
+				for (int i = 0; i < tempStr.length(); i++) {
+					if (tempStr.charAt(i) == WebAppConst.PERCENTAGE_CHARACTER) {
 						sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
 						tempStr = sb.toString();
 						i++;
@@ -409,8 +415,10 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 				;
 
 				session.put("questionInfo", sessionQuestionInfo);
-				if (scoreInputInfo != null && scoreInputInfo.getScoreCurrentInfo()!=null) {
-					scoreInputInfo.getScoreCurrentInfo().setPunchText(inputString);
+				if (scoreInputInfo != null
+						&& scoreInputInfo.getScoreCurrentInfo() != null) {
+					scoreInputInfo.getScoreCurrentInfo().setPunchText(
+							inputString);
 				}
 				return FAILURE;
 			}
@@ -479,8 +487,10 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 							.isEmpty())) {
 				// Display record not available, if answerRecordsList is null or
 				// empty
-				if (scoreInputInfo != null && scoreInputInfo.getScoreCurrentInfo()!=null) {
-					scoreInputInfo.getScoreCurrentInfo().setPunchText(inputString);
+				if (scoreInputInfo != null
+						&& scoreInputInfo.getScoreCurrentInfo() != null) {
+					scoreInputInfo.getScoreCurrentInfo().setPunchText(
+							inputString);
 				}
 				return FAILURE;
 			}
@@ -656,16 +666,16 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 			}
 			scoreHistoryInfo
 					.setHistoryPendingCategorySeqList(historyPendingCategorySeqList);
-			
-			List historyDenyCategorySeqList = buildDenyCategorySeqList (
+
+			List historyDenyCategorySeqList = buildDenyCategorySeqList(
 					questionSeq, historyCategoryType,
 					scoreHistoryInfo.getHistoryDenyCategory());
-			if(historyDenyCategorySeqList != null
+			if (historyDenyCategorySeqList != null
 					&& historyDenyCategorySeqList.isEmpty()) {
 				historyDenyCategorySeqList.add(WebAppConst.MINUS_ONE);
 			}
 			scoreHistoryInfo
-			.setHistoryDenyCategorySeqList(historyDenyCategorySeqList);
+					.setHistoryDenyCategorySeqList(historyDenyCategorySeqList);
 			System.out.println(historyDenyCategorySeqList);
 			System.out.println(scoreHistoryInfo.getHistoryDenyCategory());
 		}
@@ -699,15 +709,16 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 			}
 			scoreCurrentInfo
 					.setCurrentPendingCategorySeqList(currentPendingCategorySeqList);
-			
-			List currentDenyCategorySeqList = buildDenyCategorySeqList (
+
+			List currentDenyCategorySeqList = buildDenyCategorySeqList(
 					questionSeq, currentCategoryType,
 					scoreCurrentInfo.getCurrentDenyCategory());
 			if (currentDenyCategorySeqList != null
-					&& currentDenyCategorySeqList.isEmpty()){
+					&& currentDenyCategorySeqList.isEmpty()) {
 				currentDenyCategorySeqList.add(WebAppConst.MINUS_ONE);
 			}
-			scoreCurrentInfo.setCurrentDenyCategorySeqList(currentDenyCategorySeqList);
+			scoreCurrentInfo
+					.setCurrentDenyCategorySeqList(currentDenyCategorySeqList);
 			System.out.println(currentDenyCategorySeqList);
 		}
 	}
@@ -828,14 +839,15 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 				tranDescScoreInfo.getAnswerInfo().setUpdateDate(updateDate);
 			}
 			if (nextFlag) {
-				
+
 				String lockBy = ((MstScorerInfo) session.get("scorerInfo"))
 						.getScorerId();
-				TranDescScoreInfo tranDescScoreInfo1 = answerRecordsList.get(prevRecordCount-1);
-				Integer answerSeq= tranDescScoreInfo1.getAnswerInfo().getAnswerSeq();
+				TranDescScoreInfo tranDescScoreInfo1 = answerRecordsList
+						.get(prevRecordCount - 1);
+				Integer answerSeq = tranDescScoreInfo1.getAnswerInfo()
+						.getAnswerSeq();
 				scoreService.unlockAnswer(questionInfo.getQuestionSeq(),
-						lockBy, questionInfo.getConnectionString(),
-						answerSeq);
+						lockBy, questionInfo.getConnectionString(), answerSeq);
 			}
 		}
 
@@ -1139,7 +1151,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 
 		return pendingCategorySeqList;
 	}
-	
+
 	/**
 	 * @param questionSeq
 	 * @param categoryType
@@ -1194,7 +1206,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 
 		return pendingCategory;
 	}
-	
+
 	/**
 	 * @param denyCategoryArray
 	 * @return Short[]
@@ -1677,12 +1689,15 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 				Short selectedMarkValue = null;
 				Short pendingCategory = SaitenUtil
 						.getPendingCategoryByPendingCategorySeq(pendingCategorySeq);
+				System.out.println(denyCategorySeq);
+				Short denyCategory = SaitenUtil
+						.getDenyCategoryByDenyCategorySeq(denyCategorySeq);
 				// Find answer record
 				tranDescScoreInfo = scoreService.findAnswer(
 						questionInfo.getQuestionSeq(), menuId,
 						scorerInfo.getScorerId(),
 						questionInfo.getConnectionString(), gradeNum,
-						pendingCategory,
+						pendingCategory, denyCategory,
 						specialScoreInputInfo.getAnswerFormNum(),
 						historyRecordCount, scorerInfo.getRoleId(),
 						selectedMarkValue, questionInfo);
@@ -2267,6 +2282,14 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 
 	public void setProcessDetailsList(List<TranDescScoreInfo> processDetailsList) {
 		this.processDetailsList = processDetailsList;
+	}
+
+	public Integer getDenyCategorySeq() {
+		return denyCategorySeq;
+	}
+
+	public void setDenyCategorySeq(Integer denyCategorySeq) {
+		this.denyCategorySeq = denyCategorySeq;
 	}
 
 	/**

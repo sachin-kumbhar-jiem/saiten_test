@@ -1,8 +1,8 @@
 ﻿
 //Our validation script will go here.
 $(function () {
-	if(($('#score').length>0) || ($('#approve').length>0)){
-		$('#popup-wrapper').modalPopLite({ openButton: '#score', approveButton: '#approve', closeButton: '#cancel', isModal: true, callBack: cancelScoring });
+	if(($('#score').length>0) || ($('#approve').length>0) || ($('#deny').length>0)){
+		$('#popup-wrapper').modalPopLite({ openButton: '#score', approveButton: '#approve', denyButton: '#deny', closeButton: '#cancel', isModal: true, callBack: cancelScoring });
 	}
 });
 
@@ -12,11 +12,7 @@ $(function () {
 	}
 });
 
-$(function () {
-	if(($('#deny').length>0)){
-		$('#denypopup-wrapper').modalPopLite({ openButton: '#deny', closeButton: '#close', isModal: true, callBack: cancelDeny });
-	}
-});
+
 
 var selectedCheckPoints = [];
 var selectedButtonId;

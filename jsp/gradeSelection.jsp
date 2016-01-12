@@ -83,6 +83,9 @@
 					
 					<tr>
 						<td  class="button">
+						<%-- <s:property value="#denyCategory"/> --%>
+						
+						<s:hidden id="denyCategory" name="denyCategory" value="%{denyCategory}"></s:hidden>
 							<s:if test="!(#session.gradeMap.isEmpty())">
 								<%-- <s:submit type="image" src="./material/img/button/next_button.gif" cssClass="rollover" id="next" cssStyle="width: 180px; height: 39px;" label="%{getText('label.alt.next')}"/> --%>
 								<s:submit type="button" cssClass="btn btn-primary btn-xl" id="next" cssStyle="width: 180px; height: 39px;" label="%{getText('label.alt.next')}"/>

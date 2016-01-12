@@ -39,6 +39,7 @@ public class ConfirmScoreAction extends ActionSupport implements SessionAware {
 	private boolean bookMarkFlag;
 	private String approveOrDeny;
 	private boolean qualityCheckFlag;
+	private Integer denyCategorySeq;
 
 	public String confirmScore() {
 
@@ -49,6 +50,7 @@ public class ConfirmScoreAction extends ActionSupport implements SessionAware {
 				result = SaitenUtil.getAjaxCallStatusCode(session);
 				return SUCCESS;
 			}
+			
 
 			// Calculate bitValue from selected check points
 			int bitValue = confirmScoreService.calculateBitValue(checkPoint);
@@ -232,6 +234,14 @@ public class ConfirmScoreAction extends ActionSupport implements SessionAware {
 	 */
 	public void setQualityCheckFlag(boolean qualityCheckFlag) {
 		this.qualityCheckFlag = qualityCheckFlag;
+	}
+
+	public Integer getDenyCategorySeq() {
+		return denyCategorySeq;
+	}
+
+	public void setDenyCategorySeq(Integer denyCategorySeq) {
+		this.denyCategorySeq = denyCategorySeq;
 	}
 
 }

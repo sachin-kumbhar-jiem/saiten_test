@@ -22,6 +22,7 @@ import com.saiten.manager.SaitenTransactionManager;
 import com.saiten.service.RegisterScoreService;
 import com.saiten.util.ErrorCode;
 import com.saiten.util.WebAppConst;
+import com.saiten.util.SaitenUtil;
 
 /**
  * @author sachin
@@ -47,6 +48,10 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 	private List<Integer> answerSeq;
 	private Integer totalRecordsCount;
 	private int updatedCount;
+	private Integer denyCategorySeq;
+	private Integer denyCategory;
+	private boolean bookMarkFlag;
+	private boolean qualityCheckFlag;
 
 	@SuppressWarnings("unchecked")
 	public String doRegister() {
@@ -56,6 +61,7 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 		Integer historyRecordCount = null;
+		String approveOrDeny = session.get("approveOrDeny").toString();
 
 		try {
 
@@ -75,6 +81,11 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 					gradeNum = Integer.valueOf(gradeNumText);
 				}
 			}
+			Short denyCategory = null;
+			if (approveOrDeny.equals(WebAppConst.DENY)) {
+				denyCategory = SaitenUtil
+						.getDenyCategoryByDenyCategorySeq(denyCategorySeq);
+			}
 			historyRecordCount = (Integer) session.get("historyRecordCount");
 
 			platformTransactionManager = saitenTransactionManager
@@ -93,8 +104,9 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 					.getAnswerInfo().getHistorySeq() == null))
 					|| (tranDescScoreInfo.getAnswerInfo().getQcSeq() != null)) {
 				lockFlag = registerScoreService.registerQcScoring(questionInfo,
-						scorerInfo, answerInfo, gradeSeq, gradeNum, session
-								.get("approveOrDeny").toString(),
+						scorerInfo, answerInfo, gradeSeq, gradeNum,
+						denyCategorySeq, denyCategory,
+						session.get("approveOrDeny").toString(),
 						tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
 						historyRecordCount);
 				if (tranDescScoreInfo.getAnswerInfo().getQcSeq() == null) {
@@ -108,8 +120,9 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 
 				// Register or update answer
 				lockFlag = registerScoreService.registerScoring(questionInfo,
-						scorerInfo, answerInfo, gradeSeq, gradeNum, session
-								.get("approveOrDeny").toString(),
+						scorerInfo, answerInfo, gradeSeq, gradeNum,
+						denyCategorySeq, denyCategory,
+						session.get("approveOrDeny").toString(),
 						tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
 						historyRecordCount);
 			}
@@ -244,7 +257,7 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 		 * (scoreInputInfo.getScoreCurrentInfo() != null) { currentStateList =
 		 * scoreInputInfo.getScoreCurrentInfo() .getCurrentStateList(); }
 		 */
-		
+
 		synchronized (RegisterScoreAction.class) {
 			Integer inspectGroupSeq = registerScoreService
 					.findMaxInspectGroupSeq(questionInfo.getQuestionSeq(),
@@ -253,10 +266,10 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 			updatedCount = registerScoreService.updateInspectFlag(answerSeq,
 					questionInfo, scoreSamplingInfoList, selectAllFlag,
 					scoreInputInfo, inspectGroupSeq);
-			
+
 			session.put("inspectGroupSeq", inspectGroupSeq);
 		}
-		
+
 		session.put("updatedCount", updatedCount);
 		session.remove("scoreSamplingInfoList");
 		return SUCCESS;
@@ -359,5 +372,37 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 	 */
 	public void setTotalRecordsCount(Integer totalRecordsCount) {
 		this.totalRecordsCount = totalRecordsCount;
+	}
+
+	public Integer getDenyCategorySeq() {
+		return denyCategorySeq;
+	}
+
+	public void setDenyCategorySeq(Integer denyCategorySeq) {
+		this.denyCategorySeq = denyCategorySeq;
+	}
+
+	public Integer getDenyCategory() {
+		return denyCategory;
+	}
+
+	public void setDenyCategory(Integer denyCategory) {
+		this.denyCategory = denyCategory;
+	}
+
+	public boolean isBookMarkFlag() {
+		return bookMarkFlag;
+	}
+
+	public void setBookMarkFlag(boolean bookMarkFlag) {
+		this.bookMarkFlag = bookMarkFlag;
+	}
+
+	public boolean isQualityCheckFlag() {
+		return qualityCheckFlag;
+	}
+
+	public void setQualityCheckFlag(boolean qualityCheckFlag) {
+		this.qualityCheckFlag = qualityCheckFlag;
 	}
 }

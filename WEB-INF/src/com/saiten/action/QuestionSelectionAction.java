@@ -46,11 +46,13 @@ public class QuestionSelectionAction extends ActionSupport implements
 	private String subjectShortName;
 	private Map<Short, String> selectedQuestionMarkValueMap;
 	private Short selectedMarkValue;
+	private String denyCategory;
 
 	public String fetchDbInstanceInfo() {
 
 		try {
 			int questionSeq;
+			session.put("denyCategory", denyCategory);
 			QuestionInfo sessionQuestionInfo = (QuestionInfo) session
 					.get("questionInfo");
 			questionSeq = sessionQuestionInfo.getQuestionSeq();
@@ -487,6 +489,14 @@ public class QuestionSelectionAction extends ActionSupport implements
 	 */
 	public void setSelectedMarkValue(Short selectedMarkValue) {
 		this.selectedMarkValue = selectedMarkValue;
+	}
+
+	public String getDenyCategory() {
+		return denyCategory;
+	}
+
+	public void setDenyCategory(String denyCategory) {
+		this.denyCategory = denyCategory;
 	}
 
 }

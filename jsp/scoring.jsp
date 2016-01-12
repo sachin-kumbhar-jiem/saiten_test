@@ -644,7 +644,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 									<jsp:include page="include/confirmDeny.jsp"/>
 								</div>
 							</s:if> --%>
-							<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID">
+							<%-- <s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID">
 								<div id="denypopup-wrapper" style="background-color:#2D2D2D;">
 									<jsp:include page="include/confirmDeny.jsp"/>
 								</div>
@@ -653,7 +653,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 								<div id="denypopup-wrapper" style="background-color:#2D2D2D;">
 									<jsp:include page="include/confirmDeny.jsp"/>
 								</div>
-							</s:if>
+							</s:if> --%>
 						</div>
 				   <table><tr><td style="border-bottom: none;">	
 				 	<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID">

@@ -61,9 +61,9 @@
             	e.preventDefault();
                 selectedButtonId = $(this).attr("id");
                
-            	if(((selectedButtonId=='pending' || selectedButtonId=='score'||selectedButtonId=='deny') && $('form').valid())){
+            	if(((selectedButtonId=='pending' || selectedButtonId=='score') && $('form').valid())){
             		var isSuccess = true;
-            		
+            		$("#denyMap").hide();
             		if(selectedButtonId=='score'){
             			$('#score').prop('disabled', true);
             			$("#registerScore").focus();
@@ -72,11 +72,7 @@
             			$('#pending').prop('disabled', true);
             			$("#registerPending").focus();
             			isSuccess = confirmPending();
-            		} else if(selectedButtonId=='deny') {
-            			$('#deny').prop('disabled', true);
-            			$("#registerDeny").focus();
-            			isSuccess = confirmDeny();
-            		}
+            		} 
             		
             		if(isSuccess){
             			if((questionType == '3' || questionType == '4' ) && selectedButtonId=='score'){
@@ -119,7 +115,7 @@
             			$("#scorePopupHeading").attr('value', APPROVE_HEADING);
             			$("#popup-wrapper").css('background-color','#2D2D2D');
             			$("#scorePopupHeading").css('background-color','#2D2D2D');
-            			
+            			$("#denyMap").hide();
             			isSuccess = confirmScore();
             		} 
             		
@@ -157,13 +153,14 @@
             		
             		if(selectedButtonId=='deny'){
             			$('#deny').prop('disabled', true);
-            			$("#registerDeny").focus();
+            			$("#registerScore").focus();
             			$("#approveOrDeny").val("deny");
-            			$("#registerDeny").attr('value', DENY);
+            			$("#registerScore").attr('value', DENY);
             			$("#scorePopupHeading").attr('value', DENY_HEADING);
             			$("#popup-wrapper").css('background-color','red');
             			$("#scorePopupHeading").css('background-color','red');
-            			isSuccess = confirmDeny();
+            			$("#denyMap").show();
+            			isSuccess = confirmScore();
             			
             		}
             		

@@ -26,8 +26,8 @@ public interface RegisterScoreService {
 	 */
 	public boolean registerScoring(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo, Integer gradeSeq,
-			Integer gradeNum, String approveOrDeny, Date updateDate,
-			Integer historyRecordCount);
+			Integer gradeNum, Integer denyCategorySeq, Short denyCategory,
+			String approveOrDeny, Date updateDate, Integer historyRecordCount);
 
 	/**
 	 * @param answerSeq
@@ -39,7 +39,8 @@ public interface RegisterScoreService {
 	public int updateInspectFlag(List<Integer> answerSeq,
 			QuestionInfo questionInfo,
 			List<ScoreSamplingInfo> scoreSamplingInfoList,
-			boolean selectAllFlag, ScoreInputInfo scoreInputInfo, Integer maxInspectGroupSeq);
+			boolean selectAllFlag, ScoreInputInfo scoreInputInfo,
+			Integer maxInspectGroupSeq);
 
 	/**
 	 * @param questionInfo
@@ -53,14 +54,15 @@ public interface RegisterScoreService {
 	 */
 	public boolean registerQcScoring(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo, Integer gradeSeq,
-			Integer gradeNum, String approveOrDeny, Date updateDate,
-			Integer historyRecordCount);
-	
+			Integer gradeNum, Integer denyCategorySeq, Short denyCategory,
+			String approveOrDeny, Date updateDate, Integer historyRecordCount);
+
 	/**
 	 * @param questionSeq
 	 * @param connectionString
 	 * @return
 	 */
-	public Integer findMaxInspectGroupSeq(int questionSeq, String connectionString);
+	public Integer findMaxInspectGroupSeq(int questionSeq,
+			String connectionString);
 
 }

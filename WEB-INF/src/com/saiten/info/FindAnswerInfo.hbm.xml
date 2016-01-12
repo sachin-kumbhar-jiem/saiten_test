@@ -55,7 +55,7 @@
     		<return-property name="latestScreenScorerId" column="latest_screen_scorer_id"></return-property>
     		<return-property name="secondLatestScreenScorerId" column="second_latest_screen_scorer_id"></return-property>
     	</return>
-    	{ CALL fetch_answer_pass_by_random_number(?,?,?,?,?,?,?,?,?,?,?,?,?)} 
+    	{ CALL fetch_answer_pass_by_random_number(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)} 
     	
     	
     	<!-- <return alias="tranDescScore" class="com.saiten.model.TranDescScore"/>
@@ -74,7 +74,7 @@
     		<return-property name="latestScreenScorerId" column="latest_screen_scorer_id"></return-property>
     		<return-property name="secondLatestScreenScorerId" column="second_latest_screen_scorer_id"></return-property>
     	</return>
-    	{ CALL fetch_answer_order_by_random(?,?,?,?,?,?,?,?,?,?,?,?)} 
+    	{ CALL fetch_answer_order_by_random(?,?,?,?,?,?,?,?,?,?,?,?,?,?)} 
     	
     	
     	<!-- <return alias="tranDescScore" class="com.saiten.model.TranDescScore"/>

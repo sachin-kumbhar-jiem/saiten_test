@@ -24,9 +24,17 @@
 				<td><dl><dd id="result"></dd></dl></td>
 			</tr>		
 		</table>
+		
+			<p class="list" id="denyMap">
+					<s:if test="(#session.questionInfo.denyCategoryGroupMap != null) && (#session.questionInfo.denyCategoryGroupMap.size()>0)">
+						<s:radio theme="simpleNew" id="denyCategory" name="denyCategory" list="#session.questionInfo.denyCategoryGroupMap" cssStyle="width: auto;" />
+					</s:if>
+						<s:hidden id="denyCategorySeq" name="denyCategorySeq" value="%{#session.tranDescScoreInfo.answerInfo.denyCategorySeq}" />
+			</p>
+		
 		<s:hidden id="approveOrDeny" name="approveOrDeny" value="#session.approveOrDeny"></s:hidden>
 		<div class="categ_popup_buttons" id="categ_popup_buttons">
-			<input type="button" name="registerScore" id="registerScore" class="white_short" onclick="javascript:location.href='registerScore.action';" value="<s:text name="label.register" />" />
+			<input type="button" name="registerScore" id="registerScore" class="white_short"  value="<s:text name="label.register" />" />
 			<input type="button" name="cancel" id="cancel" class="white_short" value="<s:text name="label.cancel" />" />
 		</div>
 				

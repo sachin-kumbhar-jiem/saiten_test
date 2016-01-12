@@ -24,7 +24,7 @@ public interface ScoreService {
 	 */
 	public TranDescScoreInfo findAnswer(int quetionSeq, String menuId,
 			String scorerId, String connectionString, Integer gradeNum,
-			Short pendingCategory, String answerFormNum,
+			Short pendingCategory, Short denyCategory, String answerFormNum,
 			Integer historyRecordCount, int roleId, Short selectedMarkValue, QuestionInfo questionInfo);
 
 	/**

@@ -38,10 +38,9 @@ import com.saiten.util.WebAppConst;
  */
 public class RegisterScoreServiceImpl implements RegisterScoreService {
 
-	
 	private static Logger log = Logger
 			.getLogger(RegisterScoreServiceImpl.class);
-	
+
 	private TranDescScoreDAO tranDescScoreDAO;
 
 	private TranDescScoreHistoryDAO tranDescScoreHistoryDAO;
@@ -59,8 +58,8 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 	@Override
 	public boolean registerScoring(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo, Integer gradeSeq,
-			Integer gradeNum, String approveOrDeny, Date updateDate,
-			Integer historyRecordCount) {
+			Integer gradeNum, Integer denyCategorySeq, Short denyCategory,
+			String approveOrDeny, Date updateDate, Integer historyRecordCount) {
 		boolean lockFlag = WebAppConst.FALSE;
 		TranDescScoreHistory tranDescScoreHistory = null;
 		String menuId = questionInfo.getMenuId();
@@ -84,7 +83,8 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 					// Update tranDescScoreHistory for history answer evaluation
 					updateTranDescScoreHistoryObject(questionInfo, scorerInfo,
 							answerInfo, tranDescScoreHistory, gradeSeq,
-							gradeNum, approveOrDeny);
+							gradeNum, denyCategorySeq, denyCategory,
+							approveOrDeny);
 				} else {
 					// lockFlag will be true, if lock is acquired by two or more
 					// users
@@ -131,7 +131,7 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 						// Update tranDescScore object
 						updateTranDescScoreObject(questionInfo, scorerInfo,
 								answerInfo, tranDescScore, gradeSeq, gradeNum,
-								approveOrDeny);
+								denyCategorySeq, denyCategory, approveOrDeny);
 
 						tranDescScoreHistory = new TranDescScoreHistory();
 
@@ -172,6 +172,7 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 							updateTranDescScoreHistoryObject(questionInfo,
 									scorerInfo, answerInfo,
 									tranDescScoreHistory, gradeSeq, gradeNum,
+									denyCategorySeq, denyCategory,
 									approveOrDeny);
 						} else {
 							// Build tranDescScoreHistory persistent object
@@ -261,6 +262,10 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 			tranDescScoreHistory.setPendingCategory(null);
 		}
 
+		tranDescScoreHistory.setDenyCategory(tranDescScore.getDenyCategory());
+		tranDescScoreHistory.setDenyCategorySeq(tranDescScore
+				.getDenyCategorySeq());
+
 		tranDescScoreHistory.setUpdateDate(tranDescScore.getUpdateDate());
 		tranDescScoreHistory.setScorerRoleId(scorerRoleId);
 
@@ -290,12 +295,20 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 			tranDescScoreHistory
 					.setQualityCheckFlag(WebAppConst.QUALITY_MARK_FLAG_FALSE);
 		}
-		if(answerInfo.getHistorySeq() != null){
-			log.info(tranDescScore.getLatestScorerId()+"-"+menuId+"-"+"History Tran record scoring."+"-{ Question Sequence: "+tranDescScore.getQuestionSeq()+", Answer Sequence: "+answerInfo.getAnswerSeq()+", Scoring State: "+tranDescScore
-					.getLatestScoringState()+", Bit Value: "+answerInfo.getBitValue()+"}");
-		}else{
-			log.info(tranDescScore.getLatestScorerId()+"-"+menuId+"-"+"Tran record scoring."+"-{ Question Sequence: "+tranDescScore.getQuestionSeq()+", Answer Sequence: "+answerInfo.getAnswerSeq()+", Scoring State: "+tranDescScore
-					.getLatestScoringState()+", Bit Value: "+answerInfo.getBitValue()+"}");
+		if (answerInfo.getHistorySeq() != null) {
+			log.info(tranDescScore.getLatestScorerId() + "-" + menuId + "-"
+					+ "History Tran record scoring." + "-{ Question Sequence: "
+					+ tranDescScore.getQuestionSeq() + ", Answer Sequence: "
+					+ answerInfo.getAnswerSeq() + ", Scoring State: "
+					+ tranDescScore.getLatestScoringState() + ", Bit Value: "
+					+ answerInfo.getBitValue() + "}");
+		} else {
+			log.info(tranDescScore.getLatestScorerId() + "-" + menuId + "-"
+					+ "Tran record scoring." + "-{ Question Sequence: "
+					+ tranDescScore.getQuestionSeq() + ", Answer Sequence: "
+					+ answerInfo.getAnswerSeq() + ", Scoring State: "
+					+ tranDescScore.getLatestScoringState() + ", Bit Value: "
+					+ answerInfo.getBitValue() + "}");
 		}
 		return tranDescScoreHistory;
 	}
@@ -345,7 +358,8 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 	private boolean updateTranDescScoreHistoryObject(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo,
 			TranDescScoreHistory tranDescScoreHistory, Integer gradeSeq,
-			Integer gradeNum, String approveOrDeny) {
+			Integer gradeNum, Integer denyCategorySeq, Short denyCategory,
+			String approveOrDeny) {
 
 		String menuId = questionInfo.getMenuId();
 		String connectionString = questionInfo.getConnectionString();
@@ -357,7 +371,8 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 
 		// Update tranDescScore history object
 		updateTranDescScoreObject(questionInfo, scorerInfo, answerInfo,
-				tranDescScore, gradeSeq, gradeNum, approveOrDeny);
+				tranDescScore, gradeSeq, gradeNum, denyCategorySeq,
+				denyCategory, approveOrDeny);
 		tranDescScoreHistory.setTranDescScore(tranDescScore);
 
 		// Build tranDescScoreHistory object to be updated
@@ -379,7 +394,7 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 	private boolean updateTranDescScoreObject(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo,
 			TranDescScore tranDescScore, Integer gradeSeq, Integer gradeNum,
-			String approveOrDeny) {
+			Integer denyCategorySeq, Short denyCategory, String approveOrDeny) {
 
 		String menuId = questionInfo.getMenuId();
 		Map<String, String> configMap = SaitenUtil.getConfigMap();
@@ -420,6 +435,10 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 		}
 
 		tranDescScore.setLatestScoringState(latestScoringState);
+		// Setting deny value
+
+		tranDescScore.setDenyCategory(denyCategory);
+		tranDescScore.setDenyCategorySeq(denyCategorySeq);
 
 		// Set bivValue and gradeSeq for scoring operation
 		Double bitValue = answerInfo.getBitValue();
@@ -460,8 +479,8 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 
 	public boolean registerQcScoring(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo, Integer gradeSeq,
-			Integer gradeNum, String approveOrDeny, Date updateDate,
-			Integer historyRecordCount) {
+			Integer gradeNum, Integer denyCategorySeq, Short denyCategory,
+			String approveOrDeny, Date updateDate, Integer historyRecordCount) {
 		boolean lockFlag = WebAppConst.FALSE;
 		String connectionString = questionInfo.getConnectionString();
 		Integer qcSeq = answerInfo.getQcSeq();
@@ -510,7 +529,12 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 		Short latestScoringState = scoringStatesMap.get(scoringStateKey).get(0);
 		tranQualitycheckScore.setScoringState(latestScoringState);
 		tranQualitycheckScore.setScorerComment(answerInfo.getScorerComment());
-		log.info(scorerInfo.getScorerId()+"-"+menuId+"-"+"History Quality record scoring."+"-{ Question Sequence: "+questionInfo.getQuestionSeq()+", Answer Sequence: "+answerInfo.getAnswerSeq()+", Scoring State: "+latestScoringState+", Bit Value: "+answerInfo.getBitValue()+"}");
+		log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
+				+ "History Quality record scoring." + "-{ Question Sequence: "
+				+ questionInfo.getQuestionSeq() + ", Answer Sequence: "
+				+ answerInfo.getAnswerSeq() + ", Scoring State: "
+				+ latestScoringState + ", Bit Value: "
+				+ answerInfo.getBitValue() + "}");
 	}
 
 	private TranQualitycheckScore buildTranQualitycheckScoreObj(
@@ -571,38 +595,45 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 		}
 		tranQualitycheckScore
 				.setAnswerFormNum(tranDescScore.getAnswerFormNum());
-		log.info(scorerInfo.getScorerId()+"-"+menuId+"-"+"Quality record scoring."+"-{ Question Sequence: "+questionInfo.getQuestionSeq()+", Answer Sequence: "+answerInfo.getAnswerSeq()+", Scoring State: "+latestScoringState+", Bit Value: "+answerInfo.getBitValue()+"}");
+		log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
+				+ "Quality record scoring." + "-{ Question Sequence: "
+				+ questionInfo.getQuestionSeq() + ", Answer Sequence: "
+				+ answerInfo.getAnswerSeq() + ", Scoring State: "
+				+ latestScoringState + ", Bit Value: "
+				+ answerInfo.getBitValue() + "}");
 		return tranQualitycheckScore;
 	}
 
 	public int updateInspectFlag(List<Integer> answerSeq,
 			QuestionInfo questionInfo,
 			List<ScoreSamplingInfo> scoreSamplingInfoList,
-			boolean selectAllFlag, ScoreInputInfo scoreInputInfo, Integer maxInspectGroupSeq) {	
+			boolean selectAllFlag, ScoreInputInfo scoreInputInfo,
+			Integer maxInspectGroupSeq) {
 		int updatedCount = 0;
 		if (!selectAllFlag) {
 			if (answerSeq != null && !answerSeq.isEmpty()) {
 				updatedCount = tranDescScoreDAO.updateInspectFlag(answerSeq,
-						questionInfo, selectAllFlag, scoreInputInfo, maxInspectGroupSeq);
+						questionInfo, selectAllFlag, scoreInputInfo,
+						maxInspectGroupSeq);
 
 			}
 		} else {
 			List<Integer> answerSeqList = new ArrayList<Integer>();
 			updatedCount = tranDescScoreDAO.updateInspectFlag(answerSeqList,
-					questionInfo, selectAllFlag, scoreInputInfo, maxInspectGroupSeq);
+					questionInfo, selectAllFlag, scoreInputInfo,
+					maxInspectGroupSeq);
 		}
 		return updatedCount;
 	}
-	
+
 	public Integer findMaxInspectGroupSeq(int questionSeq,
 			String connectionString) {
 		@SuppressWarnings("rawtypes")
-		List maxInspectGroupSeqList = tranDescScoreDAO
-				.findMaxInspectGroupSeq(questionSeq, connectionString);
-		
+		List maxInspectGroupSeqList = tranDescScoreDAO.findMaxInspectGroupSeq(
+				questionSeq, connectionString);
+
 		Integer inspectGroupSeq = 1;
-		if (maxInspectGroupSeqList != null
-				&& maxInspectGroupSeqList.size() > 0) {
+		if (maxInspectGroupSeqList != null && maxInspectGroupSeqList.size() > 0) {
 			Integer maxInspectGroupSeqValue = (Integer) maxInspectGroupSeqList
 					.get(0);
 
@@ -610,7 +641,7 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 				inspectGroupSeq = maxInspectGroupSeqValue + 1;
 			}
 		}
-		
+
 		return inspectGroupSeq;
 	}
 

@@ -423,9 +423,10 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			String scorerId,
 			LinkedHashMap<String, Short> menuIdAndScoringStateMap,
 			String connectionString, Integer gradeNum, Short pendingCategory,
-			String answerFormNum, Integer historyRecordCount,
-			Integer randomNumberRange, boolean passByRandomFlag,
-			String selectedMarkValue, int roleId, boolean qualityFromPendingMenu, Integer inspectGroupSeq) {
+			Short denyCategory, String answerFormNum,
+			Integer historyRecordCount, Integer randomNumberRange,
+			boolean passByRandomFlag, String selectedMarkValue, int roleId,
+			boolean qualityFromPendingMenu, Integer inspectGroupSeq) {
 		List answerRecords;
 		String questionSeq = null;
 		/* String gradeSeq = null; */
@@ -452,22 +453,25 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			Map<String, String> configMap = SaitenUtil.getConfigMap();
 			boolean secondAndThirdLatestScorerIdFlag = Boolean
 					.valueOf(configMap.get("secondAndThirdLatestScorerIdFlag"));
+			boolean qualityFromDenyMenu = false;
 			if (passByRandomFlag == true) {
 				Random randomGenerator = new Random();
 				randomNumber = randomGenerator.nextInt(randomNumberRange);
 				answerRecords = hibernateTemplate.findByNamedQuery(
 						"fetchAnswerPassByRandomNumber", questionSeq,
 						randomNumber, scorerId,
-						menuIdAndScoringStateMap.get(menuId), gradeNum, inspectGroupSeq,
-						pendingCategory, answerFormNum, selectedMarkValue,
-						date, roleId, qualityFromPendingMenu,
+						menuIdAndScoringStateMap.get(menuId), gradeNum,
+						inspectGroupSeq, pendingCategory, denyCategory,
+						answerFormNum, selectedMarkValue, date, roleId,
+						qualityFromPendingMenu, qualityFromDenyMenu,
 						secondAndThirdLatestScorerIdFlag);
 			} else {
 				answerRecords = hibernateTemplate.findByNamedQuery(
 						"fetchAnswerOrderByRandom", questionSeq, scorerId,
-						menuIdAndScoringStateMap.get(menuId), gradeNum, inspectGroupSeq,
-						pendingCategory, answerFormNum, selectedMarkValue,
-						date, roleId, qualityFromPendingMenu,
+						menuIdAndScoringStateMap.get(menuId), gradeNum,
+						inspectGroupSeq, pendingCategory, denyCategory,
+						answerFormNum, selectedMarkValue, date, roleId,
+						qualityFromPendingMenu, qualityFromDenyMenu,
 						secondAndThirdLatestScorerIdFlag);
 			}
 			if (!answerRecords.isEmpty()) {
@@ -1092,7 +1096,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 							queryObj.setCharacter("VALID_FLAG",
 									WebAppConst.VALID_FLAG);
 							queryObj.setParameter("LOCK", WebAppConst.LOCK);
-							queryObj.setParameter("INSPECTION_GROUP_SEQ", maxInspectGroupSeq);
+							queryObj.setParameter("INSPECTION_GROUP_SEQ",
+									maxInspectGroupSeq);
 							queryObj.setParameter("UPDATE_DATE", new Date());
 
 							return queryObj.executeUpdate();
@@ -1711,39 +1716,41 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 	 * @return testsetnum_seq
 	 */
 	@SuppressWarnings("rawtypes")
-	public List  findTestsetNumSeq(final Integer answerSeq,final String connectionString) {
+	public List findTestsetNumSeq(final Integer answerSeq,
+			final String connectionString) {
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT tranDescScore.testsetnumSeq ");
 		query.append("FROM TranDescScore as tranDescScore WHERE ");
 		query.append("tranDescScore.answerSeq = :ANSWER_SEQ  ");
 		List<String> paramNameList = new ArrayList<String>();
-		List valueList = new ArrayList();
+		// List valueList = new ArrayList();
 
 		paramNameList.add(0, "ANSWER_SEQUENCE");
 
-		valueList.add(0, answerSeq);
-		
-		String[] paramNames = paramNameList.toArray(new String[paramNameList
-		                                       				.size()]);
-		Object[] values = valueList.toArray(new Object[valueList.size()]);
+		/*
+		 * valueList.add(0, answerSeq);
+		 * 
+		 * String[] paramNames = paramNameList.toArray(new String[paramNameList
+		 * .size()]); Object[] values = valueList.toArray(new
+		 * Object[valueList.size()]);
+		 */
 
-		//String[] paramNames = { "ANSWER_SEQ" };
-		//Object[] values = { answerSeq };
+		// String[] paramNames = { "ANSWER_SEQ" };
+		// Object[] values = { answerSeq };
 		return getHibernateTemplate(connectionString).execute(
 				new HibernateCallback<List>() {
 					public List doInHibernate(Session session)
 							throws HibernateException {
-						Query queryObj = session.createQuery(query
-								.toString());
+						Query queryObj = session.createQuery(query.toString());
 						queryObj.setParameter("ANSWER_SEQ", answerSeq);
 						return queryObj.list();
 					}
 				});
-		/*try {
-			return getHibernateTemplate().findByNamedParam(query.toString(),paramNames,values);
-		}catch (RuntimeException re) {
-			throw re;
-		}*/
+		/*
+		 * try { return
+		 * getHibernateTemplate().findByNamedParam(query.toString(),
+		 * paramNames,values); }catch (RuntimeException re) { throw re; }
+		 */
 	}
 
 	/**
@@ -1769,4 +1776,6 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 					}
 				});
 	}
+
+	
 }

@@ -56,6 +56,7 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 	private HttpServletRequest request;
 	public static final String FAILURE = "failure";
 	private Short pendingCategory;
+	private Short denyCategory;
 	private String answerFormNum;
 	private HistoryListingService historyListingService;
 	private String answerFlag;
@@ -67,7 +68,13 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 		MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 		try {
-
+			String denyCategoryStr = session.get("denyCategory").toString();
+	
+			if(denyCategoryStr != null && !(denyCategoryStr.isEmpty())) {
+				denyCategory=Short.valueOf(denyCategoryStr);
+			}else {
+				denyCategory=null;
+			}
 			String menuId = questionInfo.getMenuId();
 			SpecialScoreInputInfo specialScoreInputInfo = (SpecialScoreInputInfo) session
 					.get("specialScoreInputInfo");
@@ -149,7 +156,7 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 								questionInfo.getQuestionSeq(), menuId,
 								scorerInfo.getScorerId(),
 								questionInfo.getConnectionString(), gradeNum,
-								pendingCategory, answerFormNum,
+								pendingCategory, denyCategory,answerFormNum,
 								historyRecordCount, roleId, selectedMarkValue,
 								questionInfo);
 						if (tranDescScoreInfo == null) {
@@ -289,7 +296,7 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 						questionInfo.getQuestionSeq(), menuId,
 						scorerInfo.getScorerId(),
 						questionInfo.getConnectionString(), gradeNum,
-						pendingCategory, answerFormNum, historyRecordCount,
+						pendingCategory, denyCategory, answerFormNum, historyRecordCount,
 						roleId, selectedMarkValue, questionInfo);
 
 				if (tranDescScoreInfo != null) {

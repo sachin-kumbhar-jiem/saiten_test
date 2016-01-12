@@ -29,9 +29,10 @@ public interface TranDescScoreDAO {
 			String scorerId,
 			LinkedHashMap<String, Short> menuIdAndScoringStateMap,
 			String connectionString, Integer gradeNum, Short pendingCategory,
-			String answerFormNum, Integer historyRecordCount,
-			Integer randomNumberRange, boolean passByRandomFlag,
-			String selectedMarkValue, int roleId, boolean qualityFromPendingMenu, Integer inspectGroupSeq);
+			Short denyCategory, String answerFormNum,
+			Integer historyRecordCount, Integer randomNumberRange,
+			boolean passByRandomFlag, String selectedMarkValue, int roleId,
+			boolean qualityFromPendingMenu, Integer inspectGroupSeq);
 
 	/**
 	 * @param answerSeq
@@ -62,7 +63,8 @@ public interface TranDescScoreDAO {
 	 * @param questionInfo
 	 */
 	public int updateInspectFlag(List<Integer> answerSeq,
-			QuestionInfo questionInfo, boolean selectAllFlag, ScoreInputInfo scoreInputInfo, Integer maxInspectGroupSeq);
+			QuestionInfo questionInfo, boolean selectAllFlag,
+			ScoreInputInfo scoreInputInfo, Integer maxInspectGroupSeq);
 
 	/**
 	 * @param quetionSeq
@@ -121,37 +123,42 @@ public interface TranDescScoreDAO {
 	@SuppressWarnings("rawtypes")
 	public List getDailyuStatusSearchListByScorer(
 			DailyStatusSearchInfo dailyStatusSearchInfo,
-			String connectionString,String scorerIds,String questionSeq);
-	
+			String connectionString, String scorerIds, String questionSeq);
+
 	/**
 	 * @param questionSeq
 	 * @param connectionString
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public List getGradeWiseAnswerDetails(String questionSeq, String connectionString, Character questionType);
-	
+	public List getGradeWiseAnswerDetails(String questionSeq,
+			String connectionString, Character questionType);
+
 	/**
 	 * @param questionSeq
 	 * @param connectionString
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public List getPendingCategoryWiseAnswerDetails(String questionSeq, String connectionString);
-	
+	public List getPendingCategoryWiseAnswerDetails(String questionSeq,
+			String connectionString);
+
 	/**
 	 * 
 	 * @param answerSeq
 	 * @return testsetnum_seq
 	 */
-	public List findTestsetNumSeq (Integer answerSeq,String connectionString);
-	
+	@SuppressWarnings("rawtypes")
+	public List findTestsetNumSeq(Integer answerSeq, String connectionString);
+
 	/**
 	 * 
 	 * @param questionSeq
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public List findMaxInspectGroupSeq (int questionSeq, String connectionString);
+	public List findMaxInspectGroupSeq(int questionSeq, String connectionString);
+
+	
 
 }

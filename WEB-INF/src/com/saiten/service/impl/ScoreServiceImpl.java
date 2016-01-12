@@ -56,7 +56,7 @@ public class ScoreServiceImpl implements ScoreService {
 	@Override
 	public TranDescScoreInfo findAnswer(int questionSeq, String menuId,
 			String scorerId, String connectionString, Integer gradeNum,
-			Short pendingCategory, String answerFormNum,
+			Short pendingCategory, Short denyCategory, String answerFormNum,
 			Integer historyRecordCount, int roleId, Short selectedMarkValue,
 			QuestionInfo questionInfo) {
 		try {
@@ -82,7 +82,7 @@ public class ScoreServiceImpl implements ScoreService {
 							.equals(WebAppConst.SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID)
 					|| menuId
 							.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID) || menuId
-					.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID))) {
+						.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID))) {
 				Map<String, String> configMap = SaitenUtil.getConfigMap();
 				boolean qualityFromPendingMenu = Boolean.valueOf(configMap
 						.get("qualityFromPendingMenu"));
@@ -109,10 +109,12 @@ public class ScoreServiceImpl implements ScoreService {
 					tranDescScoreInfoList = tranDescScoreDAO.findAnswer(
 							questionSequenceList, menuId, scorerId,
 							menuIdAndScoringStateMap, connectionString,
-							gradeNum, pendingCategory, answerFormNum,
-							historyRecordCount, randomNumberRange,
-							passByRandomFlag, selectedMarkValueObj, roleId,
-							qualityFromPendingMenu, questionInfo.getInspectionGroupSeq());
+							gradeNum, pendingCategory, denyCategory,
+							answerFormNum, historyRecordCount,
+							randomNumberRange, passByRandomFlag,
+							selectedMarkValueObj, roleId,
+							qualityFromPendingMenu,
+							questionInfo.getInspectionGroupSeq());
 					if (!tranDescScoreInfoList.isEmpty()) {
 						break;
 					}
@@ -281,7 +283,7 @@ public class ScoreServiceImpl implements ScoreService {
 								|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
 								|| menuId
 										.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID) || menuId
-								.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID))) {
+									.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID))) {
 					tranDescScoreInfo
 							.setGradeSeq((Integer) tranDescScoreObjArray[3]);
 					answerInfo.setBitValue((Double) tranDescScoreObjArray[4]);
@@ -574,8 +576,7 @@ public class ScoreServiceImpl implements ScoreService {
 			boolean historyScreenFlag = WebAppConst.TRUE;
 			Integer qcSeq = null;
 			return buildTranDescScoreInfo(tranDescScoreHistoryInfoList,
-					scorerId, historyScreenFlag,
-					null, menuId,
+					scorerId, historyScreenFlag, null, menuId,
 					bookmarkScreenFlag, qcSeq, questionInfo);
 		} catch (HibernateException he) {
 			throw new SaitenRuntimeException(
@@ -623,21 +624,23 @@ public class ScoreServiceImpl implements ScoreService {
 
 		return historySeq;
 	}
-	
+
 	/**
-	 * This method returns testsetnum_seq of record. 
+	 * This method returns testsetnum_seq of record.
+	 * 
 	 * @param answerSeq
 	 * @return testSetnum_seq
 	 */
 	@SuppressWarnings("rawtypes")
-	public Integer findTestsetNumSeq (Integer answerSeq,String connectionString) {
-		List testsetnumseqList=tranDescScoreDAO.findTestsetNumSeq(answerSeq,connectionString);
-		if(testsetnumseqList!=null) {
+	public Integer findTestsetNumSeq(Integer answerSeq, String connectionString) {
+		List testsetnumseqList = tranDescScoreDAO.findTestsetNumSeq(answerSeq,
+				connectionString);
+		if (testsetnumseqList != null) {
 			return Integer.parseInt(testsetnumseqList.get(0).toString());
-		}else {
+		} else {
 			return null;
 		}
-		
+
 	}
 
 	/**
