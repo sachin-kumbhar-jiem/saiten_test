@@ -1,6 +1,7 @@
 package com.saiten.action;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class QuestionSelectionAction extends ActionSupport implements
 	public String fetchDbInstanceInfo() {
 
 		try {
+			Date logActionStartTime = new Date();
 			int questionSeq;
 			session.put("denyCategory", denyCategory);
 			QuestionInfo sessionQuestionInfo = (QuestionInfo) session
@@ -72,17 +74,19 @@ public class QuestionSelectionAction extends ActionSupport implements
 					&& (sessionQuestionInfo.getScoreType() == WebAppConst.SCORE_TYPE[3])) {
 				session.put("selectedMarkValue", selectedMarkValue);
 			}
-
+			Date logGradeStartTime = null;
+			Date logGradeEndTime = null;
 			if (sessionQuestionInfo.getMenuId().equals(
 					WebAppConst.CHECKING_MENU_ID)
 					|| sessionQuestionInfo.getMenuId().equals(
 							WebAppConst.INSPECTION_MENU_ID)
 					|| sessionQuestionInfo.getMenuId().equals(
 							WebAppConst.DENY_MENU_ID)) {
-
+				logGradeStartTime = new Date();
 				List<Integer> gradeSeqList = SaitenUtil
 						.getGradeSeqListByQuestionSeqAndGradeNum(questionSeq,
 								gradeNum);
+				logGradeEndTime = new Date();
 				if (gradeSeqList == null || gradeSeqList.isEmpty()) {
 					this.addActionError(getText("error.noRecordAvailableForSelectedGrade"));
 					return INPUT;
@@ -94,15 +98,19 @@ public class QuestionSelectionAction extends ActionSupport implements
 
 			// Fetch dbInstanceInfo and questionInfo corresponding to selected
 			// questionSeq
+			Date logQuestionInfoStartTime = new Date();
 			questionInfo = questionSelectionService
 					.fetchDbInstanceInfo(questionSeqList);
+			Date logQuestionInfoEndTime = new Date();
 
 			String scorerId = scorerInfo.getScorerId();
 
 			// Build scoringStateList based on menuId and noDbUpdate value. e.g.
 			// 122, 123
+			Date logScoringStateListStartTime = new Date();
 			List<Short> scoringStateList = SaitenUtil
 					.buildScoringStateList(scorerInfo.getNoDbUpdate());
+			Date logScoringStateListEndTime = new Date();
 
 			selectedMenuId = ((QuestionInfo) session.get("questionInfo"))
 					.getMenuId();
@@ -114,39 +122,45 @@ public class QuestionSelectionAction extends ActionSupport implements
 			int historyRecordCount = 0;
 			Character questionType = questionInfo.getQuestionType();
 			String menuId = sessionQuestionInfo.getMenuId();
+			Date logQcHistoryCountStartTime = null;
+			Date logQcHistoryCountEndTime = null;
 			if ((menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID) || menuId
 					.equals(WebAppConst.SECOND_SCORING_MENU_ID))
 			/*
 			 * && (questionType == WebAppConst.SPEAKING_TYPE || questionType ==
 			 * WebAppConst.WRITING_TYPE)
 			 */) {
+				logQcHistoryCountStartTime = new Date();
 				qcRecordsCount = questionSelectionService
 						.findQcHistoryRecordCount(scorerId,
 								questionSequenceList,
 								questionInfo.getConnectionString(),
 								scoringStateList);
+				logQcHistoryCountEndTime = new Date();
 			}
-
+			Date logHistoryRecordCountStartTime = new Date();
 			historyRecordCount = questionSelectionService
 					.findHistoryRecordCount(scorerId, questionSequenceList,
 							questionInfo.getConnectionString(),
 							scoringStateList);
+			Date logHistoryRecordCountEndTime = new Date();
 			// Fetch historyRecordCount for selected question
 			questionInfo.setHistoryRecordCount(historyRecordCount
 					+ qcRecordsCount);
 			questionInfo.setQuestionSeq(questionSeq);
 
 			// Get checkPointList for selected question
+			Date logCheckPointsStartTime = new Date();
 			questionInfo.setCheckPointList(questionSelectionService
 					.findCheckPoints(questionSeq));
-
+			Date logCheckPointsEndTime = new Date();
 			// Get pending categories for selected question
+			Date logPendingCategoryStartTime = new Date();
 			questionInfo.setPendingCategoryGroupMap(questionSelectionService
 					.findPendingCategories(questionSeq));
-
+			Date logPendingCategoryEndTime = new Date();
 			questionInfo.setDenyCategoryGroupMap(questionSelectionService
 					.findDenyCategories(questionSeq));
-
 			// Update questionInfo with the data fetched.
 			updateQuestionInfo();
 
@@ -158,7 +172,40 @@ public class QuestionSelectionAction extends ActionSupport implements
 			 */) {
 				session.put("loadQcListFlag", true);
 			}
-
+			Date logActionEndTime = new Date();
+			String actionName = "showScoringPage";
+			long total = logActionEndTime.getTime()
+					- logActionStartTime.getTime();
+			log.info(actionName + "-Total: " + total);
+			if (logGradeStartTime != null && logGradeEndTime != null) {
+				long gradeTime = logGradeEndTime.getTime()
+						- logGradeStartTime.getTime();
+				log.info(actionName + "-GetGradeSeqList: " + gradeTime);
+			}
+			long questionInfoTime = logQuestionInfoEndTime.getTime()
+					- logQuestionInfoStartTime.getTime();
+			log.info(actionName + "-GetQuestionInfo: " + questionInfoTime);
+			long scoringStateListTime = logScoringStateListEndTime.getTime()
+					- logScoringStateListStartTime.getTime();
+			log.info(actionName + "-BuildScoringStateList: "
+					+ scoringStateListTime);
+			if (logQcHistoryCountStartTime != null
+					&& logQcHistoryCountEndTime != null) {
+				long QcHistoryCountTime = logQcHistoryCountEndTime.getTime()
+						- logQcHistoryCountStartTime.getTime();
+				log.info(actionName + "-GetQcHistoryCount: "
+						+ QcHistoryCountTime);
+			}
+			long historyCountTime = logHistoryRecordCountEndTime.getTime()
+					- logHistoryRecordCountStartTime.getTime();
+			log.info(actionName + "-GetHistoryCount: " + historyCountTime);
+			long getCheckPointsTime = logCheckPointsEndTime.getTime()
+					- logCheckPointsStartTime.getTime();
+			log.info(actionName + "-GetCheckPoints: " + getCheckPointsTime);
+			long getPendindCategoriesTime = logPendingCategoryEndTime.getTime()
+					- logPendingCategoryStartTime.getTime();
+			log.info(actionName + "-GetPendindCategories: "
+					+ getPendindCategoriesTime);
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -206,6 +253,7 @@ public class QuestionSelectionAction extends ActionSupport implements
 		// HttpServletRequest request = ServletActionContext.getRequest();
 		try {
 			// Fetch selected questionSeq
+			Date logActionStartTime = new Date();
 			String[] selectedQuestion = questionList.split(WebAppConst.COLON);
 			int questionSeq = Integer.valueOf(selectedQuestion[0]);
 			MstScorerInfo scorerInfo = ((MstScorerInfo) session
@@ -221,8 +269,10 @@ public class QuestionSelectionAction extends ActionSupport implements
 
 			// Fetch dbInstanceInfo and questionInfo corresponding to selected
 			// questionSeq
+			Date fetchDbInstanceInfoStartTime = new Date();
 			questionInfo = questionSelectionService
 					.fetchDbInstanceInfo(questionSeqList);
+			Date fetchDbInstanceInfoEndTime = new Date();
 			questionInfo.setQuestionSeq(questionSeq);
 			questionInfo.setMenuId(sessionQuestionInfo.getMenuId());
 
@@ -235,6 +285,15 @@ public class QuestionSelectionAction extends ActionSupport implements
 			// Update questionInfo with the data fetched.
 			updateQuestionInfo();
 			session.put("questionList", questionList);
+			Date logActionEndTime = new Date();
+			String actionName = "selectScoringType";
+			long total = logActionEndTime.getTime()
+					- logActionStartTime.getTime();
+			log.info(actionName + "-Total: " + total);
+			long fetchDbInstanceInfoTime = fetchDbInstanceInfoEndTime.getTime()
+					- fetchDbInstanceInfoStartTime.getTime();
+			log.info(actionName + "-FetchDbInstanceInfo: "
+					+ fetchDbInstanceInfoTime);
 			if (WebAppConst.SCORE_TYPE[3].equals(questionInfo.getScoreType())) {
 				if (sessionQuestionInfo.getMenuId().equals(
 						WebAppConst.INSPECTION_MENU_ID)) {
@@ -263,7 +322,7 @@ public class QuestionSelectionAction extends ActionSupport implements
 			} else if (sessionQuestionInfo.getMenuId().equals(
 					WebAppConst.DENY_MENU_ID)) {
 				return "denyCategorySelection";
-			}else {
+			} else {
 				return "showScoringPage";
 			}
 		} catch (SaitenRuntimeException we) {

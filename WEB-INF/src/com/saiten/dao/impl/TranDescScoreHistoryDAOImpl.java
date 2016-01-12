@@ -1,5 +1,6 @@
 package com.saiten.dao.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -24,6 +25,7 @@ import com.saiten.dao.support.SaitenHibernateDAOSupport;
 import com.saiten.info.DailyScoreInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.info.RatingInfo;
+import com.saiten.info.RegisterScoreInfo;
 import com.saiten.info.ScoreCurrentInfo;
 import com.saiten.info.ScoreHistoryInfo;
 import com.saiten.info.ScoreInputInfo;
@@ -52,7 +54,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			List<Integer> questionSeq, String connectionString,
 			List<Short> scoringStateList, boolean bookmarkScreenFlag) {
 		StringBuilder query = new StringBuilder();
-		
+
 		query.append("SELECT COUNT(*) ");
 		query.append("FROM TranDescScoreHistory as tranDescScoreHistory ");
 		query.append("WHERE tranDescScoreHistory.scorerId = :SCORER_ID ");
@@ -193,7 +195,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 		} catch (RuntimeException re) {
 			throw re;
-		} 
+		}
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -398,11 +400,12 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List findPrevOrNextHistoryAnswer(final int quetionSeq, final String menuId,
-			final String scorerId, final String connectionString,
-			final List<Short> scoringStateList, final Date updateDate, final boolean isPrevious) {
+	public List findPrevOrNextHistoryAnswer(final int quetionSeq,
+			final String menuId, final String scorerId,
+			final String connectionString, final List<Short> scoringStateList,
+			final Date updateDate, final boolean isPrevious) {
 
-		//HibernateTemplate hibernateTemplate = null;
+		// HibernateTemplate hibernateTemplate = null;
 
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT tranDescScoreHistory.tranDescScore.answerSeq, tranDescScoreHistory.answerFormNum, ");
@@ -437,33 +440,30 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			query.append("ORDER BY tranDescScoreHistory.updateDate ASC ");
 		}
 
-/*		List<String> paramNames = new ArrayList<String>();
-		paramNames.add("QUESTION_SEQUENCE");
-		paramNames.add("VALID_FLAG");
-		paramNames.add("SCORER_ID");
-		paramNames.add("SCORING_STATE_LIST");
-		paramNames.add("CREATE_DATE");
-
-		List<Object> values = new ArrayList<Object>();
-		values.add(quetionSeq);
-		values.add(WebAppConst.VALID_FLAG);
-		values.add(scorerId);
-		values.add(scoringStateList);
-		values.add(new Date());
-		if (updateDate != null) {
-			paramNames.add("LATEST_UPDATE_DATE");
-			values.add(updateDate);
-		}*/
+		/*
+		 * List<String> paramNames = new ArrayList<String>();
+		 * paramNames.add("QUESTION_SEQUENCE"); paramNames.add("VALID_FLAG");
+		 * paramNames.add("SCORER_ID"); paramNames.add("SCORING_STATE_LIST");
+		 * paramNames.add("CREATE_DATE");
+		 * 
+		 * List<Object> values = new ArrayList<Object>();
+		 * values.add(quetionSeq); values.add(WebAppConst.VALID_FLAG);
+		 * values.add(scorerId); values.add(scoringStateList); values.add(new
+		 * Date()); if (updateDate != null) {
+		 * paramNames.add("LATEST_UPDATE_DATE"); values.add(updateDate); }
+		 */
 
 		try {
-			/*hibernateTemplate = getHibernateTemplate(connectionString);
-			hibernateTemplate
-					.setMaxResults(WebAppConst.ANSWER_RECORD_FETCH_SIZE);
+			/*
+			 * hibernateTemplate = getHibernateTemplate(connectionString);
+			 * hibernateTemplate
+			 * .setMaxResults(WebAppConst.ANSWER_RECORD_FETCH_SIZE);
+			 * 
+			 * return hibernateTemplate.findByNamedParam(query.toString(),
+			 * paramNames.toArray(new String[paramNames.size()]),
+			 * values.toArray());
+			 */
 
-			return hibernateTemplate.findByNamedParam(query.toString(),
-					paramNames.toArray(new String[paramNames.size()]),
-					values.toArray());*/
-			
 			return getHibernateTemplate(connectionString).execute(
 					new HibernateCallback<List>() {
 						public List doInHibernate(Session session)
@@ -472,13 +472,17 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									.toString());
 
 							queryObj.setParameter("SCORER_ID", scorerId);
-							queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
-							queryObj.setParameterList("SCORING_STATE_LIST", scoringStateList);
-							queryObj.setParameter("QUESTION_SEQUENCE", quetionSeq);
+							queryObj.setParameter("VALID_FLAG",
+									WebAppConst.VALID_FLAG);
+							queryObj.setParameterList("SCORING_STATE_LIST",
+									scoringStateList);
+							queryObj.setParameter("QUESTION_SEQUENCE",
+									quetionSeq);
 							queryObj.setParameter("CREATE_DATE", new Date());
-						
+
 							if (updateDate != null) {
-								queryObj.setParameter("LATEST_UPDATE_DATE", updateDate);
+								queryObj.setParameter("LATEST_UPDATE_DATE",
+										updateDate);
 							}
 							queryObj.setMaxResults(WebAppConst.ANSWER_RECORD_FETCH_SIZE);
 							return queryObj.list();
@@ -486,11 +490,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 					});
 		} catch (RuntimeException re) {
 			throw re;
-		} /*finally {
-			if (hibernateTemplate != null) {
-				hibernateTemplate.setMaxResults(WebAppConst.ZERO);
-			}
-		}*/
+		} /*
+		 * finally { if (hibernateTemplate != null) {
+		 * hibernateTemplate.setMaxResults(WebAppConst.ZERO); } }
+		 */
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -526,7 +529,19 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append(" UNION ");
 		query.append("SELECT tq.answer_seq As seq,tq.answer_form_num, ");
 		query.append("ts.image_file_name,tq.ref_flag,tq.scorer_comment, ");
-		query.append("tq.grade_seq,tq.bit_value,tq.create_date,tq.pending_category_seq, "); // Change made to bring create date instead of update date from tran_qualitycheck table
+		query.append("tq.grade_seq,tq.bit_value,tq.create_date,tq.pending_category_seq, "); // Change
+																							// made
+																							// to
+																							// bring
+																							// create
+																							// date
+																							// instead
+																							// of
+																							// update
+																							// date
+																							// from
+																							// tran_qualitycheck
+																							// table
 		query.append("tq.scoring_state,tq.question_seq,tq.ref_flag As flag1,tq.qc_seq As seq1,1 As tbl ");
 		query.append("FROM tran_qualitycheck_score tq  join tran_desc_score ts ");
 		query.append("ON tq.answer_seq = ts.answer_seq ");
@@ -2132,11 +2147,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			final Boolean forceAndStateTransitionFlag,
 			final Integer startRecord, final Integer endRecord,
 			final String orderByRandAttempt) {
-		
+
 		Map<String, String> configMap = SaitenUtil.getConfigMap();
-		final boolean searchByScorerRoleId = Boolean
-				.valueOf(configMap.get("search.by.scorer_role_id"));
-		
+		final boolean searchByScorerRoleId = Boolean.valueOf(configMap
+				.get("search.by.scorer_role_id"));
+
 		final ScoreHistoryInfo scoreHistoryInfo = scoreInputInfo
 				.getScoreHistoryInfo();
 
@@ -2164,7 +2179,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 				.getHistoryUpdateStartDate() : null;
 		final Date historyUpdateEndDate = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryUpdateEndDate() : null;
-		final Integer[] historyScorerRoles = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryScorerRole() : null;
+		final Integer[] historyScorerRoles = scoreHistoryInfo != null ? scoreHistoryInfo
+				.getHistoryScorerRole() : null;
 
 		final ScoreCurrentInfo scoreCurrentInfo = scoreInputInfo
 				.getScoreCurrentInfo();
@@ -2193,7 +2209,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 				.getCurrentUpdateStartDate() : null;
 		final Date currentUpdateEndDate = scoreCurrentInfo != null ? scoreCurrentInfo
 				.getCurrentUpdateEndDate() : null;
-		final Integer[] currentScorerRoles = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentScorerRole() : null;
+		final Integer[] currentScorerRoles = scoreCurrentInfo != null ? scoreCurrentInfo
+				.getCurrentScorerRole() : null;
 
 		/*
 		 * System.out.println(">>>>>>>>>>>>>> searchAnswerRecords start: " + new
@@ -2243,7 +2260,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 									query.append(", score.lookAftSeq AS lookAftSeq ");
 								}
-								if(menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)){
+								if (menuId
+										.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
 									query.append(", t.latest_screen_scorer_id AS latestScreenScorerId ");
 									query.append(", t.second_latest_screen_scorer_id AS secondLatestScreenScorerId ");
 								}
@@ -2277,12 +2295,12 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								}
 								query.append("ON tranDescScore.answer_seq = tranLookAfterwards.answer_seq ");
 							}
-							
+
 							query.append("WHERE tranDescScore.question_seq  = :QUESTION_SEQ ");
 							query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
-							
-							if(searchByScorerRoleId==true){
-								if(currentScorerRoles != null){
+
+							if (searchByScorerRoleId == true) {
+								if (currentScorerRoles != null) {
 									query.append("AND tranDescScore.answer_seq = ");
 									query.append("( SELECT answer_seq FROM tran_desc_score_history his1 ");
 									query.append("WHERE his1.history_seq = ");
@@ -2290,10 +2308,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									query.append("WHERE his2.answer_seq = tranDescScore.answer_seq ");
 									query.append("AND his2.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
 									query.append(") ");
-									query.append(") ");								
+									query.append(") ");
 								}
 							}
-							
+
 							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
 									.equals(WebAppConst.FORCED_MENU_ID))
 									&& (orderByRandAttempt
@@ -2336,17 +2354,23 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										.append("WHERE t.question_seq  = :QUESTION_SEQ ");
 								countSubQuery
 										.append("AND t1.question_seq  = :QUESTION_SEQ ");
-								if(searchByScorerRoleId==true){
-									if(currentScorerRoles != null){
-										countSubQuery.append("AND t.answer_seq = ");
-										countSubQuery.append("( SELECT answer_seq FROM tran_desc_score_history his1 ");
-										countSubQuery.append("WHERE his1.history_seq = ");
-										countSubQuery.append("( SELECT max(history_seq) FROM tran_desc_score_history his2 ");
-										countSubQuery.append("WHERE his2.answer_seq = t.answer_seq ");
-										countSubQuery.append("AND his2.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
+								if (searchByScorerRoleId == true) {
+									if (currentScorerRoles != null) {
+										countSubQuery
+												.append("AND t.answer_seq = ");
+										countSubQuery
+												.append("( SELECT answer_seq FROM tran_desc_score_history his1 ");
+										countSubQuery
+												.append("WHERE his1.history_seq = ");
+										countSubQuery
+												.append("( SELECT max(history_seq) FROM tran_desc_score_history his2 ");
+										countSubQuery
+												.append("WHERE his2.answer_seq = t.answer_seq ");
+										countSubQuery
+												.append("AND his2.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
 										countSubQuery.append(") ");
-										countSubQuery.append(") ");								
-									}									
+										countSubQuery.append(") ");
+									}
 								}
 								countSubQuery
 										.append("AND t.lock_flag = :UNLOCK ");
@@ -2496,7 +2520,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 									if (!StringUtils.isBlank(punchText)) {
 										countSubQuery
-												.append("AND t.punch_text like :PUNCH_TEXT escape '" +WebAppConst.ESCAPE_CHARACTER + "'");
+												.append("AND t.punch_text like :PUNCH_TEXT escape '"
+														+ WebAppConst.ESCAPE_CHARACTER
+														+ "'");
 									}
 
 									if (!currentScorerIdList.isEmpty()) {
@@ -2644,16 +2670,16 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									countSubQuery
 											.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
 									countSubQuery
-										.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
-								}
-								
-								if(searchByScorerRoleId==true){
-									if(historyScorerRoles != null){
-										countSubQuery.append("AND t1.scorer_role_id IN :HISTORY_SCORER_ROLES ");
-									}									
+											.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
 								}
 
-								
+								if (searchByScorerRoleId == true) {
+									if (historyScorerRoles != null) {
+										countSubQuery
+												.append("AND t1.scorer_role_id IN :HISTORY_SCORER_ROLES ");
+									}
+								}
+
 								if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 									if (scoreCurrentInfo != null
 											&& scoreCurrentInfo
@@ -2673,7 +2699,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								query.append(countSubQuery);
 								query.append(")*10) ");
 							}
-							
+
 							query.append("AND tranDescScore.lock_flag = :UNLOCK ");
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
@@ -2796,7 +2822,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									&& scoreCurrentInfo.isCurrentBlock()) {
 
 								if (!StringUtils.isBlank(punchText)) {
-									query.append("AND tranDescScore.punch_text like :PUNCH_TEXT escape '" + WebAppConst.ESCAPE_CHARACTER + "'");
+									query.append("AND tranDescScore.punch_text like :PUNCH_TEXT escape '"
+											+ WebAppConst.ESCAPE_CHARACTER
+											+ "'");
 								}
 
 								if (!currentScorerIdList.isEmpty()) {
@@ -2920,12 +2948,12 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 							}
 
-							if(searchByScorerRoleId==true){
-								if(historyScorerRoles != null){
+							if (searchByScorerRoleId == true) {
+								if (historyScorerRoles != null) {
 									query.append("AND tranDescScoreHistory.scorer_role_id IN :HISTORY_SCORER_ROLES ");
-								}								
+								}
 							}
-							
+
 							if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 								if (scoreCurrentInfo != null
 										&& scoreCurrentInfo
@@ -2933,7 +2961,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									query.append("AND tranLookAfterwards.look_aft_flag = :VALID_FLAG ");
 								}
 							}
-							
+
 							query.append("AND tranDescScore.valid_flag = :VALID_FLAG ");
 							query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
 							if ((forceAndStateTransitionFlag != null)
@@ -3085,18 +3113,19 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									&& scoreCurrentInfo.isCurrentBlock()) {
 
 								if (!StringUtils.isBlank(punchText)) {
-									if(punchTextCondition == null || punchTextCondition.equals("0")) {
+									if (punchTextCondition == null
+											|| punchTextCondition.equals("0")) {
 										queryObj.setParameter("PUNCH_TEXT",
 												punchText);
-									} else if(punchTextCondition.equals("1")) {
+									} else if (punchTextCondition.equals("1")) {
 										queryObj.setParameter("PUNCH_TEXT",
-												punchText+"%");
-									} else if(punchTextCondition.equals("2")) {
-										queryObj.setParameter("PUNCH_TEXT",
-												"%"+punchText);
-									} else if(punchTextCondition.equals("3")) {
-										queryObj.setParameter("PUNCH_TEXT",
-												"%"+punchText+"%");
+												punchText + "%");
+									} else if (punchTextCondition.equals("2")) {
+										queryObj.setParameter("PUNCH_TEXT", "%"
+												+ punchText);
+									} else if (punchTextCondition.equals("3")) {
+										queryObj.setParameter("PUNCH_TEXT", "%"
+												+ punchText + "%");
 									}
 								}
 
@@ -3232,13 +3261,15 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										"CURRENT_STATE_LIST",
 										WebAppConst.FORCED_SCORING_CURRENT_STATES);
 							}
-							
-							if(searchByScorerRoleId==true){
-								if(currentScorerRoles != null){
-									queryObj.setParameterList("CURRENT_SCORER_ROLES", Arrays.asList(currentScorerRoles));
-								}								
+
+							if (searchByScorerRoleId == true) {
+								if (currentScorerRoles != null) {
+									queryObj.setParameterList(
+											"CURRENT_SCORER_ROLES",
+											Arrays.asList(currentScorerRoles));
+								}
 							}
-							
+
 						}
 
 						public void setHistoryParameters(SQLQuery queryObj) {
@@ -3357,11 +3388,13 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 											"HISTORY_UPDATE_END_DATE",
 											historyUpdateEndDate);
 								}
-								
-								if(searchByScorerRoleId==true){
-									if(historyScorerRoles != null){
-										queryObj.setParameterList("HISTORY_SCORER_ROLES", Arrays.asList(historyScorerRoles));
-									}									
+
+								if (searchByScorerRoleId == true) {
+									if (historyScorerRoles != null) {
+										queryObj.setParameterList(
+												"HISTORY_SCORER_ROLES",
+												Arrays.asList(historyScorerRoles));
+									}
 								}
 
 							}
@@ -3671,12 +3704,12 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * .equals(WebAppConst.FORCED_MENU_ID))) { queryObj.setParameterList(
 	 * "DUMMY_SCORING_STATES", WebAppConst.DUMMY_SCORING_STATES); }
 	 *//*
-	 * if ((forceAndStateTransitionFlag != null) &&
-	 * (forceAndStateTransitionFlag == WebAppConst.TRUE) && (menuId
-	 * .equals(WebAppConst.FORCED_MENU_ID))) { if (endRecord != null) {
-	 * queryObj.setFirstResult(startRecord); queryObj.setMaxResults(endRecord);
-	 * } }
-	 */
+		 * if ((forceAndStateTransitionFlag != null) &&
+		 * (forceAndStateTransitionFlag == WebAppConst.TRUE) && (menuId
+		 * .equals(WebAppConst.FORCED_MENU_ID))) { if (endRecord != null) {
+		 * queryObj.setFirstResult(startRecord);
+		 * queryObj.setMaxResults(endRecord); } }
+		 */
 	/*
 	 * 
 	 * return queryObj.uniqueResult(); }
@@ -4728,11 +4761,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			final ScoreInputInfo scoreInputInfo,
 			final Boolean forceAndStateTransitionFlag,
 			final Integer startRecord, final Integer endRecord) {
-		
+
 		Map<String, String> configMap = SaitenUtil.getConfigMap();
-		final boolean searchByScorerRoleId = Boolean
-				.valueOf(configMap.get("search.by.scorer_role_id"));
-		
+		final boolean searchByScorerRoleId = Boolean.valueOf(configMap
+				.get("search.by.scorer_role_id"));
+
 		final ScoreHistoryInfo scoreHistoryInfo = scoreInputInfo
 				.getScoreHistoryInfo();
 
@@ -4749,7 +4782,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		final List historyPendingCategorySeqList = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryPendingCategorySeqList() : null;
 		final List historyDenyCategorySeqList = scoreHistoryInfo != null ? scoreHistoryInfo
-						.getHistoryDenyCategorySeqList() : null;
+				.getHistoryDenyCategorySeqList() : null;
 		final String historyIncludeCheckPoints = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryIncludeCheckPoints() : null;
 		final String historyExcludeCheckPoints = scoreHistoryInfo != null ? scoreHistoryInfo
@@ -4760,8 +4793,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 				.getHistoryUpdateStartDate() : null;
 		final Date historyUpdateEndDate = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryUpdateEndDate() : null;
-		final Integer[] historyScorerRoles = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryScorerRole() : null;
-
+		final Integer[] historyScorerRoles = scoreHistoryInfo != null ? scoreHistoryInfo
+				.getHistoryScorerRole() : null;
 
 		final ScoreCurrentInfo scoreCurrentInfo = scoreInputInfo
 				.getScoreCurrentInfo();
@@ -4790,7 +4823,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 				.getCurrentUpdateStartDate() : null;
 		final Date currentUpdateEndDate = scoreCurrentInfo != null ? scoreCurrentInfo
 				.getCurrentUpdateEndDate() : null;
-		final Integer[] currentScorerRoles = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentScorerRole() : null;
+		final Integer[] currentScorerRoles = scoreCurrentInfo != null ? scoreCurrentInfo
+				.getCurrentScorerRole() : null;
 
 		/*
 		 * System.out.println(">>>>>>>>>>>> recordCount start: "+ new
@@ -4878,9 +4912,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							}
 							query.append("WHERE tranDescScore.question_seq  = :QUESTION_SEQ ");
 							query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
-							
-							if(searchByScorerRoleId==true){
-								if(currentScorerRoles != null){
+
+							if (searchByScorerRoleId == true) {
+								if (currentScorerRoles != null) {
 									query.append("AND tranDescScore.answer_seq = ");
 									query.append("( SELECT answer_seq FROM tran_desc_score_history his1 ");
 									query.append("WHERE his1.history_seq = ");
@@ -4888,10 +4922,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									query.append("WHERE his2.answer_seq = tranDescScore.answer_seq ");
 									query.append("AND his2.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
 									query.append(") ");
-									query.append(") ");								
-								}								
+									query.append(") ");
+								}
 							}
-							
+
 							query.append("AND tranDescScore.lock_flag = :UNLOCK ");
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
@@ -4971,7 +5005,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										&& !historyPendingCategorySeqList
 												.isEmpty()) {
 									query.append("AND tranDescScoreHistory.pending_category_seq IN :HISTORY_PENDING_CATEGORY_SEQ_LIST ");
-								}else if (historyCategoryType != null
+								} else if (historyCategoryType != null
 										&& historyCategoryType == 5
 										&& !historyDenyCategorySeqList
 												.isEmpty()) {
@@ -5012,7 +5046,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									&& scoreCurrentInfo.isCurrentBlock()) {
 
 								if (!StringUtils.isBlank(punchText)) {
-									query.append("AND tranDescScore.punch_text like :PUNCH_TEXT escape '" +WebAppConst.ESCAPE_CHARACTER + "'");
+									query.append("AND tranDescScore.punch_text like :PUNCH_TEXT escape '"
+											+ WebAppConst.ESCAPE_CHARACTER
+											+ "'");
 								}
 
 								if (!currentScorerIdList.isEmpty()) {
@@ -5134,13 +5170,13 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 							}
-							
-							if(searchByScorerRoleId==true){
-								if(historyScorerRoles != null){
+
+							if (searchByScorerRoleId == true) {
+								if (historyScorerRoles != null) {
 									query.append("AND tranDescScoreHistory.scorer_role_id IN :HISTORY_SCORER_ROLES ");
-								}								
+								}
 							}
-							
+
 							if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 								if (scoreCurrentInfo != null
 										&& scoreCurrentInfo
@@ -5308,18 +5344,19 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									&& scoreCurrentInfo.isCurrentBlock()) {
 
 								if (!StringUtils.isBlank(punchText)) {
-									if(punchTextCondition == null || punchTextCondition.equals("0")) {
+									if (punchTextCondition == null
+											|| punchTextCondition.equals("0")) {
 										queryObj.setParameter("PUNCH_TEXT",
 												punchText);
-									} else if(punchTextCondition.equals("1")) {
+									} else if (punchTextCondition.equals("1")) {
 										queryObj.setParameter("PUNCH_TEXT",
-												punchText+"%");
-									} else if(punchTextCondition.equals("2")) {
-										queryObj.setParameter("PUNCH_TEXT",
-												"%"+punchText);
-									} else if(punchTextCondition.equals("3")) {
-										queryObj.setParameter("PUNCH_TEXT",
-												"%"+punchText+"%");
+												punchText + "%");
+									} else if (punchTextCondition.equals("2")) {
+										queryObj.setParameter("PUNCH_TEXT", "%"
+												+ punchText);
+									} else if (punchTextCondition.equals("3")) {
+										queryObj.setParameter("PUNCH_TEXT", "%"
+												+ punchText + "%");
 									}
 								}
 
@@ -5455,11 +5492,13 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										"CURRENT_STATE_LIST",
 										WebAppConst.FORCED_SCORING_CURRENT_STATES);
 							}
-							
-							if(searchByScorerRoleId==true){
-								if(currentScorerRoles != null){
-									queryObj.setParameterList("CURRENT_SCORER_ROLES", Arrays.asList(currentScorerRoles));
-								}								
+
+							if (searchByScorerRoleId == true) {
+								if (currentScorerRoles != null) {
+									queryObj.setParameterList(
+											"CURRENT_SCORER_ROLES",
+											Arrays.asList(currentScorerRoles));
+								}
 							}
 
 						}
@@ -5582,11 +5621,13 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 											"HISTORY_UPDATE_END_DATE",
 											historyUpdateEndDate);
 								}
-								
-								if(searchByScorerRoleId==true){
-									if(historyScorerRoles != null){
-										queryObj.setParameterList("HISTORY_SCORER_ROLES", Arrays.asList(historyScorerRoles));
-									}									
+
+								if (searchByScorerRoleId == true) {
+									if (historyScorerRoles != null) {
+										queryObj.setParameterList(
+												"HISTORY_SCORER_ROLES",
+												Arrays.asList(historyScorerRoles));
+									}
 								}
 
 							}
@@ -5624,7 +5665,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			throw re;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Object[]> getDailyDiscrepancyAnalysisData(
 			String connectionString, final String fromDate, final String toDate) {
@@ -5671,7 +5712,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			throw re;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<RatingInfo> getSummaryDiscrepancyAnalysisData(
 			String connectionString, final String fromDate, final String toDate) {
@@ -5759,7 +5800,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			throw re;
 		}
 	}
-	
+
 	public DailyScoreInfo getDailyScoreInfo(String connectionString,
 			final String fromDate, final String toDate) {
 
@@ -5829,7 +5870,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("WHERE update_date between :FROM_DATE AND :TO_DATE ");
 		query.append("AND valid_flag = :VALID_FLAG ");
 		query.append("GROUP BY answer_seq) as result");
-		
+
 		try {
 			return getHibernateTemplate(connectionString).execute(
 					new HibernateCallback<DailyScoreInfo>() {
@@ -5881,7 +5922,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									WebAppConst.PEND_CATE_05);
 
 							setResultTransformerProperties(queryObj);
-							
+
 							return (DailyScoreInfo) queryObj.uniqueResult();
 						}
 					});
@@ -5889,10 +5930,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			throw re;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Integer> getDailyScoreQuesSeqInfo(
-			String connectionString, final String fromDate, final String toDate) {
+	public List<Integer> getDailyScoreQuesSeqInfo(String connectionString,
+			final String fromDate, final String toDate) {
 
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
@@ -5956,7 +5997,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			throw re;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Object[]> getStateWiseScoringData(String connectionString,
 			final String stateList, final String fromDate, final String toDate) {
@@ -6001,7 +6042,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			throw re;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Object[]> getPendCategoryAndStateWiseScoringData(
 			String connectionString, final String stateList,
@@ -6037,7 +6078,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							queryObj.setParameter("FROM_DATE", fromDate);
 							queryObj.setParameter("TO_DATE", toDate);
 							queryObj.setParameter("STATE_LIST", stateList);
-							queryObj.setParameter("PENDING_CATEGORY", pendingCategory);
+							queryObj.setParameter("PENDING_CATEGORY",
+									pendingCategory);
 							queryObj.setParameter("QUES_TYPE_SPEAKING",
 									WebAppConst.QUES_TYPE_SPEAKING);
 							queryObj.setParameter("QUES_TYPE_WRITING",
@@ -6053,7 +6095,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			throw re;
 		}
 	}
-	
+
 	public Object[] getDefectiveSciptCount(String connectionString) {
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
@@ -6084,7 +6126,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			throw re;
 		}
 	}
-	
+
 	private void setResultTransformerProperties(SQLQuery queryObj) {
 		queryObj.addScalar("firstRtgSecondWaitSpkCnt", IntegerType.INSTANCE);
 		queryObj.addScalar("firstRtgSecondWaitWrtCnt", IntegerType.INSTANCE);
@@ -6143,10 +6185,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		queryObj.setResultTransformer(Transformers
 				.aliasToBean(DailyScoreInfo.class));
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Object[]> fetchInspectionGroupSeqAndCount(final int questionSeq,
-			final String scorerId, String connectionString) {
+	public List<Object[]> fetchInspectionGroupSeqAndCount(
+			final int questionSeq, final String scorerId,
+			String connectionString) {
 
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
@@ -6164,7 +6207,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("AND tranDescScore.inspect_group_seq is not null ");
 		query.append("group by tranDescScore.inspect_group_seq ");
 		query.append("having count(*) > 0 ");
-		
+
 		try {
 			return getHibernateTemplate(connectionString).execute(
 					new HibernateCallback<List<Object[]>>() {
@@ -6173,10 +6216,13 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							SQLQuery queryObj = session.createSQLQuery(query
 									.toString());
 							queryObj.setParameter("QUESTION_SEQ", questionSeq);
-							queryObj.setParameter("LOGGED_IN_SCORER_ID", scorerId);
-							queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
-							queryObj.setParameter("INSPECTION_STATE", WebAppConst.INSPECTION_STATE);
-							
+							queryObj.setParameter("LOGGED_IN_SCORER_ID",
+									scorerId);
+							queryObj.setParameter("VALID_FLAG",
+									WebAppConst.VALID_FLAG);
+							queryObj.setParameter("INSPECTION_STATE",
+									WebAppConst.INSPECTION_STATE);
+
 							return queryObj.list();
 						}
 					});
@@ -6184,9 +6230,45 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			throw re;
 		}
 	}
-	
+
 	public static String getPropertyFromPropertyFile(String propertyFileName,
 			String key) {
 		return ResourceBundle.getBundle(propertyFileName).getString(key);
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public int registerAnswer(RegisterScoreInfo registerScoreInfo,
+			String connectionString) {
+		HibernateTemplate hibernateTemplate = null;
+		try {
+			hibernateTemplate = getHibernateTemplate(connectionString);
+
+			List list = hibernateTemplate.findByNamedQuery(
+					"registerTranAnswer", registerScoreInfo.getAnswerSeq(),
+					registerScoreInfo.getScorerId(),
+					registerScoreInfo.getLatestScreenScorerId(),
+					registerScoreInfo.getSecondLatestScreenScorerId(),
+					registerScoreInfo.getLatestScoringState(),
+					registerScoreInfo.getBitValue(),
+					registerScoreInfo.getGradeSeq(),
+					registerScoreInfo.getGradeNum(),
+					registerScoreInfo.getUpdateDate(),
+					registerScoreInfo.getQualityCheckFlag(),
+					registerScoreInfo.getRoleId(),
+					registerScoreInfo.getEventId(),
+					registerScoreInfo.getScorerComment(),
+					registerScoreInfo.getBookMarkFlag(),
+					registerScoreInfo.getHistorySeq(),
+					registerScoreInfo.isSecondAndThirdLatestScorerIdFlag(),
+					registerScoreInfo.getPendingCategorySeq(),
+					registerScoreInfo.getPendingCategory(),
+					registerScoreInfo.getIsScoreOrPending());
+			return ((BigInteger) list.get(0)).intValue();
+		} catch (RuntimeException re) {
+			// TODO: handle exception
+			throw re;
+		}
+
 	}
 }

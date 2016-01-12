@@ -176,6 +176,7 @@
 	<!-- Register score bean configuration  -->
 	<bean id="registerScore" class="com.saiten.action.RegisterScoreAction" scope="request">
    		<property name="registerScoreService" ref="registerScoreService"></property>
+   		<property name="registerScoreByProcedureService" ref="registerScoreByProcedureService"></property>
    		<property name="saitenTransactionManager" ref="saitenTransactionManager"></property>
    	</bean>
    	
@@ -185,13 +186,26 @@
 		<property name="tranQualitycheckScoreDAO" ref="tranQualitycheckScoreDAO"></property>
 	</bean>
 	
+	<bean id="registerScoreByProcedureService" class="com.saiten.service.impl.RegisterScoreByProcedureServiceImpl">
+		<property name="tranDescScoreDAO" ref="tranDescScoreDAO"></property>
+		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO"></property>
+		<property name="tranQualitycheckScoreDAO" ref="tranQualitycheckScoreDAO"></property>
+	</bean>
+	
 	<!-- Register pending bean configuration  -->
 	<bean id="registerPending" class="com.saiten.action.RegisterPendingAction" scope="request">
    		<property name="registerPendingService" ref="registerPendingService"></property>
+   		<property name="registerPendingByProcedureService" ref="registerPendingByProcedureService"></property>	
    		<property name="saitenTransactionManager" ref="saitenTransactionManager"></property>
    	</bean>
    	
    	<bean id="registerPendingService" class="com.saiten.service.impl.RegisterPendingServiceImpl">
+		<property name="tranDescScoreDAO" ref="tranDescScoreDAO"></property>
+		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO"></property>
+		<property name="tranQualitycheckScoreDAO" ref="tranQualitycheckScoreDAO"></property>
+	</bean>
+	
+	<bean id="registerPendingByProcedureService" class="com.saiten.service.impl.RegisterPendingByProcedureServiceImpl">
 		<property name="tranDescScoreDAO" ref="tranDescScoreDAO"></property>
 		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO"></property>
 		<property name="tranQualitycheckScoreDAO" ref="tranQualitycheckScoreDAO"></property>

@@ -11,7 +11,6 @@ import org.apache.struts2.ServletActionContext;
 import org.hibernate.HibernateException;
 import org.springframework.web.context.ContextLoader;
 
-import com.saiten.action.QuestionSelectionAction;
 import com.saiten.bean.SaitenConfig;
 import com.saiten.bean.ScoringStateKey;
 import com.saiten.dao.TranDescScoreDAO;
@@ -92,8 +91,15 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 				}
 			} else {
 				// Load tranDescScore object
+				String actionName = "registerScore";
+				Date logSelectTranRecordStartTime = new Date();
 				TranDescScore tranDescScore = tranDescScoreDAO.findById(
 						answerInfo.getAnswerSeq(), connectionString);
+				Date logSelectTranRecordEndTime = new Date();
+				long selectTranRecordTime = logSelectTranRecordEndTime
+						.getTime() - logSelectTranRecordStartTime.getTime();
+				log.info(actionName + "-Select Tran Record: "
+						+ selectTranRecordTime);
 
 				// Check whether lock is acquired by two or more users
 				String lockBy = tranDescScore.getLockBy();
@@ -129,9 +135,16 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 					} else {
 
 						// Update tranDescScore object
+						Date logUpdateTranDescScoreStartTime = new Date();
 						updateTranDescScoreObject(questionInfo, scorerInfo,
 								answerInfo, tranDescScore, gradeSeq, gradeNum,
 								denyCategorySeq, denyCategory, approveOrDeny);
+						Date logUpdateTranDescScoreEndTime = new Date();
+						long updateTranDescScoreTime = logUpdateTranDescScoreEndTime
+								.getTime()
+								- logUpdateTranDescScoreStartTime.getTime();
+						log.info(actionName + "-Update TranDescScore: "
+								+ updateTranDescScoreTime);
 
 						tranDescScoreHistory = new TranDescScoreHistory();
 
@@ -176,12 +189,20 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 									approveOrDeny);
 						} else {
 							// Build tranDescScoreHistory persistent object
+							Date logBuildTranDescScoreHistoryStartTime = new Date();
 							tranDescScoreHistory = buildTranDescScoreHistoryObj(
 									tranDescScore, scorerInfo.getRoleId(),
 									menuId, answerInfo, tranDescScoreHistory);
-
 							// Save tranDescScoreHistory object
 							save(tranDescScoreHistory, connectionString);
+							Date logBuildTranDescScoreHistoryEndTime = new Date();
+							long buildTranDescScoreHistoryTime = logBuildTranDescScoreHistoryEndTime
+									.getTime()
+									- logBuildTranDescScoreHistoryStartTime
+											.getTime();
+							log.info(actionName
+									+ "-Insert TranDescScoreHistory: "
+									+ buildTranDescScoreHistoryTime);
 						}
 					}
 				} else {
@@ -201,7 +222,6 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 							connectionString, historySeq);
 				}
 			}
-
 			return lockFlag;
 		} catch (HibernateException he) {
 			throw new SaitenRuntimeException(

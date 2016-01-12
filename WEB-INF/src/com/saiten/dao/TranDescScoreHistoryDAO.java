@@ -6,6 +6,7 @@ import java.util.List;
 import com.saiten.info.DailyScoreInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.info.RatingInfo;
+import com.saiten.info.RegisterScoreInfo;
 import com.saiten.info.ScoreInputInfo;
 import com.saiten.model.TranDescScoreHistory;
 
@@ -153,33 +154,34 @@ public interface TranDescScoreHistoryDAO {
 	public List findPrevOrNextHistoryAndQcAnswer(int quetionSeq, String menuId,
 			String scorerId, String connectionString,
 			List<Short> scoringStateList, Date updateDate, boolean isPrevious);
-	
+
 	/**
 	 * @param answerSequence
 	 * @param connectionString
 	 * @return List
 	 */
 	@SuppressWarnings("rawtypes")
-	public List findProcessDetails(Integer answerSequence, String connectionString);
-	
+	public List findProcessDetails(Integer answerSequence,
+			String connectionString);
+
 	/**
 	 * @param connectionString
 	 * @param fromDate
 	 * @param toDate
 	 * @return
 	 */
-	public List<Object[]> getDailyDiscrepancyAnalysisData(String connectionString,
-			String fromDate, String toDate);
-	
+	public List<Object[]> getDailyDiscrepancyAnalysisData(
+			String connectionString, String fromDate, String toDate);
+
 	/**
 	 * @param connectionString
 	 * @param fromDate
 	 * @param toDate
 	 * @return
 	 */
-	public List<RatingInfo> getSummaryDiscrepancyAnalysisData(String connectionString,
-			String fromDate, String toDate);
-	
+	public List<RatingInfo> getSummaryDiscrepancyAnalysisData(
+			String connectionString, String fromDate, String toDate);
+
 	/**
 	 * @param connectionString
 	 * @param fromDate
@@ -188,16 +190,16 @@ public interface TranDescScoreHistoryDAO {
 	 */
 	public DailyScoreInfo getDailyScoreInfo(String connectionString,
 			String fromDate, String toDate);
-	
+
 	/**
 	 * @param connectionString
 	 * @param fromDate
 	 * @param toDate
 	 * @return
 	 */
-	public List<Integer> getDailyScoreQuesSeqInfo(
-			String connectionString, final String fromDate, final String toDate);
-	
+	public List<Integer> getDailyScoreQuesSeqInfo(String connectionString,
+			final String fromDate, final String toDate);
+
 	/**
 	 * @param connectionString
 	 * @param stateList
@@ -219,13 +221,13 @@ public interface TranDescScoreHistoryDAO {
 	public List<Object[]> getPendCategoryAndStateWiseScoringData(
 			String connectionString, String stateList, String pendingCategory,
 			String fromDate, String toDate);
-	
+
 	/**
 	 * @param connectionString
 	 * @return
 	 */
 	public Object[] getDefectiveSciptCount(String connectionString);
-	
+
 	/**
 	 * @param questionSeq
 	 * @param scorerId
@@ -234,4 +236,7 @@ public interface TranDescScoreHistoryDAO {
 	 */
 	public List<Object[]> fetchInspectionGroupSeqAndCount(int questionSeq,
 			String scorerId, String connectionString);
+
+	public int registerAnswer(RegisterScoreInfo registerScoreInfo,
+			String connectionString);
 }

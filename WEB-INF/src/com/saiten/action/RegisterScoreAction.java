@@ -1,6 +1,7 @@
 package com.saiten.action;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +20,11 @@ import com.saiten.info.ScoreInputInfo;
 import com.saiten.info.ScoreSamplingInfo;
 import com.saiten.info.TranDescScoreInfo;
 import com.saiten.manager.SaitenTransactionManager;
+import com.saiten.service.RegisterScoreByProcedureService;
 import com.saiten.service.RegisterScoreService;
 import com.saiten.util.ErrorCode;
-import com.saiten.util.WebAppConst;
 import com.saiten.util.SaitenUtil;
+import com.saiten.util.WebAppConst;
 
 /**
  * @author sachin
@@ -37,6 +39,7 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 	 */
 	private static final long serialVersionUID = 1L;
 	private RegisterScoreService registerScoreService;
+	private RegisterScoreByProcedureService registerScoreByProcedureService;
 	private Map<String, Object> session;
 	private SaitenTransactionManager saitenTransactionManager;
 	private boolean lockFlag;
@@ -65,9 +68,10 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 
 		try {
 
+			Date logActionStartTime = new Date();
 			MstScorerInfo scorerInfo = (MstScorerInfo) session
 					.get("scorerInfo");
-
+			String menuId = questionInfo.getMenuId();
 			TranDescScoreInfo tranDescScoreInfo = (TranDescScoreInfo) session
 					.get("tranDescScoreInfo");
 			AnswerInfo answerInfo = tranDescScoreInfo.getAnswerInfo();
@@ -119,18 +123,42 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 			} else {
 
 				// Register or update answer
-				lockFlag = registerScoreService.registerScoring(questionInfo,
-						scorerInfo, answerInfo, gradeSeq, gradeNum,
-						denyCategorySeq, denyCategory,
-						session.get("approveOrDeny").toString(),
-						tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
-						historyRecordCount);
+				if (menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID)
+						|| menuId.equals(WebAppConst.SECOND_SCORING_MENU_ID)
+						|| menuId.equals(WebAppConst.CHECKING_MENU_ID)
+						|| menuId.equals(WebAppConst.DENY_MENU_ID)
+						|| menuId.equals(WebAppConst.PENDING_MENU_ID)
+						|| menuId.equals(WebAppConst.INSPECTION_MENU_ID)
+						|| menuId.equals(WebAppConst.MISMATCH_MENU_ID)
+						|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
+						|| menuId.equals(WebAppConst.OUT_BOUNDARY_MENU_ID)
+						|| menuId
+								.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)) {
+					lockFlag = registerScoreByProcedureService.registerScoring(
+							questionInfo, scorerInfo, answerInfo, gradeSeq,
+							gradeNum, denyCategorySeq, denyCategory, session
+									.get("approveOrDeny").toString(),
+							tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
+							historyRecordCount);
+				} else {
+					lockFlag = registerScoreService.registerScoring(
+							questionInfo, scorerInfo, answerInfo, gradeSeq,
+							gradeNum, denyCategorySeq, denyCategory, session
+									.get("approveOrDeny").toString(),
+							tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
+							historyRecordCount);
+				}
+
 			}
 			platformTransactionManager.commit(transactionStatus);
-
 			// Modify session info after answer evaluation
 			updateSessionInfo(tranDescScoreInfo);
 
+			Date logActionEndTime = new Date();
+			String actionName = "registerScore";
+			long total = logActionEndTime.getTime()
+					- logActionStartTime.getTime();
+			log.info(actionName + "-Total: " + total);
 		} catch (SaitenRuntimeException we) {
 			if (platformTransactionManager != null)
 				platformTransactionManager.rollback(transactionStatus);
@@ -405,4 +433,14 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 	public void setQualityCheckFlag(boolean qualityCheckFlag) {
 		this.qualityCheckFlag = qualityCheckFlag;
 	}
+
+	/**
+	 * @param registerScoreByProcedureService
+	 *            the registerScoreByProcedureService to set
+	 */
+	public void setRegisterScoreByProcedureService(
+			RegisterScoreByProcedureService registerScoreByProcedureService) {
+		this.registerScoreByProcedureService = registerScoreByProcedureService;
+	}
+
 }

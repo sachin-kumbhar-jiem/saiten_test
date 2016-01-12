@@ -18,6 +18,7 @@ import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.info.TranDescScoreInfo;
 import com.saiten.manager.SaitenTransactionManager;
+import com.saiten.service.RegisterPendingByProcedureService;
 import com.saiten.service.RegisterPendingService;
 import com.saiten.util.ErrorCode;
 import com.saiten.util.SaitenUtil;
@@ -36,6 +37,7 @@ public class RegisterPendingAction extends ActionSupport implements
 	 */
 	private static final long serialVersionUID = 1L;
 	private RegisterPendingService registerPendingService;
+	private RegisterPendingByProcedureService registerPendingByProcedureService;
 	private Map<String, Object> session;
 	private SaitenTransactionManager saitenTransactionManager;
 	private Integer pendingCategorySeq;
@@ -46,24 +48,6 @@ public class RegisterPendingAction extends ActionSupport implements
 	public static final String SCORE_SAMPLING = "scoreSampling";
 	public static final String BACK_TO_FORCED_SCORING_LIST = "backToForcedScoringList";
 	private boolean qualityCheckFlag;
-
-	/**
-	 * 
-	 * @param saitenTransactionManager
-	 */
-	public void setSaitenTransactionManager(
-			SaitenTransactionManager saitenTransactionManager) {
-		this.saitenTransactionManager = saitenTransactionManager;
-	}
-
-	/**
-	 * 
-	 * @param registerPendingService
-	 */
-	public void setRegisterPendingService(
-			RegisterPendingService registerPendingService) {
-		this.registerPendingService = registerPendingService;
-	}
 
 	@SuppressWarnings("unchecked")
 	public String doRegister() {
@@ -76,7 +60,7 @@ public class RegisterPendingAction extends ActionSupport implements
 		try {
 			MstScorerInfo scorerInfo = (MstScorerInfo) session
 					.get("scorerInfo");
-
+			String menuId = questionInfo.getMenuId();
 			TranDescScoreInfo tranDescScoreInfo = (TranDescScoreInfo) session
 					.get("tranDescScoreInfo");
 			AnswerInfo answerInfo = tranDescScoreInfo.getAnswerInfo();
@@ -93,16 +77,18 @@ public class RegisterPendingAction extends ActionSupport implements
 			List<Integer> qcAnswerSeqList = new ArrayList<Integer>();
 			qcAnswerSeqList = (List<Integer>) session.get("qcAnswerSeqList");
 			Boolean isQcRecord = false;
-			if(session.get("isQcRecord") != null){
-				isQcRecord = (Boolean)session.get("isQcRecord");
+			if (session.get("isQcRecord") != null) {
+				isQcRecord = (Boolean) session.get("isQcRecord");
 			}
-			if ((qcAnswerSeqList != null && !qcAnswerSeqList.isEmpty() && (isQcRecord != null && isQcRecord) && (tranDescScoreInfo.getAnswerInfo().getHistorySeq() == null))
+			if ((qcAnswerSeqList != null && !qcAnswerSeqList.isEmpty()
+					&& (isQcRecord != null && isQcRecord) && (tranDescScoreInfo
+					.getAnswerInfo().getHistorySeq() == null))
 					|| (tranDescScoreInfo.getAnswerInfo().getQcSeq() != null)) {
 				lockFlag = registerPendingService.registerQcPending(
 						questionInfo, scorerInfo, answerInfo,
 						pendingCategorySeq, pendingCategory, tranDescScoreInfo
 								.getAnswerInfo().getUpdateDate());
-				if(tranDescScoreInfo.getAnswerInfo().getQcSeq() == null){
+				if (tranDescScoreInfo.getAnswerInfo().getQcSeq() == null) {
 					qcAnswerSeqList.remove(Integer.valueOf(answerInfo
 							.getAnswerSeq()));
 					session.remove("isQcRecord");
@@ -110,11 +96,29 @@ public class RegisterPendingAction extends ActionSupport implements
 				session.put("qcAnswerSeqList", qcAnswerSeqList);
 
 			} else {
+				if (menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID)
+						|| menuId.equals(WebAppConst.SECOND_SCORING_MENU_ID)
+						|| menuId.equals(WebAppConst.CHECKING_MENU_ID)
+						|| menuId.equals(WebAppConst.DENY_MENU_ID)
+						|| menuId.equals(WebAppConst.PENDING_MENU_ID)
+						|| menuId.equals(WebAppConst.INSPECTION_MENU_ID)
+						|| menuId.equals(WebAppConst.MISMATCH_MENU_ID)
+						|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
+						|| menuId.equals(WebAppConst.OUT_BOUNDARY_MENU_ID)
+						|| menuId
+								.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)) {
+					lockFlag = registerPendingByProcedureService
+							.registerPending(questionInfo, scorerInfo,
+									answerInfo, pendingCategorySeq,
+									pendingCategory, tranDescScoreInfo
+											.getAnswerInfo().getUpdateDate());
+				} else {
+					lockFlag = registerPendingService.registerPending(
+							questionInfo, scorerInfo, answerInfo,
+							pendingCategorySeq, pendingCategory,
+							tranDescScoreInfo.getAnswerInfo().getUpdateDate());
+				}
 
-				lockFlag = registerPendingService.registerPending(questionInfo,
-						scorerInfo, answerInfo, pendingCategorySeq,
-						pendingCategory, tranDescScoreInfo.getAnswerInfo()
-								.getUpdateDate());
 			}
 
 			platformTransactionManager.commit(transactionStatus);
@@ -270,4 +274,32 @@ public class RegisterPendingAction extends ActionSupport implements
 	public void setQualityCheckFlag(boolean qualityCheckFlag) {
 		this.qualityCheckFlag = qualityCheckFlag;
 	}
+
+	/**
+	 * 
+	 * @param saitenTransactionManager
+	 */
+	public void setSaitenTransactionManager(
+			SaitenTransactionManager saitenTransactionManager) {
+		this.saitenTransactionManager = saitenTransactionManager;
+	}
+
+	/**
+	 * 
+	 * @param registerPendingService
+	 */
+	public void setRegisterPendingService(
+			RegisterPendingService registerPendingService) {
+		this.registerPendingService = registerPendingService;
+	}
+
+	/**
+	 * @param registerPendingByProcedureService
+	 *            the registerPendingByProcedureService to set
+	 */
+	public void setRegisterPendingByProcedureService(
+			RegisterPendingByProcedureService registerPendingByProcedureService) {
+		this.registerPendingByProcedureService = registerPendingByProcedureService;
+	}
+
 }

@@ -68,12 +68,13 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 		MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 		try {
+			Date logActionStartTime = new Date();
 			String denyCategoryStr = session.get("denyCategory").toString();
-	
-			if(denyCategoryStr != null && !(denyCategoryStr.isEmpty())) {
-				denyCategory=Short.valueOf(denyCategoryStr);
-			}else {
-				denyCategory=null;
+
+			if (denyCategoryStr != null && !(denyCategoryStr.isEmpty())) {
+				denyCategory = Short.valueOf(denyCategoryStr);
+			} else {
+				denyCategory = null;
 			}
 			String menuId = questionInfo.getMenuId();
 			SpecialScoreInputInfo specialScoreInputInfo = (SpecialScoreInputInfo) session
@@ -108,6 +109,12 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 			Integer questionSequence = null;
 			// for writing & speaking, first & second time menu, scorer &
 			// supervisor load quality check answers.
+			Date logGetQcAnsSeqListStartTime = null;
+			Date logGetQcAnsSeqListEndTime = null;
+			Date logFindAnswerStartTime = null;
+			Date logFindAnswerEndTime = null;
+			Date logFindQcAnswerStartTime = null;
+			Date logFindQcAnswerEndTime = null;
 			if ((menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID) || menuId
 					.equals(WebAppConst.SECOND_SCORING_MENU_ID)
 			/*
@@ -129,10 +136,12 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 						.get("loadQcListFlag");
 				if ((qcAnswerSeqList == null || qcAnswerSeqList.isEmpty())
 						&& ((loadQcListFlag != null) && (loadQcListFlag == true))) {
+					logGetQcAnsSeqListStartTime = new Date();
 					qcAnswerSeqList = scoreService.findQcAnsSeqList(
 							questionInfo.getQuestionSeq(),
 							scorerInfo.getScorerId(),
 							questionInfo.getConnectionString());
+					logGetQcAnsSeqListEndTime = new Date();
 					session.remove("loadQcListFlag");
 				}
 				session.put("qcAnswerSeqList", qcAnswerSeqList);
@@ -152,13 +161,15 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 					boolean answerNotAvailable = false;
 					boolean isEven = randomNumber % 3 == 0 ? true : false;
 					if (!isEven || qcAnswerSeqList.isEmpty()) {
+						logFindAnswerStartTime = new Date();
 						tranDescScoreInfo = scoreService.findAnswer(
 								questionInfo.getQuestionSeq(), menuId,
 								scorerInfo.getScorerId(),
 								questionInfo.getConnectionString(), gradeNum,
-								pendingCategory, denyCategory,answerFormNum,
+								pendingCategory, denyCategory, answerFormNum,
 								historyRecordCount, roleId, selectedMarkValue,
 								questionInfo);
+						logFindAnswerEndTime = new Date();
 						if (tranDescScoreInfo == null) {
 							answerNotAvailable = true;
 						} else {
@@ -178,12 +189,14 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 					}
 					if ((isEven || answerNotAvailable)
 							&& !qcAnswerSeqList.isEmpty()) {
+						logFindQcAnswerStartTime = new Date();
 						tranDescScoreInfo = scoreService
 								.findQualityCheckAnswers(
 										qcAnswerSeqList.get(0), menuId,
 										scorerInfo.getScorerId(),
 										questionInfo.getConnectionString(),
 										questionInfo);
+						logFindQcAnswerEndTime = new Date();
 						if (tranDescScoreInfo != null) {
 							log.info(scorerInfo.getScorerId()
 									+ "-"
@@ -207,24 +220,56 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 						buildTranDescScoreInfo();
 					}
 
+					Date logActionEndTime = new Date();
+					String actionName = "scoreAction";
+					long total = logActionEndTime.getTime()
+							- logActionStartTime.getTime();
+					log.info(actionName + "-Total: " + total);
+					if (logGetQcAnsSeqListStartTime != null
+							&& logGetQcAnsSeqListEndTime != null) {
+						long getQcAnsSeqListTime = logGetQcAnsSeqListEndTime
+								.getTime()
+								- logGetQcAnsSeqListStartTime.getTime();
+						log.info(actionName + "-getQcAnsSeqList: "
+								+ getQcAnsSeqListTime);
+					}
+					if (logFindAnswerStartTime != null
+							&& logFindAnswerEndTime != null) {
+						long findAnswerTime = logFindAnswerEndTime.getTime()
+								- logFindAnswerStartTime.getTime();
+						log.info(actionName + "-findAnswer: " + findAnswerTime);
+					}
+					if (logFindQcAnswerStartTime != null
+							&& logFindQcAnswerEndTime != null) {
+						long findQcAnswerTime = logFindQcAnswerEndTime
+								.getTime() - logFindQcAnswerStartTime.getTime();
+						log.info(actionName + "-findQcAnswer: "
+								+ findQcAnswerTime);
+					}
+
 					if (tranDescScoreInfo != null) {
 						return SUCCESS;
 					} else {
-						log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
-								+ "-" + "Answer not available." + "-{ Question sequence: "
+						log.info(scorerInfo.getScorerId() + "-"
+								+ questionInfo.getMenuId() + "-"
+								+ "Answer not available."
+								+ "-{ Question sequence: "
 								+ questionInfo.getQuestionSeq()
-								+ ", \n TranDescScoreInfo: " + tranDescScoreInfo + "}");
+								+ ", \n TranDescScoreInfo: "
+								+ tranDescScoreInfo + "}");
 						return FAILURE;
 					}
 
 				} else {
 					if (tranDescScoreInfo == null && !qcAnswerSeqList.isEmpty()) {
+						logFindQcAnswerStartTime = new Date();
 						tranDescScoreInfo = scoreService
 								.findQualityCheckAnswers(
 										qcAnswerSeqList.get(0), menuId,
 										scorerInfo.getScorerId(),
 										questionInfo.getConnectionString(),
 										questionInfo);
+						logFindQcAnswerEndTime = new Date();
 						if (tranDescScoreInfo != null) {
 							session.put("isQcRecord", true);
 							buildTranDescScoreInfo();
@@ -265,6 +310,8 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 			}
 
 			// Check if answer is already locked or not
+			Date logLockAnswerStartTime = null;
+			Date logLockAnswerEndTime = null;
 			if (tranDescScoreInfo == null
 					&& !(menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
 							|| menuId
@@ -292,12 +339,15 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 						.get("selectedMarkValue");
 				/* Character questionType = questionInfo.getQuestionType(); */
 				// Find answer record
+				logFindAnswerStartTime = new Date();
 				tranDescScoreInfo = scoreService.findAnswer(
 						questionInfo.getQuestionSeq(), menuId,
 						scorerInfo.getScorerId(),
 						questionInfo.getConnectionString(), gradeNum,
-						pendingCategory, denyCategory, answerFormNum, historyRecordCount,
-						roleId, selectedMarkValue, questionInfo);
+						pendingCategory, denyCategory, answerFormNum,
+						historyRecordCount, roleId, selectedMarkValue,
+						questionInfo);
+				logFindAnswerEndTime = new Date();
 
 				if (tranDescScoreInfo != null) {
 					log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
@@ -317,10 +367,12 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 									.equals(WebAppConst.SPECIAL_SCORING_BLIND_TYPE_MENU_ID)
 							|| menuId
 									.equals(WebAppConst.SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID)) {
+						logLockAnswerStartTime = new Date();
 						scoreService.lockAnswer(tranDescScoreInfo
 								.getAnswerInfo().getAnswerSeq(), scorerInfo
 								.getScorerId(), questionInfo
 								.getConnectionString(), updateDate);
+						logLockAnswerEndTime = new Date();
 					}
 					if (menuId.equals(WebAppConst.MISMATCH_MENU_ID)) {
 						getMismatchScoreActionData();
@@ -355,6 +407,34 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 				getScoreActionData(questionSequence, menuId);
 			} else if (menuId.equals(WebAppConst.MISMATCH_MENU_ID)) {
 				getMismatchScoreActionData();
+			}
+			Date logActionEndTime = new Date();
+			String actionName = "scoreAction";
+			long total = logActionEndTime.getTime()
+					- logActionStartTime.getTime();
+			log.info(actionName + "-Total: " + total);
+			if (logGetQcAnsSeqListStartTime != null
+					&& logGetQcAnsSeqListEndTime != null) {
+				long getQcAnsSeqListTime = logGetQcAnsSeqListEndTime.getTime()
+						- logGetQcAnsSeqListStartTime.getTime();
+				log.info(actionName + "-getQcAnsSeqList: "
+						+ getQcAnsSeqListTime);
+			}
+			if (logFindAnswerStartTime != null && logFindAnswerEndTime != null) {
+				long findAnswerTime = logFindAnswerEndTime.getTime()
+						- logFindAnswerStartTime.getTime();
+				log.info(actionName + "-findAnswer: " + findAnswerTime);
+			}
+			if (logFindQcAnswerStartTime != null
+					&& logFindQcAnswerEndTime != null) {
+				long findQcAnswerTime = logFindQcAnswerEndTime.getTime()
+						- logFindQcAnswerStartTime.getTime();
+				log.info(actionName + "-findQcAnswer: " + findQcAnswerTime);
+			}
+			if (logLockAnswerStartTime != null && logLockAnswerEndTime != null) {
+				long lockAnswerTime = logLockAnswerEndTime.getTime()
+						- logLockAnswerStartTime.getTime();
+				log.info(actionName + "-lockAnswer: " + lockAnswerTime);
 			}
 		} catch (SaitenRuntimeException we) {
 			throw we;
