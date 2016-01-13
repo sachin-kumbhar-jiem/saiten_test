@@ -108,9 +108,8 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 					.getAnswerInfo().getHistorySeq() == null))
 					|| (tranDescScoreInfo.getAnswerInfo().getQcSeq() != null)) {
 				lockFlag = registerScoreService.registerQcScoring(questionInfo,
-						scorerInfo, answerInfo, gradeSeq, gradeNum,
-						denyCategorySeq, denyCategory,
-						session.get("approveOrDeny").toString(),
+						scorerInfo, answerInfo, gradeSeq, gradeNum, session
+								.get("approveOrDeny").toString(),
 						tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
 						historyRecordCount);
 				if (tranDescScoreInfo.getAnswerInfo().getQcSeq() == null) {

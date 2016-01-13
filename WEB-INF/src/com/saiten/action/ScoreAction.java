@@ -69,7 +69,10 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 		try {
 			Date logActionStartTime = new Date();
-			String denyCategoryStr = session.get("denyCategory").toString();
+			String denyCategoryStr =null;
+			if(session.get("denyCategory") != null) {
+				 denyCategoryStr = session.get("denyCategory").toString();
+			}
 
 			if (denyCategoryStr != null && !(denyCategoryStr.isEmpty())) {
 				denyCategory = Short.valueOf(denyCategoryStr);

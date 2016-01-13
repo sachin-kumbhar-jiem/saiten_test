@@ -403,6 +403,9 @@ public class RegisterPendingServiceImpl implements RegisterPendingService {
 		// Set pendingCategorySeq for pending operation
 		tranDescScore.setPendingCategorySeq(pendingCategorySeq);
 		tranDescScore.setPendingCategory(pendingCategory);
+		
+		tranDescScore.setDenyCategory(null);
+		tranDescScore.setDenyCategorySeq(null);
 
 		tranDescScore.setGradeSeq(null);
 		tranDescScore.setGradeNum(null);

@@ -499,8 +499,8 @@ public class RegisterScoreServiceImpl implements RegisterScoreService {
 
 	public boolean registerQcScoring(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo, Integer gradeSeq,
-			Integer gradeNum, Integer denyCategorySeq, Short denyCategory,
-			String approveOrDeny, Date updateDate, Integer historyRecordCount) {
+			Integer gradeNum, String approveOrDeny, Date updateDate,
+			Integer historyRecordCount) {
 		boolean lockFlag = WebAppConst.FALSE;
 		String connectionString = questionInfo.getConnectionString();
 		Integer qcSeq = answerInfo.getQcSeq();
