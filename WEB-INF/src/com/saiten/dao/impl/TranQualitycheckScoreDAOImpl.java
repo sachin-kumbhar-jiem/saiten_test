@@ -3,6 +3,7 @@
  */
 package com.saiten.dao.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 
 import com.saiten.dao.TranQualitycheckScoreDAO;
 import com.saiten.dao.support.SaitenHibernateDAOSupport;
+import com.saiten.info.RegisterQcScoreInfo;
 import com.saiten.model.TranQualitycheckScore;
 import com.saiten.util.WebAppConst;
 
@@ -192,6 +194,35 @@ public class TranQualitycheckScoreDAOImpl extends SaitenHibernateDAOSupport
 		try {
 			return getHibernateTemplate(connectionString).get(
 					TranQualitycheckScore.class, qcSeq);
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public int registerQcAnswer(RegisterQcScoreInfo registerQcScoreInfo,
+			String connectionString) {
+		HibernateTemplate hibernateTemplate = null;
+		try {
+			hibernateTemplate = getHibernateTemplate(connectionString);
+			List list = hibernateTemplate.findByNamedQuery("registerQcAnswer",
+					registerQcScoreInfo.getQcSeq(),
+					registerQcScoreInfo.getAnswerSeq(),
+					registerQcScoreInfo.getQuestionSeq(),
+					registerQcScoreInfo.getScorerId(),
+					registerQcScoreInfo.getScoringState(),
+					registerQcScoreInfo.getBitValue(),
+					registerQcScoreInfo.getGradeSeq(),
+					registerQcScoreInfo.getGradeNum(),
+					registerQcScoreInfo.getPendingCategorySeq(),
+					registerQcScoreInfo.getPendingCategory(),
+					registerQcScoreInfo.getUpdateDate(),
+					registerQcScoreInfo.getCreateDate(),
+					registerQcScoreInfo.getScorerComment(),
+					registerQcScoreInfo.getAnswerFormNum(),
+					registerQcScoreInfo.getIsScoreOrPending());
+			return ((BigInteger) list.get(0)).intValue();
 		} catch (RuntimeException re) {
 			throw re;
 		}

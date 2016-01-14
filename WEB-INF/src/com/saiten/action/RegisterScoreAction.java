@@ -107,11 +107,16 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 					&& (isQcRecord != null && isQcRecord) && (tranDescScoreInfo
 					.getAnswerInfo().getHistorySeq() == null))
 					|| (tranDescScoreInfo.getAnswerInfo().getQcSeq() != null)) {
-				lockFlag = registerScoreService.registerQcScoring(questionInfo,
-						scorerInfo, answerInfo, gradeSeq, gradeNum, session
-								.get("approveOrDeny").toString(),
+				// register qc answer using stored procedure.
+				// NOTE: for register without using stored procedure replace
+				// 'registerScoreByProcedureService' with 'registerScoreService'
+				// in below line.
+				lockFlag = registerScoreByProcedureService.registerQcScoring(
+						questionInfo, scorerInfo, answerInfo, gradeSeq,
+						gradeNum, session.get("approveOrDeny").toString(),
 						tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
-						historyRecordCount);
+						historyRecordCount,
+						tranDescScoreInfo.getAnswerFormNumber());
 				if (tranDescScoreInfo.getAnswerInfo().getQcSeq() == null) {
 					qcAnswerSeqList.remove(Integer.valueOf(answerInfo
 							.getAnswerSeq()));
@@ -121,7 +126,9 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 
 			} else {
 
-				// Register or update answer
+				// IF - register or update answer by using stored procedure.
+				// ELSE - register or update answer without using stored
+				// procedure.
 				if (menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID)
 						|| menuId.equals(WebAppConst.SECOND_SCORING_MENU_ID)
 						|| menuId.equals(WebAppConst.CHECKING_MENU_ID)

@@ -5,6 +5,7 @@ package com.saiten.dao;
 
 import java.util.List;
 
+import com.saiten.info.RegisterQcScoreInfo;
 import com.saiten.model.TranQualitycheckScore;
 
 /**
@@ -56,5 +57,8 @@ public interface TranQualitycheckScoreDAO {
 	public List findQcHistoryAnswer(Integer qcSeq, String connectionString);
 
 	public TranQualitycheckScore findById(int qcSeq, String connectionString);
+
+	public int registerQcAnswer(RegisterQcScoreInfo registerQcScoreInfo,
+			String connectionString);
 
 }

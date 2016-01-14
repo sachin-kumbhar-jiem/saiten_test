@@ -28,6 +28,8 @@ public class RegisterScoreInfo {
 	private boolean secondAndThirdLatestScorerIdFlag;
 	private Integer pendingCategorySeq;
 	private Short pendingCategory;
+	private Integer denyCategorySeq;
+	private Short denyCategory;
 	private String isScoreOrPending;
 
 	public RegisterScoreInfo() {
@@ -41,7 +43,7 @@ public class RegisterScoreInfo {
 			Character bookMarkFlag, Integer historySeq,
 			boolean secondAndThirdLatestScorerIdFlag,
 			Integer pendingCategorySeq, Short pendingCategory,
-			String isScoreOrPending) {
+			Integer denyCategorySeq, Short denyCategory, String isScoreOrPending) {
 		this.answerSeq = answerSeq;
 		this.scorerId = scorerId;
 		this.latestScreenScorerId = latestScreenScorerId;
@@ -60,6 +62,8 @@ public class RegisterScoreInfo {
 		this.secondAndThirdLatestScorerIdFlag = secondAndThirdLatestScorerIdFlag;
 		this.pendingCategorySeq = pendingCategorySeq;
 		this.pendingCategory = pendingCategory;
+		this.denyCategorySeq = denyCategorySeq;
+		this.denyCategory = denyCategory;
 		this.isScoreOrPending = isScoreOrPending;
 	}
 
@@ -332,6 +336,36 @@ public class RegisterScoreInfo {
 	 */
 	public void setPendingCategory(Short pendingCategory) {
 		this.pendingCategory = pendingCategory;
+	}
+
+	/**
+	 * @return the denyCategorySeq
+	 */
+	public Integer getDenyCategorySeq() {
+		return denyCategorySeq;
+	}
+
+	/**
+	 * @param denyCategorySeq
+	 *            the denyCategorySeq to set
+	 */
+	public void setDenyCategorySeq(Integer denyCategorySeq) {
+		this.denyCategorySeq = denyCategorySeq;
+	}
+
+	/**
+	 * @return the denyCategory
+	 */
+	public Short getDenyCategory() {
+		return denyCategory;
+	}
+
+	/**
+	 * @param denyCategory
+	 *            the denyCategory to set
+	 */
+	public void setDenyCategory(Short denyCategory) {
+		this.denyCategory = denyCategory;
 	}
 
 	/**

@@ -206,7 +206,6 @@
 	</bean>
 	
 	<bean id="registerPendingByProcedureService" class="com.saiten.service.impl.RegisterPendingByProcedureServiceImpl">
-		<property name="tranDescScoreDAO" ref="tranDescScoreDAO"></property>
 		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO"></property>
 		<property name="tranQualitycheckScoreDAO" ref="tranQualitycheckScoreDAO"></property>
 	</bean>

@@ -84,10 +84,15 @@ public class RegisterPendingAction extends ActionSupport implements
 					&& (isQcRecord != null && isQcRecord) && (tranDescScoreInfo
 					.getAnswerInfo().getHistorySeq() == null))
 					|| (tranDescScoreInfo.getAnswerInfo().getQcSeq() != null)) {
-				lockFlag = registerPendingService.registerQcPending(
+				// register qc answer using stored procedure.
+				// NOTE: for register without using stored procedure replace
+				// 'registerScoreByProcedureService' with 'registerScoreService'
+				// in below line.
+				lockFlag = registerPendingByProcedureService.registerQcPending(
 						questionInfo, scorerInfo, answerInfo,
 						pendingCategorySeq, pendingCategory, tranDescScoreInfo
-								.getAnswerInfo().getUpdateDate());
+								.getAnswerInfo().getUpdateDate(),
+						tranDescScoreInfo.getAnswerFormNumber());
 				if (tranDescScoreInfo.getAnswerInfo().getQcSeq() == null) {
 					qcAnswerSeqList.remove(Integer.valueOf(answerInfo
 							.getAnswerSeq()));
@@ -96,6 +101,9 @@ public class RegisterPendingAction extends ActionSupport implements
 				session.put("qcAnswerSeqList", qcAnswerSeqList);
 
 			} else {
+				// IF - register or update answer by using stored procedure.
+				// ELSE - register or update answer without using stored
+				// procedure.
 				if (menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID)
 						|| menuId.equals(WebAppConst.SECOND_SCORING_MENU_ID)
 						|| menuId.equals(WebAppConst.CHECKING_MENU_ID)

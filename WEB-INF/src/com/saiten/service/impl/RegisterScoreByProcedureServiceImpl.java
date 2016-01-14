@@ -19,11 +19,10 @@ import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.info.AnswerInfo;
 import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
+import com.saiten.info.RegisterQcScoreInfo;
 import com.saiten.info.RegisterScoreInfo;
 import com.saiten.info.ScoreInputInfo;
 import com.saiten.info.ScoreSamplingInfo;
-import com.saiten.model.TranDescScore;
-import com.saiten.model.TranQualitycheckScore;
 import com.saiten.service.RegisterScoreByProcedureService;
 import com.saiten.util.ErrorCode;
 import com.saiten.util.SaitenUtil;
@@ -57,8 +56,8 @@ public class RegisterScoreByProcedureServiceImpl implements
 	@Override
 	public boolean registerScoring(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo, Integer gradeSeq,
-			Integer gradeNum, Integer denyCategorySeq, Short denyCategory, String approveOrDeny, Date updateDate,
-			Integer historyRecordCount) {
+			Integer gradeNum, Integer denyCategorySeq, Short denyCategory,
+			String approveOrDeny, Date updateDate, Integer historyRecordCount) {
 		boolean lockFlag = WebAppConst.FALSE;
 		String menuId = questionInfo.getMenuId();
 		Integer historySeq = answerInfo.getHistorySeq();
@@ -123,7 +122,8 @@ public class RegisterScoreByProcedureServiceImpl implements
 					scoringEventMap.get(menuId), scorerComment,
 					answerInfo.getBookMarkFlag(), historySeq,
 					secondAndThirdLatestScorerIdFlag, pendingCategorySeq,
-					pendingCategory, isScoreOrPending);
+					pendingCategory, denyCategorySeq, denyCategory,
+					isScoreOrPending);
 			int rowCount = tranDescScoreHistoryDAO.registerAnswer(
 					registerScoreInfo, questionInfo.getConnectionString());
 			Date logRegisterUsingStoredProcedureEndTime = new Date();
@@ -165,15 +165,6 @@ public class RegisterScoreByProcedureServiceImpl implements
 	}
 
 	/**
-	 * @param tranQualitycheckScore
-	 * @param connectionString
-	 */
-	private void save(TranQualitycheckScore tranQualitycheckScore,
-			String connectionString) {
-		tranQualitycheckScoreDAO.save(tranQualitycheckScore, connectionString);
-	}
-
-	/**
 	 * @param tranDescScoreDAO
 	 */
 	public void setTranDescScoreDAO(TranDescScoreDAO tranDescScoreDAO) {
@@ -191,134 +182,68 @@ public class RegisterScoreByProcedureServiceImpl implements
 	public boolean registerQcScoring(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo, Integer gradeSeq,
 			Integer gradeNum, String approveOrDeny, Date updateDate,
-			Integer historyRecordCount) {
+			Integer historyRecordCount, String answerFormNum) {
 		boolean lockFlag = WebAppConst.FALSE;
 		String connectionString = questionInfo.getConnectionString();
 		Integer qcSeq = answerInfo.getQcSeq();
 
-		if (qcSeq != null) {
-			TranQualitycheckScore tranQualitycheckScore = tranQualitycheckScoreDAO
-					.findById(qcSeq, connectionString);
-			updateTranQualitycheckScoreObj(tranQualitycheckScore, gradeSeq,
-					gradeNum, answerInfo, questionInfo, scorerInfo);
-
-		} else {
-			// Load tranDescScore object
-			TranDescScore tranDescScore = tranDescScoreDAO.findById(
-					answerInfo.getAnswerSeq(), connectionString);
-
-			TranQualitycheckScore tranQualitycheckScore = new TranQualitycheckScore();
-			tranQualitycheckScore = buildTranQualitycheckScoreObj(questionInfo,
-					scorerInfo, answerInfo, tranQualitycheckScore, gradeSeq,
-					gradeNum, approveOrDeny, tranDescScore);
-			save(tranQualitycheckScore, connectionString);
-		}
-		return lockFlag;
-	}
-
-	private void updateTranQualitycheckScoreObj(
-			TranQualitycheckScore tranQualitycheckScore, Integer gradeSeq,
-			Integer gradeNum, AnswerInfo answerInfo, QuestionInfo questionInfo,
-			MstScorerInfo scorerInfo) {
-		String menuId = questionInfo.getMenuId();
 		LinkedHashMap<ScoringStateKey, List<Short>> scoringStatesMap = ((SaitenConfig) ServletActionContext
 				.getServletContext().getAttribute("saitenConfigObject"))
 				.getHistoryScoringStatesMap();
-		// Set bivValue and gradeSeq for scoring operation
-		tranQualitycheckScore.setBitValue(answerInfo.getBitValue());
-		tranQualitycheckScore.setGradeSeq(gradeSeq);
-		tranQualitycheckScore.setGradeNum(gradeNum);
-		tranQualitycheckScore.setBitValue(answerInfo.getBitValue());
-		tranQualitycheckScore.setUpdateDate(new Date());
-		tranQualitycheckScore.setPendingCategorySeq(null);
-		tranQualitycheckScore.setPendingCategory(null);
 		ScoringStateKey scoringStateKey = new ScoringStateKey();
-		scoringStateKey.setMenuId(menuId);
+		scoringStateKey.setMenuId(questionInfo.getMenuId());
 		scoringStateKey.setNoDbUpdate(scorerInfo.getNoDbUpdate());
-
 		// Get latestScoringState based on selected menuId and noDbUpdate
-		Short latestScoringState = scoringStatesMap.get(scoringStateKey).get(0);
-		tranQualitycheckScore.setScoringState(latestScoringState);
-		tranQualitycheckScore.setScorerComment(answerInfo.getScorerComment());
-		log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
-				+ "History Quality record scoring." + "-{ Question Sequence: "
-				+ questionInfo.getQuestionSeq() + ", Answer Sequence: "
-				+ answerInfo.getAnswerSeq() + ", Scoring State: "
-				+ latestScoringState + ", Bit Value: "
-				+ answerInfo.getBitValue() + "}");
-	}
-
-	private TranQualitycheckScore buildTranQualitycheckScoreObj(
-			QuestionInfo questionInfo, MstScorerInfo scorerInfo,
-			AnswerInfo answerInfo, TranQualitycheckScore tranQualitycheckScore,
-			Integer gradeSeq, Integer gradeNum, String approveOrDeny,
-			TranDescScore tranDescScore) {
-
-		String menuId = questionInfo.getMenuId();
-		LinkedHashMap<ScoringStateKey, List<Short>> scoringStatesMap = ((SaitenConfig) ServletActionContext
-				.getServletContext().getAttribute("saitenConfigObject"))
-				.getHistoryScoringStatesMap();
-
-		tranQualitycheckScore.setQuestionSeq(questionInfo.getQuestionSeq());
-		tranQualitycheckScore.setScorerId(scorerInfo.getScorerId());
-		tranQualitycheckScore.setTranDescScore(tranDescScore);
-
-		ScoringStateKey scoringStateKey = new ScoringStateKey();
-		scoringStateKey.setMenuId(menuId);
-		scoringStateKey.setNoDbUpdate(scorerInfo.getNoDbUpdate());
-
-		// Get latestScoringState based on selected menuId and noDbUpdate
-		Short latestScoringState = null;
-		if ((menuId.equals(WebAppConst.CHECKING_MENU_ID)
-				|| menuId.equals(WebAppConst.INSPECTION_MENU_ID) || menuId
-					.equals(WebAppConst.MISMATCH_MENU_ID))
-				&& (approveOrDeny.equals(WebAppConst.DENY))) {
-			latestScoringState = scoringStatesMap.get(scoringStateKey).get(1);
-		} else {
-			latestScoringState = scoringStatesMap.get(scoringStateKey).get(0);
-		}
-
-		tranQualitycheckScore.setScoringState(latestScoringState);
-		// Set bivValue and gradeSeq for scoring operation
-		tranQualitycheckScore.setBitValue(answerInfo.getBitValue());
-		tranQualitycheckScore.setGradeSeq(gradeSeq);
-		tranQualitycheckScore.setGradeNum(gradeNum);
-
-		if (answerInfo.getHistorySeq() == null) {
-			tranQualitycheckScore.setCreateDate(new Date());
-		}
-		if (answerInfo.getHistorySeq() != null) {
-			// pendingCategorySeq will be null for pending operation
-			tranQualitycheckScore.setPendingCategorySeq(null);
-			tranQualitycheckScore.setPendingCategory(null);
-		}
-		tranQualitycheckScore.setValidFlag(WebAppConst.VALID_FLAG);
-		tranQualitycheckScore.setRefFlag(WebAppConst.F);
-
-		tranQualitycheckScore.setUpdateDate(new Date());
+		Short scoringState = scoringStatesMap.get(scoringStateKey).get(0);
 
 		String scorerComment = answerInfo.getScorerComment();
 		if ((scorerComment == null) || (scorerComment.equals(""))) {
-			tranQualitycheckScore.setScorerComment(null);
-		} else {
-			tranQualitycheckScore.setScorerComment(answerInfo
-					.getScorerComment());
+			scorerComment = null;
 		}
-		tranQualitycheckScore
-				.setAnswerFormNum(tranDescScore.getAnswerFormNum());
-		log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
-				+ "Quality record scoring." + "-{ Question Sequence: "
-				+ questionInfo.getQuestionSeq() + ", Answer Sequence: "
-				+ answerInfo.getAnswerSeq() + ", Scoring State: "
-				+ latestScoringState + ", Bit Value: "
-				+ answerInfo.getBitValue() + "}");
-		return tranQualitycheckScore;
+
+		Integer pendingCategorySeq = null;
+		Short pendingCategory = null;
+		Date createDate = new Date();
+		Date updateDateObj = createDate;
+		String isScoreOrPending = "score";
+		RegisterQcScoreInfo registerQcScoreInfo = new RegisterQcScoreInfo(
+				qcSeq, answerInfo.getAnswerSeq(),
+				questionInfo.getQuestionSeq(), scorerInfo.getScorerId(),
+				scoringState, answerInfo.getBitValue(), gradeSeq, gradeNum,
+				pendingCategorySeq, pendingCategory, createDate, updateDateObj,
+				scorerComment, answerFormNum, isScoreOrPending);
+		int rowCount = tranQualitycheckScoreDAO.registerQcAnswer(
+				registerQcScoreInfo, connectionString);
+		if (!(rowCount > 0)) {
+			lockFlag = WebAppConst.TRUE;
+		} else {
+			lockFlag = WebAppConst.FALSE;
+		}
+
+		if (qcSeq != null) {
+			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
+					+ "-" + "History Quality record scoring."
+					+ "-{ Question Sequence: " + questionInfo.getQuestionSeq()
+					+ ", Answer Sequence: " + answerInfo.getAnswerSeq()
+					+ ", Scoring State: " + scoringState + ", Bit Value: "
+					+ answerInfo.getBitValue() + "}");
+
+		} else {
+			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
+					+ "-" + "Quality record scoring."
+					+ "-{ Question Sequence: " + questionInfo.getQuestionSeq()
+					+ ", Answer Sequence: " + answerInfo.getAnswerSeq()
+					+ ", Scoring State: " + scoringState + ", Bit Value: "
+					+ answerInfo.getBitValue() + "}");
+		}
+		return lockFlag;
 	}
 
 	public int updateInspectFlag(List<Integer> answerSeq,
 			QuestionInfo questionInfo,
 			List<ScoreSamplingInfo> scoreSamplingInfoList,
-			boolean selectAllFlag, ScoreInputInfo scoreInputInfo,Integer maxInspectGroupSeq) {
+			boolean selectAllFlag, ScoreInputInfo scoreInputInfo,
+			Integer maxInspectGroupSeq) {
 		int updatedCount = 0;
 		if (!selectAllFlag) {
 			if (answerSeq != null && !answerSeq.isEmpty()) {

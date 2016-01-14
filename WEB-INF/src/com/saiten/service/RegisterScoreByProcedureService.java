@@ -14,7 +14,7 @@ import com.saiten.info.ScoreSamplingInfo;
 
 /**
  * @author user
- *
+ * 
  */
 public interface RegisterScoreByProcedureService {
 
@@ -28,8 +28,8 @@ public interface RegisterScoreByProcedureService {
 	 */
 	public boolean registerScoring(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo, Integer gradeSeq,
-			Integer gradeNum, Integer denyCategorySeq, Short denyCategory, String approveOrDeny, Date updateDate,
-			Integer historyRecordCount);
+			Integer gradeNum, Integer denyCategorySeq, Short denyCategory,
+			String approveOrDeny, Date updateDate, Integer historyRecordCount);
 
 	/**
 	 * @param answerSeq
@@ -41,7 +41,8 @@ public interface RegisterScoreByProcedureService {
 	public int updateInspectFlag(List<Integer> answerSeq,
 			QuestionInfo questionInfo,
 			List<ScoreSamplingInfo> scoreSamplingInfoList,
-			boolean selectAllFlag, ScoreInputInfo scoreInputInfo,Integer maxInspectGroupSeq);
+			boolean selectAllFlag, ScoreInputInfo scoreInputInfo,
+			Integer maxInspectGroupSeq);
 
 	/**
 	 * @param questionInfo
@@ -56,5 +57,5 @@ public interface RegisterScoreByProcedureService {
 	public boolean registerQcScoring(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo, Integer gradeSeq,
 			Integer gradeNum, String approveOrDeny, Date updateDate,
-			Integer historyRecordCount);
+			Integer historyRecordCount, String answerFormNum);
 }

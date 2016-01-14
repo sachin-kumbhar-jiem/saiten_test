@@ -6263,10 +6263,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 					registerScoreInfo.isSecondAndThirdLatestScorerIdFlag(),
 					registerScoreInfo.getPendingCategorySeq(),
 					registerScoreInfo.getPendingCategory(),
+					registerScoreInfo.getDenyCategorySeq(),
+					registerScoreInfo.getDenyCategory(),
 					registerScoreInfo.getIsScoreOrPending());
 			return ((BigInteger) list.get(0)).intValue();
 		} catch (RuntimeException re) {
-			// TODO: handle exception
 			throw re;
 		}
 
