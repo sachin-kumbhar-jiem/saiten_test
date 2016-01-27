@@ -237,6 +237,6 @@ public interface TranDescScoreHistoryDAO {
 	public List<Object[]> fetchInspectionGroupSeqAndCount(int questionSeq,
 			String scorerId, String connectionString);
 
-	public int registerAnswer(RegisterScoreInfo registerScoreInfo,
+	public List registerAnswer(RegisterScoreInfo registerScoreInfo,
 			String connectionString);
 }

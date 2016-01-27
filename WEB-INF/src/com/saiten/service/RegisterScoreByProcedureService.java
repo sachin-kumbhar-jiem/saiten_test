@@ -29,7 +29,8 @@ public interface RegisterScoreByProcedureService {
 	public boolean registerScoring(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo, Integer gradeSeq,
 			Integer gradeNum, Integer denyCategorySeq, Short denyCategory,
-			String approveOrDeny, Date updateDate, Integer historyRecordCount);
+			String approveOrDeny, Date updateDate, Integer historyRecordCount,
+			String answerFormNum);
 
 	/**
 	 * @param answerSeq

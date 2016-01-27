@@ -139,13 +139,24 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 						|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
 						|| menuId.equals(WebAppConst.OUT_BOUNDARY_MENU_ID)
 						|| menuId
-								.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)) {
+								.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)
+						|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
+						|| menuId.equals(WebAppConst.FORCED_MENU_ID)
+						|| menuId
+								.equals(WebAppConst.SPECIAL_SCORING_BLIND_TYPE_MENU_ID)
+						|| menuId
+								.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID)
+						|| menuId
+								.equals(WebAppConst.SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID)
+						|| menuId
+								.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)) {
 					lockFlag = registerScoreByProcedureService.registerScoring(
 							questionInfo, scorerInfo, answerInfo, gradeSeq,
 							gradeNum, denyCategorySeq, denyCategory, session
 									.get("approveOrDeny").toString(),
 							tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
-							historyRecordCount);
+							historyRecordCount, tranDescScoreInfo
+									.getAnswerFormNumber());
 				} else {
 					lockFlag = registerScoreService.registerScoring(
 							questionInfo, scorerInfo, answerInfo, gradeSeq,

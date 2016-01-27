@@ -1,5 +1,6 @@
 package com.saiten.service.impl;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -73,7 +74,8 @@ public class RegisterPendingByProcedureServiceImpl implements
 					.get(1);
 			int questionSeq = questionInfo.getQuestionSeq();
 			Character qualityCheckFlag = null;
-			if (menuId.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)) {
+			if (menuId.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)
+					|| menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 				qualityCheckFlag = answerInfo.getQualityCheckFlag();
 			} else {
 				qualityCheckFlag = WebAppConst.QUALITY_MARK_FLAG_FALSE;
@@ -89,6 +91,7 @@ public class RegisterPendingByProcedureServiceImpl implements
 			Integer gradeNum = null;
 			Integer denyCategorySeq = null;
 			Short denyCategory = null;
+			Integer historyRecordCount = null;
 			String isScoreOrPending = "pending";
 			RegisterScoreInfo registerScoreInfo = new RegisterScoreInfo(
 					answerInfo.getAnswerSeq(), scorerInfo.getScorerId(),
@@ -99,9 +102,9 @@ public class RegisterPendingByProcedureServiceImpl implements
 					scoringEventMap.get(menuId), scorerComment,
 					answerInfo.getBookMarkFlag(), historySeq,
 					secondAndThirdLatestScorerIdFlag, pendingCategorySeq,
-					pendingCategory, denyCategorySeq, denyCategory,
-					isScoreOrPending);
-			int rowCount = tranDescScoreHistoryDAO.registerAnswer(
+					pendingCategory, denyCategorySeq, denyCategory, menuId,
+					historyRecordCount, updateDate, isScoreOrPending);
+			List list = tranDescScoreHistoryDAO.registerAnswer(
 					registerScoreInfo, questionInfo.getConnectionString());
 			Date logRegisterUsingStoredProcedureEndTime = new Date();
 			long registerByStoredProcedureTime = logRegisterUsingStoredProcedureEndTime
@@ -109,6 +112,7 @@ public class RegisterPendingByProcedureServiceImpl implements
 					- logRegisterUsingStoredProcedureStartTime.getTime();
 			log.info(actionName + "-Register By using Stored Procedure: "
 					+ registerByStoredProcedureTime);
+			int rowCount = ((BigInteger) list.get(0)).intValue();
 			if (!(rowCount > 0)) {
 				lockFlag = WebAppConst.TRUE;
 			} else {

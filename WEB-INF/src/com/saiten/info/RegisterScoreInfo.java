@@ -30,11 +30,37 @@ public class RegisterScoreInfo {
 	private Short pendingCategory;
 	private Integer denyCategorySeq;
 	private Short denyCategory;
+	private String menuId;
+	private Integer historyRecordCount;
+	private Date lastUpdateDate;
 	private String isScoreOrPending;
 
-	public RegisterScoreInfo() {
-	}
-
+	/**
+	 * @param answerSeq
+	 * @param scorerId
+	 * @param latestScreenScorerId
+	 * @param secondLatestScreenScorerId
+	 * @param latestScoringState
+	 * @param bitValue
+	 * @param gradeSeq
+	 * @param gradeNum
+	 * @param updateDate
+	 * @param qualityCheckFlag
+	 * @param roleId
+	 * @param eventId
+	 * @param scorerComment
+	 * @param bookMarkFlag
+	 * @param historySeq
+	 * @param secondAndThirdLatestScorerIdFlag
+	 * @param pendingCategorySeq
+	 * @param pendingCategory
+	 * @param denyCategorySeq
+	 * @param denyCategory
+	 * @param menuId
+	 * @param historyRecordCount
+	 * @param lastUpdateDate
+	 * @param isScoreOrPending
+	 */
 	public RegisterScoreInfo(int answerSeq, String scorerId,
 			String latestScreenScorerId, String secondLatestScreenScorerId,
 			Short latestScoringState, Double bitValue, Integer gradeSeq,
@@ -43,7 +69,9 @@ public class RegisterScoreInfo {
 			Character bookMarkFlag, Integer historySeq,
 			boolean secondAndThirdLatestScorerIdFlag,
 			Integer pendingCategorySeq, Short pendingCategory,
-			Integer denyCategorySeq, Short denyCategory, String isScoreOrPending) {
+			Integer denyCategorySeq, Short denyCategory, String menuId,
+			Integer historyRecordCount, Date lastUpdateDate,
+			String isScoreOrPending) {
 		this.answerSeq = answerSeq;
 		this.scorerId = scorerId;
 		this.latestScreenScorerId = latestScreenScorerId;
@@ -64,6 +92,9 @@ public class RegisterScoreInfo {
 		this.pendingCategory = pendingCategory;
 		this.denyCategorySeq = denyCategorySeq;
 		this.denyCategory = denyCategory;
+		this.menuId = menuId;
+		this.historyRecordCount = historyRecordCount;
+		this.lastUpdateDate = lastUpdateDate;
 		this.isScoreOrPending = isScoreOrPending;
 	}
 
@@ -366,6 +397,51 @@ public class RegisterScoreInfo {
 	 */
 	public void setDenyCategory(Short denyCategory) {
 		this.denyCategory = denyCategory;
+	}
+
+	/**
+	 * @return the menuId
+	 */
+	public String getMenuId() {
+		return menuId;
+	}
+
+	/**
+	 * @param menuId
+	 *            the menuId to set
+	 */
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
+	}
+
+	/**
+	 * @return the historyRecordCount
+	 */
+	public Integer getHistoryRecordCount() {
+		return historyRecordCount;
+	}
+
+	/**
+	 * @param historyRecordCount
+	 *            the historyRecordCount to set
+	 */
+	public void setHistoryRecordCount(Integer historyRecordCount) {
+		this.historyRecordCount = historyRecordCount;
+	}
+
+	/**
+	 * @return the lastUpdateDate
+	 */
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	/**
+	 * @param lastUpdateDate
+	 *            the lastUpdateDate to set
+	 */
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
 	}
 
 	/**

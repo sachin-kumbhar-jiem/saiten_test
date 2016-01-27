@@ -1,6 +1,5 @@
 package com.saiten.dao.impl;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -6238,14 +6237,14 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public int registerAnswer(RegisterScoreInfo registerScoreInfo,
+	public List registerAnswer(RegisterScoreInfo registerScoreInfo,
 			String connectionString) {
 		HibernateTemplate hibernateTemplate = null;
 		try {
 			hibernateTemplate = getHibernateTemplate(connectionString);
 
-			List list = hibernateTemplate.findByNamedQuery(
-					"registerTranAnswer", registerScoreInfo.getAnswerSeq(),
+			return hibernateTemplate.findByNamedQuery("registerTranAnswer",
+					registerScoreInfo.getAnswerSeq(),
 					registerScoreInfo.getScorerId(),
 					registerScoreInfo.getLatestScreenScorerId(),
 					registerScoreInfo.getSecondLatestScreenScorerId(),
@@ -6265,8 +6264,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 					registerScoreInfo.getPendingCategory(),
 					registerScoreInfo.getDenyCategorySeq(),
 					registerScoreInfo.getDenyCategory(),
+					registerScoreInfo.getMenuId(),
+					registerScoreInfo.getHistoryRecordCount(),
+					registerScoreInfo.getLastUpdateDate(),
 					registerScoreInfo.getIsScoreOrPending());
-			return ((BigInteger) list.get(0)).intValue();
 		} catch (RuntimeException re) {
 			throw re;
 		}
