@@ -18,6 +18,10 @@
     	 <property name="sessionFactory" ref="saitenMasterDbSessionFactory" />
    	</bean>	
    
+    <bean id="saitenCommonDbTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    	 <property name="sessionFactory" ref="saitenCommonDbSessionFactory" />
+   	</bean>	
+
   	<bean id="saitenTranDb1TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
    	 	 <property name="sessionFactory" ref="saitenTranDb1SessionFactory" />
   	</bean>	

@@ -1342,7 +1342,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 				TranScorerSessionInfo tranScorerSessionInfo = (TranScorerSessionInfo) session
 						.get("tranScorerSessionInfo");
 				if (tranScorerSessionInfo != null) {
-					tranScorerSessionInfo.setMstQuestion(null);
+					tranScorerSessionInfo.setQuestionSeq(null);
 					tranScorerSessionInfo.setUpdateDate(new Date());
 					// clears question_seq from tran_scorer_session_info table.
 					ApplicationContext ctx = ContextLoader

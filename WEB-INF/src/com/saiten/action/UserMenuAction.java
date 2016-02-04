@@ -27,9 +27,8 @@ import com.saiten.util.WebAppConst;
  */
 public class UserMenuAction extends ActionSupport implements SessionAware {
 
-	private static Logger log = Logger
-			.getLogger(UserMenuAction.class);
-	
+	private static Logger log = Logger.getLogger(UserMenuAction.class);
+
 	/**
 	 * 
 	 */
@@ -63,7 +62,8 @@ public class UserMenuAction extends ActionSupport implements SessionAware {
 					.getPropertyFromPropertyFile(
 							WebAppConst.APPLICATION_PROPERTIES_FILE,
 							WebAppConst.SHINEIGO_RELEASE));
-			log.info(mstScorerInfo.getScorerId()+"-"+"Loaded User Menu Screen.");
+			log.info(mstScorerInfo.getScorerId() + "-"
+					+ "Loaded User Menu Screen.");
 			if (saitenRelease) {
 				return "saiten-success";
 			} else if (shinEigoRelease) {
@@ -85,7 +85,7 @@ public class UserMenuAction extends ActionSupport implements SessionAware {
 		TranScorerSessionInfo tranScorerSessionInfo = (TranScorerSessionInfo) session
 				.get("tranScorerSessionInfo");
 		if (tranScorerSessionInfo != null) {
-			tranScorerSessionInfo.setMstQuestion(null);
+			tranScorerSessionInfo.setQuestionSeq(null);
 			tranScorerSessionInfo.setAnswerFormNum(null);
 			tranScorerSessionInfo.setSubjectCode(null);
 			tranScorerSessionInfo.setUpdateDate(new Date());

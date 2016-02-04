@@ -14,7 +14,7 @@ public class TranScorerAccessLog implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Integer id;
-	private MstScorer mstScorer;
+	private String scorerId;
 	private Date loginTime;
 	private Date logoutTime;
 	private String status;
@@ -22,18 +22,31 @@ public class TranScorerAccessLog implements java.io.Serializable {
 	public TranScorerAccessLog() {
 	}
 
-	public TranScorerAccessLog(MstScorer mstScorer, Date loginTime) {
-		this.mstScorer = mstScorer;
-		this.loginTime = loginTime;
+	
+	/**
+	 * @param id
+	 */
+	public TranScorerAccessLog(Integer id) {
+		this.id = id;
 	}
 
-	public TranScorerAccessLog(MstScorer mstScorer, Date loginTime,
+
+	/**
+	 * @param id
+	 * @param scorerId
+	 * @param loginTime
+	 * @param logoutTime
+	 * @param status
+	 */
+	public TranScorerAccessLog(Integer id, String scorerId, Date loginTime,
 			Date logoutTime, String status) {
-		this.mstScorer = mstScorer;
+		this.id = id;
+		this.scorerId = scorerId;
 		this.loginTime = loginTime;
 		this.logoutTime = logoutTime;
 		this.status = status;
 	}
+
 
 	public Integer getId() {
 		return this.id;
@@ -43,13 +56,22 @@ public class TranScorerAccessLog implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public MstScorer getMstScorer() {
-		return this.mstScorer;
+	
+	/**
+	 * @return the scorerId
+	 */
+	public String getScorerId() {
+		return scorerId;
 	}
 
-	public void setMstScorer(MstScorer mstScorer) {
-		this.mstScorer = mstScorer;
+
+	/**
+	 * @param scorerId the scorerId to set
+	 */
+	public void setScorerId(String scorerId) {
+		this.scorerId = scorerId;
 	}
+
 
 	public Date getLoginTime() {
 		return this.loginTime;

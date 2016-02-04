@@ -200,14 +200,15 @@ public class SaitenMasterUtil {
 					// Build mstGrade set
 					Set<MstGrade> mstGrades = createMstGradeSet(mstGradeSet);
 
-					Set<MstDenyCategory> mstDenyCategoriesSet = mstQuestion.getMstDenyCategories();
-					
-					Set<MstDenyCategory>mstDenyCategories = createMstDenyCategoriesSet(mstDenyCategoriesSet);
-					
+					Set<MstDenyCategory> mstDenyCategoriesSet = mstQuestion
+							.getMstDenyCategories();
+
+					Set<MstDenyCategory> mstDenyCategories = createMstDenyCategoriesSet(mstDenyCategoriesSet);
+
 					// Build mstQuestionObj
 					MstQuestion mstQuestionObj = createMstQuestionObj(
 							mstQuestion, mstCheckPoints, mstPendingCategories,
-							mstGrades,mstDenyCategories);
+							mstGrades, mstDenyCategories);
 
 					mstQuestionMap.put(mstQuestion.getQuestionSeq(),
 							mstQuestionObj);
@@ -337,19 +338,17 @@ public class SaitenMasterUtil {
 				});
 	}
 
-	
-	
-	private Set<MstDenyCategory> createMstDenyCategoriesSet (
-			Set<MstDenyCategory>mstDenyCategoriesSet ) {
-		
-		Set<MstDenyCategory>mstDenyCategories = buildMstDenyCategoriesComparator();
-		
-		for (MstDenyCategory mstDenyCategory:mstDenyCategoriesSet) {
-			
+	private Set<MstDenyCategory> createMstDenyCategoriesSet(
+			Set<MstDenyCategory> mstDenyCategoriesSet) {
+
+		Set<MstDenyCategory> mstDenyCategories = buildMstDenyCategoriesComparator();
+
+		for (MstDenyCategory mstDenyCategory : mstDenyCategoriesSet) {
+
 			if (mstDenyCategory.getDeleteFlag() == WebAppConst.DELETE_FLAG
 					&& mstDenyCategory.getValidFlag() == WebAppConst.VALID_FLAG) {
 				MstDenyCategory mstDenyCategoryObj = new MstDenyCategory(
-						mstDenyCategory.getDenyCategorySeq(),null,
+						mstDenyCategory.getDenyCategorySeq(), null,
 						mstDenyCategory.getDenyCategory(),
 						mstDenyCategory.getDenyDescription(),
 						mstDenyCategory.getDisplayIndex(),
@@ -358,27 +357,25 @@ public class SaitenMasterUtil {
 						mstDenyCategory.getUpdatePersonId(),
 						mstDenyCategory.getUpdateDate(),
 						mstDenyCategory.getCreateDate());
-				
+
 				mstDenyCategories.add(mstDenyCategoryObj);
 			}
 		}
 		return mstDenyCategories;
-	} 
-	
-	
-	private TreeSet<MstDenyCategory> buildMstDenyCategoriesComparator () {
-		return new TreeSet<MstDenyCategory> (
-				new Comparator <MstDenyCategory>() {
-					
-					@Override
-					public int compare (MstDenyCategory denyCategory1,
-							MstDenyCategory denyCategory2) {
-						return denyCategory1.getDisplayIndex().compareTo(
-								denyCategory2.getDisplayIndex());
-					}
-				}
-				);
 	}
+
+	private TreeSet<MstDenyCategory> buildMstDenyCategoriesComparator() {
+		return new TreeSet<MstDenyCategory>(new Comparator<MstDenyCategory>() {
+
+			@Override
+			public int compare(MstDenyCategory denyCategory1,
+					MstDenyCategory denyCategory2) {
+				return denyCategory1.getDisplayIndex().compareTo(
+						denyCategory2.getDisplayIndex());
+			}
+		});
+	}
+
 	private Set<MstGrade> createMstGradeSet(Set<MstGrade> mstGradeSet) {
 		Set<MstGrade> mstGrades = buildMstGradeComparator();
 
@@ -435,8 +432,7 @@ public class SaitenMasterUtil {
 	private MstQuestion createMstQuestionObj(MstQuestion mstQuestion,
 			Set<MstCheckPoint> mstCheckPoints,
 			Set<MstPendingCategory> mstPendingCategories,
-			Set<MstGrade> mstGrades,
-			Set<MstDenyCategory>mstDenyCategories) {
+			Set<MstGrade> mstGrades, Set<MstDenyCategory> mstDenyCategories) {
 
 		MstSubject mstSubjectObj = mstQuestion.getMstSubject();
 
@@ -626,7 +622,7 @@ public class SaitenMasterUtil {
 				ScorerAccessLogInfo scorerAccessLogInfo = new ScorerAccessLogInfo();
 				scorerAccessLogInfo.setId(tranScorerAccessLog.getId());
 				scorerAccessLogInfo.setScorerId(tranScorerAccessLog
-						.getMstScorer().getScorerId());
+						.getScorerId());
 				scorerAccessLogInfo.setLoginTime(tranScorerAccessLog
 						.getLoginTime());
 				scorerAccessLogInfo.setLogoutTime(tranScorerAccessLog

@@ -14,7 +14,7 @@ public class TranScorerSessionInfo implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String scorerId;
-	private MstQuestion mstQuestion;
+	private Integer questionSeq;
 	private String answerFormNum;
 	private String subjectCode;
 	private Date createDate;
@@ -27,11 +27,19 @@ public class TranScorerSessionInfo implements java.io.Serializable {
 		this.scorerId = scorerId;
 	}
 
-	public TranScorerSessionInfo(String scorerId, MstQuestion mstQuestion,
+	/**
+	 * @param scorerId
+	 * @param questionSeq
+	 * @param answerFormNum
+	 * @param subjectCode
+	 * @param createDate
+	 * @param updateDate
+	 */
+	public TranScorerSessionInfo(String scorerId, Integer questionSeq,
 			String answerFormNum, String subjectCode, Date createDate,
 			Date updateDate) {
 		this.scorerId = scorerId;
-		this.mstQuestion = mstQuestion;
+		this.questionSeq = questionSeq;
 		this.answerFormNum = answerFormNum;
 		this.subjectCode = subjectCode;
 		this.createDate = createDate;
@@ -46,12 +54,18 @@ public class TranScorerSessionInfo implements java.io.Serializable {
 		this.scorerId = scorerId;
 	}
 
-	public MstQuestion getMstQuestion() {
-		return this.mstQuestion;
+	/**
+	 * @return the questionSeq
+	 */
+	public Integer getQuestionSeq() {
+		return questionSeq;
 	}
 
-	public void setMstQuestion(MstQuestion mstQuestion) {
-		this.mstQuestion = mstQuestion;
+	/**
+	 * @param questionSeq the questionSeq to set
+	 */
+	public void setQuestionSeq(Integer questionSeq) {
+		this.questionSeq = questionSeq;
 	}
 
 	public String getAnswerFormNum() {

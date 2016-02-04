@@ -16,7 +16,6 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
-import com.saiten.model.MstQuestion;
 import com.saiten.model.TranScorerSessionInfo;
 import com.saiten.util.SaitenMasterUtil;
 
@@ -103,9 +102,8 @@ public class UpdateSessionRegistryInterceptor extends AbstractInterceptor {
 			if (questionInfo != null) {
 				// make question_seq entry into tran_scorer_session_info for
 				// logged_in scorer.
-				MstQuestion mstQuestion = new MstQuestion();
-				mstQuestion.setQuestionSeq(questionInfo.getQuestionSeq());
-				tranScorerSessionInfo.setMstQuestion(mstQuestion);
+				tranScorerSessionInfo.setQuestionSeq(questionInfo
+						.getQuestionSeq());
 				subjectCode = (String) questionInfo.getSubjectCode();
 			}
 

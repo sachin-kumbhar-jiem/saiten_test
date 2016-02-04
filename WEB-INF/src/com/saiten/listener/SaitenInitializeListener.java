@@ -118,11 +118,17 @@ public class SaitenInitializeListener extends AbstractInitializeListener {
 				key = "saiten.masterdb.url";
 				hibernateTemplateBeanId = "saitenMasterDbSessionFactory";
 				transactionManagerBeanId = "saitenMasterDbTransactionManager";
+			} else if (i == 1) {
+				// Common DB
+				key = "saiten.commondb.url";
+				hibernateTemplateBeanId = "saitenCommonDbSessionFactory";
+				transactionManagerBeanId = "saitenCommonDbTransactionManager";
 			} else {
 				// Transaction DB
-				key = "saiten.transactiondb" + i + ".url";
-				hibernateTemplateBeanId = "saitenTranDb" + i + "SessionFactory";
-				transactionManagerBeanId = "saitenTranDb" + i
+				int j = i - 1;
+				key = "saiten.transactiondb" + j + ".url";
+				hibernateTemplateBeanId = "saitenTranDb" + j + "SessionFactory";
+				transactionManagerBeanId = "saitenTranDb" + j
 						+ "TransactionManager";
 			}
 

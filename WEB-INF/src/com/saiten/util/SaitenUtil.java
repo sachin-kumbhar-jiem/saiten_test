@@ -440,7 +440,7 @@ public class SaitenUtil {
 				.get("tranScorerSessionInfo");
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 		if (questionInfo != null) {
-			tranScorerSessionInfo.setMstQuestion(null);
+			tranScorerSessionInfo.setQuestionSeq(null);
 		}
 		tranScorerSessionInfo.setAnswerFormNum(null);
 		tranScorerSessionInfo.setSubjectCode(null);
@@ -701,20 +701,27 @@ public class SaitenUtil {
 		}
 		return facilitatorId;
 	}
-	
-	public static Map<String, String> getPunchTextMap(List <String> punchTextList) {
+
+	public static Map<String, String> getPunchTextMap(List<String> punchTextList) {
 		Map<String, String> punchTextMap = new LinkedHashMap<String, String>();
-		int i=0;
+		int i = 0;
 		for (String str : punchTextList) {
 			punchTextMap.put(Integer.toString(i), str);
 			i++;
 		}
 		return punchTextMap;
 	}
-	public static Short getDenyCategoryByDenyCategorySeq(
-			Integer denyCategorySeq) {
+
+	public static Short getDenyCategoryByDenyCategorySeq(Integer denyCategorySeq) {
 		LinkedHashMap<Integer, Short> CategoryMap = getSaitenConfigObject()
 				.getDenyCategoryMap();
 		return CategoryMap.get(denyCategorySeq);
+	}
+
+	public static String getCommonDbConnectionString() {
+		Properties saitenDbProperties = (Properties) ContextLoader
+				.getCurrentWebApplicationContext()
+				.getBean("saitenDbProperties");
+		return saitenDbProperties.getProperty(WebAppConst.SAITEN_COMMONDB_URL);
 	}
 }

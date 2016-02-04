@@ -32,7 +32,7 @@ public class ScorerLoggingServiceImpl implements ScorerLoggingService {
 			}
 			MstScorer mstScorer = new MstScorer();
 			mstScorer.setScorerId(scorerAccessLogInfo.getScorerId());
-			tranScorerAccessLog.setMstScorer(mstScorer);
+			tranScorerAccessLog.setScorerId(scorerAccessLogInfo.getScorerId());
 			tranScorerAccessLog
 					.setLoginTime(scorerAccessLogInfo.getLoginTime());
 			if (scorerAccessLogInfo.getLogoutTime() != null) {

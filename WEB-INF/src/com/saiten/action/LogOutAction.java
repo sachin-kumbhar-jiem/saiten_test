@@ -16,7 +16,6 @@ import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.info.ScorerAccessLogInfo;
-import com.saiten.model.MstQuestion;
 import com.saiten.model.TranScorerSessionInfo;
 import com.saiten.service.ScorerLoggingService;
 import com.saiten.util.AESEncryptionDecryptionUtil;
@@ -32,9 +31,8 @@ import com.saiten.util.WebAppConst;
  */
 public class LogOutAction extends ActionSupport implements SessionAware {
 
-	private static Logger log = Logger
-			.getLogger(LogOutAction.class);
-	
+	private static Logger log = Logger.getLogger(LogOutAction.class);
+
 	/**
 	 * 
 	 */
@@ -112,8 +110,7 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 					 * tranScorerSessionInfo.setSubjectCode(null); }
 					 */
 				}
-				MstQuestion mstQuestion = null;
-				tranScorerSessionInfo.setMstQuestion(mstQuestion);
+				tranScorerSessionInfo.setQuestionSeq(null);
 				tranScorerSessionInfo.setAnswerFormNum(null);
 				tranScorerSessionInfo.setSubjectCode(null);
 				tranScorerSessionInfo.setUpdateDate(new Date());
@@ -143,13 +140,20 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 
 						saitenLMSUrl += "?login=" + scorerId + "&password="
 								+ password;
-						log.info(scorerId+"-"+"BackToLams. User Logout. Redirecting to Lms. LMS URL: "+saitenLMSUrl);
+						log.info(scorerId
+								+ "-"
+								+ "BackToLams. User Logout. Redirecting to Lms. LMS URL: "
+								+ saitenLMSUrl);
 						Thread.sleep(2000);
 					}
-					log.info(scorerId+"-"+"User Logout. Redirecting to Lms login page. LMS URL: "+saitenLMSUrl);
+					log.info(scorerId
+							+ "-"
+							+ "User Logout. Redirecting to Lms login page. LMS URL: "
+							+ saitenLMSUrl);
 					RESULT = SUCCESS;
 				} else {
-					log.info(scorerId+"-"+"User Logout. Loading saiten login page.");
+					log.info(scorerId + "-"
+							+ "User Logout. Loading saiten login page.");
 					RESULT = INPUT;
 				}
 

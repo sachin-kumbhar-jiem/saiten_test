@@ -3,14 +3,14 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 1 Jan, 2015 10:15:12 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.saiten.model.TranScorerAccessLog" table="tran_scorer_access_log" catalog="saiten_master">
+    <class name="com.saiten.model.TranScorerAccessLog" table="tran_scorer_access_log" >
         <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="mstScorer" class="com.saiten.model.MstScorer" fetch="select">
+        <property name="scorerId" type="string">
             <column name="scorer_id" length="7" not-null="true" />
-        </many-to-one>
+        </property>
         <property name="loginTime" type="timestamp">
             <column name="login_time" length="19" not-null="true" />
         </property>

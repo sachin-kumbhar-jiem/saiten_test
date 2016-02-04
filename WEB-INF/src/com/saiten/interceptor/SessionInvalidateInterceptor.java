@@ -88,13 +88,9 @@ public class SessionInvalidateInterceptor extends AbstractInterceptor {
 					.getBean("saitenMasterUtil")).getAllLoggedInScorers(
 					scorerAccessLogInfo.getId(),
 					scorerAccessLogInfo.getScorerId());
-			MstQuestion mstQuestion = null;
 			Integer questionSequence = null;
 			if (tranScorerSessionInfo != null) {
-				mstQuestion = tranScorerSessionInfo.getMstQuestion();
-				if (mstQuestion != null) {
-					questionSequence = mstQuestion.getQuestionSeq();
-				}
+				questionSequence = tranScorerSessionInfo.getQuestionSeq();
 
 				// unlock answer, locked by previous session same user.
 				if (questionSequence != null) {
@@ -123,8 +119,7 @@ public class SessionInvalidateInterceptor extends AbstractInterceptor {
 
 				// clear questionSeq, answerFormNum & SubjectCode from
 				// tran_scorer_session_info.
-				MstQuestion mstQuestionObj = null;
-				tranScorerSessionInfo.setMstQuestion(mstQuestionObj);
+				tranScorerSessionInfo.setQuestionSeq(null);
 				tranScorerSessionInfo.setUpdateDate(new Date());
 				tranScorerSessionInfo.setSubjectCode(null);
 				tranScorerSessionInfo.setAnswerFormNum(null);

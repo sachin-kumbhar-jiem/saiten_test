@@ -26,6 +26,18 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
     <property name="maxPoolSize" value="2" />
     <property name="maxIdleTime" value="14400" />
  </bean>
+ 
+  <bean id="saitenCommonDbDataSource" 
+         class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	<property name="driverClass" value="${saiten.commondb.driverClassName}" />
+	<property name="jdbcUrl" value="${saiten.commondb.url}?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull" />
+	<property name="user" value="${saiten.commondb.username}" />
+	<property name="password" value="${saiten.commondb.password}" />
+	<property name="acquireIncrement" value="1" />
+    <property name="minPoolSize" value="2" />
+    <property name="maxPoolSize" value="2" />
+    <property name="maxIdleTime" value="14400" />
+ </bean>
   
  <bean id="saitenTranDb1DataSource" 
          class="com.mchange.v2.c3p0.ComboPooledDataSource">

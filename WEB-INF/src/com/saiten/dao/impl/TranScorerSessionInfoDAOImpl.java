@@ -6,6 +6,7 @@ package com.saiten.dao.impl;
 import com.saiten.dao.TranScorerSessionInfoDAO;
 import com.saiten.dao.support.SaitenHibernateDAOSupport;
 import com.saiten.model.TranScorerSessionInfo;
+import com.saiten.util.SaitenUtil;
 
 /**
  * @author user
@@ -25,7 +26,8 @@ public class TranScorerSessionInfoDAOImpl extends SaitenHibernateDAOSupport
 	public void saveOrUpdate(TranScorerSessionInfo tranScorerSessionInfo) {
 		try {
 
-			getHibernateTemplate().saveOrUpdate(tranScorerSessionInfo);
+			getHibernateTemplate(SaitenUtil.getCommonDbConnectionString())
+					.saveOrUpdate(tranScorerSessionInfo);
 
 		} catch (RuntimeException re) {
 			throw re;
@@ -36,8 +38,9 @@ public class TranScorerSessionInfoDAOImpl extends SaitenHibernateDAOSupport
 	public TranScorerSessionInfo findById(String scorerId) {
 		try {
 
-			return getHibernateTemplate().get(TranScorerSessionInfo.class,
-					scorerId);
+			return getHibernateTemplate(
+					SaitenUtil.getCommonDbConnectionString()).get(
+					TranScorerSessionInfo.class, scorerId);
 
 		} catch (RuntimeException re) {
 			throw re;
@@ -59,7 +62,8 @@ public class TranScorerSessionInfoDAOImpl extends SaitenHibernateDAOSupport
 
 		try {
 
-			return (Long) getHibernateTemplate().findByNamedParam(
+			return (Long) getHibernateTemplate(
+					SaitenUtil.getCommonDbConnectionString()).findByNamedParam(
 					query.toString(), params, values).get(0);
 
 		} catch (RuntimeException re) {

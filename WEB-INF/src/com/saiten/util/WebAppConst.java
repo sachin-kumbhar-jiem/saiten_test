@@ -9,6 +9,8 @@ public interface WebAppConst {
 
 	public static final String SAITEN_MASTERDB_URL = "saiten.masterdb.url";
 
+	public static final String SAITEN_COMMONDB_URL = "saiten.commondb.url";
+
 	public static final Character DELETE_FLAG = 'F';
 
 	public static final Character VALID_FLAG = 'T';
@@ -102,7 +104,7 @@ public interface WebAppConst {
 	public static final String SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID = "SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID";
 
 	public static final String SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID = "SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID";
-	
+
 	public static final String DAILY_SCORING_REPORT_MENU_ID = "DAILY_SCORING_REPORT_MENU_ID";
 
 	public static final int SCORER_ROLE_ID = 1;
@@ -148,8 +150,8 @@ public interface WebAppConst {
 	public static final String BOOKMARK_PAGESIZE = "bookmark.pagesize";
 
 	public static final String HISTORY_PAGESIZE = "history.pagesize";
-	
-	public static final String DAILY_STATUS_REPORT_PAGESIZE= "dailyStatusSearch.report.pagesize";
+
+	public static final String DAILY_STATUS_REPORT_PAGESIZE = "dailyStatusSearch.report.pagesize";
 
 	public static final String FORCED_AND_STATETRANSITION_LIST_PAGESIZE = "forcedAndStateTransition.listpage.pagesize";
 
@@ -324,7 +326,7 @@ public interface WebAppConst {
 	public static final String ERROR_NO_QUESTIONS_ALLOCATED = "error.no.question.allocated";
 
 	public static final String ERROR_NO_GRADE_AVAILABLE_FOR_SELECTED_QUESTION = "error.no.grade.available.for.selected.question";
-	
+
 	public static final String ERROR_NO_INSPECTION_GROUP_SEQ_AVAILABLE_FOR_SELECTED_QUESTION = "error.no.inspection.group.seq.available.for.selected.question";
 
 	public static final String ERROR_NO_PENDING_CATEGORY_AVAILABLE_FOR_SELECTED_QUESTION = "error.no.pending.category.available.for.selected.question";
@@ -373,81 +375,82 @@ public interface WebAppConst {
 	public static final String QUESTION_TYPE_WRITTING = "label.dailyStatusReport.questionType.writing";
 
 	public static final String QUESTION_TYPE_SPEAKING = "label.dailyStatusReport.questionType.speaking";
-	
+
 	public static final String ANSWER_IMAGE_URL = "saiten.answerimage.url";
-	
-	public static final String	SHIFT_JIS =	"Shift_JIS";
-	
+
+	public static final String SHIFT_JIS = "Shift_JIS";
+
 	public static final String SAITEN_RELEASE = "saiten.release";
-	
+
 	public static final String SHINEIGO_RELEASE = "shineigo.release";
-	
+
 	public static final String APPLICATION_PROPERTIES_FILE = "application";
-	
+
 	public static final String CRLF = "\r\n";
-	
+
 	public static final String CSV_FILE_EXTENSION = ".csv";
 
 	public static final String ZIP_FILE_EXTENSION = ".zip";
 
 	public static final String FILE_ENCODING = "UTF-8";
-	
+
 	public static final String SINGLE_SPACE = " ";
-	
+
 	public static final String TILDE = "~";
-	
+
 	public static final String UNDERSCORE = "_";
-	
+
 	public static final String EMPTY_STRING = "";
-	
+
 	public static final String HYPHEN_STRING = "-";
-	
+
 	public static final String PERCENTAGE_FORMAT = "%1$.2f";
-	
+
 	public static final Character QUES_TYPE_SPEAKING = 'S';
-	
+
 	public static final Character QUES_TYPE_WRITING = 'W';
-	
+
 	public static final String MP3_FORMAT = "%3";
-	
+
 	public static final String TXT_FORMAT = "%txt";
-	
+
 	public static final String BATCH_SCORER_ID = "BAT001";
-	
-	public static final Short[] SUMMARY_DISCR_REPORT_STATES = {122,132,162,212};
-	
+
+	public static final Short[] SUMMARY_DISCR_REPORT_STATES = { 122, 132, 162,
+			212 };
+
 	public static final String FIRST_RTG_SECOND_WAIT = "%122,131%";
-	
+
 	public static final String FIRST_RTG_PENDING = "%123,161%";
-	
+
 	public static final String SECOND_RTG_COMPLETE = "%132,500%";
-	
+
 	public static final String SECOND_RTG_PENDING = "%133,161%";
-	
+
 	public static final String SECOND_RTG_MISMATCH = "%132,171%";
-	
+
 	public static final String MISMATCH_RTG_PENDING = "%173,161%";
-	
+
 	public static final String MISMATCH_RTG_COMPLETE = "%172,500%";
-	
+
 	public static final String PENDING_RTG_SECOND_WAIT = "%162,131%";
-	
+
 	public static final String PENDING_RTG_PENDING = "%163,161%";
-	
+
 	public static final String PENDING_RTG_COMPLETE = "%162,500%";
-	
+
 	public static final String PENDING_RTG_MISMATCH = "%162,171%";
-	
+
 	public static final String PEND_CATE_01 = "%01";
-	
+
 	public static final String PEND_CATE_02 = "%02";
-	
+
 	public static final String PEND_CATE_03 = "%03";
-	
+
 	public static final String PEND_CATE_04 = "%04";
-	
+
 	public static final String PEND_CATE_05 = "%05";
-	
+
 	public static final String FIRST_RTG_SECOND_WAIT_KEY = "dailyScoring.report.title.first.rating.second.wait";
 
 	public static final String FIRST_RTG_PENDING_KEY = "dailyScoring.report.title.first.rating.pending";
@@ -503,32 +506,32 @@ public interface WebAppConst {
 	public static final String MISMATCH_RTG_PENDING_KEY = "dailyScoring.report.title.mismatch.rating.pending";
 
 	public static final String MISMATCH_RTG_COMPLETE_KEY = "dailyScoring.report.title.mismatch.rating.complete";
-	
+
 	public static final String TOTAL_RESULT_COUNT_DEFAULT = "1000";
-	
+
 	public static final String SINGLE_DIGIT_RANDOM_NUMBER = "label.singledigit.randomNumber";
-	
+
 	public static final String PUNCH_TEXT_CONDITION_EXACT_MATCH = "punch.text.condition.exact.match";
-	
+
 	public static final String PUNCH_TEXT_CONDITION_FORWORD_MATCH = "punch.text.condition.forword.match";
-	
+
 	public static final String PUNCH_TEXT_CONDITION_BACKWORD_MATCH = "punch.text.condition.backword.match";
-	
+
 	public static final String PUNCH_TEXT_CONDITION_PARTIAL_MATCH = "punch.text.condition.partial.match";
-	
+
 	public static final char PERCENTAGE_CHARACTER = '%';
-	
+
 	public static final char ESCAPE_CHARACTER = '!';
-	
+
 	public static final String ERROR_NO_DENY_CATEGORY_AVAILABLE_FOR_SELECTED_QUESTION = "error.no.deny.category.available.for.selected.question";
-	
+
 	public static final int KENSHU_ROLE_ID = 6;
-	
+
 	public static final String KENSHU_SAMPLING_MENU_ID = "KENSHU_SAMPLING_MENU_ID";
-	
+
 	public static final String OPENING_BRACKET = "(";
-	
+
 	public static final String CLOSING_BRACKET = ")";
-	
+
 	public static final int INSPECTION_STATE = 151;
 }

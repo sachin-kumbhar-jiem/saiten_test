@@ -9,6 +9,7 @@ import java.util.List;
 import com.saiten.dao.TranScorerAccessLogDAO;
 import com.saiten.dao.support.SaitenHibernateDAOSupport;
 import com.saiten.model.TranScorerAccessLog;
+import com.saiten.util.SaitenUtil;
 import com.saiten.util.WebAppConst;
 
 /**
@@ -23,11 +24,13 @@ public class TranScorerAccessLogDAOImpl extends SaitenHibernateDAOSupport
 
 		try {
 			if (tranScorerAccessLog.getId() == null) {
-				Serializable id = getHibernateTemplate().save(
+				Serializable id = getHibernateTemplate(
+						SaitenUtil.getCommonDbConnectionString()).save(
 						tranScorerAccessLog);
 				return (Integer) id;
 			} else {
-				getHibernateTemplate().saveOrUpdate(tranScorerAccessLog);
+				getHibernateTemplate(SaitenUtil.getCommonDbConnectionString())
+						.saveOrUpdate(tranScorerAccessLog);
 				return tranScorerAccessLog.getId();
 			}
 		} catch (RuntimeException re) {
@@ -48,7 +51,8 @@ public class TranScorerAccessLogDAOImpl extends SaitenHibernateDAOSupport
 
 		try {
 
-			return getHibernateTemplate()
+			return getHibernateTemplate(
+					SaitenUtil.getCommonDbConnectionString())
 					.findByNamedParam(query.toString(), params, values).get(0)
 					.toString();
 		} catch (RuntimeException re) {
@@ -64,7 +68,7 @@ public class TranScorerAccessLogDAOImpl extends SaitenHibernateDAOSupport
 		StringBuilder query = new StringBuilder();
 		query.append("FROM TranScorerAccessLog as tranScorerAccessLog ");
 		query.append("WHERE tranScorerAccessLog.id != :ID ");
-		query.append("AND tranScorerAccessLog.mstScorer.scorerId = :SCORER_ID ");
+		query.append("AND tranScorerAccessLog.scorerId = :SCORER_ID ");
 		query.append("AND tranScorerAccessLog.status = :STATUS ");
 
 		String[] params = { "ID", "SCORER_ID", "STATUS" };
@@ -72,8 +76,9 @@ public class TranScorerAccessLogDAOImpl extends SaitenHibernateDAOSupport
 
 		try {
 
-			return getHibernateTemplate().findByNamedParam(query.toString(),
-					params, values);
+			return getHibernateTemplate(
+					SaitenUtil.getCommonDbConnectionString()).findByNamedParam(
+					query.toString(), params, values);
 		} catch (RuntimeException re) {
 			throw re;
 		}

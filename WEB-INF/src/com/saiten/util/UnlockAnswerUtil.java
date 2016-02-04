@@ -16,7 +16,6 @@ import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.info.ScorerAccessLogInfo;
 import com.saiten.manager.SaitenTransactionManager;
-import com.saiten.model.MstQuestion;
 import com.saiten.model.TranScorerSessionInfo;
 import com.saiten.service.ScoreService;
 
@@ -96,8 +95,7 @@ public class UnlockAnswerUtil implements HttpSessionListener {
 							Integer answerSeq = null;
 							unlockAnswer(questionSeq, lockBy, connectionString,
 									answerSeq);
-							MstQuestion mstQuestion = null;
-							tranScorerSessionInfo.setMstQuestion(mstQuestion);
+							tranScorerSessionInfo.setQuestionSeq(null);
 						}
 
 						if (menuId
