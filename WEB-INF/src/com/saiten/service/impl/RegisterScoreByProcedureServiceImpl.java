@@ -175,8 +175,8 @@ public class RegisterScoreByProcedureServiceImpl implements
 						- logRegisterUsingStoredProcedureStartTime.getTime();
 				log.info(actionName + "-Register By using Stored Procedure: "
 						+ registerByStoredProcedureTime);
-				obj = (Object[]) list.get(0);
 
+				obj = (Object[]) list.get(0);
 				int rowCount = ((BigInteger) obj[0]).intValue();
 				if (!(rowCount > 0)) {
 					lockFlag = WebAppConst.TRUE;
