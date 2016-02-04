@@ -56,6 +56,7 @@ public class RegisterPendingByProcedureServiceImpl implements
 		Integer historySeq = answerInfo.getHistorySeq();
 
 		try {
+			Object[] obj = null;
 			String actionName = "registerPending";
 			Date logRegisterUsingStoredProcedureStartTime = new Date();
 			LinkedHashMap<ScoringStateKey, List<Short>> scoringStatesMap = ((SaitenConfig) ServletActionContext
@@ -112,7 +113,9 @@ public class RegisterPendingByProcedureServiceImpl implements
 					- logRegisterUsingStoredProcedureStartTime.getTime();
 			log.info(actionName + "-Register By using Stored Procedure: "
 					+ registerByStoredProcedureTime);
-			int rowCount = ((BigInteger) list.get(0)).intValue();
+
+			obj = (Object[]) list.get(0);
+			int rowCount = ((BigInteger) obj[0]).intValue();
 			if (!(rowCount > 0)) {
 				lockFlag = WebAppConst.TRUE;
 			} else {
