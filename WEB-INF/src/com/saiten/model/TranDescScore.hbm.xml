@@ -95,5 +95,8 @@
         <property name="inspectionGroupSeq" type="java.lang.Integer">
             <column name="inspect_group_seq" />
         </property>
+        <property name="kenshuSamplingFlag" type="java.lang.Character">
+            <column name="kenshu_sampling_flag" length="1" />
+        </property>
     </class>
 </hibernate-mapping>

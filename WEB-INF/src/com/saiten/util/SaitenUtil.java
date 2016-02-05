@@ -159,7 +159,7 @@ public class SaitenUtil {
 		MstScorerInfo sessionScorerInfo = (MstScorerInfo) session
 				.get("scorerInfo");
 		boolean isValid = false;
-		if (sessionScorerInfo.getRoleId() == 4) {
+		if (sessionScorerInfo.getRoleId() == 4 || sessionScorerInfo.getRoleId() == 6) {
 			mstQuestionMap = getMstQuestionMap();
 			;
 			// root.put("isQuestionNumValid", WebAppConst.QUESTION_NUM_VALID);

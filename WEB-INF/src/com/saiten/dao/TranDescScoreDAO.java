@@ -159,6 +159,29 @@ public interface TranDescScoreDAO {
 	@SuppressWarnings("rawtypes")
 	public List findMaxInspectGroupSeq(int questionSeq, String connectionString);
 
-	
+	/**
+	 * 
+	 * @param questionSeq
+	 * @return List
+	 */
+	@SuppressWarnings("rawtypes")
+	public List findKenshuRecords(Integer questionSeq, String connectionString,
+			int recordCount);
+
+	/**
+	 * 
+	 * @param gradeNum
+	 * @return Integer
+	 */
+	@SuppressWarnings("rawtypes")
+	public List isAnswerAlreadyChecked(Integer answerSeq, Date date,
+			String connectionString);
+
+	/**
+	 * 
+	 * @param answerSeq
+	 */
+	public int updateKunshuFlagByAnswerseq(Integer answerSeq, Date date,
+			String connectionString);
 
 }

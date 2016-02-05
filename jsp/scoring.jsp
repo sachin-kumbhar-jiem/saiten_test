@@ -140,7 +140,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 								 onclick="javascript:location.href='showSaitenMenu.action';" />
 							</s:else>
 							
-							<s:if  test="!(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID)">
+							<s:if  test="!(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID)">
 								<s:if test="(bookmarkScreenFlag == true || #session.historyScreenFlag == true)&&(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID)">
 									<a href="historyListing.action?forcedScoringFlag=true" class="menu_button"><s:text name="label.historylist" /></a><p>
 									<a href="bookmarkListing.action?forcedScoringFlag=true" class="menu_button"><s:text name="label.bookmarklist" /></a><p>	
@@ -170,7 +170,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				</div>
 				<br/>
 				<div class="green_menu">
-					<s:if test="!(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID)">
+					<s:if test="!(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID)">
 						<p class="menu_button_without_cursor"><s:text name="label.scoring.pregrading" /></p>
 						<p class="menu_button_without_cursor">
 							<s:if test="#session.historyRecordCount != null">
@@ -181,12 +181,15 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 							</s:else>
 						</p>
 					</s:if>
-					<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID">
+					<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID 
+					|| #session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
 						<p class="menu_button_without_cursor"><s:text name="label.scoresearch.referencesamplingrecordcount" /></p>
 						<p class="menu_button_without_cursor">
 							<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID">
 								<s:property value="#session.questionInfo.prevRecordCount + 1" /><s:text name="label.forwardslash" /><s:property value="#session.questionInfo.historyRecordCount" />
-							</s:if><s:else>
+							</s:if> <s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
+								<s:property value="#session.questionInfo.prevRecordCount + 1" /><s:text name="label.forwardslash" /><s:property value="#session.tranDescScoreInfoList.size()" />
+							</s:elseif><s:else>
 								<s:property value="#session.recordNumber"/><s:text name="label.forwardslash" /><s:property value="#session.answerRecordsList.size()"/>
 							</s:else>
 							
@@ -219,7 +222,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 					   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   
 					</s:elseif>  
 				
-					<s:if test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID) || ((#session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@OUT_BOUNDARY_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_BLIND_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID) && (#session.tranDescScoreInfo.answerInfo.historySeq == null)) || (@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@ANSWER_PAPER_LINK_ENABLE_STATES, #session.tranDescScoreInfo.scoringState))">
+					<s:if test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID) || ((#session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@OUT_BOUNDARY_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_BLIND_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID) && (#session.tranDescScoreInfo.answerInfo.historySeq == null)) || (@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@ANSWER_PAPER_LINK_ENABLE_STATES, #session.tranDescScoreInfo.scoringState))">
 						&nbsp;&nbsp;
 					<s:if test="!(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE) && !(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE)">	
 						<s:text name="label.partition" />
@@ -235,7 +238,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 					</s:else>
 				</span>
 				
-				<s:if test="bookmarkScreenFlag != true && !(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID)">
+				<s:if test="bookmarkScreenFlag != true && !(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID)">
 					<span style="cursor:pointer;padding-right:8px;float:right">
 						<s:if test="#session.questionInfo.prevRecordCount > @com.saiten.util.WebAppConst@ZERO || #session.prevRecordCount > @com.saiten.util.WebAppConst@ZERO">
 							<img style="padding-right:6px" id="prev" name="prev" src="./material/img/action_back.gif" alt="<s:text name="label.scoring.alt.previousgrading"/>"
@@ -300,6 +303,62 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		</tr>
 		</table>
 		</s:if>
+		<s:if  test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID)">
+		<table style="width: 465px;">
+		<tr><td>&nbsp;</td></tr>
+		<tr class="box_less_width_input" >
+			<td colspan="5">
+				<span class="table_center_heading"><s:text name="label.kenshu_comment" /></span>
+			</td>
+		</tr>
+		
+		<tr >
+		<td >
+			<!-- <p class="comment_area1" > -->
+					<%-- <s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID"> --%>
+						
+					<%-- </s:if>
+					<s:else>
+							<s:textarea  name="kenshuComment" id="kenshuComment" value=""  cssStyle="width: 350px; height: 50px;" disabled="true" ></s:textarea>
+					</s:else> --%>
+			<!-- </p> -->
+			<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
+				<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
+			</s:if> <s:else>
+				<s:if test="#session.kenshuRecordInfo == null || #session.kenshuRecordInfo.comment == '' || #session.kenshuRecordInfo.comment == null" >
+					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.kenshuRecordInfo.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;"></s:textarea>
+				</s:if><s:else>
+					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.kenshuRecordInfo.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
+				</s:else>
+			</s:else>
+			
+		</td>
+		<td>
+			
+			<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
+				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
+					<p class="btn btn-disabled" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></p>	
+				</s:if> <s:else>
+					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
+				</s:else>
+			</s:if> <s:else>
+				<s:if test="#session.kenshuRecordInfo == null || #session.kenshuRecordInfo.comment == '' || #session.kenshuRecordInfo.comment == null" >
+					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>	
+				</s:if> <s:else>
+					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
+				</s:else>
+			</s:else>
+			
+			<%-- <s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
+				<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>
+			</s:if><s:else>
+				<a onclick="unmarkAll();" id="unmarkAll" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>
+			</s:else> --%>
+
+		</td>
+		</tr>
+		</table>
+		</s:if>
 			</div>			
 		</s:if>
 		<s:elseif test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE">
@@ -355,6 +414,61 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		</tr>
 		</table>
 		</s:if>
+		<s:if  test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID)">
+		<table style="width: 465px;">
+		<tr><td>&nbsp;</td></tr>
+		<tr class="box_less_width_input" >
+			<td colspan="5">
+				<span class="table_center_heading"><s:text name="label.kenshu_comment" /></span>
+			</td>
+		</tr>
+		
+		<tr >
+		<td >
+			<!-- <p class="comment_area1" > -->
+					<%-- <s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID"> --%>
+					<%-- </s:if>
+					<s:else>
+							<s:textarea  name="kenshuComment" id="kenshuComment" value=""  cssStyle="width: 350px; height: 50px;" disabled="true" ></s:textarea>
+					</s:else> --%>
+			<!-- </p> -->
+			
+			<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
+				<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
+			</s:if> <s:else>
+				<s:if test="#session.kenshuRecordInfo == null || #session.kenshuRecordInfo.comment == '' || #session.kenshuRecordInfo.comment == null" >
+					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.kenshuRecordInfo.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;"></s:textarea>
+				</s:if><s:else>
+					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.kenshuRecordInfo.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
+				</s:else>
+			</s:else>
+		</td>
+		<td>
+			
+			<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
+				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
+					<p class="btn btn-disabled" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></p>	
+				</s:if> <s:else>
+					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
+				</s:else>
+			</s:if> <s:else>
+				<s:if test="#session.kenshuRecordInfo == null || #session.kenshuRecordInfo.comment == '' || #session.kenshuRecordInfo.comment == null" >
+					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>	
+				</s:if> <s:else>
+					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
+				</s:else>
+			</s:else>
+			
+			<%-- <s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
+				<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>
+			</s:if><s:else>
+				<a onclick="unmarkAll();" id="unmarkAll" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>
+			</s:else> --%>
+
+		</td>
+		</tr>
+		</table>
+		</s:if>
 			</div> 			 
 		</s:elseif><s:elseif test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE">
 			<div style="overflow-x: auto;overflow-y: auto;width: 465px;height: 555px;vertical-align: top;" align="center">
@@ -393,6 +507,60 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 			</s:if><s:else>
 				<a onclick="unmarkAll();" id="unmarkAll" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>
 			</s:else>
+
+		</td>
+		</tr>
+		</table>
+		</s:if>
+		<s:if  test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID)">
+		<table style="width: 465px;">
+		<tr><td>&nbsp;</td></tr>
+		<tr class="box_less_width_input" >
+			<td colspan="5">
+				<span class="table_center_heading"><s:text name="label.kenshu_comment" /></span>
+			</td>
+		</tr>
+		
+		<tr >
+		<td >
+			<!-- <p class="comment_area1" > -->
+					<%-- <s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID"> --%>
+					<%-- </s:if> --%>
+					<%-- <s:else>
+							<s:textarea  name="kenshuComment" id="kenshuComment" value=""  cssStyle="width: 350px; height: 50px;" disabled="true" ></s:textarea>
+					</s:else> --%>
+			<!-- </p> -->
+			<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
+				<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
+			</s:if> <s:else>
+				<s:if test="#session.kenshuRecordInfo == null || #session.kenshuRecordInfo.comment == '' || #session.kenshuRecordInfo.comment == null" >
+					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.kenshuRecordInfo.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;"></s:textarea>
+				</s:if><s:else>
+					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.kenshuRecordInfo.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
+				</s:else>
+			</s:else>
+			
+		</td>
+		<td>
+			<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
+				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
+					<p class="btn btn-disabled" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></p>	
+				</s:if> <s:else>
+					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
+				</s:else>
+			</s:if> <s:else>
+				<s:if test="#session.kenshuRecordInfo == null || #session.kenshuRecordInfo.comment == '' || #session.kenshuRecordInfo.comment == null" >
+					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>	
+				</s:if> <s:else>
+					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
+				</s:else>
+			</s:else>
+			
+			<%-- <s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
+				<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>
+			</s:if><s:else>
+				<a onclick="unmarkAll();" id="unmarkAll" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>
+			</s:else> --%>
 
 		</td>
 		</tr>
@@ -476,7 +644,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 			<!-- <label for="example"> -->
 				<!-- MISMATCH -->
 					<s:if test="((#session.questionInfo.menuId == @com.saiten.util.WebAppConst@MISMATCH_MENU_ID || ((@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_SCORING_STATES, #session.tranDescScoreInfo.scoringState) || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID) && (#session.questionInfo.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE || #session.questionInfo.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE))) && (bookmarkScreenFlag != true))
-							|| ((bookmarkScreenFlag == true || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID) && (@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@MISMATCH_STATES, #session.tranDescScoreInfo.scoringState) || (@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_SCORING_STATES, #session.tranDescScoreInfo.scoringState) && (#session.questionInfo.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE || #session.questionInfo.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE))))">
+							|| ((bookmarkScreenFlag == true || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID) && (@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@MISMATCH_STATES, #session.tranDescScoreInfo.scoringState) || (@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_SCORING_STATES, #session.tranDescScoreInfo.scoringState) && (#session.questionInfo.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE || #session.questionInfo.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE))))">
 				
 					<td bgcolor="pink" style="border-right:inset;">
 						<s:if test="#session.firstTimeSelectedCheckPointList!= null && #session.firstTimeSelectedCheckPointList.contains(#checkPointObj.checkPoint)">
@@ -499,7 +667,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<c:set var="checkPoint" value="${checkPointObj.checkPoint}"/>
 				<c:set var="shortCutKey" value="${checkPointsShortCutsMap[checkPoint + 0]}"></c:set>
 				<td class="check" style='background-color:<s:property value="%{#checkPointObj.bgColor}" /> '>								
-					<s:if test="bookmarkScreenFlag == true || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID  || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID)">
+					<s:if test="bookmarkScreenFlag == true || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID  || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID)">
 						<s:if test="#session.selectedCheckPointList!= null && #session.selectedCheckPointList.contains(#checkPointObj.checkPoint)">
 							<input type="checkbox" accesskey="<s:property  value="%{#checkPointObj.checkPoint}" />" name="checkPoint" id="checkPoint" disabled="disabled" checked="checked" class="scoring_big_checkbox">
 						</s:if><s:else><s:property value="&nbsp;"/>
@@ -510,7 +678,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 						<s:if test="#session.selectedCheckPointList!= null && #session.selectedCheckPointList.contains(#checkPointObj.checkPoint)">
 						 <input type="checkbox" accesskey="${shortCutKey}" name="checkPoint" id="${checkPoint}" checked="checked" value="<s:property value="%{#checkPointObj.checkPoint}" />:<s:property value="%{#checkPointObj.groupType}" />:<s:property value="%{#checkPointObj.groupId}" />" class="scoring_big_checkbox" onkeydown="uniKeyCode(event)">
 						</s:if><s:else>
-							<s:if test="(#checkPointObj.checkPoint == WebAppConst.ZERO) && (#session.questionInfo.menuId != @com.saiten.util.WebAppConst@CHECKING_MENU_ID && #session.questionInfo.menuId != @com.saiten.util.WebAppConst@INSPECTION_MENU_ID  && #session.questionInfo.menuId != @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID)">
+							<s:if test="(#checkPointObj.checkPoint == WebAppConst.ZERO) && (#session.questionInfo.menuId != @com.saiten.util.WebAppConst@CHECKING_MENU_ID && #session.questionInfo.menuId != @com.saiten.util.WebAppConst@INSPECTION_MENU_ID  && #session.questionInfo.menuId != @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID && #session.questionInfo.menuId != @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID)">
 								<input type="checkbox" accesskey="${shortCutKey}" name="checkPoint" id="${checkPoint}" value="<s:property value="%{#checkPointObj.checkPoint}" />:<s:property value="%{#checkPointObj.groupType}" />:<s:property value="%{#checkPointObj.groupId}" />" class="scoring_big_checkbox" onkeydown="uniKeyCode(event)">
 							</s:if><s:else>
 								<input type="checkbox" accesskey="${shortCutKey}" name="checkPoint" id="${checkPoint}" value="<s:property value="%{#checkPointObj.checkPoint}" />:<s:property value="%{#checkPointObj.groupType}" />:<s:property value="%{#checkPointObj.groupId}" />" class="scoring_big_checkbox" autofocus="autofocus" onkeydown="uniKeyCode(event)">
@@ -526,7 +694,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		</td>
 		</tr>
 		
-		<s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID">
+		<s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID">
 			<tr><td colspan="5" >&nbsp;</td></tr>
 				<tr class="box_less_width_input">
 					<td colspan="5">
@@ -537,13 +705,13 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 			<tr><td colspan="5" class="wordwrap" style="border: none;"><pre style="margin-left: 5px;"><s:property value="#session.tranDescScoreInfo.answerInfo.punchText"/></pre></td></tr>
 		</s:if>
 	 <s:if test="!(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE || #session.questionInfo.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE)">
-		<s:if test="(bookmarkScreenFlag == true || #session.historyScreenFlag == true) || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID  && #session.tranDescScoreInfo.scoringState != @com.saiten.util.WebAppConst@MISMATCH_STATES[0]))">
+		<s:if test="(bookmarkScreenFlag == true || #session.historyScreenFlag == true) || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID  && #session.tranDescScoreInfo.scoringState != @com.saiten.util.WebAppConst@MISMATCH_STATES[0]))">
 			<tr><td>&nbsp;</td></tr>
 			<tr>
 				<td class="big_result_blue" colspan="5">
 					<s:set id="backToScoringFlag" value="#parameters['backToScoringFlag'][0]"></s:set>
 					<s:text name="label.header.grade"></s:text><s:text name="label.colon"></s:text>
-					<s:if test="((#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID) || ((#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID) && (#backToScoringFlag != @java.lang.String@valueOf(@com.saiten.util.WebAppConst@TRUE) && (bookmarkScreenFlag != true) && (#session.historyScreenFlag != true)))) 
+					<s:if test="((#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID) || ((#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID) && (#backToScoringFlag != @java.lang.String@valueOf(@com.saiten.util.WebAppConst@TRUE) && (bookmarkScreenFlag != true) && (#session.historyScreenFlag != true)))) 
 								|| ((#parameters['prevOrNextFlag'][0] == @java.lang.String@valueOf(@com.saiten.util.WebAppConst@TRUE) || #parameters['prevOrNextFlag'][0] == @java.lang.String@valueOf(@com.saiten.util.WebAppConst@FALSE)) 
 									&& (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || #session.historyScreenFlag == true))">
 						<s:if test="#session.tranDescScoreInfo.answerInfo.pendingCategorySeq == null && #parameters['gradeNum'][0] == '' && !(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@NOT_SCORED_STATES_ARRAY, #session.tranDescScoreInfo.scoringState))">
@@ -625,12 +793,12 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<td colspan="5" style="border-bottom: none;">
 					<div id="bottom_row" style="padding-top: 15px;">
 						<div class="buttons">
-							<s:if test="!(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID)">
+							<s:if test="!(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID)">
 								<div id="popup-wrapper" style="background-color:#2D2D2D;">
 									<jsp:include page="include/confirmScore.jsp"/>
 								</div>
 							</s:if> 
-							<s:if test="!(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_BLIND_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID )"> <!-- || ((#session.questionInfo.menuId == @com.saiten.util.WebAppConst@PENDING_MENU_ID) && (#session.questionInfo.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE || #session.questionInfo.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE)) -->
+							<s:if test="!(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_BLIND_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID)"> <!-- || ((#session.questionInfo.menuId == @com.saiten.util.WebAppConst@PENDING_MENU_ID) && (#session.questionInfo.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE || #session.questionInfo.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE)) -->
 								<div id="pendingpopup-wrapper" style="background-color:#2D2D2D;">
 									<jsp:include page="include/confirmPending.jsp"/>
 								</div>
@@ -690,6 +858,23 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 							<p class="btn btn-disabled" style="width:97px; height:37px;margin-top: 4px;"><s:text name="label.next"></s:text></p>
 						</s:else>						
 					</s:elseif>
+					<s:elseif  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
+						<s:if  test="#session.questionInfo.prevRecordCount > @com.saiten.util.WebAppConst@ZERO">
+							<a href="showKenshuAnswerDetails.action?prevOrNextFlag=<s:property value="%{@com.saiten.util.WebAppConst@TRUE}" />" id="prev" name="prev" class="btn btn-primary btn-scoring-sm" style="width:99px; height:39px;"><!-- <img class="rollover" src="./material/img/button/back.gif" alt="%{getText('label.cancel')}" /> --><s:text name="label.previous"></s:text></a>
+						</s:if>
+						<s:else>
+							<!-- <img src="./material/img/button/back.gif" alt="%{getText('btn.scoring.alt.saiten')}" /> -->
+							<p class="btn btn-disabled" style="width:97px; height:37px;margin-top: 4px;"><s:text name="label.previous"></s:text></p>
+						</s:else>
+						
+						<s:if  test="#session.questionInfo.nextRecordCount > @com.saiten.util.WebAppConst@ZERO">
+			  				<a href="showKenshuAnswerDetails.action?prevOrNextFlag=<s:property value="%{@com.saiten.util.WebAppConst@FALSE}" />" id="next" name="next" class="btn btn-primary btn-scoring-sm" style="width:99px; height:39px;"><!-- <img class="rollover" src="./material/img/button/next.gif" alt="%{getText('label.next')}" /> --><s:text name="label.next"></s:text></a>
+			  			</s:if>
+			  			<s:else>
+							<!-- <img src="./material/img/button/next.gif" alt="%{getText('label.next')}" /> -->
+							<p class="btn btn-disabled" style="width:97px; height:37px;margin-top: 4px;"><s:text name="label.next"></s:text></p>
+						</s:else>						
+					</s:elseif>
 					<s:else>
 						<a>
 							<%-- <s:submit accesskey="s" type="image" src="./material/img/button/input_bn-login.gif" cssStyle="width:99px; height:39px;" cssClass="rollover" label="%{getText('btn.scoring.alt.saiten')}" name="score" id="score" /> --%>
@@ -701,7 +886,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 						</a>
 					</s:else>
 					</td><td style="border-bottom: none;"><table><tr><td style="font-size: 14px;border-bottom: none;">	
-					<s:if test="bookmarkScreenFlag != true && !(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID)">
+					<s:if test="bookmarkScreenFlag != true && !(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID) && !(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID)">
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<span style="vertical-align: top;font-size: 14px;">
 						<s:if test="(!(#session.qcAnswerSeqList.isEmpty()) && #session.isQcRecord && #session.tranDescScoreInfo.answerInfo.historySeq == null) || (#session.tranDescScoreInfo.answerInfo.qcSeq != null)">
@@ -714,7 +899,30 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 						<s:text name="label.scoring.bookmark" /><img src="./material/img/bookmark.png" style="vertical-align: top;">
 						</span>
 					</s:if>
-					 </td></tr><tr><td style="font-size: 14px;border-bottom: none;">
+					 </td></tr>
+					 
+					 <tr><td style="font-size: 14px;border-bottom: none;">	
+					<s:if test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID) && (#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY)">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<span style="vertical-align: top;font-size: 14px;">
+						<%-- <s:if test="(!(#session.qcAnswerSeqList.isEmpty()) && #session.isQcRecord && #session.tranDescScoreInfo.answerInfo.historySeq == null) || (#session.tranDescScoreInfo.answerInfo.qcSeq != null)">
+							<input  type="checkbox" name="bookMark" id="bookMark" disabled="disabled" style="vertical-align: top;"/>
+						</s:if><s:elseif test="#session.tranDescScoreInfo.answerInfo.bookMarkFlag == @com.saiten.util.WebAppConst@BOOKMARK_FLAG_TRUE">
+							<input type="checkbox" name="bookMark" id="bookMark" checked="checked" style="vertical-align: top;"/>
+						</s:elseif><s:else> --%>
+						<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
+							<input  type="checkbox" name="bookMark" id="bookMark" style="vertical-align: top;" checked="checked" onclick="checkUncheckFlag();" disabled="disabled"/>
+						</s:if> <s:else>
+							<input  type="checkbox" name="bookMark" id="bookMark" style="vertical-align: top;" onclick="checkUncheckFlag();"/>
+						</s:else>
+						<%-- </s:else> --%>
+						<s:text name="label.kenshu.explain.flag" />
+						</span>
+					</s:if>
+					 </td></tr>
+					 
+					 
+					 <tr><td style="font-size: 14px;border-bottom: none;">
 					 <!-- removed writting and speaking condition for saitama release. -->
 					<s:if test="((#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_QUALITY_CHECK_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID))">
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -759,6 +967,20 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="bookmarkScreenFlag == true">
 					<s:textarea  name="scorerComment" id="scorerComment" value="%{#session.tranDescScoreInfo.answerInfo.scorerComment}" disabled="true"></s:textarea>					
 				</s:if>
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
+					<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
+						<s:textarea  name="scorerComment" id="scorerComment" value="%{getText('label.scoring.openingbracket') + getText('label.kenshu.userId') + getText('label.colon') + #session.tranAcceptance.markBy + getText('label.scoring.closingbracket')}" disabled="true"></s:textarea>	
+					</s:if>
+					<s:elseif test="(#session.tranDescScoreInfo.latestScreenScorerId == '') || (#session.tranDescScoreInfo.latestScreenScorerId == null)" >
+							<s:textarea  name="scorerComment" id="scorerComment" value="" disabled="true"></s:textarea>
+						</s:elseif><s:else>
+									<s:if test="((#session.tranDescScoreInfo.answerInfo.scorerComment != null) && (#session.tranDescScoreInfo.answerInfo.scorerComment != ''))"> 
+												<s:textarea  name="scorerComment" id="scorerComment" value="%{getText('label.scoring.openingbracket') + getText('label.scoresearch.scorerid') + getText('label.colon') + #session.tranDescScoreInfo.latestScreenScorerId + getText('label.scoring.closingbracket') + '  ' + #session.tranDescScoreInfo.answerInfo.scorerComment}" disabled="true"></s:textarea>
+									</s:if><s:else>
+												<s:textarea  name="scorerComment" id="scorerComment" value="%{getText('label.scoring.openingbracket') + getText('label.scoresearch.scorerid') + getText('label.colon') + #session.tranDescScoreInfo.latestScreenScorerId + getText('label.scoring.closingbracket')}" disabled="true"></s:textarea>
+									</s:else>
+							</s:else>
+				</s:elseif>
 				<s:else>
 					<s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID">
 						<s:if test="(#session.tranDescScoreInfo.latestScreenScorerId == '') || (#session.tranDescScoreInfo.latestScreenScorerId == null)" >
@@ -865,7 +1087,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 			</div>
 		</div>	
 		</s:if>
-		<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_BLIND_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID">
+		<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID  || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_BLIND_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID">
 			<div id="bottom_row" style="margin-top: 0px;">
 				<div class="buttons">
 				<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID">
@@ -887,6 +1109,10 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 					<!-- <img class="rollover" src="./material/img/button/sampling_bn-back.gif" alt="%{getText('label.backtosearch')}" /> -->
 					<s:text name="label.backtosearch"></s:text>
 				</a>
+			</s:elseif>
+			<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
+				<a href="kenshuSampling?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID"/>" id="back" name="back" class="btn btn-primary btn-xl"><s:text name="label.back.to.gradwise.list"></s:text></a>
+				<a href="showKenshuSampling?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID"/>&sessionClearFlag=<s:property value="@com.saiten.util.WebAppConst@FALSE"/>" id="back" name="back" class="btn btn-primary btn-xl"><s:text name="label.backtosearch"></s:text></a>
 			</s:elseif>
 			</div>
 			</div>	

@@ -140,5 +140,7 @@ public interface ErrorCode {
 	public static final String REGISTER_DENY_HIBERNATE_EXCEPTION = "S002000";
 	
 	public static final String REGISTER_DENY_SERVICE_EXCEPTION = "S002001";
+	
+	public static final String KENSHU_RECORD_SERVICE_EXCEPTION = "S002002";
 
 }

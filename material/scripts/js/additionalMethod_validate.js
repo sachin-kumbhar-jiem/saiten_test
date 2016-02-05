@@ -177,8 +177,13 @@ function numericCommaValidation(value, element){
 function isQuestionNumValid(value, element){
 	var isSuccess;
 	var requestData = {};   
-	requestData["questionNum"] = $("#questionNum").val();
-	requestData["subjectCode"] = $("input:radio[id='subjectCode']:checked").val();
+	if ($('#acceptanceDisplayRadio').is(':checked')) {
+		requestData["questionNum"] = $("#questionNumA").val();
+		requestData["subjectCode"] = $("input:radio[id='subjectCodeA']:checked").val();
+	}else {
+		requestData["questionNum"] = $("#questionNum").val();
+		requestData["subjectCode"] = $("input:radio[id='subjectCode']:checked").val();
+	}
 	$.ajax({
 		type: "POST",
 		url: './validateQuestionNum.action',

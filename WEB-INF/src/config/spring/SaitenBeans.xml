@@ -317,20 +317,6 @@
    	</bean>
    	
    	<!-- Confirm deny bean configuration  -->
-   	<bean id="confirmDeny" class="com.saiten.action.ConfirmDenyAction" scope="request" >
-   		<property name="confirmScoreService" ref="confirmScoreService"></property>
-   	</bean>
-   	
-   	<bean id="registerDeny" class="com.saiten.action.RegisterDenyAction" scope="request">
-   		<property name="registerDenyService" ref="registerDenyService"></property>
-   		<property name="saitenTransactionManager" ref="saitenTransactionManager"></property>
-   	</bean>
-   	
-   	<bean id="registerDenyService" class="com.saiten.service.impl.RegisterDenyServiceImpl">
-   		<property name="tranDescScoreDAO" ref="tranDescScoreDAO"></property>
-		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO"></property>
-		<property name="tranQualitycheckScoreDAO" ref="tranQualitycheckScoreDAO"></property>
-   	</bean>
    	
    	<bean id="denyCategorySelection" class="com.saiten.action.DenyCategorySelectionAction" scope="request">
 		<property name="denyCategorySelectionService" ref="denyCategorySelectionService"></property>
@@ -348,6 +334,35 @@
    	<bean id="inspectionGroupSeqSelectionService" class="com.saiten.service.impl.InspectionGroupSeqSelectionServiceImpl">
 		<property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO" />
    	</bean>
+   	
+   	<!-- Kenshu Sampling beans -->
+  	<bean id="kenshuSampling" class="com.saiten.action.KenshuSamplingAction" scope="request">
+   		<property name="scoreSearchService" ref="scoreSearchService"></property>
+   		<property name="questionSelectionService" ref="questionSelectionService"></property>
+   		<property name="kenshuSamplingService" ref="kenshuSamplingService" />
+   		<property name="gradeSelectionService" ref="gradeSelectionService"></property>
+   		<property name="scoreService" ref="scoreService" />
+   	</bean>
+   	
+   	<bean id="kenshuSamplingService" class="com.saiten.service.impl.KenshuSamplingServiceImpl" scope="request">
+   		<property name="tranDescScoreDAO" ref="tranDescScoreDAO" />
+   		<property name="tranAcceptanceDao" ref="tranAcceptanceDao"></property>
+   	</bean>
+   	
+   	<bean id="kenshuMark" class="com.saiten.action.MarkKenshuRecordsAction" scope="request">
+   		<property name="markKenshuRecordService" ref="markKenshuRecordService"></property>
+   	</bean>
+   	
+   	<bean id="markKenshuRecordService" class=" com.saiten.service.impl.MarkKenshuRecordServiceImpl" scope="request">
+   		<property name="tranAcceptanceDao" ref="tranAcceptanceDao"></property>
+   		<property name="tranAcceptanceHistoryDao" ref="tranAcceptanceHistoryDao"></property>
+   	</bean>
+  	
+  	<bean id="tranAcceptanceDao" class="com.saiten.dao.impl.TranAcceptanceDaoImpl" scope="request">
+  	</bean>
+  	
+  	<bean id="tranAcceptanceHistoryDao" class="com.saiten.dao.impl.TranAcceptanceHistoryDaoImpl" scope="request">
+  	</bean>
   	
   	<!-- database.properties bean configuration  -->
    	<util:properties id="saitenDbProperties" location="classpath:config/database/properties/database.properties" />

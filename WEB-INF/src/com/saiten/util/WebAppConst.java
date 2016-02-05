@@ -534,4 +534,18 @@ public interface WebAppConst {
 	public static final String CLOSING_BRACKET = ")";
 
 	public static final int INSPECTION_STATE = 151;
+	
+	public static final String ACCEPTANCE_DISPLAY = "ACCEPTANCE DISPLAY";
+
+	public static final String KENSHU_SAMPLING_SEARCH = "KENSHU_SAMPLING_SEARCH";
+
+	public static final String KENSHU_SEARCH_ALL = "label.kenshu.search.all";
+
+	public static final String KENSHU_SEARCH_EXPLAINED = "label.kenshu.explain.flag";
+
+	public static final String KENSHU_SEARCH_UNEXPLAINED = "label.kenshu.search.unexplained";
+
+	public static final Short[] KENSU_RECORDS_STATES = { 151, 500, 501 };
+	
+	public static final Character UNDER_SCORE = '_';
 }

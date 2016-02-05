@@ -35,7 +35,6 @@ public class DenyCategorySelectionAction extends ActionSupport implements
 	private Short selectedMarkValue;
 
 	public String onLoad() {
-		System.out.println("this is here");
 
 		int questionSeq;
 		QuestionInfo sessionQuestionInfo = (QuestionInfo) session

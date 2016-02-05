@@ -278,6 +278,32 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 					+ sessionQuestionInfo.getMenuId() + "-"
 					+ "Search count screen loading. Search Criteria: -{ "
 					+ scoreInputInfo + " } ");
+			// adding escape character before any % in punchText
+				String tempStr = scoreInputInfo.getScoreCurrentInfo() != null ? scoreInputInfo
+						.getScoreCurrentInfo().getPunchText() : null;
+				String inputString = tempStr;
+						if (tempStr != null) {
+							StringBuilder sb = new StringBuilder();
+							sb.append(tempStr);
+							for (int i = 0; i < tempStr.length(); i++) {
+								if (tempStr.charAt(i) == WebAppConst.PERCENTAGE_CHARACTER) {
+									sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
+									tempStr = sb.toString();
+									i++;
+								}else if (tempStr.charAt(i) == WebAppConst.ESCAPE_CHARACTER) {
+									sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
+									tempStr = sb.toString();
+									i++;
+								}else if (tempStr.charAt(i) == WebAppConst.UNDER_SCORE) {
+									sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
+									tempStr = sb.toString();
+									i++;
+
+							}
+							scoreInputInfo.getScoreCurrentInfo().setPunchText(tempStr);
+						}
+						}
+
 			// Fetch questionSeq from subjectCode & questionNum
 			List<Integer> questionSeqList = scoreSearchService.findQuestionSeq(
 					scoreInputInfo.getSubjectCode(),
@@ -394,9 +420,18 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 						sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
 						tempStr = sb.toString();
 						i++;
-					}
+					}else if (tempStr.charAt(i) == WebAppConst.ESCAPE_CHARACTER) {
+						sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
+						tempStr = sb.toString();
+						i++;
+					}else if (tempStr.charAt(i) == WebAppConst.UNDER_SCORE) {
+						sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
+						tempStr = sb.toString();
+						i++;
+
 				}
 				scoreInputInfo.getScoreCurrentInfo().setPunchText(tempStr);
+			}
 			}
 
 			// Fetch questionSeq from subjectCode & questionNum

@@ -16,6 +16,7 @@ $(document).ready(function(){
 		{
 			setHistoryDateValues();
 			setCurrentDateValues();	
+			isDateError();
 		});
 	
 	$("#topSearch").click(function()

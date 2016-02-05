@@ -44,9 +44,10 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 	 * @see com.saiten.dao.TranDescScoreDAO#findAnswer(int, java.lang.String,
 	 * java.lang.String, java.util.LinkedHashMap, java.lang.String)
 	 */
+	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(TranDescScoreDAOImpl.class);
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	public List findAnswer(final List<Integer> quetionSeq, final String menuId,
 			final String scorerId,
 			final LinkedHashMap<String, Short> menuIdAndScoringStateMap,
@@ -295,7 +296,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 	 * } }
 	 */
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "rawtypes", "unused" })
 	public List findQcAnsSeqList(final List<Integer> quetionSeq,
 			final String scorerId, String connectionString) {
 		HibernateTemplate hibernateTemplate = null;
@@ -1761,21 +1762,117 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 	@SuppressWarnings("rawtypes")
 	public List findMaxInspectGroupSeq(final int questionSeq,
 			final String connectionString) {
+		
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT max(tranDescScore.inspectionGroupSeq) as maxInspectGroupSeq ");
 		query.append("FROM TranDescScore as tranDescScore WHERE ");
 		query.append("tranDescScore.questionSeq = :QUESTION_SEQ  ");
-
-		return getHibernateTemplate(connectionString).execute(
-				new HibernateCallback<List>() {
-					public List doInHibernate(Session session)
-							throws HibernateException {
-						Query queryObj = session.createQuery(query.toString());
-						queryObj.setParameter("QUESTION_SEQ", questionSeq);
-						return queryObj.list();
-					}
-				});
+		try {
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<List>() {
+						public List doInHibernate(Session session)
+								throws HibernateException {
+							Query queryObj = session.createQuery(query.toString());
+							queryObj.setParameter("QUESTION_SEQ", questionSeq);
+							return queryObj.list();
+						}
+					});
+		}catch (RuntimeException re) {
+			throw re;
+		}
 	}
 
-	
+	@Override
+	@SuppressWarnings("rawtypes")
+	public List findKenshuRecords(final Integer questionSeq,
+			final String connectionString, final int recordCont) {
+		final StringBuilder query = new StringBuilder();
+
+		query.append("SELECT t.answerSeq, t.answerFormNum, t.imageFileName, ");
+		query.append("t.gradeSeq, t.bitValue, t.questionSeq, ");
+		query.append("t.updateDate, t.markValue, t.latestScreenScorerId, ");
+		query.append("t.secondLatestScreenScorerId, t.gradeNum ");
+		query.append("FROM TranDescScore t ");
+		query.append("WHERE t.questionSeq = :QUESTION_SEQ ");
+		query.append("AND t.latestScoringState IN (:KESNHU_SAMPLING_STATES) ");
+		query.append("AND t.validFlag = :VALID_FLAG ");
+		query.append("AND (t.kenshuSamplingFlag IS NULL ");
+		query.append("OR t.kenshuSamplingFlag = :FALSE) ");
+		query.append("ORDER BY RAND() ");
+
+		try {
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<List>() {
+						public List doInHibernate(Session session)
+								throws HibernateException {
+							Query queryObj = session.createQuery(query.toString());
+							queryObj.setParameter("QUESTION_SEQ", questionSeq);
+							queryObj.setParameterList("KESNHU_SAMPLING_STATES",
+									WebAppConst.KENSU_RECORDS_STATES);
+							queryObj.setParameter("VALID_FLAG",
+									WebAppConst.VALID_FLAG);
+							queryObj.setParameter("FALSE", WebAppConst.F);
+							queryObj.setMaxResults(recordCont);
+							return queryObj.list();
+						}
+					});
+		}catch (RuntimeException re) {
+			throw re;
+		}
+	}
+
+	@Override
+	@SuppressWarnings("rawtypes")
+	public List isAnswerAlreadyChecked(final Integer answerSeq,
+			final Date date, final String connectionString) {
+		final StringBuilder query = new StringBuilder();
+		query.append("FROM TranDescScore as t WHERE ");
+		query.append("t.answerSeq = :ANSWER_SEQ ");
+		try {
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<List>() {
+						public List doInHibernate(Session session)
+								throws HibernateException {
+							Query queryObj = session.createQuery(query.toString());
+							queryObj.setParameter("ANSWER_SEQ", answerSeq);
+							return queryObj.list();
+						}
+					});
+		}catch (RuntimeException re) {
+			throw re;
+		}
+	}
+
+	@Override
+	public int updateKunshuFlagByAnswerseq(final Integer answerSeq, final Date date,
+			final String connectionString) {
+		final StringBuilder query = new StringBuilder();
+		query.append("UPDATE TranDescScore as t ");
+		query.append("SET t.kenshuSamplingFlag = :TRUE , ");
+		query.append("t.updateDate = :DATE ");
+		query.append("WHERE t.answerSeq = :ANSWER_SEQ ");
+
+		try {
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<Integer>() {
+						public Integer doInHibernate(Session session)
+								throws HibernateException {
+
+							Query queryObj = session.createQuery(query
+									.toString());
+
+							queryObj.setParameter("TRUE", WebAppConst.ENABLE);
+							queryObj.setParameter("DATE", date);
+							queryObj.setParameter("ANSWER_SEQ", answerSeq);
+
+							return queryObj.executeUpdate();
+						}
+					});
+
+		} catch (RuntimeException re) {
+			throw re;
+		}
+
+	}
+
 }

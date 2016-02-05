@@ -130,6 +130,8 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/FindAnswerInfo.hbm.xml</value>
          	 <value>com/saiten/model/TranLookAfterwards.hbm.xml</value>
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value> 	
+         	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
+         	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
 		</list>
     </property>	
  
@@ -172,6 +174,8 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/FindAnswerInfo.hbm.xml</value>
          	 <value>com/saiten/model/TranLookAfterwards.hbm.xml</value>	
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>
+         	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
+         	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
 		</list>
     </property>	
  
@@ -198,6 +202,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          <prop key="hibernate.cache.use_second_level_cache">false</prop>
 		 <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
          <prop key="hibernate.jdbc.batch_size">20</prop>
+         
        </props>
     </property>
  
@@ -213,7 +218,9 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/model/TranQualitycheckScore.hbm.xml</value>
          	 <value>com/saiten/info/FindAnswerInfo.hbm.xml</value>
          	 <value>com/saiten/model/TranLookAfterwards.hbm.xml</value>	
-         	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>         	 
+         	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>   
+         	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
+         	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>      	 
 		</list>
     </property>	
  
@@ -256,6 +263,8 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/FindAnswerInfo.hbm.xml</value>
          	 <value>com/saiten/model/TranLookAfterwards.hbm.xml</value>	
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>
+         	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
+         	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
 		</list>
     </property>	
  
@@ -298,6 +307,8 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/FindAnswerInfo.hbm.xml</value>
          	 <value>com/saiten/model/TranLookAfterwards.hbm.xml</value>	
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>
+         	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
+         	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
 		</list>
     </property>	
  

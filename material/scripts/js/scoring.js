@@ -747,3 +747,150 @@ function unmarkAll(){
 	
 	return isSuccess;
 }
+
+function doKenshuMarkUnmark(){
+	
+	var markUnamrk = $('#kenshumarkUnamrk').text();
+	if(markUnamrk == MARK_lOOK_AFTERWARDS){
+		doKenshuMark();
+		$("#kenshuComment").attr("disabled", true);
+		$('#kenshumarkUnamrk').text(UNMARK_LOOK_AFTERWARDS);
+	}else if(markUnamrk == UNMARK_LOOK_AFTERWARDS){
+		$("#kenshuComment").val("");
+		doKenshuUnmark();
+		$("#kenshuComment").attr("disabled", false);
+		$('#kenshumarkUnamrk').text(MARK_lOOK_AFTERWARDS);
+	}
+}
+
+function doKenshuMark(){
+	
+	var isSuccess;
+	var requestData = {};
+	requestData["markComment"] = $('#kenshuComment').val();
+	
+	$.ajax({
+		type: "POST",
+		url: './markKenshuRecord.action',
+		async: false,
+		dataType:"json",
+		cache: false,
+		data: $.param(requestData),
+		success: function(json, status, request){
+				isSuccess = true;
+		},
+		error: function(request, status, error){
+			alert(INTERNAL_SERVER_ERROR);
+			isSuccess = false;
+		}
+	});
+	
+	return isSuccess;
+}
+
+function doKenshuUnmark(){
+	var isSuccess;
+	var requestData = {};
+	requestData["markComment"] = $('#kenshuComment').val();
+	
+	$.ajax({
+		type: "POST",
+		url: './unmarkKenshuRecord.action',
+		async: false,
+		dataType:"json",
+		cache: false,
+		data: $.param(requestData),
+		success: function(json, status, request){
+				isSuccess = true;
+		},
+		error: function(request, status, error){
+			alert(INTERNAL_SERVER_ERROR);
+			isSuccess = false;
+		}
+	});
+	
+	return isSuccess;
+}
+
+/*function unmarkAll(){
+	var isSuccess;
+	var requestData = {};
+	$.ajax({
+		type: "POST",
+		url: './unmarkAllLookAfterwards.action',
+		async: false,
+		dataType:"json",
+		cache: false,
+		data: $.param(requestData),
+		success: function(json, status, request){
+				isSuccess = true;
+				$("#unmarkAll").removeAttr('onclick');
+				$("#unmarkAll").addClass("btn btn-disabled");
+		},
+		error: function(request, status, error){
+			alert(INTERNAL_SERVER_ERROR);
+			isSuccess = false;
+		}
+	});
+	
+	return isSuccess;
+}*/
+
+function checkUncheckFlag () {
+	var atLeastOneIsChecked = $('input[name="bookMark"]:checked').length > 0;
+	if(atLeastOneIsChecked == true) {
+		setExplainFlag();
+		$("#kenshumarkUnamrk").attr("class", "btn btn-disabled");
+	}else {
+		clearExplainFlag ();
+		$("#kenshumarkUnamrk").attr("class", "btn btn-primary btn-scoring-sm");
+	}
+}
+
+function setExplainFlag () {
+	var isSuccess;
+	var requestData = {};
+	requestData["markComment"] = $('#kenshuComment').val();
+	
+	$.ajax({
+		type: "POST",
+		url: './setExplainFlag.action',
+		async: false,
+		dataType:"json",
+		cache: false,
+		data: $.param(requestData),
+		success: function(json, status, request){
+				isSuccess = true;
+		},
+		error: function(request, status, error){
+			alert(INTERNAL_SERVER_ERROR);
+			isSuccess = false;
+		}
+	});
+	
+	return isSuccess;
+}
+
+function clearExplainFlag () {
+	var isSuccess;
+	var requestData = {};
+	requestData["markComment"] = $('#kenshuComment').val();
+	
+	$.ajax({
+		type: "POST",
+		url: './clearExplainFlag.action',
+		async: false,
+		dataType:"json",
+		cache: false,
+		data: $.param(requestData),
+		success: function(json, status, request){
+				isSuccess = true;
+		},
+		error: function(request, status, error){
+			alert(INTERNAL_SERVER_ERROR);
+			isSuccess = false;
+		}
+	});
+	
+	return isSuccess;
+}

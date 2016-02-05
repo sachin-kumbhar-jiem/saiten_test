@@ -177,7 +177,27 @@
 						&nbsp;&nbsp;
 							<a href="scoreSearch.action?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@STATE_TRAN_MENU_ID"/>" id="back" name="back" class="btn btn-primary btn-xl"><!-- <img class="rollover" src="./material/img/button/sampling_bn-back.gif" alt="%{getText('label.backtosearch')}" /> --><s:text name="label.backtosearch"></s:text></a>
 					</s:elseif>
-				
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
+						<span class="errorMessage"><s:text name="error.message.kenshu" /></span>
+						<br><br>
+						<s:if  test="#session.questionInfo.prevRecordCount > @com.saiten.util.WebAppConst@ZERO">
+							<a href="showKenshuAnswerDetails.action?prevOrNextFlag=<s:property value="%{@com.saiten.util.WebAppConst@TRUE}" />" id="prev" name="prev" class="btn btn-primary btn-scoring-sm" style="width:99px; height:39px;"><!-- <img class="rollover" src="./material/img/button/back.gif" alt="%{getText('label.cancel')}" /> --><s:text name="label.previous"></s:text></a>
+						</s:if>
+						<s:else>
+							<!-- <img src="./material/img/button/back.gif" alt="%{getText('btn.scoring.alt.saiten')}" /> -->
+							<p class="btn btn-disabled" style="width:97px; height:37px;margin-top: 4px;"><s:text name="label.previous"></s:text></p>
+						</s:else>
+						
+						<s:if  test="#session.questionInfo.nextRecordCount > @com.saiten.util.WebAppConst@ZERO">
+			  				<a href="showKenshuAnswerDetails.action?prevOrNextFlag=<s:property value="%{@com.saiten.util.WebAppConst@FALSE}" />" id="next" name="next" class="btn btn-primary btn-scoring-sm" style="width:99px; height:39px;"><!-- <img class="rollover" src="./material/img/button/next.gif" alt="%{getText('label.next')}" /> --><s:text name="label.next"></s:text></a>
+			  			</s:if>
+			  			<s:else>
+							<!-- <img src="./material/img/button/next.gif" alt="%{getText('label.next')}" /> -->
+							<p class="btn btn-disabled" style="width:97px; height:37px;margin-top: 4px;"><s:text name="label.next"></s:text></p>
+						</s:else>
+						<br><br>
+						<a href="showKenshuSampling.action?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID"/>&sessionClearFlag=<s:property value="@com.saiten.util.WebAppConst@FALSE"/>" id="back" name="back" class="btn btn-primary btn-xl"><s:text name="label.backtosearch"></s:text></a>
+					</s:elseif>
 				<s:else> 
 					<span class="errorMessage"><s:text name="label.answernotavailable.norecordfound" /></span>
 					<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID">

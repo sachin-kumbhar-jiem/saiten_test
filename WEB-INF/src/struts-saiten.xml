@@ -162,24 +162,6 @@
 			</result>
 		</action>
 		
-		<action name="confirmDeny" class="confirmDeny" method="confirmDeny">
-			<interceptor-ref name="defaultStack" />
-			<result type="json">
-				<param name="root">result</param>
-				<param name="excludeNullProperties">true</param>
-			</result>
-		</action>
-		
-		<action name="registerDeny" class="registerDeny" method="doRegister">
-			<result name="success" type="redirectAction">scoreAction</result>
-			<result name="scoreSampling" type="redirectAction">scoreSampling</result>
-			<result name="backToForcedScoringList" type="redirectAction">backToForcedScoringList</result>
-			<result name="failure" type="redirectAction">
-				<param name="actionName">showScoringError</param>
-				<param name="lockFlag">${lockFlag}</param>
-			</result>
-		</action>
-		
 		<action name="denyCategorySelection" class="denyCategorySelection" method="onLoad">
 			<result name="success">/jsp/denyCategorySelection.jsp</result>
 		</action>
@@ -521,6 +503,63 @@
             </result>
             <result name="input">/jsp/dailyScoringReport.jsp</result>
          </action>
+         
+          <!-- Kenshu sampling actions -->
+         <action name="showKenshuSampling" class="kenshuSampling" method="onLoad">
+         	<result name="success">/jsp/kenshuSampling.jsp</result>
+         </action>
+         <action name="kenshuSampling" class="kenshuSampling" method="search">
+         	<result name="success">/jsp/kenshuSamplingRecordsList.jsp</result>
+         </action>
+         <action name="showKenshuSamplingList" class="kenshuSampling" method="showKenhuRecords">
+         	<interceptor-ref name="logFilterStack" />
+			<interceptor-ref name="updateSessionRegistryInterceptor" />
+			<result name="success" type="redirectAction">
+				<param name="actionName">showHistory</param>
+				<param name="gradeNum">${gradeInfo.gradeNum}</param>
+				<param name="result">${gradeInfo.result}</param>
+			</result>	
+			<result name="failure">/error/answerNotAvailable.jsp</result>
+         </action>
+         <action name="showKenshuAnswerDetails" class="kenshuSampling" method="findPrevOrNextAnswer">
+			<result name="success" type="redirectAction">
+				<param name="actionName">showHistory</param>
+				<param name="gradeNum">${gradeInfo.gradeNum}</param>
+				<param name="result">${gradeInfo.result}</param>
+			</result>
+			<result name="failure">/error/answerNotAvailable.jsp</result>
+		</action>
+		
+		<action name="markKenshuRecord" class="kenshuMark" method="doMark">
+			<!-- <interceptor-ref name="defaultStack" /> -->
+			<result type="json">
+				<param name="root">result</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		
+		<action name="unmarkKenshuRecord" class="kenshuMark" method="doUnmark">
+			<!-- <interceptor-ref name="defaultStack" /> -->
+			<result type="json">
+				<param name="root">result</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		
+		<action name="setExplainFlag" class="kenshuMark" method="setExplainFlag">
+			<result type="json">
+				<param name="root">result</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		
+		<action name="clearExplainFlag" class="kenshuMark" method="clearExplainFlag">
+			<result type="json">
+				<param name="root">result</param>
+				<param name="excludeNullProperties">true</param>
+			</result>
+		</action>
+		
 	</package>
 	
 </struts>	

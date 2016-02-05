@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 18 Mar, 2015 10:24:13 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.saiten.model.TranAcceptanceHistory" table="tran_acceptance_history" >
+        <id name="acceptanceHistorySeq" type="java.lang.Integer">
+            <column name="acceptance_history_seq" />
+            <generator class="identity" />
+        </id>
+         <many-to-one name="tranAcceptance" class="com.saiten.model.TranAcceptance" fetch="select">
+            <column name="acceptance_seq" not-null="true" />
+        </many-to-one>
+        <property name="answerSeq" type="java.lang.Integer">
+            <column name="answer_seq" />
+        </property>
+        <property name="markFlag" type="java.lang.Character">
+            <column name="mark_flag" length="1" />
+        </property>
+        <property name="markBy" type="string">
+            <column name="mark_by" length="7" />
+        </property>
+        <property name="comment" type="string">
+            <column name="comment" length="512" />
+        </property>
+         <property name="explainFlag" type="java.lang.Character">
+            <column name="explain_flag" length="1"/>
+        </property>
+        <property name="explainBy" type="string">
+            <column name="explain_by" length="7" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="19" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>
