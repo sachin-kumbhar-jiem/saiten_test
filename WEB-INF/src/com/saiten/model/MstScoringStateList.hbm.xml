@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
-    <class name="com.saiten.model.MstScoringStateList" table="mst_scoring_state_list" catalog="saiten_master">
+    <class name="com.saiten.model.MstScoringStateList" table="mst_scoring_state_list" >
         <id name="scoringState" type="short">
             <column name="scoring_state" />
             <generator class="assigned" />

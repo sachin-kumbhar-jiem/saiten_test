@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
-    <class name="com.saiten.model.MstScoringEventList" table="mst_scoring_event_list" catalog="saiten_master">
+    <class name="com.saiten.model.MstScoringEventList" table="mst_scoring_event_list" >
         <id name="eventId" type="short">
             <column name="event_id" />
             <generator class="assigned" />

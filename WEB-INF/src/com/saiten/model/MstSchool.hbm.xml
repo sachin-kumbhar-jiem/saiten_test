@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Dec 12, 2012 12:02:39 PM by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
-    <class name="com.saiten.model.MstSchool" table="mst_school" catalog="saiten_master">
+    <class name="com.saiten.model.MstSchool" table="mst_school" >
         <id name="schoolCode" type="string">
             <column name="school_code" length="9" />
             <generator class="assigned" />

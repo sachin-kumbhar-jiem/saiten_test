@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Dec 1, 2014 12:38:17 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="com.saiten.model.MstMarkValue" table="mst_mark_value" catalog="saiten_master">
+    <class name="com.saiten.model.MstMarkValue" table="mst_mark_value" >
         <id name="markValueSeq" type="int">
             <column name="mark_value_seq" />
             <generator class="assigned" />

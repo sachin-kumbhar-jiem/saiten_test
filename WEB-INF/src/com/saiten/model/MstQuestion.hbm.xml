@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
-    <class name="com.saiten.model.MstQuestion" table="mst_question" catalog="saiten_master">
+    <class name="com.saiten.model.MstQuestion" table="mst_question" >
         <id name="questionSeq" type="int">
             <column name="question_seq" />
             <generator class="assigned" />

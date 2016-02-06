@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="com.saiten.model.MstDenyCategory" table="mst_deny_category" catalog="saiten_master">
+	<class name="com.saiten.model.MstDenyCategory" table="mst_deny_category" >
 		<id name="denyCategorySeq" type="int">
             <column name="deny_category_seq" />
             <generator class="assigned" />

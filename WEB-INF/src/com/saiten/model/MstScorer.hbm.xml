@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Dec 3, 2012 11:19:36 AM by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
-    <class name="com.saiten.model.MstScorer" table="mst_scorer" catalog="saiten_master">
+    <class name="com.saiten.model.MstScorer" table="mst_scorer" >
         <id name="scorerId" type="string">
             <column name="scorer_id" length="7" />
             <generator class="assigned" />
