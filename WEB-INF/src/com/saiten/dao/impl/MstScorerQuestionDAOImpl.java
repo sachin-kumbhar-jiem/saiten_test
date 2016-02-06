@@ -174,8 +174,10 @@ public class MstScorerQuestionDAOImpl extends SaitenHibernateDAOSupport
 	@Override
 	public void saveAll(List<MstScorerQuestion> mstScorerQuestionList) {
 		try {
-
-			getHibernateTemplate().saveOrUpdateAll(mstScorerQuestionList);
+			for (MstScorerQuestion mstScorerQuestionObj :mstScorerQuestionList ) {
+				getHibernateTemplate().save(mstScorerQuestionObj);
+			}
+			//getHibernateTemplate().saveOrUpdateAll(mstScorerQuestionList);
 
 		} catch (RuntimeException re) {
 			throw re;
