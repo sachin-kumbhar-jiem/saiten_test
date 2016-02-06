@@ -117,6 +117,7 @@ public class ModifyMasterDataService {
 			prepareMstScorerInfo(mstScorerInfo, userJSONObject);
 
 			try {
+
 				boolean isRegister = userRegistration
 						.registerAdmin(mstScorerInfo);
 
@@ -130,6 +131,36 @@ public class ModifyMasterDataService {
 				throw new Exception(
 						globalProperties
 								.getProperty(WebAppConst.ERROR_ADMIN_REGISTRATION));
+			}
+
+		} else if (serviceId.equals(WebAppConst.KENKYUSHA_REGISTRATION)) {
+
+			// get user specific data.
+			JSONArray array = new JSONArray(data);
+			JSONArray userJSONArray = array.getJSONArray(0);
+			JSONObject userJSONObject = userJSONArray.getJSONObject(0);
+			MstScorerInfo mstScorerInfo = new MstScorerInfo();
+			prepareMstScorerInfo(mstScorerInfo, userJSONObject);
+
+			try {
+
+				/*
+				 * registerAdmin() method used in both cases of Admin
+				 * Registration & Kenkyusha Registration.
+				 */
+				boolean isRegister = userRegistration
+						.registerAdmin(mstScorerInfo);
+
+				response = Response.status(201).entity(isRegister).build();
+
+			} catch (SaitenRuntimeException e) {
+				throw new Exception(
+						globalProperties
+								.getProperty(WebAppConst.ERROR_KENKYUSHA_REGISTRATION));
+			} catch (Exception e) {
+				throw new Exception(
+						globalProperties
+								.getProperty(WebAppConst.ERROR_KENKYUSHA_REGISTRATION));
 			}
 
 		} else {

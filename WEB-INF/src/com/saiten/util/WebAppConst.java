@@ -258,6 +258,8 @@ public interface WebAppConst {
 	public static final String ERROR_GET_SUBJECTWISE_QUESTIONLIST = "error.get.subjectwise.questionlist";
 
 	public static final String ERROR_ADMIN_REGISTRATION = "error.admin.registration";
+	
+	public static final String ERROR_KENKYUSHA_REGISTRATION = "error.kenkyusha.registration";
 
 	public static final String SCORER_WISE_QUESTIONSMAP = "scorerWiseQuestionsMap";
 
@@ -308,6 +310,8 @@ public interface WebAppConst {
 	public static final String SAITENSHA_REGISTRATION = "SaitenshaRegistration";
 
 	public static final String ADMIN_REGISTRATION = "AdminRegistration";
+	
+	public static final String KENKYUSHA_REGISTRATION = "KenkyushaRegistration";
 
 	public static final Integer IS_KANTOKUSHA = 1;
 
