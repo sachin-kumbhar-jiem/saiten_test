@@ -1,16 +1,23 @@
 
 //Our validation script will go here.
-$(document).ready(function(){
+//$(document).ready(function(){
 	$("#registerPending").click(function(){
 		$("#registerPending").prop('disabled', true);
 		$('#close').trigger('click');
+		
+		var pendingCategorySeq = $("input[name='pendingCategory']:checked").val();
+		var bookMark =  $("#bookMark").is(":checked") ? true : false;
+		var qualityMark = $("#qualityMark").is(":checked") ? true : false;
+		var scorerComment =  $('#scorerComment').val();
+			
+		location.href = 'registerPending.action?pendingCategorySeq='+pendingCategorySeq+"&bookMarkFlag="+bookMark+"&qualityCheckFlag="+qualityMark+"&scorerComment="+encodeURIComponent(scorerComment);
 	});
 	$("#close").click(function(){
 		$("#0").focus();
 	});
-});
+//});
 
-$(document).ready(function(){
+/*$(document).ready(function(){
 	$("#registerPending").click(function()	{
 		var pendingCategorySeq = $("input[name='pendingCategory']:checked").val();
 		var bookMark =  $("#bookMark").is(":checked") ? true : false;
@@ -20,7 +27,7 @@ $(document).ready(function(){
 		location.href = 'registerPending.action?pendingCategorySeq='+pendingCategorySeq+"&bookMarkFlag="+bookMark+"&qualityCheckFlag="+qualityMark+"&scorerComment="+encodeURIComponent(scorerComment);
 		
 	});		
-});
+});*/
 
 function cancelPending(){
 	$('#pending').prop('disabled', false);
