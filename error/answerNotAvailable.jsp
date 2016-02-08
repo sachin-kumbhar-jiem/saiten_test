@@ -22,6 +22,9 @@
 <script type="text/javascript" src="./material/scripts/js/script.js"></script>
 <script type="text/javascript" src="./material/scripts/js/scoring.js"></script>
 <script type="text/javascript" src="./material/scripts/js/modalPopLite.js"></script>
+<script language="JavaScript">
+	javascript:window.history.forward(1);
+</script>
 <link href="./material/css/modalPopLite.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="./material/css/import.css" media="all">
 		

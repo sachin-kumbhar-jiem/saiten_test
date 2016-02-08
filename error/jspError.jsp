@@ -15,6 +15,9 @@
  label { width: auto; float: none; color: red;  display: block;   }
 </style>
 <script type="text/javascript" src="./material/scripts/js/default.js"></script>
+<script language="JavaScript">
+	javascript:window.history.forward(1);
+</script>
 </head>
 <body>
 

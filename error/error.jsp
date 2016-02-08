@@ -11,6 +11,9 @@
 <title><s:text name="title.errorPage"></s:text></title>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/material/css/import.css" media="all">
 <script type="text/javascript" src="./material/scripts/js/default.js"></script>	
+<script language="JavaScript">
+	javascript:window.history.forward(1);
+</script>
 <style type="text/css">
  label { width: auto; float: none; color: red;  display: block;   }
 </style>

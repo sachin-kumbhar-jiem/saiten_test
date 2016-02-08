@@ -89,7 +89,10 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
         /* document.getElementById('playButton').onclick = function() { document.getElementById('myTuneObj').play() };
 		document.getElementById('pauseButton').onclick = function() { document.getElementById('myTuneObj').pause() };
 		document.getElementById('stopButton').onclick = function() { document.getElementById('myTuneObj').stop() }; */
-    </script>    
+    </script>   
+    <script language="JavaScript">
+   		javascript:window.history.forward(1);
+	</script> 
 <link href="./material/css/modalPopLite.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="./material/css/import.css" media="all">
 		
