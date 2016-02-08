@@ -27,6 +27,9 @@
 		<script type="text/javascript" src="./material/scripts/js/script.js"></script>
 		<%-- <script type="text/javascript"  src="./material/scripts/js/errorMessages.js" ></script> --%>
 		<link rel="stylesheet" type="text/css" href="./material/css/import.css" media="all">
+		<script language="JavaScript">
+   			javascript:window.history.forward(1);
+		</script>
 		
 		
 <style type="text/css">
