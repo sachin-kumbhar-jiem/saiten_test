@@ -50,14 +50,14 @@
 		  
 		<td class="table-center-menu-td" width="92%">
 		<div class="box">
-			<h1 align="left">
+			<h1 align="left" style="background-repeat:repeat;">
 				<s:text name="dailyStatusSearch.report.title.subject" /> <s:text name="label.colon" /> <s:property value="questionInfo.subjectName"/>
 				&ensp;&ensp;&ensp;<s:text name="label.scoring.questionnumber" /> <s:text name="label.colon" /> <s:property value="questionInfo.questionNum"/>
 			</h1>
 			<table class="displayTable" style="width: 100%;">
 				<thead>
 					<tr style="height: 25px;">
-						<th colspan="17" style="padding-left: 10px;text-align: left;">
+						<th colspan="18" style="padding-left: 10px;text-align: left;">
 							<s:text name="dailyStatusQuestionWise.report.title.gradenum.details"/>
 						</th>
 					</tr>
@@ -70,6 +70,7 @@
 							<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.second.time.scoring.wait"/></th>
 						</s:else>
 						<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.inspection.scoring.wait"/></th>
+						<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.denial.scoring.wait"/></th>
 						<s:if test="!(#session.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE) && !(#session.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE)">
 							<th style="width:5%;" colspan="9"><s:text name="dailyStatusSearch.report.title.first.time.scoring.temp"/></th>
 						</s:if><s:else>
@@ -81,8 +82,8 @@
 						<th style="width:5%;" colspan="2"><s:text name="dailyStatusSearch.report.scorerwise.title.inespection.menu"/></th>
 					</tr>
 					<tr style="height: 20px;">
-						<th style="width:5%;"><s:text name="dailyStatusQuestionWise.report.title.first.time"/></th>
-						<th style="width:5%;"><s:text name="dailyStatusQuestionWise.report.title.second.time"/></th>
+						<th style="width:4%;"><s:text name="dailyStatusQuestionWise.report.title.first.time"/></th>
+						<th style="width:4%;"><s:text name="dailyStatusQuestionWise.report.title.second.time"/></th>
 						<th style="width:5%;"><s:text name="btn.scoring.alt.pending"/></th>
 						<th style="width:5%;"><s:text name="dailyStatusQuestionWise.report.title.mismatch"/></th>
 						<s:if test="!(#session.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE) && !(#session.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE)">
@@ -122,6 +123,7 @@
 							<td><s:property value="#dailyStatusInfo.secondTimeScoringWait"/></td>
 						</s:else>
 						<td><s:property value="#dailyStatusInfo.inspectionMenuWait"/></td>
+						<td><s:property value="#dailyStatusInfo.denyuScoringWait"/></td>
 						<td><s:property value="#dailyStatusInfo.firstTimeScoringTemp"/></td>
 						<td><s:property value="#dailyStatusInfo.secondTimeScoringTemp"/></td>
 						<td><s:property value="#dailyStatusInfo.pendingScoringTemp"/></td>

@@ -658,6 +658,8 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 							+ array[15]);
 					dailyStatusReportListInfo.setInspectionMenuWait(""
 							+ array[16]);
+					dailyStatusReportListInfo.setDenyuScoringWait(""
+							+ array[17]);
 					gradeWiseReportList.add(dailyStatusReportListInfo);
 				}
 			}

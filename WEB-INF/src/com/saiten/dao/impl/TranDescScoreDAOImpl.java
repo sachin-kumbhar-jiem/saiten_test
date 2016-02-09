@@ -1629,7 +1629,9 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			queryString
 					.append("sum(case when latest_scoring_state=241 then 1 else 0 end) as forceScoringTemp,  ");
 			queryString
-					.append("sum(case when latest_scoring_state=151 then 1 else 0 end) as inspectionMenuWait  ");
+					.append("sum(case when latest_scoring_state=151 then 1 else 0 end) as inspectionMenuWait,  ");
+			queryString
+				.append("sum(case when latest_scoring_state=191 then 1 else 0 end) as denyScoringWait  ");
 
 			queryString.append("FROM tran_desc_score  ");
 
@@ -1638,7 +1640,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			queryString.append("AND  question_seq in (" + questionSeq + ") ");
 
 			queryString
-					.append("AND latest_scoring_state in (500,122,131,132,144,145,162,172,154,155,182,192,212,221,241,151,141) ");
+					.append("AND latest_scoring_state in (500,122,131,132,144,145,162,172,154,155,182,192,212,221,241,151,141,191) ");
 			queryString.append("GROUP BY grade_num ");
 			queryString.append("WITH ROLLUP ");
 
