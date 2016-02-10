@@ -20,6 +20,7 @@ import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.info.RegisterQcScoreInfo;
 import com.saiten.info.RegisterScoreInfo;
+import com.saiten.model.TranDescScoreHistory;
 import com.saiten.service.RegisterPendingByProcedureService;
 import com.saiten.util.ErrorCode;
 import com.saiten.util.SaitenUtil;
@@ -47,10 +48,12 @@ public class RegisterPendingByProcedureServiceImpl implements
 	 * info.QuestionInfo, com.saiten.info.MstScorerInfo,
 	 * com.saiten.info.AnswerInfo, java.lang.Integer)
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean registerPending(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo,
-			Integer pendingCategorySeq, Short pendingCategory, Date updateDate) {
+			Integer pendingCategorySeq, Short pendingCategory, Date updateDate,
+			String answerFormNum) {
 		boolean lockFlag = WebAppConst.FALSE;
 		String menuId = questionInfo.getMenuId();
 		Integer historySeq = answerInfo.getHistorySeq();
@@ -59,83 +62,119 @@ public class RegisterPendingByProcedureServiceImpl implements
 			Object[] obj = null;
 			String actionName = "registerPending";
 			Date logRegisterUsingStoredProcedureStartTime = new Date();
-			LinkedHashMap<ScoringStateKey, List<Short>> scoringStatesMap = ((SaitenConfig) ServletActionContext
-					.getServletContext().getAttribute("saitenConfigObject"))
-					.getHistoryScoringStatesMap();
-			LinkedHashMap<String, Short> scoringEventMap = ((SaitenConfig) ServletActionContext
-					.getServletContext().getAttribute("saitenConfigObject"))
-					.getScoringEventMap();
-			Map<String, String> configMap = SaitenUtil.getConfigMap();
-			ScoringStateKey scoringStateKey = new ScoringStateKey();
-			scoringStateKey.setMenuId(menuId);
-			scoringStateKey.setNoDbUpdate(scorerInfo.getNoDbUpdate());
-
-			// Get latestScoringState based on selected menuId and noDbUpdate
-			Short latestScoringState = scoringStatesMap.get(scoringStateKey)
-					.get(1);
-			int questionSeq = questionInfo.getQuestionSeq();
-			Character qualityCheckFlag = null;
-			if (menuId.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)
-					|| menuId.equals(WebAppConst.FORCED_MENU_ID)) {
-				qualityCheckFlag = answerInfo.getQualityCheckFlag();
-			} else {
-				qualityCheckFlag = WebAppConst.QUALITY_MARK_FLAG_FALSE;
-			}
-			String scorerComment = answerInfo.getScorerComment();
-			if ((scorerComment == null) || (scorerComment.equals(""))) {
-				scorerComment = null;
-			}
-			boolean secondAndThirdLatestScorerIdFlag = Boolean
-					.valueOf(configMap.get("secondAndThirdLatestScorerIdFlag"));
-			Double bitValue = null;
-			Integer gradeSeq = null;
-			Integer gradeNum = null;
-			Integer denyCategorySeq = null;
-			Short denyCategory = null;
-			Integer historyRecordCount = null;
-			String isScoreOrPending = "pending";
-			RegisterScoreInfo registerScoreInfo = new RegisterScoreInfo(
-					answerInfo.getAnswerSeq(), scorerInfo.getScorerId(),
-					answerInfo.getLatestScreenScorerId(),
-					answerInfo.getSecondLatestScreenScorerId(),
-					latestScoringState, bitValue, gradeSeq, gradeNum,
-					new Date(), qualityCheckFlag, scorerInfo.getRoleId(),
-					scoringEventMap.get(menuId), scorerComment,
-					answerInfo.getBookMarkFlag(), historySeq,
-					secondAndThirdLatestScorerIdFlag, pendingCategorySeq,
-					pendingCategory, denyCategorySeq, denyCategory, menuId,
-					historyRecordCount, updateDate, isScoreOrPending);
-			List list = tranDescScoreHistoryDAO.registerAnswer(
-					registerScoreInfo, questionInfo.getConnectionString());
-			Date logRegisterUsingStoredProcedureEndTime = new Date();
-			long registerByStoredProcedureTime = logRegisterUsingStoredProcedureEndTime
-					.getTime()
-					- logRegisterUsingStoredProcedureStartTime.getTime();
-			log.info(actionName + "-Register By using Stored Procedure: "
-					+ registerByStoredProcedureTime);
-
-			obj = (Object[]) list.get(0);
-			int rowCount = ((BigInteger) obj[0]).intValue();
-			if (!(rowCount > 0)) {
+			String scorerId = scorerInfo.getScorerId();
+			String subjectCode = questionInfo.getSubjectCode();
+			if (menuId.equals(WebAppConst.FORCED_MENU_ID)
+					&& SaitenUtil.isEvaluationInProgress(scorerId, subjectCode,
+							answerFormNum, menuId)) {
+				// The case in which the record of same
+				// answerFormNumber, subjectCode, scorerId is evaluating
+				// from 'Special Scoring'.
 				lockFlag = WebAppConst.TRUE;
 			} else {
-				lockFlag = WebAppConst.FALSE;
-			}
+				LinkedHashMap<ScoringStateKey, List<Short>> scoringStatesMap = ((SaitenConfig) ServletActionContext
+						.getServletContext().getAttribute("saitenConfigObject"))
+						.getHistoryScoringStatesMap();
+				LinkedHashMap<String, Short> scoringEventMap = ((SaitenConfig) ServletActionContext
+						.getServletContext().getAttribute("saitenConfigObject"))
+						.getScoringEventMap();
+				Map<String, String> configMap = SaitenUtil.getConfigMap();
+				ScoringStateKey scoringStateKey = new ScoringStateKey();
+				scoringStateKey.setMenuId(menuId);
+				scoringStateKey.setNoDbUpdate(scorerInfo.getNoDbUpdate());
 
-			if (answerInfo.getHistorySeq() != null) {
-				log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
-						+ "History Tran record Pending."
-						+ "-{ Question Sequence: " + questionSeq
-						+ ", Answer Sequence: " + answerInfo.getAnswerSeq()
-						+ ", Scoring State: " + latestScoringState
-						+ ", Pending Category: " + pendingCategory + "}");
-			} else {
-				log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
-						+ "Tran record Pending." + "-{ Question Sequence: "
-						+ questionSeq + ", Answer Sequence: "
-						+ answerInfo.getAnswerSeq() + ", Scoring State: "
-						+ latestScoringState + ", Pending Category: "
-						+ pendingCategory + "}");
+				// Get latestScoringState based on selected menuId and
+				// noDbUpdate
+				Short latestScoringState = scoringStatesMap
+						.get(scoringStateKey).get(1);
+				int questionSeq = questionInfo.getQuestionSeq();
+				Character qualityCheckFlag = null;
+				if (menuId
+						.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)
+						|| menuId.equals(WebAppConst.FORCED_MENU_ID)) {
+					qualityCheckFlag = answerInfo.getQualityCheckFlag();
+				} else {
+					qualityCheckFlag = WebAppConst.QUALITY_MARK_FLAG_FALSE;
+				}
+				String scorerComment = answerInfo.getScorerComment();
+				if ((scorerComment == null) || (scorerComment.equals(""))) {
+					scorerComment = null;
+				}
+				boolean secondAndThirdLatestScorerIdFlag = Boolean
+						.valueOf(configMap
+								.get("secondAndThirdLatestScorerIdFlag"));
+				if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
+						&& (historySeq == null)) {
+					TranDescScoreHistory tranDescScoreHistory = new TranDescScoreHistory();
+
+					List<Short> scoringStateList = scoringStatesMap
+							.get(scoringStateKey);
+
+					@SuppressWarnings("unchecked")
+					List<TranDescScoreHistory> tranDescScoreHistoryList = tranDescScoreHistoryDAO
+							.findHistoryRecord(scorerInfo.getScorerId(),
+									answerInfo.getAnswerSeq(),
+									scoringStateList,
+									questionInfo.getConnectionString());
+
+					if (!tranDescScoreHistoryList.isEmpty()) {
+						tranDescScoreHistory = tranDescScoreHistoryList.get(0);
+					}
+
+					if (tranDescScoreHistory.getHistorySeq() != null) {
+						historySeq = tranDescScoreHistory.getHistorySeq();
+					}
+				}
+				Double bitValue = null;
+				Integer gradeSeq = null;
+				Integer gradeNum = null;
+				Integer denyCategorySeq = null;
+				Short denyCategory = null;
+				Integer historyRecordCount = null;
+				String isScoreOrPending = "pending";
+				RegisterScoreInfo registerScoreInfo = new RegisterScoreInfo(
+						answerInfo.getAnswerSeq(), scorerInfo.getScorerId(),
+						answerInfo.getLatestScreenScorerId(),
+						answerInfo.getSecondLatestScreenScorerId(),
+						latestScoringState, bitValue, gradeSeq, gradeNum,
+						new Date(), qualityCheckFlag, scorerInfo.getRoleId(),
+						scoringEventMap.get(menuId), scorerComment,
+						answerInfo.getBookMarkFlag(), historySeq,
+						secondAndThirdLatestScorerIdFlag, pendingCategorySeq,
+						pendingCategory, denyCategorySeq, denyCategory, menuId,
+						historyRecordCount, updateDate, isScoreOrPending);
+				List list = tranDescScoreHistoryDAO.registerAnswer(
+						registerScoreInfo, questionInfo.getConnectionString());
+				Date logRegisterUsingStoredProcedureEndTime = new Date();
+				long registerByStoredProcedureTime = logRegisterUsingStoredProcedureEndTime
+						.getTime()
+						- logRegisterUsingStoredProcedureStartTime.getTime();
+				log.info(actionName + "-Register By using Stored Procedure: "
+						+ registerByStoredProcedureTime);
+
+				obj = (Object[]) list.get(0);
+				int rowCount = ((BigInteger) obj[0]).intValue();
+				if (!(rowCount > 0)) {
+					lockFlag = WebAppConst.TRUE;
+				} else {
+					lockFlag = WebAppConst.FALSE;
+				}
+
+				if (answerInfo.getHistorySeq() != null) {
+					log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
+							+ "History Tran record Pending."
+							+ "-{ Question Sequence: " + questionSeq
+							+ ", Answer Sequence: " + answerInfo.getAnswerSeq()
+							+ ", Scoring State: " + latestScoringState
+							+ ", Pending Category: " + pendingCategory + "}");
+				} else {
+					log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
+							+ "Tran record Pending." + "-{ Question Sequence: "
+							+ questionSeq + ", Answer Sequence: "
+							+ answerInfo.getAnswerSeq() + ", Scoring State: "
+							+ latestScoringState + ", Pending Category: "
+							+ pendingCategory + "}");
+				}
 			}
 
 			return lockFlag;

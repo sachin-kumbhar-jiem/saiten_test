@@ -114,12 +114,15 @@ public class RegisterPendingAction extends ActionSupport implements
 						|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
 						|| menuId.equals(WebAppConst.OUT_BOUNDARY_MENU_ID)
 						|| menuId
-								.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)) {
+								.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)
+						|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
+						|| menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 					lockFlag = registerPendingByProcedureService
 							.registerPending(questionInfo, scorerInfo,
 									answerInfo, pendingCategorySeq,
 									pendingCategory, tranDescScoreInfo
-											.getAnswerInfo().getUpdateDate());
+											.getAnswerInfo().getUpdateDate(),
+									tranDescScoreInfo.getAnswerFormNumber());
 				} else {
 					lockFlag = registerPendingService.registerPending(
 							questionInfo, scorerInfo, answerInfo,

@@ -22,7 +22,8 @@ public interface RegisterPendingByProcedureService {
 	 */
 	public boolean registerPending(QuestionInfo questionInfo,
 			MstScorerInfo scorerInfo, AnswerInfo answerInfo,
-			Integer pendingCategorySeq, Short pendingCategory, Date updateDate);
+			Integer pendingCategorySeq, Short pendingCategory, Date updateDate,
+			String answerFormNum);
 
 	/**
 	 * @param questionInfo
