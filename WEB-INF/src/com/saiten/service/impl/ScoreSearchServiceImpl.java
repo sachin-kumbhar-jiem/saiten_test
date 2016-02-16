@@ -256,9 +256,10 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 				// 1st: answer_seq like '%'random
 				// 2nd: answer_seq like '%'random'%'
 				// 3rd: rand()< rand_number.
-				for (int i = 0; i < 2; i++) {
+				for (int i = 0; i < 1; i++) { //changing limit value of i to 1 from 2.
 					if (i == 0) {
-						orderByRandAttempt = WebAppConst.ORDER_BY_ATTEMPT2;
+						//orderByRandAttempt = WebAppConst.ORDER_BY_ATTEMPT2;
+						orderByRandAttempt = WebAppConst.ORDER_BY_ATTEMPT3;
 					} /*
 					 * else if (i == 1) { orderByRandAttempt =
 					 * WebAppConst.ORDER_BY_ATTEMPT2; }
