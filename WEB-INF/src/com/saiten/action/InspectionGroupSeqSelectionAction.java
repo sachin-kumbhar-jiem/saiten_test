@@ -9,7 +9,6 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
-import com.saiten.service.GradeSelectionService;
 import com.saiten.service.InspectionGroupSeqSelectionService;
 import com.saiten.util.ErrorCode;
 import com.saiten.util.WebAppConst;
@@ -70,6 +69,11 @@ public class InspectionGroupSeqSelectionAction extends ActionSupport implements
 		QuestionInfo sessionQuestionInfo = (QuestionInfo) session
 				.get("questionInfo");
 		sessionQuestionInfo.setInspectionGroupSeq(inspectionGroupSeq);
+
+		String scorerId = ((MstScorerInfo) session.get("scorerInfo"))
+				.getScorerId();
+		log.info(scorerId + "-" + sessionQuestionInfo.getMenuId() + "-"
+				+ "Selected inspectionGroupSeq = " + inspectionGroupSeq);
 
 		String redirectScreen = null;
 		if (WebAppConst.SCORE_TYPE[3]
