@@ -552,4 +552,8 @@ public interface WebAppConst {
 	public static final Short[] KENSU_RECORDS_STATES = { 151, 500, 501 };
 	
 	public static final Character UNDER_SCORE = '_';
+	
+	public static final String KENSHU_SEARCH_EXPLAINED_STRING = "EXPLAINED";
+	
+	public static final String KENSHU_SEARCH_UNEXPLAINED_STRING = "UNEXPLAINED";
 }

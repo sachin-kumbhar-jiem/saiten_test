@@ -135,6 +135,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 		MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
 		log.info(scorerInfo.getScorerId() + "-" + selectedMenuId + "-"
 				+ "Search Screen loading.");
+		String pucnText = (String) session.get("punchtext");
 		if (selectedMenuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 			session.remove("updatedCount");
 		}
@@ -248,6 +249,13 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 			throw new SaitenRuntimeException(
 					ErrorCode.SCORE_SEARCH_ACTION_EXCEPTION, e);
 		}
+		scoreInputInfo = (ScoreInputInfo) session.get("scoreInputInfo");
+		
+		if (scoreInputInfo != null
+				&& scoreInputInfo.getScoreCurrentInfo() != null) {
+			scoreInputInfo.getScoreCurrentInfo().setPunchText(
+					pucnText);
+		}
 
 		Boolean saitenRelease = Boolean.valueOf(SaitenUtil
 				.getPropertyFromPropertyFile(
@@ -279,30 +287,31 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 					+ "Search count screen loading. Search Criteria: -{ "
 					+ scoreInputInfo + " } ");
 			// adding escape character before any % in punchText
-				String tempStr = scoreInputInfo.getScoreCurrentInfo() != null ? scoreInputInfo
-						.getScoreCurrentInfo().getPunchText() : null;
-				String inputString = tempStr;
-						if (tempStr != null) {
-							StringBuilder sb = new StringBuilder();
-							sb.append(tempStr);
-							for (int i = 0; i < tempStr.length(); i++) {
-								if (tempStr.charAt(i) == WebAppConst.PERCENTAGE_CHARACTER) {
-									sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
-									tempStr = sb.toString();
-									i++;
-								}else if (tempStr.charAt(i) == WebAppConst.ESCAPE_CHARACTER) {
-									sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
-									tempStr = sb.toString();
-									i++;
-								}else if (tempStr.charAt(i) == WebAppConst.UNDER_SCORE) {
-									sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
-									tempStr = sb.toString();
-									i++;
+			String tempStr = scoreInputInfo.getScoreCurrentInfo() != null ? scoreInputInfo
+					.getScoreCurrentInfo().getPunchText() : null;
+			String inputString = tempStr;
+			session.put("punchText", inputString);
+			if (tempStr != null) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(tempStr);
+				for (int i = 0; i < tempStr.length(); i++) {
+					if (tempStr.charAt(i) == WebAppConst.PERCENTAGE_CHARACTER) {
+						sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
+						tempStr = sb.toString();
+						i++;
+					} else if (tempStr.charAt(i) == WebAppConst.ESCAPE_CHARACTER) {
+						sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
+						tempStr = sb.toString();
+						i++;
+					} else if (tempStr.charAt(i) == WebAppConst.UNDER_SCORE) {
+						sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
+						tempStr = sb.toString();
+						i++;
 
-							}
-							scoreInputInfo.getScoreCurrentInfo().setPunchText(tempStr);
-						}
-						}
+					}
+					scoreInputInfo.getScoreCurrentInfo().setPunchText(tempStr);
+				}
+			}
 
 			// Fetch questionSeq from subjectCode & questionNum
 			List<Integer> questionSeqList = scoreSearchService.findQuestionSeq(
@@ -323,6 +332,11 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 				sessionQuestionInfo.setQuestionSeq(WebAppConst.ZERO);
 
 				session.put("questionInfo", sessionQuestionInfo);
+				if (scoreInputInfo != null
+						&& scoreInputInfo.getScoreCurrentInfo() != null) {
+					scoreInputInfo.getScoreCurrentInfo().setPunchText(
+							inputString);
+				}
 				return FAILURE;
 			}
 
@@ -412,6 +426,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 			String tempStr = scoreInputInfo.getScoreCurrentInfo() != null ? scoreInputInfo
 					.getScoreCurrentInfo().getPunchText() : null;
 			String inputString = tempStr;
+			session.put("punchText", inputString);
 			if (tempStr != null) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(tempStr);
@@ -420,18 +435,18 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 						sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
 						tempStr = sb.toString();
 						i++;
-					}else if (tempStr.charAt(i) == WebAppConst.ESCAPE_CHARACTER) {
+					} else if (tempStr.charAt(i) == WebAppConst.ESCAPE_CHARACTER) {
 						sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
 						tempStr = sb.toString();
 						i++;
-					}else if (tempStr.charAt(i) == WebAppConst.UNDER_SCORE) {
+					} else if (tempStr.charAt(i) == WebAppConst.UNDER_SCORE) {
 						sb.insert(i, WebAppConst.ESCAPE_CHARACTER);
 						tempStr = sb.toString();
 						i++;
 
+					}
+					scoreInputInfo.getScoreCurrentInfo().setPunchText(tempStr);
 				}
-				scoreInputInfo.getScoreCurrentInfo().setPunchText(tempStr);
-			}
 			}
 
 			// Fetch questionSeq from subjectCode & questionNum
@@ -838,6 +853,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 			 * System.out.println(">>>>>>>>> isAnswerAlreadyScored query start: "
 			 * + new Date().getTime());
 			 */
+
 			Object str = "";
 			str = request.getParameter("prevOrNextFlag");
 			boolean nextFlag;

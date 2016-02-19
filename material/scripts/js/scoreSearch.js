@@ -320,12 +320,12 @@ $(document).ready(function(){
 				numericComma: PENDING_CATEGORY_NUMERIC_AND_COMMA_ALLOWED
 			},
 			"scoreInputInfo.scoreHistoryInfo.historyDenyCategory" :{
-				required: PENDING_CATEGORY_REQUIRED,
-				numericComma: PENDING_CATEGORY_NUMERIC_AND_COMMA_ALLOWED
+				required: DENY_CATEGORY_REQUIRED,
+				numericComma: DENY_CATEGORY_NUMERIC_AND_COMMA_ALLOWED
 			},
 			"scoreInputInfo.scoreCurrentInfo.currentDenyCategory" :{
-				required: PENDING_CATEGORY_REQUIRED,
-				numericComma: PENDING_CATEGORY_NUMERIC_AND_COMMA_ALLOWED
+				required: DENY_CATEGORY_REQUIRED,
+				numericComma: DENY_CATEGORY_NUMERIC_AND_COMMA_ALLOWED
 			},
 			"scoreInputInfo.scoreHistoryInfo.historyIncludeCheckPoints" :{
 				numericComma: INCLUDE_CHECKPOINT_NUMERIC_AND_COMMA_ALLOWED

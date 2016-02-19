@@ -637,6 +637,10 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		<tr><td>
 		<div  style="overflow: auto;height: 320px;">
 		<table id="checkbox">
+		<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID"> 
+		</s:if> <s:else>
+		
+		
 		<s:iterator value="#session.questionInfo.checkPointList" id="checkPointObj" status="checkPointStatus">
 			<s:if test="#checkPointStatus.odd">
 				<tr class="skp_color_0">
@@ -692,6 +696,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<td class="ans" style='background-color:<s:property value="%{#checkPointObj.bgColor}" /> '><s:property value="%{#checkPointObj.checkPointDescription}" escapeHtml="false" /></td>
 				
 		</s:iterator>
+		</s:else>
 		</table>
 		</div>
 		</td>
@@ -904,7 +909,25 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 					</s:if>
 					 </td></tr>
 					 
-					 <tr><td style="font-size: 14px;border-bottom: none;">	
+					 
+					 
+					 
+					 <tr><td style="font-size: 14px;border-bottom: none;">
+					 <!-- removed writting and speaking condition for saitama release. -->
+					<s:if test="((#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_QUALITY_CHECK_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID))">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<span style="vertical-align: top;font-size: 14px;">
+						<s:if test="#session.tranDescScoreInfo.answerInfo.qualityCheckFlag == @com.saiten.util.WebAppConst@QUALITY_MARK_FLAG_TRUE">
+							<input type="checkbox" name="qualityMark" id="qualityMark" checked="checked" style="vertical-align: top;"/>
+						</s:if><s:else>
+							<input  type="checkbox" name="qualityMark" id="qualityMark" style="vertical-align: top;"/>
+						</s:else>
+						<s:text name="label.scoring.qualitymark" />
+						</span>
+			     	</s:if>
+					</td></tr>
+					
+					<tr><td style="font-size: 14px;border-bottom: none;">	
 					<s:if test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID) && (#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY)">
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<span style="vertical-align: top;font-size: 14px;">
@@ -923,22 +946,8 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 						</span>
 					</s:if>
 					 </td></tr>
-					 
-					 
-					 <tr><td style="font-size: 14px;border-bottom: none;">
-					 <!-- removed writting and speaking condition for saitama release. -->
-					<s:if test="((#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_QUALITY_CHECK_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID))">
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<span style="vertical-align: top;font-size: 14px;">
-						<s:if test="#session.tranDescScoreInfo.answerInfo.qualityCheckFlag == @com.saiten.util.WebAppConst@QUALITY_MARK_FLAG_TRUE">
-							<input type="checkbox" name="qualityMark" id="qualityMark" checked="checked" style="vertical-align: top;"/>
-						</s:if><s:else>
-							<input  type="checkbox" name="qualityMark" id="qualityMark" style="vertical-align: top;"/>
-						</s:else>
-						<s:text name="label.scoring.qualitymark" />
-						</span>
-			     	</s:if>
-					</td></tr></table></td></tr></table>
+					
+					</table></td></tr></table>
 				</div>
 				</td>
 			</tr>	

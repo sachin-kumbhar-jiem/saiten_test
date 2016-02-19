@@ -1060,6 +1060,7 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 		return processDetailsList;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List findDenyCategorySeqList(Integer questionSeq,
 			Short[] denyCategoryList) {

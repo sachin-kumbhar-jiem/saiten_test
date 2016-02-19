@@ -183,5 +183,15 @@ public interface TranDescScoreDAO {
 	 */
 	public int updateKunshuFlagByAnswerseq(Integer answerSeq, Date date,
 			String connectionString);
-
+	/**
+	 * 
+	 * @param questionSeq
+	 * @param connectionString
+	 * @param recordCount
+	 * @param gradeNum
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	public List getKenshuRecordsByGrade(int questionSeq,
+			String connectionString, int recordCount, int gradeNum);
 }

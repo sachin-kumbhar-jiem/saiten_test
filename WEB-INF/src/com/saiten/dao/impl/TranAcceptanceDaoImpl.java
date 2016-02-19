@@ -75,11 +75,11 @@ public class TranAcceptanceDaoImpl extends SaitenHibernateDAOSupport implements
 		query.append("FROM TranAcceptance as ta ");
 		query.append("WHERE ta.tranDescScore.questionSeq = :QUESTION_SEQ ");
 		query.append("AND ta.markBy = :MARK_BY ");
-		if (searchCriteria.equals("3")) {
+		if (searchCriteria.equals(WebAppConst.KENSHU_SEARCH_UNEXPLAINED_STRING)) {
 			query.append("AND ta.explainFlag IS NULL OR ");
 			query.append("ta.explainFlag = :FALSE ");
-		} else if (searchCriteria.equals("2")) {
-			query.append("AND ta.explainFlag IS NOT NULL ");
+		} else if (searchCriteria.equals(WebAppConst.KENSHU_SEARCH_EXPLAINED_STRING)) {
+			query.append("AND ta.explainFlag = :TRUE ");
 		}
 		//String[] paramNames = { "QUESTION_SEQ", "MARK_BY" };
 		//Object[] values = { questionSeq, markBy };
@@ -100,8 +100,10 @@ public class TranAcceptanceDaoImpl extends SaitenHibernateDAOSupport implements
 									.toString());
 							queryObj.setParameter("QUESTION_SEQ", questionSeq);
 							queryObj.setParameter("MARK_BY", markBy);
-							if (searchCriteria.equals("unexplained")) {
+							if (searchCriteria.equals(WebAppConst.KENSHU_SEARCH_UNEXPLAINED_STRING)) {
 								queryObj.setParameter("FALSE", WebAppConst.F);
+							} else if (searchCriteria.equals(WebAppConst.KENSHU_SEARCH_EXPLAINED_STRING)) {
+								queryObj.setParameter("TRUE", WebAppConst.VALID_FLAG);
 							}
 							return queryObj.list();
 						}

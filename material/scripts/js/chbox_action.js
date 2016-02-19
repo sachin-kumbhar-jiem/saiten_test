@@ -21,11 +21,11 @@ function changeCategoryType(checkDisable, textDisable) {
 		currentDenyCategory.item(0).disabled = textDisable;
 		currentDenyCategory.item(0).className = "";
 		currentPendingCategory.item(0).disabled = !textDisable;
-		currentIncludeCheckPoints.item(0).disabled = !textDisable;
-		currentExcludeCheckPoints.item(0).disabled = !textDisable;
+		currentIncludeCheckPoints.item(0).disabled = textDisable;
+		currentExcludeCheckPoints.item(0).disabled = textDisable;
 		currentPendingCategory.item(0).className = "disable_bg";
-		currentIncludeCheckPoints.item(0).className = "disable_bg";
-		currentExcludeCheckPoints.item(0).className = "disable_bg";
+		currentIncludeCheckPoints.item(0).className = "";
+		currentExcludeCheckPoints.item(0).className = "";
 		
 	}else {
 		currentPendingCategory.item(0).disabled = textDisable;
@@ -132,11 +132,11 @@ function changeHistoryCategoryType(checkDisable, textDisable) {
 		historyDenyCategory.item(0).disabled = textDisable;
 		historyDenyCategory.item(0).className = "";
 		historyPendingCategory.item(0).disabled = !textDisable;
-		historyIncludeCheckPoints.item(0).disabled = !textDisable;
-		historyExcludeCheckPoints.item(0).disabled = !textDisable;
+		historyIncludeCheckPoints.item(0).disabled = textDisable;
+		historyExcludeCheckPoints.item(0).disabled = textDisable;
 		historyPendingCategory.item(0).className = "disable_bg";
-		historyIncludeCheckPoints.item(0).className = "disable_bg";
-		historyExcludeCheckPoints.item(0).className = "disable_bg";
+		historyIncludeCheckPoints.item(0).className = "";
+		historyExcludeCheckPoints.item(0).className = "";
 	} else {
 		historyPendingCategory.item(0).disabled = textDisable;
 		historyIncludeCheckPoints.item(0).disabled = !textDisable;

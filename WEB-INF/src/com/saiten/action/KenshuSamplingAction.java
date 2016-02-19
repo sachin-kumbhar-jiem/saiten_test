@@ -12,6 +12,7 @@ import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.web.context.ContextLoader;
@@ -42,6 +43,7 @@ import com.saiten.util.WebAppConst;
 public class KenshuSamplingAction extends ActionSupport implements
 		SessionAware, ServletRequestAware, Serializable {
 
+	private static Logger log = Logger.getLogger(KenshuSamplingAction.class);
 	/**
 	 * 
 	 */
@@ -64,7 +66,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 	private GradeInfo gradeInfo;
 	private ScoreService scoreService;
 	private Boolean prevOrNextFlag;
-	private Map<Integer, String> searchCriteria;
+	private Map<String, String> searchCriteria;
 	private AcceptanceDisplayInfo acceptanceDisplayInfo;
 	private String kenshuSamplingSearch;
 	private String acceptanceDisplayRadio;
@@ -78,6 +80,9 @@ public class KenshuSamplingAction extends ActionSupport implements
 	private String sessionClearFlag;
 
 	public String onLoad() {
+		scorerInfo = (MstScorerInfo) session.get("scorerInfo");
+		log.info(scorerInfo.getScorerId() + "-" + selectedMenuId + "-"
+				+ "Kenshu Sampling Screen loading.");
 		try {
 			if (sessionClearFlag.equals(Boolean.toString(WebAppConst.TRUE))) {
 				clearSessionInfo();
@@ -90,10 +95,12 @@ public class KenshuSamplingAction extends ActionSupport implements
 					.findSubjectNameList();
 
 			scoreSearchInfo.setSubjectNameList(subjectNameList);
-			searchCriteria = new LinkedHashMap<Integer, String>();
-			searchCriteria.put(1, getText(WebAppConst.KENSHU_SEARCH_ALL));
-			searchCriteria.put(2, getText(WebAppConst.KENSHU_SEARCH_EXPLAINED));
-			searchCriteria.put(3,
+			searchCriteria = new LinkedHashMap<String, String>();
+			searchCriteria.put(getText(WebAppConst.KENSHU_SEARCH_ALL),
+					getText(WebAppConst.KENSHU_SEARCH_ALL));
+			searchCriteria.put(getText(WebAppConst.KENSHU_SEARCH_EXPLAINED),
+					getText(WebAppConst.KENSHU_SEARCH_EXPLAINED));
+			searchCriteria.put(getText(WebAppConst.KENSHU_SEARCH_UNEXPLAINED),
 					getText(WebAppConst.KENSHU_SEARCH_UNEXPLAINED));
 
 			acceptanceDisplayInfo = (AcceptanceDisplayInfo) session
@@ -126,6 +133,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 			if (kenshuSamplingSearch != null
 					|| samplingSearch
 							.equals(WebAppConst.KENSHU_SAMPLING_SEARCH)) {
+
 				if (kenshuSamplingSearch != null) {
 					session.put("samplingSearch", kenshuSamplingSearch);
 				}
@@ -137,10 +145,19 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 				scoreSearchInfo = (ScoreSearchInfo) session
 						.get("scoreSearchInfo");
-				String subjectCode = "99-"
+				
+				Set<String> keySet = scoreSearchInfo.getSubjectNameList()
+						.keySet();
+				for (String key : keySet) {
+					if (key.contains(kenshuSamplingInfo.getSubjectCode())) {
+						subjectName = scoreSearchInfo.getSubjectNameList().get(
+								key);
+					}
+				}
+				/*String subjectCode = "99-"
 						+ kenshuSamplingInfo.getSubjectCode();
 				subjectName = scoreSearchInfo.getSubjectNameList().get(
-						subjectCode);
+						subjectCode);*/
 
 				session.remove("kenshuRecordInfo");
 
@@ -148,30 +165,45 @@ public class KenshuSamplingAction extends ActionSupport implements
 						kenshuSamplingInfo.getSubjectCode(),
 						kenshuSamplingInfo.getQuestionNum());
 
+				scorerInfo = (MstScorerInfo) session.get("scorerInfo");
+
+				log.info(scorerInfo.getScorerId() + "-"
+						+ questionInfo.getMenuId() + "-"
+						+ "Search Criteria: -{ " + kenshuSamplingInfo + "}");
+
 				if (kenshuSamplingSearch != null) {
-					List<TranDescScoreInfo> tranDescScoreInfoListMap = kenshuSamplingService
+					kenshuSamplingSearchRecordInfoList = kenshuSamplingService
 							.getKenshuSamplingRecordsList(
 									questionInfo.getQuestionSeq(),
 									questionInfo.getConnectionString(),
 									kenshuSamplingInfo.getResultCount());
-					session.put("tranDescScoreInfoListMap",
-							tranDescScoreInfoListMap);
-					tranDescScoreInfoList = tranDescScoreInfoListMap;
+					/*
+					 * session.put("tranDescScoreInfoListMap",
+					 * tranDescScoreInfoListMap); tranDescScoreInfoList =
+					 * tranDescScoreInfoListMap;
+					 */
 				} else {
-					List<TranDescScoreInfo> tranDescScoreInfoListMap = (List<TranDescScoreInfo>) session
-							.get("tranDescScoreInfoListMap");
-					tranDescScoreInfoList = tranDescScoreInfoListMap;
+					/*
+					 * List<TranDescScoreInfo> tranDescScoreInfoListMap =
+					 * (List<TranDescScoreInfo>) session
+					 * .get("tranDescScoreInfoListMap"); tranDescScoreInfoList =
+					 * tranDescScoreInfoListMap;
+					 */
+					kenshuSamplingSearchRecordInfoList = (List<KenshuSamplingSearchRecordInfo>) session
+							.get("kenshuSamplingSearchRecordInfoList");
 				}
 
-				buildGradWaiseRecordList();
+				// buildGradWaiseRecordList();
 
-				buildKenshuSamplingSearchList();
+				// buildKenshuSamplingSearchList();
 				session.put("kenshuSamplingInfo", kenshuSamplingInfo);
 				session.put("kenshuSamplingSearchRecordInfoList",
 						kenshuSamplingSearchRecordInfoList);
 				session.put("questionInfo", questionInfo);
-				session.put("kenshuSamplingGradeWiaseMap",
-						kenshuSamplingGradeWiaseMap);
+				/*
+				 * session.put("kenshuSamplingGradeWiaseMap",
+				 * kenshuSamplingGradeWiaseMap);
+				 */
 
 			} else if ((acceptanceDisplayRadio != null || samplingSearch
 					.equals(WebAppConst.ACCEPTANCE_DISPLAY))) {
@@ -186,21 +218,45 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 				scoreSearchInfo = (ScoreSearchInfo) session
 						.get("scoreSearchInfo");
-				String subjectCode = "99-"
+				
+				Set<String> keySet = scoreSearchInfo.getSubjectNameList()
+						.keySet();
+				for (String key : keySet) {
+					if (key.contains(acceptanceDisplayInfo.getSubjectCode())) {
+						subjectName = scoreSearchInfo.getSubjectNameList().get(
+								key);
+					}
+				}
+				/*String subjectCode = "99-"
 						+ acceptanceDisplayInfo.getSubjectCode();
 				subjectName = scoreSearchInfo.getSubjectNameList().get(
-						subjectCode);
+						subjectCode);*/
 
 				QuestionInfo questionInfo = getQuestionInfo(
 						acceptanceDisplayInfo.getSubjectCode(),
 						acceptanceDisplayInfo.getQuestionNum());
 
+				scorerInfo = (MstScorerInfo) session.get("scorerInfo");
+
+				log.info(scorerInfo.getScorerId() + "-"
+						+ questionInfo.getMenuId() + "-"
+						+ "Search Criteria: -{ " + acceptanceDisplayInfo + "}");
+
 				if (acceptanceDisplayRadio != null) {
+					String searchCriteria = new String();
+					if (acceptanceDisplayInfo.getRecordSearchCriteria().equals(
+							getText(WebAppConst.KENSHU_SEARCH_EXPLAINED))) {
+						searchCriteria = WebAppConst.KENSHU_SEARCH_EXPLAINED_STRING;
+					} else if (acceptanceDisplayInfo
+							.getRecordSearchCriteria()
+							.equals(getText(WebAppConst.KENSHU_SEARCH_UNEXPLAINED))) {
+						searchCriteria = WebAppConst.KENSHU_SEARCH_UNEXPLAINED_STRING;
+					}
 					tranAcceptanceList = kenshuSamplingService
-							.getKenshuMarkeRecordsList(questionInfo
-									.getQuestionSeq(), acceptanceDisplayInfo
-									.getRecordSearchCriteria(), questionInfo
-									.getConnectionString(),
+							.getKenshuMarkeRecordsList(
+									questionInfo.getQuestionSeq(),
+									searchCriteria,
+									questionInfo.getConnectionString(),
 									acceptanceDisplayInfo.getKenshuUserId());
 				} else {
 					tranAcceptanceList = (List<TranAcceptance>) session
@@ -285,11 +341,32 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 			kenshuSamplingGradeWiaseMap = (Map<Integer, List<TranDescScoreInfo>>) session
 					.get("kenshuSamplingGradeWiaseMap");
+			if (kenshuSamplingGradeWiaseMap != null
+					&& !(kenshuSamplingGradeWiaseMap.isEmpty())) {
+				tranDescScoreInfoList = kenshuSamplingGradeWiaseMap.get(Integer
+						.parseInt(slectedGrade));
+			} else {
+				kenshuSamplingGradeWiaseMap = new HashMap<Integer, List<TranDescScoreInfo>>();
+			}
+			if (tranDescScoreInfoList == null) {
 
-			tranDescScoreInfoList = kenshuSamplingGradeWiaseMap.get(Integer
-					.parseInt(slectedGrade));
+				tranDescScoreInfoList = kenshuSamplingService
+						.getKenhuRecordsByGrade(questionInfo.getQuestionSeq(),
+								questionInfo.getConnectionString(),
+								Integer.parseInt(totalRecordCount),
+								Integer.parseInt(slectedGrade));
+				kenshuSamplingGradeWiaseMap.put(Integer.parseInt(slectedGrade),
+						tranDescScoreInfoList);
+				session.put("kenshuSamplingGradeWiaseMap",
+						kenshuSamplingGradeWiaseMap);
+			}
 
 			session.put("tranDescScoreInfoList", tranDescScoreInfoList);
+
+			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
+
+			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
+					+ "-" + "loading question of grade -" + slectedGrade);
 
 			questionInfo.setPrevRecordCount(0);
 			questionInfo.setNextRecordCount(tranDescScoreInfoList.size() - 1);
@@ -299,6 +376,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 			result = buildTranDescScoreInfo(questionInfo.getPrevRecordCount());
 
 			getscoringData(questionInfo.getQuestionSeq());
+
 			/*
 			 * @SuppressWarnings("unchecked") List<TranDescScoreInfo>
 			 * tranDescScoreInfoList = kenshuSamplingService
@@ -388,6 +466,12 @@ public class KenshuSamplingAction extends ActionSupport implements
 				.get("tranDescScoreInfoList");
 
 		tranDescScoreInfo = tranDescScoreInfoList.get(prevRecordCount);
+
+		scorerInfo = (MstScorerInfo) session.get("scorerInfo");
+
+		log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
+				+ "-" + "Loading answer -{" + tranDescScoreInfo + "}");
+
 		String samplingSearch = (String) session.get("samplingSearch");
 		if (samplingSearch.equals(WebAppConst.ACCEPTANCE_DISPLAY)) {
 			tranAcceptanceMap = (Map<Integer, TranAcceptance>) session
@@ -665,11 +749,11 @@ public class KenshuSamplingAction extends ActionSupport implements
 		this.prevOrNextFlag = prevOrNextFlag;
 	}
 
-	public Map<Integer, String> getSearchCriteria() {
+	public Map<String, String> getSearchCriteria() {
 		return searchCriteria;
 	}
 
-	public void setSearchCriteria(Map<Integer, String> searchCriteria) {
+	public void setSearchCriteria(Map<String, String> searchCriteria) {
 		this.searchCriteria = searchCriteria;
 	}
 

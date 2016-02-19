@@ -42,6 +42,8 @@ DURATION_CHECK_DATE= '<s:text name="error.duration.check.date"/>';
 DURATION_CHECK_FEBRUARY_FROM_TO_DATE= '<s:text name="error.duration.check.feb.from.to.date"/>';
 DURATION_CHECK_FEBRUARY_FROM_DATE= '<s:text name="error.duration.check.feb.from.date"/>';
 DURATION_CHECK_FEBRUARY_TO_DATE= '<s:text name="error.duration.check.feb.to.date"/>';
+DENY_CATEGORY_REQUIRED= '<s:text name="error.deny.category.required"/>';
+DENY_CATEGORY_NUMERIC_AND_COMMA_ALLOWED= '<s:text name="error.deny.category.numeric.and.comma.allowed"/>';
 	
 //special Scoring	
 QUESTION_NO_REQUIRED= '<s:text name="error.question.num.required"/>';

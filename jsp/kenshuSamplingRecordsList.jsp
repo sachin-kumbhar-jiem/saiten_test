@@ -121,16 +121,16 @@
 				<thead>
 					<tr style="height: 25px;">
 						
-						<th style="padding-left: 10px;text-align: left;width:10%;">
+						<th style="padding-left: 10px;text-align: center;width:10%;">
 		 					<s:text name="label.confirmscore.gradenum" />
 		 				</th>
-		 				 <th style="padding-left: 10px;text-align: left;width:15%;">
+		 				 <th style="padding-left: 10px;text-align: center;width:15%;">
 		 					<s:text name="lable.kenshusampling.ratio.title" />
 		 				</th>
-		 				<th style="padding-left: 10px;text-align: left;width:20%;">
+		 				<th style="padding-left: 10px;text-align: center;width:20%;">
 		 					<s:text name="lable.kenshusampling.target.number" />
 		 				</th>
-		 				<th style="padding-left: 10px;text-align: left;">
+		 				<th style="padding-left: 10px;text-align: center;">
 		 					<%-- <s:text name="lable.kenshusampling.target.number" /> --%>
 		 				</th>
 					</tr>

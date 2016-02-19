@@ -19,7 +19,8 @@ public interface KenshuSamplingService {
 	 * @param gradeNum
 	 * @return List
 	 */
-	public int updateKenshuRecord(TranDescScoreInfo tranDescScoreInfo, String connectionString);
+	public int updateKenshuRecord(TranDescScoreInfo tranDescScoreInfo,
+			String connectionString);
 
 	/**
 	 * 
@@ -27,8 +28,8 @@ public interface KenshuSamplingService {
 	 * @param connectionString
 	 * @return boolean
 	 */
-	public boolean isAnswerAlreadyChecked(TranDescScoreInfo tranDescScoreInfo, String scorerId,
-			String connectionString);
+	public boolean isAnswerAlreadyChecked(TranDescScoreInfo tranDescScoreInfo,
+			String scorerId, String connectionString);
 
 	/**
 	 * 
@@ -40,4 +41,8 @@ public interface KenshuSamplingService {
 	@SuppressWarnings("rawtypes")
 	public List getKenshuMarkeRecordsList(int questionSeq,
 			String searchCriteria, String ConnectionString, String kenshuUserId);
+
+	@SuppressWarnings("rawtypes")
+	public List getKenhuRecordsByGrade(int questionSeq,
+			String connectionString, int recordCount, int gradeNum);
 }

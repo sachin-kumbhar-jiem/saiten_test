@@ -825,8 +825,9 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									query.append("WHERE his1.history_seq = ");
 									query.append("( SELECT max(history_seq) FROM tran_desc_score_history his2 ");
 									query.append("WHERE his2.answer_seq = tranDescScore.answer_seq ");
-									query.append("AND his2.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
 									query.append(") ");
+									query.append("AND his1.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
+									
 									query.append(") ");
 								}
 							}
@@ -1790,35 +1791,44 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			final String connectionString, final int recordCont) {
 		final StringBuilder query = new StringBuilder();
 
-		query.append("SELECT t.answerSeq, t.answerFormNum, t.imageFileName, ");
-		query.append("t.gradeSeq, t.bitValue, t.questionSeq, ");
-		query.append("t.updateDate, t.markValue, t.latestScreenScorerId, ");
-		query.append("t.secondLatestScreenScorerId, t.gradeNum ");
+		// query.append("SELECT t.answerSeq, t.answerFormNum, t.imageFileName, ");
+		// query.append("t.gradeSeq, t.bitValue, t.questionSeq, ");
+		// query.append("t.updateDate, t.markValue, t.latestScreenScorerId, ");
+		// query.append("t.secondLatestScreenScorerId, t.gradeNum ");
+		// query.append("FROM TranDescScore t ");
+		// query.append("WHERE t.questionSeq = :QUESTION_SEQ ");
+		// query.append("AND t.latestScoringState IN (:KESNHU_SAMPLING_STATES) ");
+		// query.append("AND t.validFlag = :VALID_FLAG ");
+		// query.append("AND (t.kenshuSamplingFlag IS NULL ");
+		// query.append("OR t.kenshuSamplingFlag = :FALSE) ");
+		// query.append("ORDER BY RAND() ");
+		query.append("SELECT t.gradeNum, COUNT(*) ");
 		query.append("FROM TranDescScore t ");
 		query.append("WHERE t.questionSeq = :QUESTION_SEQ ");
 		query.append("AND t.latestScoringState IN (:KESNHU_SAMPLING_STATES) ");
 		query.append("AND t.validFlag = :VALID_FLAG ");
 		query.append("AND (t.kenshuSamplingFlag IS NULL ");
 		query.append("OR t.kenshuSamplingFlag = :FALSE) ");
-		query.append("ORDER BY RAND() ");
+		query.append(" GROUP BY t.gradeNum");
 
 		try {
 			return getHibernateTemplate(connectionString).execute(
 					new HibernateCallback<List>() {
 						public List doInHibernate(Session session)
 								throws HibernateException {
-							Query queryObj = session.createQuery(query.toString());
+							Query queryObj = session.createQuery(query
+									.toString());
 							queryObj.setParameter("QUESTION_SEQ", questionSeq);
 							queryObj.setParameterList("KESNHU_SAMPLING_STATES",
 									WebAppConst.KENSU_RECORDS_STATES);
 							queryObj.setParameter("VALID_FLAG",
 									WebAppConst.VALID_FLAG);
 							queryObj.setParameter("FALSE", WebAppConst.F);
-							queryObj.setMaxResults(recordCont);
+							// queryObj.setMaxResults(recordCont);
 							return queryObj.list();
 						}
 					});
-		}catch (RuntimeException re) {
+		} catch (RuntimeException re) {
 			throw re;
 		}
 	}
@@ -1875,6 +1885,48 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			throw re;
 		}
 
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List getKenshuRecordsByGrade(final int questionSeq,
+			final String connectionString, final int recordCount,
+			final int gradeNum) {
+		final StringBuilder query = new StringBuilder();
+
+		query.append("SELECT t.answerSeq, t.answerFormNum, t.imageFileName, ");
+		query.append("t.gradeSeq, t.bitValue, t.questionSeq, ");
+		query.append("t.updateDate, t.markValue, t.latestScreenScorerId, ");
+		query.append("t.secondLatestScreenScorerId, t.gradeNum ");
+		query.append("FROM TranDescScore t ");
+		query.append("WHERE t.questionSeq = :QUESTION_SEQ ");
+		query.append(" AND t.gradeNum = :GRADE_NUM ");
+		query.append("AND t.latestScoringState IN (:KESNHU_SAMPLING_STATES) ");
+		query.append("AND t.validFlag = :VALID_FLAG ");
+		query.append("AND (t.kenshuSamplingFlag IS NULL ");
+		query.append("OR t.kenshuSamplingFlag = :FALSE) ");
+		query.append("ORDER BY RAND() ");
+		try {
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<List>() {
+						public List doInHibernate(Session session)
+								throws HibernateException {
+							Query queryObj = session.createQuery(query
+									.toString());
+							queryObj.setParameter("QUESTION_SEQ", questionSeq);
+							queryObj.setParameter("GRADE_NUM", gradeNum);
+							queryObj.setParameterList("KESNHU_SAMPLING_STATES",
+									WebAppConst.KENSU_RECORDS_STATES);
+							queryObj.setParameter("VALID_FLAG",
+									WebAppConst.VALID_FLAG);
+							queryObj.setParameter("FALSE", WebAppConst.F);
+							queryObj.setMaxResults(recordCount);
+							return queryObj.list();
+						}
+					});
+		} catch (RuntimeException re) {
+			throw re;
+		}
 	}
 
 }

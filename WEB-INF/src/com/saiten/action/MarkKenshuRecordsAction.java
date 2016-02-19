@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.SessionAware;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -20,6 +21,8 @@ import com.saiten.util.WebAppConst;
 
 public class MarkKenshuRecordsAction extends ActionSupport implements
 		SessionAware {
+	
+	private static Logger log = Logger.getLogger(MarkKenshuRecordsAction.class);
 
 	/**
 	 * 
@@ -75,6 +78,13 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 
 			session.put("kenshuRecordInfo", kenshuRecordInfo);
 			session.put("tranAcceptance", tranAcceptance);
+			
+			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
+			
+			log.info(scorerInfo.getScorerId() + "-"
+					+ questionInfo.getMenuId() + "-"
+					+ "Marking answer explaination -{" + tranDescScoreInfo +"}" );
+			
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -112,6 +122,13 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 			session.put("kenshuRecordInfoMap", kenshuRecordInfoMap);
 
 			session.put("kenshuRecordInfo", kenshuRecordInfo);
+			
+			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
+			
+			log.info(scorerInfo.getScorerId() + "-"
+					+ questionInfo.getMenuId() + "-"
+					+ "Unmarking answer explaination -{" + tranDescScoreInfo +"}" );
+			
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -165,6 +182,13 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 
 			markKenshuRecordService.updateRecord(tranAcceptance,
 					connectionString);
+			
+			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
+			
+			log.info(scorerInfo.getScorerId() + "-"
+					+ questionInfo.getMenuId() + "-"
+					+ "Explaining Answer  -{" + tranAcceptance +"}" );
+			
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -191,6 +215,13 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 
 			markKenshuRecordService.updateRecord(tranAcceptance,
 					connectionString);
+			
+			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
+			
+			log.info(scorerInfo.getScorerId() + "-"
+					+ questionInfo.getMenuId() + "-"
+					+ "Clearing Explain flag for Answer  -{" + tranAcceptance +"}" );
+			
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {

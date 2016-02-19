@@ -2305,8 +2305,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									query.append("WHERE his1.history_seq = ");
 									query.append("( SELECT max(history_seq) FROM tran_desc_score_history his2 ");
 									query.append("WHERE his2.answer_seq = tranDescScore.answer_seq ");
-									query.append("AND his2.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
 									query.append(") ");
+									query.append("AND his1.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
+									
 									query.append(") ");
 								}
 							}
@@ -2365,9 +2366,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 												.append("( SELECT max(history_seq) FROM tran_desc_score_history his2 ");
 										countSubQuery
 												.append("WHERE his2.answer_seq = t.answer_seq ");
-										countSubQuery
-												.append("AND his2.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
 										countSubQuery.append(") ");
+										countSubQuery
+												.append("AND his1.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
+										
 										countSubQuery.append(") ");
 									}
 								}
@@ -2675,7 +2677,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								if (searchByScorerRoleId == true) {
 									if (historyScorerRoles != null) {
 										countSubQuery
-												.append("AND t1.scorer_role_id IN :HISTORY_SCORER_ROLES ");
+												.append("AND t1.scorer_role_id IN :HISTORY_SCORER_ROLES   ");
+										/*countSubQuery.append(" AND tranDescScoreHistory.history_seq = ");
+										countSubQuery.append(" (SELECT MAX(history_Seq) from tran_desc_score_history as tranDescScoreHistory ");
+										countSubQuery.append("WHERE tranDescScoreHistory.answer_seq =tranDescScore.answer_seq)");*/ 
 									}
 								}
 
@@ -2950,6 +2955,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							if (searchByScorerRoleId == true) {
 								if (historyScorerRoles != null) {
 									query.append("AND tranDescScoreHistory.scorer_role_id IN :HISTORY_SCORER_ROLES ");
+									/*query.append(" AND tranDescScoreHistory.history_seq = ");
+									query.append(" (SELECT MAX(history_Seq) from tran_desc_score_history as tranDescScoreHistory ");
+									query.append("WHERE tranDescScoreHistory.answer_seq =tranDescScore.answer_seq)");*/ 
 								}
 							}
 
@@ -4919,8 +4927,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									query.append("WHERE his1.history_seq = ");
 									query.append("( SELECT max(history_seq) FROM tran_desc_score_history his2 ");
 									query.append("WHERE his2.answer_seq = tranDescScore.answer_seq ");
-									query.append("AND his2.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
 									query.append(") ");
+									query.append("AND his1.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
+									
 									query.append(") ");
 								}
 							}

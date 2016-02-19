@@ -1,6 +1,7 @@
 package com.saiten.service.impl;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import com.saiten.dao.TranAcceptanceDao;
 import com.saiten.dao.TranDescScoreDAO;
 import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.info.AnswerInfo;
+import com.saiten.info.KenshuSamplingSearchRecordInfo;
 import com.saiten.info.TranDescScoreInfo;
 import com.saiten.model.TranAcceptance;
 import com.saiten.model.TranDescScore;
@@ -31,12 +33,14 @@ public class KenshuSamplingServiceImpl implements KenshuSamplingService,
 
 	@Override
 	@SuppressWarnings("rawtypes")
-	public List<TranDescScoreInfo> getKenshuSamplingRecordsList(
+	public List<KenshuSamplingSearchRecordInfo> getKenshuSamplingRecordsList(
 			int questionSeq, String connectionString, int recordCount) {
 		try {
 			List recordList = tranDescScoreDAO.findKenshuRecords(questionSeq,
 					connectionString, recordCount);
-			return createKenshuSamplingRecord(recordList);
+			return createGreadeWiseList(recordList, recordCount);
+
+			// return createKenshuSamplingRecord(recordList,recordCount);
 		} catch (HibernateException he) {
 			throw new SaitenRuntimeException(
 					ErrorCode.KENSHU_RECORD_SERVICE_EXCEPTION, he);
@@ -104,7 +108,17 @@ public class KenshuSamplingServiceImpl implements KenshuSamplingService,
 	}
 
 	@SuppressWarnings("rawtypes")
-	public List<TranDescScoreInfo> createKenshuSamplingRecord(List temp) {
+	@Override
+	public List<TranDescScoreInfo> getKenhuRecordsByGrade(int questionSeq,
+			String connectionString, int recordCount, int gradeNum) {
+		List recordList = tranDescScoreDAO.getKenshuRecordsByGrade(questionSeq,
+				connectionString, recordCount, gradeNum);
+		return createKenshuSamplingRecord(recordList,recordCount);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public List<TranDescScoreInfo> createKenshuSamplingRecord(List temp,
+			int recordCount) {
 		List<TranDescScoreInfo> tranDescScoreInfoList = null;
 		if (!temp.isEmpty()) {
 			tranDescScoreInfoList = new ArrayList<TranDescScoreInfo>();
@@ -175,6 +189,44 @@ public class KenshuSamplingServiceImpl implements KenshuSamplingService,
 			throw new SaitenRuntimeException(
 					ErrorCode.KENSHU_RECORD_SERVICE_EXCEPTION, e);
 		}
+	}
+
+	@SuppressWarnings({ "null", "rawtypes" })
+	public List<KenshuSamplingSearchRecordInfo> createGreadeWiseList(List temp, Integer recordNum) {
+		List<KenshuSamplingSearchRecordInfo> kenshuSamplingSearchRecordInfoList = null;
+		int totalRecords = 0;
+		if (temp != null || !(temp.isEmpty())) {
+
+			for (Object gradeRecord : temp) {
+				Object[] gradeRecordObj = (Object[]) gradeRecord;
+				totalRecords = totalRecords
+						+ Integer.parseInt(gradeRecordObj[1].toString());
+			}
+
+			if (recordNum > totalRecords) {
+				recordNum = totalRecords;
+			}
+
+			DecimalFormat df = new DecimalFormat();
+			df.setMaximumFractionDigits(2);
+			kenshuSamplingSearchRecordInfoList = new ArrayList<KenshuSamplingSearchRecordInfo>();
+			for (Object gradeRecord : temp) {
+				KenshuSamplingSearchRecordInfo kenshuInfoObj = new KenshuSamplingSearchRecordInfo();
+				Object[] gradeRecordObj = (Object[]) gradeRecord;
+				kenshuInfoObj.setGradeNum(Integer.parseInt(gradeRecordObj[0]
+						.toString()));
+				int gradeWiasecount = Integer.parseInt(gradeRecordObj[1]
+						.toString());
+				double ratio = ((double) gradeWiasecount / (double) totalRecords) * 100;
+				kenshuInfoObj.setRatio(Double.valueOf(df.format(ratio)));
+				double number = ((double) gradeWiasecount / (double) totalRecords)
+						* recordNum;
+				number = Math.ceil(number);
+				kenshuInfoObj.setTotalNumber((int) number);
+				kenshuSamplingSearchRecordInfoList.add(kenshuInfoObj);
+			}
+		}
+		return kenshuSamplingSearchRecordInfoList;
 	}
 
 	public TranDescScoreDAO getTranDescScoreDAO() {
