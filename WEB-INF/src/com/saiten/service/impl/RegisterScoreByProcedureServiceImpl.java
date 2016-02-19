@@ -120,9 +120,9 @@ public class RegisterScoreByProcedureServiceImpl implements
 						.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)
 						|| menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 					qualityCheckFlag = answerInfo.getQualityCheckFlag();
-				} else {
+				} /*else {
 					qualityCheckFlag = WebAppConst.QUALITY_MARK_FLAG_FALSE;
-				}
+				}*/
 				String scorerComment = answerInfo.getScorerComment();
 				if ((scorerComment == null) || (scorerComment.equals(""))) {
 					scorerComment = null;
