@@ -565,7 +565,7 @@ $(document).ready(function() {
 		$.validator.addMethod("validateCheckPointLength", function validateCheckPointLength(value, element) {
 			var retValue;
 			$("#myErrorMessages").html('');
-			if(selectedButtonId=='score' || selectedButtonId=='approve' || selectedButtonId=='deny')
+			if(selectedButtonId=='score' || selectedButtonId=='approve' || selectedButtonId=='deny' || selectedButtonId=='pending')
 				retValue=true;
 			
 			if(!retValue && $(':checkbox[name=checkPoint]:checked').length > 0) {
