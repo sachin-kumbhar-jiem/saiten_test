@@ -267,6 +267,16 @@
 					<p class="btn btn-disabled"><s:text name="menu.btn.dailyStatusSearch" /></p>
 				</s:else>
 			</td>
+			
+			<td class="right_side_height_button">
+			   <s:if test="userMenuIdList.contains(@com.saiten.util.WebAppConst@DAILY_REPORT_MENU_ID)">
+			      <a href="dailyReportInit.action" id="dailyReport" class="btn btn-primary btn-xl">
+	               	   <s:text name="menu.btn.dailyReport"/></a>				
+			   </s:if><s:else>
+					<p class="btn btn-disabled"><s:text name="menu.btn.dailyReport"/></p>
+			   </s:else>
+		    </td>
+		    
 			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 		</tr>

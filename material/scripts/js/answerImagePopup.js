@@ -15,6 +15,15 @@ $(window).bind("load", function() {
 	}
 });
 
+function setImageToDefaultSize(){
+	calculateActualWidthHeight();
+
+	$('#answerImage').css('width',actualWidth);
+	$('#answerImage').css('height',actualHeight);
+
+	increamentSeq = 0;
+}
+
 function setAnswerImageSize(){
 	calculateActualWidthHeight();
 	

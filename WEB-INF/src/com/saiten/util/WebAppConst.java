@@ -258,7 +258,7 @@ public interface WebAppConst {
 	public static final String ERROR_GET_SUBJECTWISE_QUESTIONLIST = "error.get.subjectwise.questionlist";
 
 	public static final String ERROR_ADMIN_REGISTRATION = "error.admin.registration";
-	
+
 	public static final String ERROR_KENKYUSHA_REGISTRATION = "error.kenkyusha.registration";
 
 	public static final String SCORER_WISE_QUESTIONSMAP = "scorerWiseQuestionsMap";
@@ -310,7 +310,7 @@ public interface WebAppConst {
 	public static final String SAITENSHA_REGISTRATION = "SaitenshaRegistration";
 
 	public static final String ADMIN_REGISTRATION = "AdminRegistration";
-	
+
 	public static final String KENKYUSHA_REGISTRATION = "KenkyushaRegistration";
 
 	public static final Integer IS_KANTOKUSHA = 1;
@@ -538,7 +538,7 @@ public interface WebAppConst {
 	public static final String CLOSING_BRACKET = ")";
 
 	public static final int INSPECTION_STATE = 151;
-	
+
 	public static final String ACCEPTANCE_DISPLAY = "ACCEPTANCE DISPLAY";
 
 	public static final String KENSHU_SAMPLING_SEARCH = "KENSHU_SAMPLING_SEARCH";
@@ -550,10 +550,27 @@ public interface WebAppConst {
 	public static final String KENSHU_SEARCH_UNEXPLAINED = "label.kenshu.search.unexplained";
 
 	public static final Short[] KENSU_RECORDS_STATES = { 151, 500, 501 };
-	
+
 	public static final Character UNDER_SCORE = '_';
-	
+
 	public static final String KENSHU_SEARCH_EXPLAINED_STRING = "EXPLAINED";
-	
+
 	public static final String KENSHU_SEARCH_UNEXPLAINED_STRING = "UNEXPLAINED";
+
+	public static final Short[] CONFIRM_AND_INSPECTION_WAIT_STATES = { 500, 151 };
+
+	public static final String DAILY_REPORT_MENU_ID = "DAILY_REPORT_MENU_ID";
+
+	public static final String SPECIFIC_STUD_QUES_COUNT = "specifiedStudQuesCnt";
+
+	public static final String STUD_COUNT_FOR_ALL_QUES = "studCountForAllQues";
+
+	public static final String CONFIRM_AND_WAIT_STATE = "confirmAndWait";
+
+	public static final String NOT_CONFIRM_AND_WAIT_STATE = "notConfirmAndWait";
+
+	public static final String LOGIN_LOGOUT_REPORT = "loginLogoutReport";
+
+	public static final String TOTAL_RESULT_COUNT_SET_DEFAULT = "100";
+
 }

@@ -13,6 +13,22 @@ $(window).bind("load", function() {
 	setAnswerPaperImageSize();
 });
 
+function setAnsPaperToDefaultSize(){
+    calculateAnswerPaperActualWidthHeight();
+	
+	$('#answerPaper').css('width',actualWidth);
+	$('#answerPaper').css('height',actualHeight);
+     
+	width=0;
+	height=0;
+	actualWidth= 0;
+	actualHeight= 0;
+	divWidth= 675;
+	divHeight= 450;
+	heightWidthRatio=0;
+	increaseBy= 25;	
+}
+
 function enlargePaperImage(){
 	
 	calculateAnswerPaperActualWidthHeight();

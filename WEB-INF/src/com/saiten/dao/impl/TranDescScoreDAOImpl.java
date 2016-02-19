@@ -827,7 +827,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									query.append("WHERE his2.answer_seq = tranDescScore.answer_seq ");
 									query.append(") ");
 									query.append("AND his1.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
-									
+
 									query.append(") ");
 								}
 							}
@@ -1632,7 +1632,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			queryString
 					.append("sum(case when latest_scoring_state=151 then 1 else 0 end) as inspectionMenuWait,  ");
 			queryString
-				.append("sum(case when latest_scoring_state=191 then 1 else 0 end) as denyScoringWait  ");
+					.append("sum(case when latest_scoring_state=191 then 1 else 0 end) as denyScoringWait  ");
 
 			queryString.append("FROM tran_desc_score  ");
 
@@ -1765,7 +1765,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 	@SuppressWarnings("rawtypes")
 	public List findMaxInspectGroupSeq(final int questionSeq,
 			final String connectionString) {
-		
+
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT max(tranDescScore.inspectionGroupSeq) as maxInspectGroupSeq ");
 		query.append("FROM TranDescScore as tranDescScore WHERE ");
@@ -1775,12 +1775,13 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 					new HibernateCallback<List>() {
 						public List doInHibernate(Session session)
 								throws HibernateException {
-							Query queryObj = session.createQuery(query.toString());
+							Query queryObj = session.createQuery(query
+									.toString());
 							queryObj.setParameter("QUESTION_SEQ", questionSeq);
 							return queryObj.list();
 						}
 					});
-		}catch (RuntimeException re) {
+		} catch (RuntimeException re) {
 			throw re;
 		}
 	}
@@ -1845,19 +1846,20 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 					new HibernateCallback<List>() {
 						public List doInHibernate(Session session)
 								throws HibernateException {
-							Query queryObj = session.createQuery(query.toString());
+							Query queryObj = session.createQuery(query
+									.toString());
 							queryObj.setParameter("ANSWER_SEQ", answerSeq);
 							return queryObj.list();
 						}
 					});
-		}catch (RuntimeException re) {
+		} catch (RuntimeException re) {
 			throw re;
 		}
 	}
 
 	@Override
-	public int updateKunshuFlagByAnswerseq(final Integer answerSeq, final Date date,
-			final String connectionString) {
+	public int updateKunshuFlagByAnswerseq(final Integer answerSeq,
+			final Date date, final String connectionString) {
 		final StringBuilder query = new StringBuilder();
 		query.append("UPDATE TranDescScore as t ");
 		query.append("SET t.kenshuSamplingFlag = :TRUE , ");
@@ -1886,7 +1888,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 		}
 
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public List getKenshuRecordsByGrade(final int questionSeq,
@@ -1929,4 +1931,111 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
+	public List getQuesStatewiseStudCountForAllQues(String connectionString) {
+
+		try {
+			final StringBuilder queryString = new StringBuilder();
+			queryString.append("SELECT ");
+			queryString.append(" question_seq,latest_scoring_state,count(*) ");
+			queryString.append(" FROM");
+			queryString.append(" tran_desc_score t ");
+			queryString.append("GROUP BY ");
+			queryString.append("question_seq,latest_scoring_state ");
+			queryString.append(" ORDER BY ");
+			queryString.append("question_seq,latest_scoring_state");
+
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<List>() {
+						public List doInHibernate(Session session)
+								throws HibernateException {
+							Query queryObj = session.createSQLQuery(queryString
+									.toString());
+							return queryObj.list();
+						}
+					});
+
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public List getQuesWiseStudCntForSpecQues(String connectionString,
+			final List<String> queSeqsInfoList) {
+
+		try {
+			final StringBuilder queryString = new StringBuilder();
+			queryString.append("SELECT ");
+			queryString.append(" question_seq,latest_scoring_state,count(*) ");
+			queryString.append("FROM");
+			queryString.append(" tran_desc_score t ");
+			queryString.append("WHERE ");
+			queryString.append("question_seq IN :QUE_SEQ_INFO_LIST ");
+			queryString.append(" GROUP BY ");
+			queryString.append("question_seq,latest_scoring_state");
+			queryString.append(" ORDER BY");
+			queryString.append(" question_seq,latest_scoring_state");
+
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<List>() {
+						public List doInHibernate(Session session)
+								throws HibernateException {
+							Query queryObj = session.createSQLQuery(queryString
+									.toString());
+							queryObj.setParameterList("QUE_SEQ_INFO_LIST",
+									queSeqsInfoList);
+							return queryObj.list();
+						}
+					});
+
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public List getConfirmAndInspectionWaitCount(String dataString,
+			String connectionString) {
+
+		try {
+			final StringBuilder queryString = new StringBuilder();
+			queryString.append("SELECT ");
+			queryString.append(" question_seq,grade_num,count(*) ");
+			queryString.append(" FROM");
+			queryString.append(" tran_desc_score t ");
+			queryString.append("WHERE ");
+
+			if (dataString.equals(WebAppConst.CONFIRM_AND_WAIT_STATE)) {
+				queryString
+						.append("latest_scoring_state IN :CONFIRM_AND_INSPECTION_WAIT_STATE ");
+			}
+
+			else if (dataString.equals(WebAppConst.NOT_CONFIRM_AND_WAIT_STATE)) {
+				queryString
+						.append("latest_scoring_state NOT IN :CONFIRM_AND_INSPECTION_WAIT_STATE ");
+			}
+
+			queryString.append(" GROUP BY ");
+			queryString.append("question_seq,grade_num");
+
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<List>() {
+						public List doInHibernate(Session session)
+								throws HibernateException {
+							Query queryObj = session.createSQLQuery(queryString
+									.toString());
+							queryObj.setParameterList(
+									"CONFIRM_AND_INSPECTION_WAIT_STATE",
+									WebAppConst.CONFIRM_AND_INSPECTION_WAIT_STATES);
+
+							System.out.println("queryObj :: " + queryObj);
+							return queryObj.list();
+						}
+					});
+
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
 }

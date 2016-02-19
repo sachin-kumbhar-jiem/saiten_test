@@ -142,5 +142,11 @@ public interface ErrorCode {
 	public static final String REGISTER_DENY_SERVICE_EXCEPTION = "S002001";
 	
 	public static final String KENSHU_RECORD_SERVICE_EXCEPTION = "S002002";
+	
+	public static final String DOWNLOAD_DAILY_REPORT_HIBERNATE_EXCEPTION="S001822";
+	
+	public static final String DOWNLOAD_DAILY_REPORT_SERVICE_EXCEPTION="S001823";
+	
+	public static final String DOWNLOAD_DAILY_REPORT_ACTION_EXCEPTION ="S001821";
 
 }

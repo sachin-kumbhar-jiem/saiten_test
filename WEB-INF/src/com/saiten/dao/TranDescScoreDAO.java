@@ -194,4 +194,14 @@ public interface TranDescScoreDAO {
 	@SuppressWarnings("rawtypes")
 	public List getKenshuRecordsByGrade(int questionSeq,
 			String connectionString, int recordCount, int gradeNum);
+	
+	@SuppressWarnings("rawtypes")
+	public List getQuesStatewiseStudCountForAllQues(String connectionString);
+	
+	@SuppressWarnings("rawtypes")
+	public List getConfirmAndInspectionWaitCount(String dataString,String connectionString);
+	
+	@SuppressWarnings("rawtypes")
+	public List getQuesWiseStudCntForSpecQues(String connectionString,List<String> queSeqsInfoList);
+
 }

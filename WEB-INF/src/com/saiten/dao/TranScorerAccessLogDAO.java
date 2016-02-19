@@ -20,4 +20,6 @@ public interface TranScorerAccessLogDAO {
 	public List<TranScorerAccessLog> getAllLoggedInScorers(Integer id,
 			String scorerId);
 
+	@SuppressWarnings("rawtypes")
+	public List loginLogoutReport(final String dateString);
 }

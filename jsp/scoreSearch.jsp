@@ -134,8 +134,8 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 										<th class="partition">
 											<s:text name="label.scoresearch.resultcount" />
 										</th>
-										<td class="search_form_class1" >
-											<s:textfield id="resultCount" name="scoreInputInfo.resultCount" maxlength="6" size="5" value="%{#session.scoreInputInfo.resultCount}" />		
+										<td class="search_form_class1" >				
+											<s:textfield id="resultCount" name="scoreInputInfo.resultCount" maxlength="6" size="5" value="%{@com.saiten.util.WebAppConst@TOTAL_RESULT_COUNT_SET_DEFAULT}" />	
 										</td>
 										</s:if>
 									</tr>
@@ -470,7 +470,13 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 													<td class="inner">
 														<s:textfield id="historyIncludeCheckPoints" name="scoreInputInfo.scoreHistoryInfo.historyIncludeCheckPoints" size="30" value="%{#session.scoreInputInfo.scoreHistoryInfo.historyIncludeCheckPoints}" />
 													</td>
-												</tr>
+													<td class="inner"> 
+												      <input type="radio" id="skpOrCondition" name="scoreInputInfo.scoreHistoryInfo.skpConditions" value="skpOrCondition">&nbsp;&nbsp;<s:text name="OR"/>
+												    </td>
+												    <td class="inner"> 
+												      <input type="radio" id="skpAndCondition" name="scoreInputInfo.scoreHistoryInfo.skpConditions" value="skpAndCondition">&nbsp;&nbsp;<s:text name="AND"/>
+												    </td>
+												</tr>    
 												<tr>
 													<td class="inner">
 														<s:text name="label.scoresearch.historyexcludecheckpoint" />
@@ -540,17 +546,17 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 													<td style="border: none;padding: 0px;">
 														<s:select id="historyUpdateDateStartYear" name="scoreInputInfo.scoreHistoryInfo.historyUpdateDateStartYear" list="scoreSearchInfo.yearList" value="%{#session.scoreInputInfo.scoreHistoryInfo.historyUpdateDateStartYear}" />
 														<s:text name="label.year" />
+														
 														<s:select id="historyUpdateDateStartMonth" name="scoreInputInfo.scoreHistoryInfo.historyUpdateDateStartMonth" list="scoreSearchInfo.monthList" value="%{#session.scoreInputInfo.scoreHistoryInfo.historyUpdateDateStartMonth}" />
-											
 														<s:text name="label.month" />
+														
 														<s:select id="historyUpdateDateStartDay" name="scoreInputInfo.scoreHistoryInfo.historyUpdateDateStartDay" list="scoreSearchInfo.daysList" value="%{#session.scoreInputInfo.scoreHistoryInfo.historyUpdateDateStartDay}" />
-											
 														<s:text name="label.day" />
+														
 														<s:select id="historyUpdateDateStartHours" name="scoreInputInfo.scoreHistoryInfo.historyUpdateDateStartHours" list="scoreSearchInfo.hoursList" value="%{#session.scoreInputInfo.scoreHistoryInfo.historyUpdateDateStartHours}" />
-											
 														<s:text name="label.hours" />
+														
 														<s:select id="historyUpdateDateStartMin" name="scoreInputInfo.scoreHistoryInfo.historyUpdateDateStartMin" list="scoreSearchInfo.minutesList" value="%{#session.scoreInputInfo.scoreHistoryInfo.historyUpdateDateStartMin}" />
-													
 														<s:text name="label.minutes" />
 														&nbsp;
 														<s:text name="label.tilde" />

@@ -364,6 +364,19 @@
   	<bean id="tranAcceptanceHistoryDao" class="com.saiten.dao.impl.TranAcceptanceHistoryDaoImpl" scope="request">
   	</bean>
   	
+	<bean id="dailyReportAction" class="com.saiten.action.DailyReportDownloadAction" scope="request"> 
+		<property name="dailyReportsService" ref="dailyReportsService" /> 
+   	</bean>
+   	
+   	<bean id="dailyReportsService" class="com.saiten.service.impl.DailyReportsServiceImpl" scope="request"> 
+   	    <property name="tranDescScoreDAO" ref="tranDescScoreDAO" />
+   	    <property name="mstDbInstanceDAO" ref="mstDbInstanceDAO" />
+   	    <property name="dailyReportsInfo" ref="dailyReportsInfo" />
+   	    <property name="tranScorerAccessLogDAO" ref="tranScorerAccessLogDAO" />
+   	</bean>
+   	 	
+   	<bean id="dailyReportsInfo" class="com.saiten.info.DailyReportsInfo"></bean>
+  	
   	<!-- database.properties bean configuration  -->
    	<util:properties id="saitenDbProperties" location="classpath:config/database/properties/database.properties" />
    	

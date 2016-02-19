@@ -6,6 +6,11 @@ package com.saiten.dao.impl;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
+
 import com.saiten.dao.TranScorerAccessLogDAO;
 import com.saiten.dao.support.SaitenHibernateDAOSupport;
 import com.saiten.model.TranScorerAccessLog;
@@ -79,6 +84,37 @@ public class TranScorerAccessLogDAOImpl extends SaitenHibernateDAOSupport
 			return getHibernateTemplate(
 					SaitenUtil.getCommonDbConnectionString()).findByNamedParam(
 					query.toString(), params, values);
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public List loginLogoutReport(final String dateString) {
+
+		String connectionString = SaitenUtil.getCommonDbConnectionString();
+
+		try {
+			final StringBuilder queryString = new StringBuilder();
+			queryString.append("SELECT * ");
+			queryString.append("FROM ");
+			queryString.append("tran_scorer_access_log ");
+			queryString.append("WHERE ");
+			queryString.append("login_time like :DATE_STRING");
+
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<List>() {
+						public List doInHibernate(Session session)
+								throws HibernateException {
+							Query queryObj = session.createSQLQuery(queryString
+									.toString());
+
+							queryObj.setParameter("DATE_STRING", dateString
+									+ WebAppConst.PERCENTAGE_CHARACTER);
+							return queryObj.list();
+						}
+					});
+
 		} catch (RuntimeException re) {
 			throw re;
 		}

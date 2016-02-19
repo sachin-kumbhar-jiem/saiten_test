@@ -114,5 +114,11 @@ var TIME_COMPARISON='<s:text name="error.daily.score.report.start.and.end.time.c
 var START_DATE_IS_GREATER_THAN_CURRENT_DATE ='<s:text name="error.start.date.is.greater.than.current.date"/>';
 var END_DATE_IS_GREATER_THAN_CURRENT_DATE='<s:text name="error.end.date.is.greater.than.current.date"/>';
 var REPORT_CANNOT_BE_DOWNLOADED='<s:text name="error.report.cannot.downloaded"/>';
+
+//Daily report download
+var QUES_SEQ_ARE_MANDATORY='<s:text name="error.question.seq.are.mandatory"/>';
+var ENTER_VALID_INPUT='<s:text name="error.enter.valid.input"/>';
+var CURRENT_DATE_IS_REQUIRED='<s:text name="error.select.the.date"/>';
+
 </script>		
 </html>
