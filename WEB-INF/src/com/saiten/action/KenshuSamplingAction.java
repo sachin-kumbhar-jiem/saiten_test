@@ -145,7 +145,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 				scoreSearchInfo = (ScoreSearchInfo) session
 						.get("scoreSearchInfo");
-				
+
 				Set<String> keySet = scoreSearchInfo.getSubjectNameList()
 						.keySet();
 				for (String key : keySet) {
@@ -154,10 +154,11 @@ public class KenshuSamplingAction extends ActionSupport implements
 								key);
 					}
 				}
-				/*String subjectCode = "99-"
-						+ kenshuSamplingInfo.getSubjectCode();
-				subjectName = scoreSearchInfo.getSubjectNameList().get(
-						subjectCode);*/
+				/*
+				 * String subjectCode = "99-" +
+				 * kenshuSamplingInfo.getSubjectCode(); subjectName =
+				 * scoreSearchInfo.getSubjectNameList().get( subjectCode);
+				 */
 
 				session.remove("kenshuRecordInfo");
 
@@ -218,7 +219,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 				scoreSearchInfo = (ScoreSearchInfo) session
 						.get("scoreSearchInfo");
-				
+
 				Set<String> keySet = scoreSearchInfo.getSubjectNameList()
 						.keySet();
 				for (String key : keySet) {
@@ -227,10 +228,11 @@ public class KenshuSamplingAction extends ActionSupport implements
 								key);
 					}
 				}
-				/*String subjectCode = "99-"
-						+ acceptanceDisplayInfo.getSubjectCode();
-				subjectName = scoreSearchInfo.getSubjectNameList().get(
-						subjectCode);*/
+				/*
+				 * String subjectCode = "99-" +
+				 * acceptanceDisplayInfo.getSubjectCode(); subjectName =
+				 * scoreSearchInfo.getSubjectNameList().get( subjectCode);
+				 */
 
 				QuestionInfo questionInfo = getQuestionInfo(
 						acceptanceDisplayInfo.getSubjectCode(),
@@ -266,8 +268,12 @@ public class KenshuSamplingAction extends ActionSupport implements
 				createTrandescScoreInfoList(tranAcceptanceList);
 
 				buildGradWaiseRecordList();
-
-				buildKenshuSamplingSearchList();
+				if (acceptanceDisplayRadio != null) {
+					buildKenshuSamplingSearchList();
+				} else {
+					kenshuSamplingSearchRecordInfoList = (List<KenshuSamplingSearchRecordInfo>) session
+							.get("kenshuSamplingSearchRecordInfoList");
+				}
 
 				session.put("acceptanceDisplayInfo", acceptanceDisplayInfo);
 				session.put("tranAcceptanceList", tranAcceptanceList);
@@ -362,6 +368,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 			}
 
 			session.put("tranDescScoreInfoList", tranDescScoreInfoList);
+			session.put("slectedGrade", slectedGrade);
 
 			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
 
@@ -465,7 +472,20 @@ public class KenshuSamplingAction extends ActionSupport implements
 		tranDescScoreInfoList = (List<TranDescScoreInfo>) session
 				.get("tranDescScoreInfoList");
 
-		tranDescScoreInfo = tranDescScoreInfoList.get(prevRecordCount);
+		kenshuSamplingSearchRecordInfoList = (List<KenshuSamplingSearchRecordInfo>) session
+				.get("kenshuSamplingSearchRecordInfoList");
+
+		int checkedRecordNum = updateChakedRecodCount();
+		if (checkedRecordNum == tranDescScoreInfoList.size()) {
+			checkedRecordNum--;
+		}
+		if (prevOrNextFlag != null && prevOrNextFlag == WebAppConst.TRUE) {
+		} else {
+			questionInfo.setPrevRecordCount(checkedRecordNum);
+			questionInfo.setNextRecordCount(tranDescScoreInfoList.size()-(checkedRecordNum+1));
+		}
+		
+		tranDescScoreInfo = tranDescScoreInfoList.get(questionInfo.getPrevRecordCount());
 
 		scorerInfo = (MstScorerInfo) session.get("scorerInfo");
 
@@ -589,6 +609,32 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 		tranDescScoreInfoObj.setPendingCategory(tranDescScore
 				.getPendingCategory());
+	}
+
+	@SuppressWarnings("unchecked")
+	private int updateChakedRecodCount() {
+		kenshuSamplingSearchRecordInfoList = (List<KenshuSamplingSearchRecordInfo>) session
+				.get("kenshuSamplingSearchRecordInfoList");
+		String slectedGrade = (String) session.get("slectedGrade");
+		int number = 0;
+		for (KenshuSamplingSearchRecordInfo recordObj : kenshuSamplingSearchRecordInfoList) {
+			if (recordObj.getGradeNum() == Integer.parseInt(slectedGrade)) {
+				number = recordObj.getCheckedRecordNumber();
+				if (prevOrNextFlag != null
+						&& prevOrNextFlag == WebAppConst.TRUE) {
+				} else {
+					if (recordObj.getTotalNumber() == number) {
+						recordObj.setCheckedRecordNumber(number);
+					}else {
+						recordObj.setCheckedRecordNumber(number + 1);
+					}
+				}
+
+				return number;
+			}
+
+		}
+		return number;
 	}
 
 	private void clearSessionInfo() {
