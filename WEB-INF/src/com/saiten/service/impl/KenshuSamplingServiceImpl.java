@@ -164,6 +164,10 @@ public class KenshuSamplingServiceImpl implements KenshuSamplingService,
 
 				tranDescScoreInfo.setGradeNum(Integer
 						.valueOf(answerRecordObj[10].toString()));
+				if (answerRecordObj[11] != null) {
+					answerInfo.setPunchText(answerRecordObj[11].toString());
+				}
+					
 
 				tranDescScoreInfoList.add(tranDescScoreInfo);
 

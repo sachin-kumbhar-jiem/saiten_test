@@ -99,6 +99,13 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 
 		try {
 			buildKenshuRecordInfo();
+			
+			TranAcceptance tranAcceptance = (TranAcceptance) session.get("tranAcceptance");
+			if (tranAcceptance != null) {
+				tranAcceptance.setComment(null);
+				session.put("tranAcceptance", tranAcceptance);
+			}
+				
 
 			kenshuRecordInfo.setComment(null);
 

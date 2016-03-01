@@ -40,18 +40,20 @@ $(document).ready(function(){
 	 
 	 
 	$.validator.addMethod("questionNumValidaton", isQuestionNumValid, "");
+	$.validator.addMethod("numericOnly", numericOnlyValidation, "");
 	
 	$("#kenshuSamplingForm").validate({
 		rules: {	
 			"kenshuSamplingInfo.questionNum" : {
 				required: true,
-				//numericOnly: true,
+				numericOnly: true,
 				maxlength: 5,
 				//questionNumMaxValidRange: true,
 				questionNumValidaton: true
 			},
 			"kenshuSamplingInfo.resultCount" : {
-				required: true
+				required: true,
+				numericOnly: true
 			},
 			"acceptanceDisplayInfo.questionNum" : {
 				required: true,
@@ -64,13 +66,14 @@ $(document).ready(function(){
 		 messages: {
 				"kenshuSamplingInfo.questionNum" : {
 					required: REQUIRED,
-					//numericOnly: NUMERIC_ONLY,
+					numericOnly: NUMERIC_ONLY,
 					maxlength: MAX_LENGTH_11,
 					//questionNumMaxValidRange: QUESTION_NUM_MAXIMUM_RANGE,
 					questionNumValidaton: QUESTION_NO_INVALID
 		        },
 		        "kenshuSamplingInfo.resultCount" : {
-		        	required: REQUIRED
+		        	required: REQUIRED,
+		        	numericOnly: NUMERIC_ONLY
 		        },
 		        "acceptanceDisplayInfo.questionNum" : {
 		        	required: REQUIRED,
@@ -83,9 +86,21 @@ $(document).ready(function(){
 		
 	});
 
+	$('#resultCount').bind('input', function () {
+	     $(this).val($(this).val().replace(/[^0-9]/g, ''));
+	});
+	
+	$('#questionNum').bind('input', function () {
+	     $(this).val($(this).val().replace(/[^0-9]/g, ''));
+	});
+	
+	$('#questionNumA').bind('input', function () {
+	     $(this).val($(this).val().replace(/[^0-9]/g, ''));
+	});
+	
 	
 	$('#questionNum').bind('keypress', function (e) {
-		var regex = new RegExp("^[0-9,]+$");
+		var regex = new RegExp("^[0-9]+$");
 	    var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
 	    if (regex.test(str)) {
 	        return true;
@@ -94,7 +109,7 @@ $(document).ready(function(){
 	});
 	
 	$('#resultCount').bind('keypress', function (e) {
-		var regex = new RegExp("^[0-9,]+$");
+		var regex = new RegExp("^[0-9]+$");
 	    var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
 	    if (regex.test(str)) {
 	        return true;
@@ -103,7 +118,7 @@ $(document).ready(function(){
 	});
 	
 	$('#questionNumA').bind('keypress', function (e) {
-		var regex = new RegExp("^[0-9,]+$");
+		var regex = new RegExp("^[0-9]+$");
 	    var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
 	    if (regex.test(str)) {
 	        return true;

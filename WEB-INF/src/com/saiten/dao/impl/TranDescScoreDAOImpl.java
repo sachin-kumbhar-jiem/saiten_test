@@ -1899,7 +1899,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 		query.append("SELECT t.answerSeq, t.answerFormNum, t.imageFileName, ");
 		query.append("t.gradeSeq, t.bitValue, t.questionSeq, ");
 		query.append("t.updateDate, t.markValue, t.latestScreenScorerId, ");
-		query.append("t.secondLatestScreenScorerId, t.gradeNum ");
+		query.append("t.secondLatestScreenScorerId, t.gradeNum, ");
+		query.append(" t.punchText ");
 		query.append("FROM TranDescScore t ");
 		query.append("WHERE t.questionSeq = :QUESTION_SEQ ");
 		query.append(" AND t.gradeNum = :GRADE_NUM ");
