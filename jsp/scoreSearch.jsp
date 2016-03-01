@@ -470,12 +470,6 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 													<td class="inner">
 														<s:textfield id="historyIncludeCheckPoints" name="scoreInputInfo.scoreHistoryInfo.historyIncludeCheckPoints" size="30" value="%{#session.scoreInputInfo.scoreHistoryInfo.historyIncludeCheckPoints}" />
 													</td>
-													<td class="inner"> 
-												      <input type="radio" id="skpOrCondition" name="scoreInputInfo.scoreHistoryInfo.skpConditions" value="skpOrCondition">&nbsp;&nbsp;<s:text name="OR"/>
-												    </td>
-												    <td class="inner"> 
-												      <input type="radio" id="skpAndCondition" name="scoreInputInfo.scoreHistoryInfo.skpConditions" value="skpAndCondition">&nbsp;&nbsp;<s:text name="AND"/>
-												    </td>
 												</tr>    
 												<tr>
 													<td class="inner">
