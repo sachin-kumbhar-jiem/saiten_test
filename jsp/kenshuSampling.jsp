@@ -162,7 +162,7 @@
 					</tr>
 					<tr>
 						<th class="partition">
-							<s:text name="label.kenshu.userId" />
+							<s:text name="label.kenshu.userId" /><s:text name="lable.required" />
 						</th>
 						<td colspan="5" style="padding-left: 20px;">
 							<s:textfield id="acceptanceDisplayInfo.kenshuUserId" name="acceptanceDisplayInfo.kenshuUserId" maxlength="7" size="15" value="%{#session.acceptanceDisplayInfo.kenshuUserId}" />
@@ -170,7 +170,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th class="partition">
+						<th class="partition" >
 							<s:text name="lable.acceptance.search.criteria" />
 						</th>
 						<td colspan="5" style="padding-left: 20px;">
