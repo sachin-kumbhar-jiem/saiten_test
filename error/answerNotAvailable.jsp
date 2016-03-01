@@ -25,6 +25,12 @@
 <script language="JavaScript">
 	javascript:window.history.forward(1);
 </script>
+<script language="JavaScript">
+function enableLinksAndButtons(){
+	$(':button').prop('disabled', false); // Enable all the button
+	$('a').unbind('click'); // Enable all the links
+}
+</script>
 <link href="./material/css/modalPopLite.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="./material/css/import.css" media="all">
 		
@@ -46,7 +52,7 @@
 	<s:set id="bodyColor" name="bodyColor" value="%{'admin-body-color'}" />
 </s:else>
 
-<body class="<s:property value="%{#bodyColor}"/>">
+<body class="<s:property value="%{#bodyColor}"/>" onload="enableLinksAndButtons();">
 <div>
 	<div id="wrapper">
 		<div id="contents" class="text14">
