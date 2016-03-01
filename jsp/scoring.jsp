@@ -114,7 +114,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 	<s:set id="bodyColor" name="bodyColor" value="%{'admin-body-color'}" />
 </s:else>
 
-<body class="<s:property value="%{#bodyColor}"/>" id="body">
+<body class="<s:property value="%{#bodyColor}"/>" id="body"  onload="enableLinksAndButtons();">
 <jsp:include page="include/jsMessages.jsp"></jsp:include>
 <div>
 	<div id="wrapper">

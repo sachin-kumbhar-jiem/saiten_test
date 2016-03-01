@@ -2,8 +2,9 @@
 //Our validation script will go here.
 //$(document).ready(function(){
 	$("#registerPending").click(function(){
-		$("#registerPending").prop('disabled', true);
-		$('#close').trigger('click');
+		//$("#registerPending").prop('disabled', true);
+		//$('#close').trigger('click');
+		disableLinksAndButtons();
 		
 		var pendingCategorySeq = $("input[name='pendingCategory']:checked").val();
 		var bookMark =  $("#bookMark").is(":checked") ? true : false;
@@ -13,6 +14,7 @@
 		location.href = 'registerPending.action?pendingCategorySeq='+pendingCategorySeq+"&bookMarkFlag="+bookMark+"&qualityCheckFlag="+qualityMark+"&scorerComment="+encodeURIComponent(scorerComment);
 	});
 	$("#close").click(function(){
+		enableLinksAndButtons();
 		$("#0").focus();
 	});
 //});

@@ -1,4 +1,15 @@
-﻿
+﻿//function for enable all links & buttons which are disabled.
+function enableLinksAndButtons(){
+	$(':button').prop('disabled', false); // Enable all the button
+	$('a').unbind('click'); // Enable all the links
+}
+//function for disable all links & buttons which are enabled.
+function disableLinksAndButtons(){
+	$(':button').prop('disabled', true); // Disable all the button
+	var disableLink = function(){ return false;};
+	$('a').bind('click', disableLink); // Disable all the links
+}
+
 //Our validation script will go here.
 $(function () {
 	if(($('#score').length>0) || ($('#approve').length>0) || ($('#deny').length>0)){
@@ -18,7 +29,10 @@ var selectedCheckPoints = [];
 var selectedButtonId;
 
 $(document).ready(function() {
-	
+	//set default focus on '0' checkpoint on every answer loading.
+	$("#0").focus();
+	//disable all links & buttons on scoring screen, while everytime loading new answer.
+	disableLinksAndButtons();
 	$('#processDetails').click(function(){
 		var childWin = window.open('findProcessDetails.action?answerSequence='+$("#answerSeq").val(),'child', "width=720, height=400, location=no, menubar=no, scrollbars=yes, status=no, toolbar=no");
 	    if (window.focus) {childWin.focus()}

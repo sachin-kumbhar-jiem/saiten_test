@@ -2,11 +2,16 @@
 //Our validation script will go here.
 $(document).ready(function(){
 	$("#registerScore").click(function(){
-		$("#registerScore").prop('disabled', true);
-		$('#cancel').trigger('click');
+		//$("#registerScore").prop('disabled', true);
+		//$("#registerScore").addClass('btn-disabled');
+		disableLinksAndButtons();
+		
 	});
 	
 	$("#cancel").click(function(){
+		//$('#score').prop('disabled', false);
+		//$("#score").removeClass('btn-disabled');
+		enableLinksAndButtons();
 		$("#0").focus();
 	});
 	

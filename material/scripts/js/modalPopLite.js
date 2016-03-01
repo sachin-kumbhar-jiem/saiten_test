@@ -65,13 +65,28 @@
             		var isSuccess = true;
             		$("#denyMap").hide();
             		if(selectedButtonId=='score'){
-            			$('#score').prop('disabled', true);
-            			$("#registerScore").focus();
+            			//$('#score').prop('disabled', true);
+            			//$("#score").addClass('btn-disabled');
+            			disableLinksAndButtons();
+            			
+            			//$("#registerScore").focus();
             			isSuccess = confirmScore();
+            			if(isSuccess){
+            				$("#registerScore").prop('disabled', false);
+            				$("#cancel").prop('disabled', false);
+            				$("#registerScore").focus();
+            			}
             		} else if(selectedButtonId=='pending'){
-            			$('#pending').prop('disabled', true);
-            			$("#registerPending").focus();
+            			//$('#pending').prop('disabled', true);
+            			disableLinksAndButtons();
+            			
+            			//$("#registerPending").focus();
             			isSuccess = confirmPending();
+            			if(isSuccess){
+            				$("#registerPending").prop('disabled', false);
+            				$("#close").prop('disabled', false);
+            				$("#registerPending").focus();
+            			}
             		} 
             		
             		if(isSuccess){
@@ -108,8 +123,10 @@
             		var isSuccess = true;
             		
             		if(selectedButtonId=='approve'){
-            			$('#approve').prop('disabled', true);
-            			$("#registerScore").focus();
+            			//$('#approve').prop('disabled', true);
+            			disableLinksAndButtons();
+            			
+            			//$("#registerScore").focus();
             			$("#approveOrDeny").val("approve");
             			$("#registerScore").attr('value', APPROVE);
             			$("#scorePopupHeading").attr('value', APPROVE_HEADING);
@@ -117,6 +134,11 @@
             			$("#scorePopupHeading").css('background-color','#2D2D2D');
             			$("#denyMap").hide();
             			isSuccess = confirmScore();
+            			if(isSuccess){
+            				$("#registerScore").prop('disabled', false);
+            				$("#cancel").prop('disabled', false);
+            				$("#registerScore").focus();
+            			}
             		} 
             		
             		if(isSuccess){
@@ -152,8 +174,10 @@
             		var isSuccess = true;
             		
             		if(selectedButtonId=='deny'){
-            			$('#deny').prop('disabled', true);
-            			$("#registerScore").focus();
+            			//$('#deny').prop('disabled', true);
+            			disableLinksAndButtons();
+            			
+            			//$("#registerScore").focus();
             			$("#approveOrDeny").val("deny");
             			$("#registerScore").attr('value', DENY);
             			$("#scorePopupHeading").attr('value', DENY_HEADING);
@@ -161,7 +185,11 @@
             			$("#scorePopupHeading").css('background-color','red');
             			$("#denyMap").show();
             			isSuccess = confirmScore();
-            			
+            			if(isSuccess){
+            				$("#registerScore").prop('disabled', false);
+            				$("#cancel").prop('disabled', false);
+            				$("#registerScore").focus();
+            			}
             		}
             		
             		if(isSuccess){
