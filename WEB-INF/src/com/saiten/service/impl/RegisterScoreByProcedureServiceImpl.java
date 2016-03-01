@@ -196,8 +196,10 @@ public class RegisterScoreByProcedureServiceImpl implements
 							+ "Tran record scoring." + "-{ Question Sequence: "
 							+ questionSeq + ", Answer Sequence: "
 							+ answerInfo.getAnswerSeq() + ", Scoring State: "
-							+ latestScoringState + ", Bit Value: " + bitValue
-							+ "}");
+							+ latestScoringState + ", Grade Seq: " + gradeSeq
+							+", Grade Num: " + gradeNum
+							+", Bit Value: " + bitValue
+							+ ", Timestamp: "+new Date().getTime()+"}");
 				}
 
 			}

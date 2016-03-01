@@ -890,7 +890,9 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 				tranDescScoreInfo.getAnswerInfo().setUpdateDate(updateDate);
 			}
 			if (nextFlag) {
-
+				log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
+						+ "Next Flag " +nextFlag + "\n TranDescScoreInfo: "
+						+ tranDescScoreInfo + ", Timestamp: "+new Date().getTime()+"}");
 				String lockBy = ((MstScorerInfo) session.get("scorerInfo"))
 						.getScorerId();
 				TranDescScoreInfo tranDescScoreInfo1 = answerRecordsList
@@ -902,11 +904,12 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 			}
 		}
 
+		session.put("tranDescScoreInfo", tranDescScoreInfo);
 		log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
 				+ "Record loaded." + "-{ Question Sequence: "
 				+ questionInfo.getQuestionSeq() + "\n TranDescScoreInfo: "
-				+ tranDescScoreInfo + "}");
-		session.put("tranDescScoreInfo", tranDescScoreInfo);
+				+ tranDescScoreInfo + ", Timestamp: "+new Date().getTime()+"}");
+		
 
 		if (ArrayUtils.contains(WebAppConst.MISMATCH_STATES,
 				tranDescScoreInfo.getScoringState())

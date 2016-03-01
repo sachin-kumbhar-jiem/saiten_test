@@ -85,6 +85,9 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 					gradeNum = Integer.valueOf(gradeNumText);
 				}
 			}
+			log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
+					+ "Record going to score \n TranDescScoreInfo: "
+					+ tranDescScoreInfo + " \n Grade Seq: "+gradeSeq+", Grade Num: "+gradeNum+", Timestamp: "+new Date().getTime()+"}");
 			Short denyCategory = null;
 			if (approveOrDeny.equals(WebAppConst.DENY)) {
 				denyCategory = SaitenUtil

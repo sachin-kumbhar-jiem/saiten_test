@@ -1,5 +1,6 @@
 package com.saiten.action;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -121,6 +122,11 @@ public class ConfirmScoreAction extends ActionSupport implements SessionAware {
 	private void buildSessionInfo(GradeInfo gradeInfo, int bitValue,
 			String menuId) {
 		session.put("gradeInfo", gradeInfo);
+		log.info(menuId + "-"
+				+ "Grade Info in session" + "-{ "+ gradeInfo.getGradeSeq()
+				+", Grade Num: " + gradeInfo.getGradeNum()
+				+", Bit Value calculated by checkpoints: " + bitValue
+				+ ", Timestamp: "+new Date().getTime()+"}");
 
 		TranDescScoreInfo tranDescScoreInfo = (TranDescScoreInfo) session
 				.get("tranDescScoreInfo");
