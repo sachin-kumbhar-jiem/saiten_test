@@ -14,12 +14,18 @@
 <script language="JavaScript">
 	javascript:window.history.forward(1);
 </script>
+<script language="JavaScript">
+function enableLinksAndButtons(){
+	$(':button').prop('disabled', false); // Enable all the button
+	$('a').unbind('click'); // Enable all the links
+}
+</script>
 <style type="text/css">
  label { width: auto; float: none; color: red;  display: block;   }
 </style>
 
 </head>
-<body>
+<body onload="enableLinksAndButtons();">
 
 <div style="height: 100%;">
 <div id="wrapper" style="height: 100%;">
