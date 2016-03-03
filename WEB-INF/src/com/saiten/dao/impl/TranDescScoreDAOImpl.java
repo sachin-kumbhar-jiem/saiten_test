@@ -708,7 +708,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 	@Override
 	public int updateInspectFlag(final List<Integer> answerSeq,
 			final QuestionInfo questionInfo, final boolean selectAllFlag,
-			ScoreInputInfo scoreInputInfo, final Integer maxInspectGroupSeq) {
+			final ScoreInputInfo scoreInputInfo,
+			final Integer maxInspectGroupSeq) {
 		/*
 		 * final StringBuilder query = new StringBuilder();
 		 * query.append("UPDATE TranDescScore ");
@@ -909,8 +910,19 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 										.isBlank(historyIncludeCheckPoints)
 										&& !StringUtils
 												.isBlank(historyExcludeCheckPoints)) {
-									query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
-									query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+									if (scoreInputInfo
+											.getScoreHistoryInfo()
+											.getPastSkpConditions()
+											.equals(WebAppConst.SKP_AND_CONDITION)) {
+										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
+										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+
+									} else if (scoreInputInfo
+											.getScoreHistoryInfo()
+											.getPastSkpConditions()
+											.equals(WebAppConst.SKP_OR_CONDITION)) {
+										query.append("AND ((tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 OR (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0)");
+									}
 								} else {
 									if (!StringUtils
 											.isBlank(historyIncludeCheckPoints)) {
@@ -995,8 +1007,19 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 										.isBlank(currentIncludeCheckPoints)
 										&& !StringUtils
 												.isBlank(currentExcludeCheckPoints)) {
-									query.append("AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
-									query.append("AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+									if (scoreInputInfo
+											.getScoreCurrentInfo()
+											.getCurrentSkpConditions()
+											.equals(WebAppConst.SKP_AND_CONDITION)) {
+										query.append("AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
+										query.append("AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+
+									} else if (scoreInputInfo
+											.getScoreCurrentInfo()
+											.getCurrentSkpConditions()
+											.equals(WebAppConst.SKP_OR_CONDITION)) {
+										query.append("AND ((tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 OR (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0)");
+									}
 								} else {
 									if (!StringUtils
 											.isBlank(currentIncludeCheckPoints)) {

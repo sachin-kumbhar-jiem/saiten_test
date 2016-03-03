@@ -46,6 +46,7 @@ public class ScoreHistoryInfo {
 	private Date historyUpdateEndDate;
 	private boolean historyQualityCheckFlag;
 	private Integer[] historyScorerRole;
+	private String pastSkpConditions;
 
 	public Integer getHistoryUpdateDateEndYear() {
 		return historyUpdateDateEndYear;
@@ -451,4 +452,11 @@ public class ScoreHistoryInfo {
 		return data.toString();
 	}
 
+	public void setPastSkpConditions(String pastSkpConditions) {
+		this.pastSkpConditions = pastSkpConditions;
+	}
+
+	public String getPastSkpConditions() {
+		return pastSkpConditions;
+	}
 }

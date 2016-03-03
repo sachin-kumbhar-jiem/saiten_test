@@ -48,6 +48,7 @@ public class ScoreCurrentInfo {
 	private String punchText;
 	private boolean lookAfterwardsFlag;
 	private Integer[] currentScorerRole;
+	private String currentSkpConditions;
 
 	public Integer getCurrentUpdateDateEndYear() {
 		return currentUpdateDateEndYear;
@@ -405,5 +406,13 @@ public class ScoreCurrentInfo {
 				+ currentUpdateDateEndHours + ":" + currentUpdateDateEndMin);
 		data.append("}");
 		return data.toString();
+	}
+
+	public void setCurrentSkpConditions(String currentSkpConditions) {
+		this.currentSkpConditions = currentSkpConditions;
+	}
+
+	public String getCurrentSkpConditions() {
+		return currentSkpConditions;
 	}
 }

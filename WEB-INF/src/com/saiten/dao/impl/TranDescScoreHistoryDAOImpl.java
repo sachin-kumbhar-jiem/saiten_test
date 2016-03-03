@@ -2307,7 +2307,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									query.append("WHERE his2.answer_seq = tranDescScore.answer_seq ");
 									query.append(") ");
 									query.append("AND his1.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
-									
+
 									query.append(") ");
 								}
 							}
@@ -2369,7 +2369,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										countSubQuery.append(") ");
 										countSubQuery
 												.append("AND his1.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
-										
+
 										countSubQuery.append(") ");
 									}
 								}
@@ -2483,10 +2483,24 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 											.isBlank(historyIncludeCheckPoints)
 											&& !StringUtils
 													.isBlank(historyExcludeCheckPoints)) {
-										countSubQuery
-												.append("AND (t1.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
-										countSubQuery
-												.append("AND (t1.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+
+										if (scoreInputInfo
+												.getScoreHistoryInfo()
+												.getPastSkpConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											countSubQuery
+													.append("AND (t1.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
+											countSubQuery
+													.append("AND (t1.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+
+										} else if (scoreInputInfo
+												.getScoreHistoryInfo()
+												.getPastSkpConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											countSubQuery
+													.append("AND ((t1.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 OR (t1.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0)");
+										}
+
 									} else {
 										if (!StringUtils
 												.isBlank(historyIncludeCheckPoints)) {
@@ -2595,10 +2609,24 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 											.isBlank(currentIncludeCheckPoints)
 											&& !StringUtils
 													.isBlank(currentExcludeCheckPoints)) {
-										countSubQuery
-												.append("AND (t.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
-										countSubQuery
-												.append("AND (t.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+
+										if (scoreInputInfo
+												.getScoreCurrentInfo()
+												.getCurrentSkpConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											countSubQuery
+													.append("AND (t.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
+											countSubQuery
+													.append("AND (t.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+
+										} else if (scoreInputInfo
+												.getScoreCurrentInfo()
+												.getCurrentSkpConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											countSubQuery
+													.append("AND ((t.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 OR (t.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0)");
+										}
+
 									} else {
 										if (!StringUtils
 												.isBlank(currentIncludeCheckPoints)) {
@@ -2678,9 +2706,15 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									if (historyScorerRoles != null) {
 										countSubQuery
 												.append("AND t1.scorer_role_id IN :HISTORY_SCORER_ROLES   ");
-										/*countSubQuery.append(" AND tranDescScoreHistory.history_seq = ");
-										countSubQuery.append(" (SELECT MAX(history_Seq) from tran_desc_score_history as tranDescScoreHistory ");
-										countSubQuery.append("WHERE tranDescScoreHistory.answer_seq =tranDescScore.answer_seq)");*/ 
+										/*
+										 * countSubQuery.append(
+										 * " AND tranDescScoreHistory.history_seq = "
+										 * ); countSubQuery.append(
+										 * " (SELECT MAX(history_Seq) from tran_desc_score_history as tranDescScoreHistory "
+										 * ); countSubQuery.append(
+										 * "WHERE tranDescScoreHistory.answer_seq =tranDescScore.answer_seq)"
+										 * );
+										 */
 									}
 								}
 
@@ -2796,8 +2830,21 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										.isBlank(historyIncludeCheckPoints)
 										&& !StringUtils
 												.isBlank(historyExcludeCheckPoints)) {
-									query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
-									query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+
+									if (scoreInputInfo
+											.getScoreHistoryInfo()
+											.getPastSkpConditions()
+											.equals(WebAppConst.SKP_AND_CONDITION)) {
+										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
+										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+
+									} else if (scoreInputInfo
+											.getScoreHistoryInfo()
+											.getPastSkpConditions()
+											.equals(WebAppConst.SKP_OR_CONDITION)) {
+										query.append("AND ((tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 OR (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0)");
+									}
+
 								} else {
 									if (!StringUtils
 											.isBlank(historyIncludeCheckPoints)) {
@@ -2889,8 +2936,21 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										.isBlank(currentIncludeCheckPoints)
 										&& !StringUtils
 												.isBlank(currentExcludeCheckPoints)) {
-									query.append("AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
-									query.append("AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+
+									if (scoreInputInfo
+											.getScoreCurrentInfo()
+											.getCurrentSkpConditions()
+											.equals(WebAppConst.SKP_AND_CONDITION)) {
+										query.append("AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
+										query.append("AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+
+									} else if (scoreInputInfo
+											.getScoreCurrentInfo()
+											.getCurrentSkpConditions()
+											.equals(WebAppConst.SKP_OR_CONDITION)) {
+										query.append("AND ((tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 OR (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0)");
+									}
+
 								} else {
 									if (!StringUtils
 											.isBlank(currentIncludeCheckPoints)) {
@@ -2955,9 +3015,15 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							if (searchByScorerRoleId == true) {
 								if (historyScorerRoles != null) {
 									query.append("AND tranDescScoreHistory.scorer_role_id IN :HISTORY_SCORER_ROLES ");
-									/*query.append(" AND tranDescScoreHistory.history_seq = ");
-									query.append(" (SELECT MAX(history_Seq) from tran_desc_score_history as tranDescScoreHistory ");
-									query.append("WHERE tranDescScoreHistory.answer_seq =tranDescScore.answer_seq)");*/ 
+									/*
+									 * query.append(
+									 * " AND tranDescScoreHistory.history_seq = "
+									 * ); query.append(
+									 * " (SELECT MAX(history_Seq) from tran_desc_score_history as tranDescScoreHistory "
+									 * ); query.append(
+									 * "WHERE tranDescScoreHistory.answer_seq =tranDescScore.answer_seq)"
+									 * );
+									 */
 								}
 							}
 
@@ -4929,7 +4995,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									query.append("WHERE his2.answer_seq = tranDescScore.answer_seq ");
 									query.append(") ");
 									query.append("AND his1.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
-									
+
 									query.append(") ");
 								}
 							}
@@ -5024,8 +5090,20 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										.isBlank(historyIncludeCheckPoints)
 										&& !StringUtils
 												.isBlank(historyExcludeCheckPoints)) {
-									query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
-									query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+									if (scoreInputInfo
+											.getScoreHistoryInfo()
+											.getPastSkpConditions()
+											.equals(WebAppConst.SKP_AND_CONDITION)) {
+										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
+										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+
+									} else if (scoreInputInfo
+											.getScoreHistoryInfo()
+											.getPastSkpConditions()
+											.equals(WebAppConst.SKP_OR_CONDITION)) {
+										query.append("AND ((tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 OR (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0)");
+									}
+
 								} else {
 									if (!StringUtils
 											.isBlank(historyIncludeCheckPoints)) {
@@ -5116,8 +5194,21 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										.isBlank(currentIncludeCheckPoints)
 										&& !StringUtils
 												.isBlank(currentExcludeCheckPoints)) {
-									query.append("AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
-									query.append("AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+
+									if (scoreInputInfo
+											.getScoreCurrentInfo()
+											.getCurrentSkpConditions()
+											.equals(WebAppConst.SKP_AND_CONDITION)) {
+										query.append("AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
+										query.append("AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+
+									} else if (scoreInputInfo
+											.getScoreCurrentInfo()
+											.getCurrentSkpConditions()
+											.equals(WebAppConst.SKP_OR_CONDITION)) {
+										query.append("AND ((tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 OR (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0)");
+									}
+
 								} else {
 									if (!StringUtils
 											.isBlank(currentIncludeCheckPoints)) {

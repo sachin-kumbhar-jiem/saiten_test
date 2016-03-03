@@ -1,5 +1,8 @@
 package com.saiten.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author sachin
  * @version 1.0
@@ -572,5 +575,9 @@ public interface WebAppConst {
 	public static final String LOGIN_LOGOUT_REPORT = "loginLogoutReport";
 
 	public static final String TOTAL_RESULT_COUNT_SET_DEFAULT = "100";
+
+	public static final String SKP_AND_CONDITION = "skpAndCondition";
+
+	public static final String SKP_OR_CONDITION = "skpORCondition";
 
 }

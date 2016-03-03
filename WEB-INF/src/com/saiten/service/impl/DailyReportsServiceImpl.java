@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.hibernate.HibernateException;
@@ -76,12 +77,12 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 
 				List<MstDbInstance> mstDbInstanceList = mstDbInstanceDAO
 						.findAll();
-
+				
 				for (MstDbInstance mstDbInstance : mstDbInstanceList) {
 					connectionStringList.add(mstDbInstance
 							.getConnectionString());
 				}
-
+				
 				String downloadDirBasePath = textProvider.getTexts(
 						WebAppConst.APPLICATION_PROPERTIES_FILE).getString(
 						"saiten.daily.report.download.basepath");
@@ -121,6 +122,7 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 									+ textProvider
 											.getText("daily.csv.data.report.for.all.ques.csv.prefix")
 									+ WebAppConst.CSV_FILE_EXTENSION);
+
 					FileUtils.writeLines(csvfile, WebAppConst.FILE_ENCODING,
 							allQuesCountList, WebAppConst.CRLF);
 
@@ -476,8 +478,11 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 		confAndInspWaitList.add(csvHeaders.toString());
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void getReportRowsForAllQues(List allQuestionsCountList) {
 		if (!allQuestionsCountList.isEmpty()) {
+
+			Map stateMap = SaitenUtil.latestScoringStatesMap();
 
 			for (Object record : allQuestionsCountList) {
 
@@ -487,7 +492,12 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 
 				csvData.append(objectRecordArray[0]);
 				csvData.append(WebAppConst.COMMA);
-				csvData.append(objectRecordArray[1]);
+
+				if (objectRecordArray[1] != null) {
+					String stateValues = (String) stateMap.get((int) Short
+							.parseShort(objectRecordArray[1].toString()));
+					csvData.append(stateValues);
+				}
 				csvData.append(WebAppConst.COMMA);
 				csvData.append(objectRecordArray[2]);
 

@@ -329,6 +329,9 @@ function toggleStateSearch() {
 	form.currentExcludeCheckPoints.disabled = isDisable;
 	form.currentExcludeCheckPoints.className = bgClass;
 	
+	form.currSkpAndCondition.disabled=isDisable;
+	form.currSkpORCondition.disabled=isDisable;
+
 	for(i=0; i < form.currentStateList.length; i++) {
 		form.currentStateList[i].disabled = isDisable;
 	}
@@ -475,6 +478,9 @@ function toggleProcessSearch() {
 	form.historyUpdateDateEndDay.className = bgClass;
 	form.historyUpdateDateEndHours.className = bgClass;
 	form.historyUpdateDateEndMin.className = bgClass;
+	
+	form.pastSkpAndCondition.disabled=isDisable;
+	form.pastSkpORCondition.disabled=isDisable;
 	
 	if (!isDisable) {
 		defaultValidationPast();
