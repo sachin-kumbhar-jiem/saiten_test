@@ -277,8 +277,18 @@
 			   </s:else>
 		    </td>
 		    
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
+		    <td class="right_side_height_button">
+				<s:if test="userMenuIdList.contains(@com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID)">
+					<a href="showKenshuSampling.action?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID"/>&sessionClearFlag=<s:property value="@com.saiten.util.WebAppConst@TRUE"/>" id="forcedScoring" class="btn btn-primary btn-xl">
+						<s:text name="label.alt.kenshusampling"></s:text>				
+					</a>
+				</s:if><s:else>
+					<p class="btn btn-disabled"><s:text name="label.alt.kenshusampling"></s:text></p>
+				</s:else>
+			</td>
+		    
+			<!-- <td>&nbsp;</td>
+			<td>&nbsp;</td> -->
 		</tr>
 		
 		</table>

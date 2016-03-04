@@ -344,7 +344,7 @@
    		<property name="scoreService" ref="scoreService" />
    	</bean>
    	
-   	<bean id="kenshuSamplingService" class="com.saiten.service.impl.KenshuSamplingServiceImpl" scope="request">
+   	<bean id="kenshuSamplingService" class="com.saiten.service.impl.KenshuSamplingServiceImpl">
    		<property name="tranDescScoreDAO" ref="tranDescScoreDAO" />
    		<property name="tranAcceptanceDao" ref="tranAcceptanceDao"></property>
    	</bean>
@@ -353,22 +353,22 @@
    		<property name="markKenshuRecordService" ref="markKenshuRecordService"></property>
    	</bean>
    	
-   	<bean id="markKenshuRecordService" class=" com.saiten.service.impl.MarkKenshuRecordServiceImpl" scope="request">
+   	<bean id="markKenshuRecordService" class=" com.saiten.service.impl.MarkKenshuRecordServiceImpl">
    		<property name="tranAcceptanceDao" ref="tranAcceptanceDao"></property>
    		<property name="tranAcceptanceHistoryDao" ref="tranAcceptanceHistoryDao"></property>
    	</bean>
   	
-  	<bean id="tranAcceptanceDao" class="com.saiten.dao.impl.TranAcceptanceDaoImpl" scope="request">
+  	<bean id="tranAcceptanceDao" class="com.saiten.dao.impl.TranAcceptanceDaoImpl">
   	</bean>
   	
-  	<bean id="tranAcceptanceHistoryDao" class="com.saiten.dao.impl.TranAcceptanceHistoryDaoImpl" scope="request">
+  	<bean id="tranAcceptanceHistoryDao" class="com.saiten.dao.impl.TranAcceptanceHistoryDaoImpl">
   	</bean>
   	
 	<bean id="dailyReportAction" class="com.saiten.action.DailyReportDownloadAction" scope="request"> 
 		<property name="dailyReportsService" ref="dailyReportsService" /> 
    	</bean>
    	
-   	<bean id="dailyReportsService" class="com.saiten.service.impl.DailyReportsServiceImpl" scope="request"> 
+   	<bean id="dailyReportsService" class="com.saiten.service.impl.DailyReportsServiceImpl"> 
    	    <property name="tranDescScoreDAO" ref="tranDescScoreDAO" />
    	    <property name="mstDbInstanceDAO" ref="mstDbInstanceDAO" />
    	    <property name="dailyReportsInfo" ref="dailyReportsInfo" />

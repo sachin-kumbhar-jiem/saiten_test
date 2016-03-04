@@ -6,6 +6,12 @@ $(document).ready(function(){
 	
 	if($("#acceptanceDisplayRadio").is(':checked') ) {
 		changeKenshuSamplingBlock ();
+		if($("input:radio[id=subjectCodeA]:checked").length == 0){
+			$("input:radio[id=subjectCodeA]:first").attr('checked', true);
+		}
+	   if($("input:radio[id=recordSearchCriteria]:checked").length == 0){
+			$("input:radio[id=recordSearchCriteria]:first").attr('checked', true);
+		}
 	}
 	
 	if($("#kenshuSamplingSearch").is(':unchecked') && $("#acceptanceDisplayRadio").is(':unchecked')) {

@@ -49,64 +49,131 @@
 		<td class="table-center-menu-td" width="70%">
 			<s:form name="kenshuSamplingForm" id="kenshuSamplingForm" method="post" action="kenshuSampling">
 		 	<div class="search_box">
-		 	<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_SEARCH">
-				<h1 align="left"><input type="radio" class="searchType" name="kenshuSamplingSearch" id="kenshuSamplingSearch" checked="checked" value="<s:property value="@com.saiten.util.WebAppConst@KENSHU_SAMPLING_SEARCH" />" ><s:text name="label.kenshu.sampling.search" /></h1>
-			</s:if>
-			<s:else>
-				<h1 align="left"><input type="radio" class="searchType" name="kenshuSamplingSearch" id="kenshuSamplingSearch" value="<s:property value="@com.saiten.util.WebAppConst@KENSHU_SAMPLING_SEARCH" />" ><s:text name="label.kenshu.sampling.search" /></h1>
-			</s:else>
-				 <table class="search_form search_table_width">
-				 	<tr>
-						<th class="partition">
-							<s:text name="label.scoresearch.subjectnamelist" />
-						</th>
-						<td colspan="5"> 
-							<c:forEach var="entry" items="${scoreSearchInfo.subjectNameList}" varStatus="subjectNameListStatus">
-								<c:set var="subjectNameKey" value="${entry.key}" />
-								<c:set var="roleId" value="${sessionScope.scorerInfo.roleId}"></c:set>
-								<c:if test="${!subjectNameListStatus.first}">
-									<c:if test="${not (schoolType eq fn:split(subjectNameKey, '-')[0])}">
-										</br>
-									</c:if>
-								</c:if>							
-								<c:set var="sessionSubjectCode" value="${sessionScope.kenshuSamplingInfo.subjectCode}" />		
-								<c:choose>
-									<c:when test="${((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
-										<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
-									</c:when>
-								<c:otherwise>
+		 	<s:if test="#session.scorerInfo.roleId == @com.saiten.util.WebAppConst@KENSHU_ROLE_ID 
+		|| #session.scorerInfo.roleId == @com.saiten.util.WebAppConst@ADMIN_ROLE_ID">
+			 	<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_SEARCH">
+					<h1 align="left"><input type="radio" class="searchType" name="kenshuSamplingSearch" id="kenshuSamplingSearch" checked="checked" value="<s:property value="@com.saiten.util.WebAppConst@KENSHU_SAMPLING_SEARCH" />" ><s:text name="label.kenshu.sampling.search" /></h1>
+				</s:if>
+				<s:else>
+					<h1 align="left"><input type="radio" class="searchType" name="kenshuSamplingSearch" id="kenshuSamplingSearch" value="<s:property value="@com.saiten.util.WebAppConst@KENSHU_SAMPLING_SEARCH" />" ><s:text name="label.kenshu.sampling.search" /></h1>
+				</s:else>
+					 <table class="search_form search_table_width">
+					 	<tr>
+							<th class="partition">
+								<s:text name="label.scoresearch.subjectnamelist" />
+							</th>
+							<td colspan="5"> 
+								<c:forEach var="entry" items="${scoreSearchInfo.subjectNameList}" varStatus="subjectNameListStatus">
+									<c:set var="subjectNameKey" value="${entry.key}" />
+									<c:set var="roleId" value="${sessionScope.scorerInfo.roleId}"></c:set>
+									<c:if test="${!subjectNameListStatus.first}">
+										<c:if test="${not (schoolType eq fn:split(subjectNameKey, '-')[0])}">
+											</br>
+										</c:if>
+									</c:if>							
+									<c:set var="sessionSubjectCode" value="${sessionScope.kenshuSamplingInfo.subjectCode}" />		
 									<c:choose>
-										<c:when test="${fn:contains(sessionSubjectCode, fn:split(subjectNameKey, '-')[1])}">
-											<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCode" checked="checked" value="${fn:split(entry.key, '-')[1]}">&nbsp;<c:out value="${entry.value}"/>
+										<c:when test="${((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
+											<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
 										</c:when>
 									<c:otherwise>
-											<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}">&nbsp;<c:out value="${entry.value}"/>													
+										<c:choose>
+											<c:when test="${fn:contains(sessionSubjectCode, fn:split(subjectNameKey, '-')[1])}">
+												<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCode" checked="checked" value="${fn:split(entry.key, '-')[1]}">&nbsp;<c:out value="${entry.value}"/>
+											</c:when>
+										<c:otherwise>
+												<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}">&nbsp;<c:out value="${entry.value}"/>													
+										</c:otherwise>
+										</c:choose>
 									</c:otherwise>
 									</c:choose>
-								</c:otherwise>
-								</c:choose>
-														
-										<c:set var="schoolType" value="${fn:split(subjectNameKey, '-')[0]}" />
-											</c:forEach>
-										</td>
-					</tr>
-					<tr>
-						<th class="partition">
-							<s:text name="label.scoresearch.questionnumber" />
-						</th>
-						<td class="search_form_class1" colspan="5" style="padding-left: 20px;">
-							<s:textfield id="questionNum" name="kenshuSamplingInfo.questionNum" maxlength="5" size="15" value="%{#session.kenshuSamplingInfo.questionNum}" />
-						</td>
-					</tr>
-					<tr>
-						<th class="partition">
-							<s:text name="label.scoresearch.resultcount" />
-						</th>
-						<td class="search_form_class1" colspan="5" style="padding-left: 20px;">
-							<s:textfield id="resultCount" name="kenshuSamplingInfo.resultCount" maxlength="6" size="15" value="%{#session.kenshuSamplingInfo.resultCount}" />
-						</td>
-				</table>
-			<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
+															
+											<c:set var="schoolType" value="${fn:split(subjectNameKey, '-')[0]}" />
+												</c:forEach>
+											</td>
+						</tr>
+						<tr>
+							<th class="partition">
+								<s:text name="label.scoresearch.questionnumber" />
+							</th>
+							<td class="search_form_class1" colspan="5" style="padding-left: 20px;">
+								<s:textfield id="questionNum" name="kenshuSamplingInfo.questionNum" maxlength="5" size="15" value="%{#session.kenshuSamplingInfo.questionNum}" />
+							</td>
+						</tr>
+						<tr>
+							<th class="partition">
+								<s:text name="label.scoresearch.resultcount" />
+							</th>
+							<td class="search_form_class1" colspan="5" style="padding-left: 20px;">
+								<s:textfield id="resultCount" name="kenshuSamplingInfo.resultCount" maxlength="6" size="15" value="%{#session.kenshuSamplingInfo.resultCount}" />
+							</td>
+					</table>
+			</s:if>
+			
+			
+			<s:if test="#session.scorerInfo.roleId == @com.saiten.util.WebAppConst@WG_ROLE_ID" >
+				<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_SEARCH">
+					<h1 align="left"><input type="radio" class="searchType" name="kenshuSamplingSearch" id="kenshuSamplingSearch" checked="checked" disabled="disabled" value="<s:property value="@com.saiten.util.WebAppConst@KENSHU_SAMPLING_SEARCH" />" ><s:text name="label.kenshu.sampling.search" /></h1>
+				</s:if>
+				<s:else>
+					<h1 align="left"><input type="radio" class="searchType" name="kenshuSamplingSearch" id="kenshuSamplingSearch" disabled="disabled" value="<s:property value="@com.saiten.util.WebAppConst@KENSHU_SAMPLING_SEARCH" />" ><s:text name="label.kenshu.sampling.search" /></h1>
+				</s:else>
+					 <table class="search_form search_table_width">
+					 	<tr >
+							<th class="partition">
+								<s:text name="label.scoresearch.subjectnamelist" />
+							</th>
+							<td colspan="5"> 
+								<c:forEach var="entry" items="${scoreSearchInfo.subjectNameList}" varStatus="subjectNameListStatus">
+									<c:set var="subjectNameKey" value="${entry.key}" />
+									<c:set var="roleId" value="${sessionScope.scorerInfo.roleId}"></c:set>
+									<c:if test="${!subjectNameListStatus.first}">
+										<c:if test="${not (schoolType eq fn:split(subjectNameKey, '-')[0])}">
+											</br>
+										</c:if>
+									</c:if>							
+									<c:set var="sessionSubjectCode" value="${sessionScope.kenshuSamplingInfo.subjectCode}" />		
+									<c:choose>
+										<c:when test="${((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
+											<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
+										</c:when>
+									<c:otherwise>
+										<c:choose>
+											<c:when test="${fn:contains(sessionSubjectCode, fn:split(subjectNameKey, '-')[1])}">
+												<input type="radio" disabled="disabled" id="subjectCode" name="kenshuSamplingInfo.subjectCode" checked="checked" value="${fn:split(entry.key, '-')[1]}">&nbsp;<c:out value="${entry.value}"/>
+											</c:when>
+										<c:otherwise>
+												<input type="radio" id="subjectCode" disabled="disabled" name="kenshuSamplingInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}">&nbsp;<c:out value="${entry.value}"/>													
+										</c:otherwise>
+										</c:choose>
+									</c:otherwise>
+									</c:choose>
+															
+											<c:set var="schoolType" value="${fn:split(subjectNameKey, '-')[0]}" />
+												</c:forEach>
+											</td>
+						</tr>
+						<tr>
+							<th class="partition">
+								<s:text name="label.scoresearch.questionnumber" />
+							</th>
+							<td class="search_form_class1" colspan="5" style="padding-left: 20px;">
+								<s:textfield id="questionNum" disabled="true" name="kenshuSamplingInfo.questionNum" maxlength="5" size="15" value="%{#session.kenshuSamplingInfo.questionNum}" />
+							</td>
+						</tr>
+						<tr>
+							<th class="partition">
+								<s:text name="label.scoresearch.resultcount" />
+							</th>
+							<td class="search_form_class1" colspan="5" style="padding-left: 20px;">
+								<s:textfield id="resultCount" name="kenshuSamplingInfo.resultCount" maxlength="6" size="15" value="%{#session.kenshuSamplingInfo.resultCount}" />
+							</td>
+					</table>
+			</s:if>
+			
+			
+			<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY 
+			|| #session.scorerInfo.roleId == @com.saiten.util.WebAppConst@WG_ROLE_ID">
 				<h1 align="left"><input type="radio" class="searchType" name="acceptanceDisplayRadio" id="acceptanceDisplayRadio" checked="checked" value="<s:property value="@com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY" />"><s:text name="label.kenshu.acceptance" /></h1>
 			</s:if>
 			<s:else>
@@ -128,10 +195,6 @@
 									</c:if>
 								</c:if>							
 								<c:set var="sessionSubjectCode" value="${sessionScope.acceptanceDisplayInfo.subjectCode}" />
-								<script>
-									//alert("work");
-									alert(sessionSubjectCode);
-								</script>
 								<c:choose>
 									<c:when test="${((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
 										<input type="radio" id="subjectCodeA" name="acceptanceDisplayInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
