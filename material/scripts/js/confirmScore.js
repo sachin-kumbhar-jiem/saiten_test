@@ -12,7 +12,11 @@ $(document).ready(function(){
 		//$('#score').prop('disabled', false);
 		//$("#score").removeClass('btn-disabled');
 		enableLinksAndButtons();
-		$("#0").focus();
+		if ($('#0').prop("disabled") == false) {
+			$("#0").focus();
+		}else{
+			$("#approve").focus();
+		}
 	});
 	
 	/*$('#registerScore').keypress(function(e) {

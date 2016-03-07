@@ -10,6 +10,14 @@ function disableLinksAndButtons(){
 	$('a').bind('click', disableLink); // Disable all the links
 }
 
+function onloadScoringScreen(){
+	enableLinksAndButtons();
+	if ($('#0').prop("disabled") == false) {
+		$("#0").focus();
+	}else{
+		$('#approve').focus();
+	}
+}
 //Our validation script will go here.
 $(function () {
 	if(($('#score').length>0) || ($('#approve').length>0) || ($('#deny').length>0)){
@@ -30,7 +38,7 @@ var selectedButtonId;
 
 $(document).ready(function() {
 	//set default focus on '0' checkpoint on every answer loading.
-	$("#0").focus();
+	
 	//disable all links & buttons on scoring screen, while everytime loading new answer.
 	disableLinksAndButtons();
 	$('#processDetails').click(function(){
@@ -369,6 +377,8 @@ $(document).ready(function() {
 		
 		if($("#next").length > 0){
 			$("#next").focus();
+		}else if($("#prev").length > 0){
+			$("#prev").focus();
 		}
 		
 		$('html, body').animate({ scrollTop: 0 }, 0);
