@@ -5,7 +5,12 @@ $(document).ready(function(){
 		//$("#registerScore").prop('disabled', true);
 		//$("#registerScore").addClass('btn-disabled');
 		disableLinksAndButtons();
-		
+		if($('#approveOrDeny').val() == "deny") {
+			var denyCategorySeq = $("input[name='denyCategory']:checked").val();
+			location.href = 'registerScore.action?denyCategorySeq='+denyCategorySeq;
+		}else {
+			location.href='registerScore.action';
+		}
 	});
 	
 	$("#cancel").click(function(){
@@ -30,7 +35,7 @@ $(document).ready(function(){
 	});*/
 });
 
-$(document).ready(function(){
+/*$(document).ready(function(){
 	$("#registerScore").click(function()	{
 		if($('#approveOrDeny').val() == "deny") {
 			var denyCategorySeq = $("input[name='denyCategory']:checked").val();
@@ -40,7 +45,7 @@ $(document).ready(function(){
 		}
 		
 	});		
-});
+});*/
 
 
 function cancelScoring(){
