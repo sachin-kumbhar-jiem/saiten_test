@@ -135,7 +135,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 		MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
 		log.info(scorerInfo.getScorerId() + "-" + selectedMenuId + "-"
 				+ "Search Screen loading.");
-		String pucnText = (String) session.get("punchtext");
+		String pucnText = (String) session.get("punchText");
 		if (selectedMenuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 			session.remove("updatedCount");
 		}

@@ -9,8 +9,20 @@ $(function () {
 	//setDefaultCB(); 
 });
 
+
+
 //Our validation script will go here.
 $(document).ready(function(){
+
+	    $("#scoreSearchForm").keydown(function (e) {
+	        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+	        	$('#scoreSearchForm').focus();
+	            $("#search").click();
+	            return false;
+	        } else {
+	            return true;
+	        }
+	    });
 	
 	$("#search").click(function()
 		{
