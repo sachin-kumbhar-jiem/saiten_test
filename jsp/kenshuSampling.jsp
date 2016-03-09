@@ -245,7 +245,7 @@
 									
 								<c:choose>
 									<c:when test="${fn:contains(sessionSearchCriteria, searchCriteriaKey)}">
-										<input type="radio" id="acceptanceDisplayInfo.recordSearchCriteria" name="acceptanceDisplayInfo.recordSearchCriteria" checked="checked" value="${criteria.value}">&nbsp;<c:out value="${criteria.value}"/>
+										<input type="radio" id="recordSearchCriteria" name="acceptanceDisplayInfo.recordSearchCriteria" checked="checked" value="${criteria.value}">&nbsp;<c:out value="${criteria.value}"/>
 									</c:when>
 								<c:otherwise>
 										<input type="radio" id="recordSearchCriteria" name="acceptanceDisplayInfo.recordSearchCriteria" value="${criteria.value}">&nbsp;<c:out value="${criteria.value}"/>													
