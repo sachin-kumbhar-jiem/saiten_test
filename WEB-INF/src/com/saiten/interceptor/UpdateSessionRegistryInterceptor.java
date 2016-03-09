@@ -6,9 +6,7 @@ package com.saiten.interceptor;
 import java.util.Date;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.context.ContextLoader;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -30,8 +28,9 @@ public class UpdateSessionRegistryInterceptor extends AbstractInterceptor {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Autowired
-	private SessionRegistry sessionRegistry;
+	/*
+	 * @Autowired private SessionRegistry sessionRegistry;
+	 */
 
 	/*
 	 * (non-Javadoc)
@@ -130,7 +129,8 @@ public class UpdateSessionRegistryInterceptor extends AbstractInterceptor {
 		return result;
 	}
 
-	public void setSessionRegistry(SessionRegistry sessionRegistry) {
-		this.sessionRegistry = sessionRegistry;
-	}
+	/*
+	 * public void setSessionRegistry(SessionRegistry sessionRegistry) {
+	 * this.sessionRegistry = sessionRegistry; }
+	 */
 }

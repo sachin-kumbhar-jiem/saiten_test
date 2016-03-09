@@ -7,8 +7,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.SessionAware;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.saiten.exception.SaitenRuntimeException;
@@ -58,9 +56,11 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 
 	@SuppressWarnings("unchecked")
 	public String doRegister() {
-
-		PlatformTransactionManager platformTransactionManager = null;
-		TransactionStatus transactionStatus = null;
+		// No need of transaction management, It is handled in procedure.
+		/*
+		 * PlatformTransactionManager platformTransactionManager = null;
+		 * TransactionStatus transactionStatus = null;
+		 */
 
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 		Integer historyRecordCount = null;
@@ -87,7 +87,9 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 			}
 			log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
 					+ "Record going to score \n TranDescScoreInfo: "
-					+ tranDescScoreInfo + " \n Grade Seq: "+gradeSeq+", Grade Num: "+gradeNum+", Timestamp: "+new Date().getTime()+"}");
+					+ tranDescScoreInfo + " \n Grade Seq: " + gradeSeq
+					+ ", Grade Num: " + gradeNum + ", Timestamp: "
+					+ new Date().getTime() + "}");
 			Short denyCategory = null;
 			if (approveOrDeny.equals(WebAppConst.DENY)) {
 				denyCategory = SaitenUtil
@@ -95,10 +97,12 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 			}
 			historyRecordCount = (Integer) session.get("historyRecordCount");
 
-			platformTransactionManager = saitenTransactionManager
-					.getTransactionManger();
-			transactionStatus = saitenTransactionManager
-					.beginTransaction(platformTransactionManager);
+			/*
+			 * platformTransactionManager = saitenTransactionManager
+			 * .getTransactionManger(questionInfo.getConnectionString());
+			 * transactionStatus = saitenTransactionManager
+			 * .beginTransaction(platformTransactionManager);
+			 */
 			List<Integer> qcAnswerSeqList = new ArrayList<Integer>();
 			qcAnswerSeqList = (List<Integer>) session.get("qcAnswerSeqList");
 			Boolean isQcRecord = false;
@@ -170,7 +174,7 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 				}
 
 			}
-			platformTransactionManager.commit(transactionStatus);
+			/* platformTransactionManager.commit(transactionStatus); */
 			// Modify session info after answer evaluation
 			updateSessionInfo(tranDescScoreInfo);
 
@@ -180,13 +184,17 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 					- logActionStartTime.getTime();
 			log.info(actionName + "-Total: " + total);
 		} catch (SaitenRuntimeException we) {
-			if (platformTransactionManager != null)
-				platformTransactionManager.rollback(transactionStatus);
+			/*
+			 * if (platformTransactionManager != null)
+			 * platformTransactionManager.rollback(transactionStatus);
+			 */
 
 			throw we;
 		} catch (Exception e) {
-			if (platformTransactionManager != null)
-				platformTransactionManager.rollback(transactionStatus);
+			/*
+			 * if (platformTransactionManager != null)
+			 * platformTransactionManager.rollback(transactionStatus);
+			 */
 
 			throw new SaitenRuntimeException(
 					ErrorCode.REGISTER_SCORE_ACTION_EXCEPTION, e);

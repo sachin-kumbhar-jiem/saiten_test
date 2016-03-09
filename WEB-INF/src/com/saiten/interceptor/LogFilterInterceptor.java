@@ -10,6 +10,7 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.info.MstScorerInfo;
+import com.saiten.util.ErrorCode;
 
 /**
  * @author sachin
@@ -42,6 +43,28 @@ public class LogFilterInterceptor extends AbstractInterceptor implements
 		} catch (SaitenRuntimeException e) {
 			log.info("================= LogFilterInterceptor =================== ");
 			String errorCode = e.getErrorCode();
+
+			MstScorerInfo scorerInfo = (MstScorerInfo) request.getSession()
+					.getAttribute("scorerInfo");
+
+			if (scorerInfo != null) {
+				String scoreId = scorerInfo.getScorerId();
+
+				log.error("[errorcode=" + errorCode + ":scoreId=" + scoreId
+						+ "]", e.getCause());
+			} else if (errorCode != null) {
+				log.error("[errorcode=" + errorCode + "]", e.getCause());
+			} else {
+				log.error("Saiten LogFilterInterceptor error");
+			}
+
+			// errorCode to be displayed on error page
+			request.setAttribute("errorCode", errorCode);
+
+			return "error";
+		} catch (Exception e) {
+			log.info("================= LogFilterInterceptor =================== ");
+			String errorCode = ErrorCode.EXCEPTION;
 
 			MstScorerInfo scorerInfo = (MstScorerInfo) request.getSession()
 					.getAttribute("scorerInfo");

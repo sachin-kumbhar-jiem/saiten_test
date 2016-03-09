@@ -12,6 +12,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.web.context.ContextLoader;
 
+import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.info.ScorerAccessLogInfo;
@@ -149,14 +150,17 @@ public class UnlockAnswerUtil implements HttpSessionListener {
 			String connectionString, Integer answerSeq) {
 		PlatformTransactionManager platformTransactionManager = null;
 		TransactionStatus transactionStatus = null;
+		boolean rollbackFlag = true;
 		try {
 			ApplicationContext ctx = ContextLoader
 					.getCurrentWebApplicationContext();
 
 			saitenTransactionManager = (SaitenTransactionManager) ctx
 					.getBean("saitenTransactionManager");
+			QuestionInfo questionInfo = (QuestionInfo) SaitenUtil.getSession()
+					.get("questionInfo");
 			platformTransactionManager = saitenTransactionManager
-					.getTransactionManger();
+					.getTransactionManger(questionInfo.getConnectionString());
 			transactionStatus = saitenTransactionManager
 					.beginTransaction(platformTransactionManager);
 
@@ -166,11 +170,23 @@ public class UnlockAnswerUtil implements HttpSessionListener {
 					.getBean("scoreService");
 			scoreService.unlockAnswer(questionSeq, lockBy, connectionString,
 					answerSeq);
-			platformTransactionManager.commit(transactionStatus);
+			try {
+				platformTransactionManager.commit(transactionStatus);
+			} catch (Exception e) {
+				rollbackFlag = false;
+				throw new Exception();
+			}
 
-		} catch (Exception e) {
-			if (platformTransactionManager != null)
+		} catch (SaitenRuntimeException we) {
+			if ((platformTransactionManager != null) && (rollbackFlag == true))
 				platformTransactionManager.rollback(transactionStatus);
+			throw we;
+		} catch (Exception e) {
+			if ((platformTransactionManager != null) && (rollbackFlag == true))
+				platformTransactionManager.rollback(transactionStatus);
+
+			throw new SaitenRuntimeException(ErrorCode.UNLOCK_ANSWER_EXCEPTION,
+					e);
 		}
 		return "success";
 	}

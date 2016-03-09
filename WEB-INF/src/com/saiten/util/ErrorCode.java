@@ -124,29 +124,33 @@ public interface ErrorCode {
 	public static final String LOOK_AFTERWARDS_HIBERNATE_EXCEPTION = "S001662";
 
 	public static final String LOOK_AFTERWARDS_ACTION_EXCEPTION = "S001661";
-	
+
 	public static final String WRITTING_FILE_NOT_FOUND_EXCEPTION = "S001701";
-	
+
 	public static final String DOWNLOAD_DAILY_SCORING_SUMMARY_REPORT_ACTION_EXCEPTION = "S001801";
-	
+
 	public static final String DOWNLOAD_DAILY_SCORING_SUMMARY_REPORT_HIBERNATE_EXCEPTION = "S001802";
 
 	public static final String DOWNLOAD_DAILY_SCORING_SUMMARY_REPORT_REPORT_SERVICE_EXCEPTION = "S001803";
-	
+
 	public static final String DOWNLOAD_REPORT_ONLOAD_ACTION_EXCEPTION = "S001811";
-	
+
 	public static final String INSPECTION_GROUP_SEQ_SELECTION_ACTION_EXCEPTION = "S001901";
-	
+
 	public static final String REGISTER_DENY_HIBERNATE_EXCEPTION = "S002000";
-	
+
 	public static final String REGISTER_DENY_SERVICE_EXCEPTION = "S002001";
-	
+
 	public static final String KENSHU_RECORD_SERVICE_EXCEPTION = "S002002";
-	
-	public static final String DOWNLOAD_DAILY_REPORT_HIBERNATE_EXCEPTION="S001822";
-	
-	public static final String DOWNLOAD_DAILY_REPORT_SERVICE_EXCEPTION="S001823";
-	
-	public static final String DOWNLOAD_DAILY_REPORT_ACTION_EXCEPTION ="S001821";
+
+	public static final String DOWNLOAD_DAILY_REPORT_HIBERNATE_EXCEPTION = "S001822";
+
+	public static final String DOWNLOAD_DAILY_REPORT_SERVICE_EXCEPTION = "S001823";
+
+	public static final String DOWNLOAD_DAILY_REPORT_ACTION_EXCEPTION = "S001821";
+
+	public static final String UNLOCK_ANSWER_EXCEPTION = "S001921";
+
+	public static final String EXCEPTION = "E100000";
 
 }

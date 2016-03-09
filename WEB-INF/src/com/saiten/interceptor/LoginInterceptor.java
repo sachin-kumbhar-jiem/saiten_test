@@ -7,9 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.StrutsStatics;
 import org.apache.struts2.dispatcher.SessionMap;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.context.ContextLoader;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -27,8 +25,9 @@ public class LoginInterceptor extends AbstractInterceptor {
 
 	private static final String LOGIN_ATTEMPT = "loginAttempt";
 
-	@Autowired
-	private SessionRegistry sessionRegistry;
+	/*
+	 * @Autowired private SessionRegistry sessionRegistry;
+	 */
 
 	@SuppressWarnings("rawtypes")
 	public String intercept(ActionInvocation invocation) throws Exception {
@@ -86,8 +85,9 @@ public class LoginInterceptor extends AbstractInterceptor {
 		}
 	}
 
-	public void setSessionRegistry(SessionRegistry sessionRegistry) {
-		this.sessionRegistry = sessionRegistry;
-	}
+	/*
+	 * public void setSessionRegistry(SessionRegistry sessionRegistry) {
+	 * this.sessionRegistry = sessionRegistry; }
+	 */
 
 }

@@ -8,8 +8,6 @@ import java.util.Map;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.SessionAware;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.saiten.exception.SaitenRuntimeException;
@@ -51,9 +49,11 @@ public class RegisterPendingAction extends ActionSupport implements
 
 	@SuppressWarnings("unchecked")
 	public String doRegister() {
-
-		PlatformTransactionManager platformTransactionManager = null;
-		TransactionStatus transactionStatus = null;
+		// No need of transaction management, It is handled in procedure.
+		/*
+		 * PlatformTransactionManager platformTransactionManager = null;
+		 * TransactionStatus transactionStatus = null;
+		 */
 
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 
@@ -70,10 +70,12 @@ public class RegisterPendingAction extends ActionSupport implements
 			Short pendingCategory = SaitenUtil
 					.getPendingCategoryByPendingCategorySeq(pendingCategorySeq);
 
-			platformTransactionManager = saitenTransactionManager
-					.getTransactionManger();
-			transactionStatus = saitenTransactionManager
-					.beginTransaction(platformTransactionManager);
+			/*
+			 * platformTransactionManager = saitenTransactionManager
+			 * .getTransactionManger(questionInfo.getConnectionString());
+			 * transactionStatus = saitenTransactionManager
+			 * .beginTransaction(platformTransactionManager);
+			 */
 			List<Integer> qcAnswerSeqList = new ArrayList<Integer>();
 			qcAnswerSeqList = (List<Integer>) session.get("qcAnswerSeqList");
 			Boolean isQcRecord = false;
@@ -132,19 +134,23 @@ public class RegisterPendingAction extends ActionSupport implements
 
 			}
 
-			platformTransactionManager.commit(transactionStatus);
+			/* platformTransactionManager.commit(transactionStatus); */
 
 			// Remove tranDescScoreInfo from session to load new answer
 			updateSessionInfo(tranDescScoreInfo);
 
 		} catch (SaitenRuntimeException we) {
-			if (platformTransactionManager != null)
-				platformTransactionManager.rollback(transactionStatus);
+			/*
+			 * if (platformTransactionManager != null)
+			 * platformTransactionManager.rollback(transactionStatus);
+			 */
 
 			throw we;
 		} catch (Exception e) {
-			if (platformTransactionManager != null)
-				platformTransactionManager.rollback(transactionStatus);
+			/*
+			 * if (platformTransactionManager != null)
+			 * platformTransactionManager.rollback(transactionStatus);
+			 */
 
 			throw new SaitenRuntimeException(
 					ErrorCode.REGISTER_PENDING_ACTION_EXCEPTION, e);

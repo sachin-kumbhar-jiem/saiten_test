@@ -163,7 +163,9 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 
 				// invalidate session
 				((SessionMap) session).invalidate();
-			} catch (Exception e) {
+			} catch (SaitenRuntimeException we) {
+				throw we;
+			}catch (Exception e) {
 				throw new SaitenRuntimeException(
 						ErrorCode.LOGOUT_ACTION_EXCEPTION, e);
 			}
