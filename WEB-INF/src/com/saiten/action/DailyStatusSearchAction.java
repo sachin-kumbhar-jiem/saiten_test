@@ -58,6 +58,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 	private String selectedMenuId;
 	List<DailyStatusReportListInfo> dailyStatusReportList;
 	List<DailyStatusSearchScorerInfo> dailyStatusSearchScorerInfo;
+	private List<DailyStatusReportListInfo> markValueWiseReportList;
 
 	@SuppressWarnings("rawtypes")
 	public String onLoad() {
@@ -269,6 +270,11 @@ public class DailyStatusSearchAction extends ActionSupport implements
 			pendingCategoryWiseReportList = dailyStatusSearchService
 					.getPendingCategoryWiseAnswerDetails(questionSeq,
 							questionInfo.getConnectionString());
+			if (WebAppConst.SCORE_TYPE[3].equals(questionInfo.getScoreType())) {
+				markValueWiseReportList = dailyStatusSearchService
+						.getMarkValueWiseAnswerDetails(questionSeq,
+								questionInfo.getConnectionString(), questionType);
+			}
 			log.info(mstScorerInfo.getScorerId()
 					+ "-"
 					+ sessionQuestionInfo.getMenuId()
@@ -276,6 +282,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 					+ "Loaded daily status detail report for selected question. \n Search Criteria: -{ Subject Code: "
 					+ questionInfo.getSubjectCode() + ", Question No.: "
 					+ questionInfo.getQuestionNum() + "}");
+			session.put("questionInfo", questionInfo);
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -567,6 +574,15 @@ public class DailyStatusSearchAction extends ActionSupport implements
 	 */
 	public void setSelectedMenuId(String selectedMenuId) {
 		this.selectedMenuId = selectedMenuId;
+	}
+
+	public List<DailyStatusReportListInfo> getMarkValueWiseReportList() {
+		return markValueWiseReportList;
+	}
+
+	public void setMarkValueWiseReportList(
+			List<DailyStatusReportListInfo> markValueWiseReportList) {
+		this.markValueWiseReportList = markValueWiseReportList;
 	}
 
 }

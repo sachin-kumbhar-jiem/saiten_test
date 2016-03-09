@@ -205,6 +205,103 @@
 				</tbody>
 			</table>
 			<br/><br/>
+			
+			
+			<s:if test="#session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[3]">
+			   <table class="displayTable" style="width: 100%;">
+				 <thead>
+					 <tr style="height: 25px;">
+						 <th colspan="18" style="padding-left: 10px;text-align: left;">
+							<s:text name="dailyStatusQuestionWise.report.title.markvalue.details"/>
+						 </th>
+					 </tr>
+					<tr style="height: 20px;">
+						<th style="width:5%;" rowspan="2"><s:text name="label.markvalue"/></th>
+						<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.confirm"/></th>
+						<s:if test="#session.questionType == @com.saiten.util.WebAppConst@LONG_TYPE">
+							<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.checking.scoring.wait"/></th>
+						</s:if><s:else>
+							<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.second.time.scoring.wait"/></th>
+						</s:else>
+						<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.inspection.scoring.wait"/></th>
+						<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.denial.scoring.wait"/></th>
+						<s:if test="!(#session.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE) && !(#session.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE)">
+							<th style="width:5%;" colspan="9"><s:text name="dailyStatusSearch.report.title.first.time.scoring.temp"/></th>
+						</s:if><s:else>
+							<th style="width:5%;" colspan="8"><s:text name="dailyStatusSearch.report.title.first.time.scoring.temp"/></th>
+						</s:else>
+						<s:if test="!(#session.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE) && !(#session.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE)">
+							<th style="width:5%;" colspan="2"><s:text name="dailyStatusSearch.report.scorerwise.common.title.cheking"/></th>
+						</s:if>	
+						<th style="width:5%;" colspan="2"><s:text name="dailyStatusSearch.report.scorerwise.title.inespection.menu"/></th>
+					</tr>
+					<tr style="height: 20px;">
+						<th style="width:4%;"><s:text name="dailyStatusQuestionWise.report.title.first.time"/></th>
+						<th style="width:4%;"><s:text name="dailyStatusQuestionWise.report.title.second.time"/></th>
+						<th style="width:5%;"><s:text name="btn.scoring.alt.pending"/></th>
+						<th style="width:5%;"><s:text name="dailyStatusQuestionWise.report.title.mismatch"/></th>
+						<s:if test="!(#session.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE) && !(#session.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE)">
+							<th style="width:5%;"><s:text name="dailyStatusQuestionWise.report.title.outofboundary"/></th>
+						</s:if>
+						<th style="width:5%;"><s:text name="label.deny"/></th>
+						<th style="width:5%;"><s:text name="label.scoresearch.gradenotavailable"/></th>
+						<th style="width:5%;"><s:text name="dailyStatusQuestionWise.report.title.scoreSampling"/></th>
+						<th style="width:5%;"><s:text name="dailyStatusQuestionWise.report.title.forced"/></th>
+						<s:if test="!(#session.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE) && !(#session.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE)">
+							<th style="width:5%;"><s:text name="dailyStatusSearch.report.title.checking.scoring.approve.temp"/></th>
+							<th style="width:5%;"><s:text name="dailyStatusSearch.report.title.checking.scoring.deny.temp"/></th>
+						</s:if>	
+						<th style="width:5%;"><s:text name="dailyStatusSearch.report.title.checking.scoring.approve.temp"/></th>
+						<th style="width:5%;"><s:text name="dailyStatusSearch.report.title.checking.scoring.deny.temp"/></th>
+						
+					</tr>
+			    </thead>
+				<tbody>
+				<s:iterator value="markValueWiseReportList" id="dailyStatusInfo" status="stat">
+					<s:if test="%{#stat.index%2==0}">
+						<tr class="even">
+					</s:if>
+					<s:else>
+						<tr class="odd">
+					</s:else>
+					<s:if test="#stat.last">
+						<td><s:text name="dailyStatusQuestionWise.report.total"/></td>
+					</s:if>
+					<s:else>
+						<td><s:property value="#dailyStatusInfo.markValue"/></td>
+					</s:else>
+						<td><s:property value="#dailyStatusInfo.confirmBatch"/></td>
+						<s:if test="#session.questionType == @com.saiten.util.WebAppConst@LONG_TYPE">
+							<td><s:property value="#dailyStatusInfo.checkingWorkWait"/></td>
+						</s:if><s:else>
+							<td><s:property value="#dailyStatusInfo.secondTimeScoringWait"/></td>
+						</s:else>
+						<td><s:property value="#dailyStatusInfo.inspectionMenuWait"/></td>
+						<td><s:property value="#dailyStatusInfo.denyuScoringWait"/></td>
+						<td><s:property value="#dailyStatusInfo.firstTimeScoringTemp"/></td>
+						<td><s:property value="#dailyStatusInfo.secondTimeScoringTemp"/></td>
+						<td><s:property value="#dailyStatusInfo.pendingScoringTemp"/></td>
+						<td><s:property value="#dailyStatusInfo.mismatchScoringTemp"/></td>
+						<s:if test="!(#session.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE) && !(#session.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE)">
+							<td><s:property value="#dailyStatusInfo.outOfBoundaryScoringTemp"/></td>
+						</s:if>	
+						<td><s:property value="#dailyStatusInfo.denyuScoringTemp"/></td>
+						<td><s:property value="#dailyStatusInfo.noGradeScoringTemp"/></td>
+						<td><s:property value="#dailyStatusInfo.scoringSamplingTemp"/></td>
+						<td><s:property value="#dailyStatusInfo.forcedScoringTemp"/></td>
+						<s:if test="!(#session.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE) && !(#session.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE)">
+							<td><s:property value="#dailyStatusInfo.checkingApproveTemp"/></td>
+							<td><s:property value="#dailyStatusInfo.chekingDenyTemp"/></td>
+						</s:if>
+						<td><s:property value="#dailyStatusInfo.inspectionMenuApprove"/></td>
+						<td><s:property value="#dailyStatusInfo.inspectionMenuDeny"/></td>
+					</tr>
+				</s:iterator>
+				</tbody>
+			</table>
+			<br/><br/>
+			</s:if>
+			
 			<table style="width: 100%;padding-top: 10px;">
 			 	<tbody>
 				 	<tr>	

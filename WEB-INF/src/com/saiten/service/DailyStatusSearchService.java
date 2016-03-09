@@ -32,4 +32,7 @@ public interface DailyStatusSearchService {
 			String questionSeq, String connectionString);
 
 	public List findQuestionTypeList();
+	
+	public List<DailyStatusReportListInfo> getMarkValueWiseAnswerDetails(
+			String questionSeq, String connectionString, Character questionType);
 }

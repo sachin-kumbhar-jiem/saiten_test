@@ -599,6 +599,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 						.getSubjectName());
 				questionInfo.setQuestionNum(mstQuestion.getQuestionNum());
 				questionInfo.setQuestionType((Character)mstQuestion.getMstEvaluation().getMstQuestionType().getQuestionType());
+				questionInfo.setScoreType(mstQuestion.getMstEvaluation().getScoreType());
 			}
 		} catch (Exception e) {
 			throw new SaitenRuntimeException(
@@ -724,6 +725,73 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 					e);
 		}
 		return pendingCategoryWiseReportList;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<DailyStatusReportListInfo> getMarkValueWiseAnswerDetails(
+			String questionSeq, String connectionString, Character questionType) {
+		List<DailyStatusReportListInfo> markValueWiseReportList = new ArrayList<DailyStatusReportListInfo>();
+		try {
+			List searchResultList = tranDescScoreDAO.getMarkValueWiseAnswerDetails(
+					questionSeq, connectionString, questionType);
+			if (searchResultList != null && !searchResultList.isEmpty()) {
+				for (Object object : searchResultList) {
+					Object[] array = (Object[]) object;
+					DailyStatusReportListInfo dailyStatusReportListInfo = new DailyStatusReportListInfo();
+					dailyStatusReportListInfo.setQuestionSeq(questionSeq);
+					dailyStatusReportListInfo.setMarkValue("" + array[0]);
+					dailyStatusReportListInfo.setConfirmBatch("" + array[1]);
+					dailyStatusReportListInfo.setFirstTimeScoringTemp(""
+							+ array[2]);
+					if (questionType == Arrays
+							.asList(WebAppConst.QUESTION_TYPE).get(1)) {
+						dailyStatusReportListInfo.setCheckingWorkWait(""
+								+ array[3]);
+					} else {
+						dailyStatusReportListInfo.setSecondTimeScoringWait(""
+								+ array[3]);
+					}
+					dailyStatusReportListInfo.setSecondTimeScoringTemp(""
+							+ array[4]);
+					dailyStatusReportListInfo.setCheckingApproveTemp(""
+							+ array[5]);
+					dailyStatusReportListInfo.setChekingDenyTemp("" + array[6]);
+					dailyStatusReportListInfo.setPendingScoringTemp(""
+							+ array[7]);
+					dailyStatusReportListInfo.setMismatchScoringTemp(""
+							+ array[8]);
+					dailyStatusReportListInfo.setInspectionMenuApprove(""
+							+ array[9]);
+					dailyStatusReportListInfo.setInspectionMenuDeny(""
+							+ array[10]);
+					dailyStatusReportListInfo.setOutOfBoundaryScoringTemp(""
+							+ array[11]);
+					dailyStatusReportListInfo.setDenyuScoringTemp(""
+							+ array[12]);
+					dailyStatusReportListInfo.setNoGradeScoringTemp(""
+							+ array[13]);
+					dailyStatusReportListInfo.setScoringSamplingTemp(""
+							+ array[14]);
+					dailyStatusReportListInfo.setForcedScoringTemp(""
+							+ array[15]);
+					dailyStatusReportListInfo.setInspectionMenuWait(""
+							+ array[16]);
+					dailyStatusReportListInfo.setDenyuScoringWait(""
+							+ array[17]);
+					markValueWiseReportList.add(dailyStatusReportListInfo);
+				}
+			}
+		} catch (HibernateException he) {
+			throw new SaitenRuntimeException(
+					ErrorCode.DAILY_STATUS_QUESTION_WISE_REPORT_HIBERNATE_EXCEPTION,
+					he);
+		} catch (Exception e) {
+			throw new SaitenRuntimeException(
+					ErrorCode.DAILY_STATUS_QUESTION_WISE_REPORT_SERVICE_EXCEPTION,
+					e);
+		}
+		return markValueWiseReportList;
 	}
 
 	@SuppressWarnings("rawtypes")

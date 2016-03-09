@@ -1736,6 +1736,82 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			throw re;
 		}
 	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List getMarkValueWiseAnswerDetails(String questionSeq,
+			String connectionString, Character questionType) {
+		try {
+			final StringBuilder queryString = new StringBuilder();
+			queryString.append("SELECT ");
+			queryString.append("mark_value, ");
+			queryString
+					.append("sum(case when latest_scoring_state=500 then 1 else 0 end) as confirm,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=122 then 1 else 0 end) as firstTimeScoreTemp,  ");
+			if (questionType == Arrays.asList(WebAppConst.QUESTION_TYPE).get(1)) {
+				queryString
+						.append("sum(case when latest_scoring_state=141 then 1 else 0 end) as checkingWorkWait,  ");
+
+			} else {
+				queryString
+						.append("sum(case when latest_scoring_state=131 then 1 else 0 end) as secondTimeScoreWait,  ");
+			}
+
+			queryString
+					.append("sum(case when latest_scoring_state=132 then 1 else 0 end) as secondTimeScoreTemp,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=144 then 1 else 0 end) as checkingApproveTemp,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=145 then 1 else 0 end) as chekingDenyTemp,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=162 then 1 else 0 end) as pendingScoringTemp,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=172 then 1 else 0 end) as mismatchScoreTemp,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=154 then 1 else 0 end) as inspectionMenuApprove,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=155 then 1 else 0 end) as inspectionMenuDeny,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=182 then 1 else 0 end) as outOfBoundaryScoringTemp,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=192 then 1 else 0 end) as denyScoreTemp,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=212 then 1 else 0 end) as noGradeScoringTemp,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=221 then 1 else 0 end) as scoringSamplingTemp,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=241 then 1 else 0 end) as forceScoringTemp,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=151 then 1 else 0 end) as inspectionMenuWait,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=191 then 1 else 0 end) as denyScoringWait  ");
+
+			queryString.append("FROM tran_desc_score  ");
+
+			queryString.append("WHERE valid_flag='" + WebAppConst.VALID_FLAG
+					+ "' ");
+			queryString.append("AND  question_seq in (" + questionSeq + ") ");
+
+			queryString
+					.append("AND latest_scoring_state in (500,122,131,132,144,145,162,172,154,155,182,192,212,221,241,151,141,191) ");
+			queryString.append("GROUP BY mark_value ");
+			queryString.append("WITH ROLLUP ");
+
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<List>() {
+						public List doInHibernate(Session session)
+								throws HibernateException {
+							Query queryObj = session.createSQLQuery(queryString
+									.toString());
+							return queryObj.list();
+						}
+					});
+
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
 
 	/**
 	 * 

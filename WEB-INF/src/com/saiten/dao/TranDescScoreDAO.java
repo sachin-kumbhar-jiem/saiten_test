@@ -203,5 +203,8 @@ public interface TranDescScoreDAO {
 	
 	@SuppressWarnings("rawtypes")
 	public List getQuesWiseStudCntForSpecQues(String connectionString,List<String> queSeqsInfoList);
+	
+	public List getMarkValueWiseAnswerDetails(String questionSeq,
+			String connectionString, Character questionType);
 
 }

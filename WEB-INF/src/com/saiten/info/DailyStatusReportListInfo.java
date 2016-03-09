@@ -45,6 +45,7 @@ public class DailyStatusReportListInfo {
 	private String scoringSamplingPending;
 	private String forcedScoringTemp;
 	private String forcedScoringPending;
+	private String markValue;
 	/*private String punchWait;
 	private String punchDataReadWait;
 	private String batchScoringWait;
@@ -600,6 +601,14 @@ public class DailyStatusReportListInfo {
 
 	public void setPendingCategory(String pendingCategory) {
 		this.pendingCategory = pendingCategory;
+	}
+
+	public String getMarkValue() {
+		return markValue;
+	}
+
+	public void setMarkValue(String markValue) {
+		this.markValue = markValue;
 	}
 
 	/**
