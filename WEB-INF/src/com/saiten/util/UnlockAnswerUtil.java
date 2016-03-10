@@ -160,10 +160,8 @@ public class UnlockAnswerUtil implements HttpSessionListener {
 			saitenTransactionManager = (SaitenTransactionManager) ctx
 					.getBean("saitenTransactionManager");
 			
-			QuestionSelectionService questionSelectionService = (QuestionSelectionService) ctx.getBean("questionSelectionService");
-			QuestionInfo questionInfo = questionSelectionService.fetchDbInstanceInfo(Arrays.asList(new Integer[]{questionSeq}));
 			platformTransactionManager = saitenTransactionManager
-					.getTransactionManger(questionInfo.getConnectionString());
+					.getTransactionManger(connectionString);
 			transactionStatus = saitenTransactionManager
 					.beginTransaction(platformTransactionManager);
 
