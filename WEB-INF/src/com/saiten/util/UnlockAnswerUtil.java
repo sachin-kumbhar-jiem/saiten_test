@@ -1,6 +1,7 @@
 package com.saiten.util;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.servlet.http.HttpSessionEvent;
@@ -18,6 +19,7 @@ import com.saiten.info.QuestionInfo;
 import com.saiten.info.ScorerAccessLogInfo;
 import com.saiten.manager.SaitenTransactionManager;
 import com.saiten.model.TranScorerSessionInfo;
+import com.saiten.service.QuestionSelectionService;
 import com.saiten.service.ScoreService;
 
 /**
@@ -157,8 +159,9 @@ public class UnlockAnswerUtil implements HttpSessionListener {
 
 			saitenTransactionManager = (SaitenTransactionManager) ctx
 					.getBean("saitenTransactionManager");
-			QuestionInfo questionInfo = (QuestionInfo) SaitenUtil.getSession()
-					.get("questionInfo");
+			
+			QuestionSelectionService questionSelectionService = (QuestionSelectionService) ctx.getBean("questionSelectionService");
+			QuestionInfo questionInfo = questionSelectionService.fetchDbInstanceInfo(Arrays.asList(new Integer[]{questionSeq}));
 			platformTransactionManager = saitenTransactionManager
 					.getTransactionManger(questionInfo.getConnectionString());
 			transactionStatus = saitenTransactionManager
