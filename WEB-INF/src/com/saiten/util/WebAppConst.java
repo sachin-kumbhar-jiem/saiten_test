@@ -1,7 +1,5 @@
 package com.saiten.util;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author sachin
@@ -203,8 +201,8 @@ public interface WebAppConst {
 	public static final Short[] SPECIAL_SCORING_STATES = { 251, 252, 253, 254,
 			255, 256, 257, 258, 452, 454, 456, 458 };
 
-	public static final Short[] SPECIAL_SCORING_AND_BATCH_STATES = { 251, 253,
-			255, 257, 31, 51, 52, 53, 59, 61, 101 };
+	public static final Short[] SPECIAL_SCORING_AND_BATCH_STATES = { 31, 51,
+			52, 53, 59, 61, 101 };
 
 	public static final Short[] DUMMY_SCORING_STATES = { 322, 323, 332, 333,
 			344, 345, 354, 355, 362, 363, 392, 393, 372, 373, 312, 313, 382,

@@ -74,10 +74,12 @@
 			  </s:if><s:else>
 			  	<h1 align="left"><s:text name="label.markvalueselection.selectmarkvalue" />&nbsp;<s:text name="label.scoring.openingbracket" /><s:property value="subjectShortName"/><s:text name="label.scoring.closingbracket" /></h1>
 				<div id="select_contents">
-				<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID  || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID">
+				<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID  || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID">
 					<s:set name="targetAction" id="targetAction" value="%{'gradeSelection'}"></s:set>
 				</s:if><s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@PENDING_MENU_ID">
 					<s:set name="targetAction" id="targetAction" value="%{'pendingCategorySelection'}"></s:set>
+				</s:elseif><s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID">
+					<s:set name="targetAction" id="targetAction" value="%{'denyCategorySelection'}"></s:set>
 				</s:elseif><s:else>
 					<s:set name="targetAction" id="targetAction" value="%{'showScoringPage'}"></s:set>
 				</s:else>
