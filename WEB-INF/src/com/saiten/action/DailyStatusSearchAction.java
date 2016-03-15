@@ -1,5 +1,9 @@
 package com.saiten.action;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -8,6 +12,7 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
@@ -59,6 +64,8 @@ public class DailyStatusSearchAction extends ActionSupport implements
 	List<DailyStatusReportListInfo> dailyStatusReportList;
 	List<DailyStatusSearchScorerInfo> dailyStatusSearchScorerInfo;
 	private List<DailyStatusReportListInfo> markValueWiseReportList;
+	private InputStream inputStream;
+	private String fileName;
 
 	@SuppressWarnings("rawtypes")
 	public String onLoad() {
@@ -273,7 +280,8 @@ public class DailyStatusSearchAction extends ActionSupport implements
 			if (WebAppConst.SCORE_TYPE[3].equals(questionInfo.getScoreType())) {
 				markValueWiseReportList = dailyStatusSearchService
 						.getMarkValueWiseAnswerDetails(questionSeq,
-								questionInfo.getConnectionString(), questionType);
+								questionInfo.getConnectionString(),
+								questionType);
 			}
 			log.info(mstScorerInfo.getScorerId()
 					+ "-"
@@ -282,7 +290,13 @@ public class DailyStatusSearchAction extends ActionSupport implements
 					+ "Loaded daily status detail report for selected question. \n Search Criteria: -{ Subject Code: "
 					+ questionInfo.getSubjectCode() + ", Question No.: "
 					+ questionInfo.getQuestionNum() + "}");
+
 			session.put("questionInfo", questionInfo);
+			session.put("gradeWiseReportList", gradeWiseReportList);
+			session.put("markValueWiseReportList", markValueWiseReportList);
+			session.put("pendingCategoryWiseReportList",
+					pendingCategoryWiseReportList);
+
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -344,6 +358,44 @@ public class DailyStatusSearchAction extends ActionSupport implements
 		}
 
 		return description;
+	}
+
+	@SuppressWarnings({ "rawtypes" })
+	public String downloadProgressReports() {
+
+		List gradeWiseList = (List) session.get("gradeWiseReportList");
+		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
+		List markValueWiseList = (List) session.get("markValueWiseReportList");
+		List pendingCategoryWiseList = (List) session
+				.get("pendingCategoryWiseReportList");
+
+		try {
+			String reportString = dailyStatusSearchService.getProgressReports(
+					gradeWiseList, markValueWiseList, pendingCategoryWiseList,
+					questionInfo, selectedMenuId);
+
+			if (!StringUtils.isBlank(reportString)) {
+
+				File fileToDownload = new File(reportString);
+
+				inputStream = new FileInputStream(reportString);
+
+				fileName = fileToDownload.getName();
+
+			} else {
+				addActionError(getText("label.data.not.found"));
+				return INPUT;
+			}
+
+		} catch (SaitenRuntimeException we) {
+			throw we;
+		} catch (Exception e) {
+			throw new SaitenRuntimeException(
+					ErrorCode.DAILY_STATUS_QUESTION_WISE_REPORT_ACTION_EXCEPTION,
+					e);
+		}
+
+		return SUCCESS;
 	}
 
 	/**
@@ -583,6 +635,22 @@ public class DailyStatusSearchAction extends ActionSupport implements
 	public void setMarkValueWiseReportList(
 			List<DailyStatusReportListInfo> markValueWiseReportList) {
 		this.markValueWiseReportList = markValueWiseReportList;
+	}
+
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+
+	public void setInputStream(InputStream inputStream) {
+		this.inputStream = inputStream;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 }

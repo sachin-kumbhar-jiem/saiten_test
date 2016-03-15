@@ -1,5 +1,6 @@
 package com.saiten.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -7,11 +8,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.HibernateException;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.TextProvider;
 import com.saiten.bean.SaitenConfig;
 import com.saiten.dao.MstDbInstanceDAO;
 import com.saiten.dao.MstEvaluationDAO;
@@ -30,6 +34,7 @@ import com.saiten.model.MstScorer;
 import com.saiten.service.DailyStatusSearchService;
 import com.saiten.service.ScoreSearchService;
 import com.saiten.util.ErrorCode;
+import com.saiten.util.SaitenFileUtil;
 import com.saiten.util.SaitenUtil;
 import com.saiten.util.WebAppConst;
 
@@ -46,6 +51,10 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 	private MstDbInstanceDAO mstDbInstanceDAO;
 	private MstEvaluationDAO mstEvaluationDAO;
 	private ScoreSearchService scoreSearchService;
+
+	@SuppressWarnings("rawtypes")
+	List finalResultList = new ArrayList();
+	List pendCategoryResultList = new ArrayList();
 
 	@SuppressWarnings({ "unused", "rawtypes" })
 	public Map<Byte, String> getScorerRollMapByID(String id) {
@@ -598,8 +607,13 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 				questionInfo.setSubjectName(mstQuestion.getMstSubject()
 						.getSubjectName());
 				questionInfo.setQuestionNum(mstQuestion.getQuestionNum());
-				questionInfo.setQuestionType((Character)mstQuestion.getMstEvaluation().getMstQuestionType().getQuestionType());
-				questionInfo.setScoreType(mstQuestion.getMstEvaluation().getScoreType());
+				questionInfo.setQuestionType((Character) mstQuestion
+						.getMstEvaluation().getMstQuestionType()
+						.getQuestionType());
+				questionInfo.setScoreType(mstQuestion.getMstEvaluation()
+						.getScoreType());
+				questionInfo.setSubjectCode(mstQuestion.getMstSubject()
+						.getSubjectCode());
 			}
 		} catch (Exception e) {
 			throw new SaitenRuntimeException(
@@ -726,15 +740,16 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 		}
 		return pendingCategoryWiseReportList;
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public List<DailyStatusReportListInfo> getMarkValueWiseAnswerDetails(
 			String questionSeq, String connectionString, Character questionType) {
 		List<DailyStatusReportListInfo> markValueWiseReportList = new ArrayList<DailyStatusReportListInfo>();
 		try {
-			List searchResultList = tranDescScoreDAO.getMarkValueWiseAnswerDetails(
-					questionSeq, connectionString, questionType);
+			List searchResultList = tranDescScoreDAO
+					.getMarkValueWiseAnswerDetails(questionSeq,
+							connectionString, questionType);
 			if (searchResultList != null && !searchResultList.isEmpty()) {
 				for (Object object : searchResultList) {
 					Object[] array = (Object[]) object;
@@ -810,6 +825,482 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 			throw new SaitenRuntimeException(
 					ErrorCode.DAILY_STATUS_QUESTION_WISE_REPORT_SERVICE_EXCEPTION,
 					e);
+		}
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public String getProgressReports(List gradeWiseList,
+			List markValueWiseList, List pendingCategoryWiseList,
+			QuestionInfo questionInfo, String selectedMenuId) {
+
+		String fileToDownload = null;
+		List<DailyStatusReportListInfo> gradeList = new ArrayList();
+		List<DailyStatusReportListInfo> markValueList = new ArrayList();
+		List<DailyStatusReportListInfo> pendCategoryList = new ArrayList();
+
+		try {
+			File downloadDir;
+			TextProvider textProvider = (TextProvider) ActionContext
+					.getContext().getActionInvocation().getAction();
+
+			String downloadDirBasePath = textProvider.getTexts(
+					WebAppConst.APPLICATION_PROPERTIES_FILE).getString(
+					"saiten.daily.report.download.basepath");
+
+			if (selectedMenuId.equals(WebAppConst.GRADE_WISE_DETAILS_REPORT)) {
+
+				if (gradeWiseList != null && !gradeWiseList.isEmpty()) {
+					gradeList.addAll(gradeWiseList);
+				}
+
+				if (gradeList != null && !gradeList.isEmpty()) {
+
+					downloadDir = SaitenFileUtil.createDirectory(
+							downloadDirBasePath,
+							textProvider.getText("grade.wise.report.file.name")
+									+ WebAppConst.HYPHEN
+									+ questionInfo.getSubjectCode()
+									+ WebAppConst.HYPHEN
+									+ questionInfo.getQuestionNum());
+
+					getProgressReportHeaders(textProvider, selectedMenuId);
+
+					getGradeWiseReportRows(gradeList, textProvider);
+
+					File txtFile = new File(
+							downloadDir.getPath()
+									+ File.separator
+									+ textProvider
+											.getText("grade.wise.report.file.name")
+									+ WebAppConst.HYPHEN
+									+ questionInfo.getSubjectCode()
+									+ WebAppConst.HYPHEN
+									+ questionInfo.getQuestionNum()
+									+ WebAppConst.TXT_FILE_EXTENSION);
+
+					txtFile.createNewFile();
+
+					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
+							finalResultList, WebAppConst.CRLF);
+
+					if (!SaitenFileUtil.isEmptyDirectory(downloadDir)) {
+
+						SaitenFileUtil.createZipFileFromDirectory(
+								downloadDir.getPath(), downloadDir.getPath()
+										+ WebAppConst.ZIP_FILE_EXTENSION);
+
+						fileToDownload = downloadDir.getPath()
+								+ WebAppConst.ZIP_FILE_EXTENSION;
+					}
+					SaitenFileUtil.deleteDirectory(downloadDir);
+				}
+
+			} else if (selectedMenuId
+					.equals(WebAppConst.PENDING_CATEGORY_WISE_DETAILS_REPORT)) {
+
+				if (pendingCategoryWiseList != null
+						&& !pendingCategoryWiseList.isEmpty()) {
+					pendCategoryList.addAll(pendingCategoryWiseList);
+				}
+
+				if (pendCategoryList != null && !pendCategoryList.isEmpty()) {
+
+					downloadDir = SaitenFileUtil
+							.createDirectory(
+									downloadDirBasePath,
+									textProvider
+											.getText("pending.category.wise.report.file.name")
+											+ WebAppConst.HYPHEN
+											+ questionInfo.getSubjectCode()
+											+ WebAppConst.HYPHEN
+											+ questionInfo.getQuestionNum());
+
+					getPendCategoryReportHeaders(textProvider, selectedMenuId);
+
+					getPendCategoryReportRows(pendCategoryList, textProvider);
+
+					File txtFile = new File(
+							downloadDir.getPath()
+									+ File.separator
+									+ textProvider
+											.getText("pending.category.wise.report.file.name")
+									+ WebAppConst.HYPHEN
+									+ questionInfo.getSubjectCode()
+									+ WebAppConst.HYPHEN
+									+ questionInfo.getQuestionNum()
+									+ WebAppConst.TXT_FILE_EXTENSION);
+
+					txtFile.createNewFile();
+
+					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
+							pendCategoryResultList, WebAppConst.CRLF);
+
+					if (!SaitenFileUtil.isEmptyDirectory(downloadDir)) {
+
+						SaitenFileUtil.createZipFileFromDirectory(
+								downloadDir.getPath(), downloadDir.getPath()
+										+ WebAppConst.ZIP_FILE_EXTENSION);
+
+						fileToDownload = downloadDir.getPath()
+								+ WebAppConst.ZIP_FILE_EXTENSION;
+					}
+					SaitenFileUtil.deleteDirectory(downloadDir);
+				}
+
+			} else if (selectedMenuId
+					.equals(WebAppConst.MARK_VALUE_WISE_DETAILS_REPORT)) {
+
+				if (markValueWiseList != null && !markValueWiseList.isEmpty()) {
+					markValueList.addAll(markValueWiseList);
+				}
+
+				if (markValueList != null && !markValueList.isEmpty()) {
+
+					downloadDir = SaitenFileUtil
+							.createDirectory(
+									downloadDirBasePath,
+									textProvider
+											.getText("mark.value.wise.report.file.name")
+											+ WebAppConst.HYPHEN
+											+ questionInfo.getSubjectCode()
+											+ WebAppConst.HYPHEN
+											+ questionInfo.getQuestionNum());
+
+					getProgressReportHeaders(textProvider, selectedMenuId);
+
+					getMarkValueWiseReportRows(markValueList, selectedMenuId,
+							textProvider);
+
+					File txtFile = new File(
+							downloadDir.getPath()
+									+ File.separator
+									+ textProvider
+											.getText("mark.value.wise.report.file.name")
+									+ WebAppConst.HYPHEN
+									+ questionInfo.getSubjectCode()
+									+ WebAppConst.HYPHEN
+									+ questionInfo.getQuestionNum()
+									+ WebAppConst.TXT_FILE_EXTENSION);
+
+					txtFile.createNewFile();
+
+					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
+							finalResultList, WebAppConst.CRLF);
+
+					if (!SaitenFileUtil.isEmptyDirectory(downloadDir)) {
+
+						SaitenFileUtil.createZipFileFromDirectory(
+								downloadDir.getPath(), downloadDir.getPath()
+										+ WebAppConst.ZIP_FILE_EXTENSION);
+
+						fileToDownload = downloadDir.getPath()
+								+ WebAppConst.ZIP_FILE_EXTENSION;
+					}
+					SaitenFileUtil.deleteDirectory(downloadDir);
+				}
+			}
+
+		} catch (HibernateException he) {
+			throw new SaitenRuntimeException(
+					ErrorCode.DAILY_STATUS_QUESTION_WISE_REPORT_HIBERNATE_EXCEPTION,
+					he);
+		} catch (Exception e) {
+			throw new SaitenRuntimeException(
+					ErrorCode.DAILY_STATUS_QUESTION_WISE_REPORT_SERVICE_EXCEPTION,
+					e);
+		}
+
+		return fileToDownload;
+	}
+
+	@SuppressWarnings("unchecked")
+	private void getPendCategoryReportHeaders(TextProvider textProvider,
+			String selectedMenuId) {
+
+		StringBuilder csvHeaders = new StringBuilder();
+		StringBuilder heading = new StringBuilder();
+
+		heading.append(textProvider
+				.getText("label.pending.cat.wise.report.details"));
+		csvHeaders.append(textProvider
+				.getText("label.prog.report.pending.category"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.prog.report.pending.rating.waiting"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("lable.prog.report.1st.pending.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.prog.report.2nd.pending.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.prog.report.pending.pending.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.prog.report.discrepancy.pending.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.prog.report.out.of.boundary.pending.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.prog.report.deny.pending.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.prog.report.no.grade.pending.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.prog.report.script.search.pending.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.prog.report.forced.pending.temp"));
+
+		pendCategoryResultList.add(heading.toString());
+		pendCategoryResultList.add(csvHeaders.toString());
+	}
+
+	@SuppressWarnings("unchecked")
+	private void getPendCategoryReportRows(
+			List<DailyStatusReportListInfo> pendCategoryList,
+			TextProvider textProvider) {
+
+		if (!pendCategoryList.isEmpty()) {
+
+			for (DailyStatusReportListInfo record : pendCategoryList) {
+
+				StringBuilder csvData = new StringBuilder();
+
+				if (record.getPendingCategory().equals("null")) {
+					csvData.append(textProvider
+							.getText("dailyStatusQuestionWise.report.total"));
+				} else {
+					csvData.append(record.getPendingCategory());
+				}
+
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getPendingScoringWait());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getFirstTimeScoringPending());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getSecondTimeScoringPending());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getPendingScorePendingTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getMismatchScoringPending());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getOutOfBoundaryPendingTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getDenyuScoringPending());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getNoGradePengingTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getScoringSamplingPending());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getForcedScoringPending());
+
+				pendCategoryResultList.add(csvData.toString());
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void getProgressReportHeaders(TextProvider textProvider,
+			String selectedMenuId) {
+
+		StringBuilder csvHeaders = new StringBuilder();
+		StringBuilder heading = new StringBuilder();
+
+		if (selectedMenuId.equals(WebAppConst.GRADE_WISE_DETAILS_REPORT)) {
+
+			heading.append(textProvider
+					.getText("label.grade.wise.report.grade.wise.details"));
+
+			csvHeaders.append(textProvider
+					.getText("label.grade.wise.report.grade"));
+
+		} else if (selectedMenuId
+				.equals(WebAppConst.MARK_VALUE_WISE_DETAILS_REPORT)) {
+
+			heading.append(textProvider
+					.getText("label.mark.value.wise.report.details"));
+
+			csvHeaders.append(textProvider
+					.getText("label.mark.value.wise.report.markValue"));
+		}
+
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.confirm"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.2nd.waiting"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.inspection.Rtg.waiting"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.deny.Rtg.waiting"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.1st.Rtg.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.2nd.Rtg.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.pending.Rtg.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.discrepancy.Rtg.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.out.of.boundary.Rtg.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.deny.Rtg.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.no.grade.Rtg.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.script.search.Rtg.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.forced.Rtg.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders
+				.append(textProvider
+						.getText("label.grade.wise.report.check.operation.approve.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(textProvider
+				.getText("label.grade.wise.report.check.operation.deny.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders
+				.append(textProvider
+						.getText("label.grade.wise.report.inspection.operation.approve.temp"));
+		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders
+				.append(textProvider
+						.getText("label.grade.wise.report.inspection.operation.deny.temp"));
+
+		finalResultList.add(heading.toString());
+		finalResultList.add(csvHeaders.toString());
+	}
+
+	@SuppressWarnings("unchecked")
+	private void getGradeWiseReportRows(
+			List<DailyStatusReportListInfo> gradeList, TextProvider textProvider) {
+
+		if (!gradeList.isEmpty()) {
+
+			for (DailyStatusReportListInfo record : gradeList) {
+
+				StringBuilder csvData = new StringBuilder();
+
+				if (record.getGradeNum().equals("null")) {
+					csvData.append(textProvider
+							.getText("dailyStatusQuestionWise.report.total"));
+				} else {
+					csvData.append(record.getGradeNum());
+				}
+
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getConfirmBatch());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getSecondTimeScoringWait());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getInspectionMenuWait());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getDenyuScoringWait());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getFirstTimeScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getSecondTimeScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getPendingScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getMismatchScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getOutOfBoundaryScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getDenyuScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getNoGradeScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getScoringSamplingTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getForcedScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getCheckingApproveTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getChekingDenyTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getInspectionMenuApprove());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getInspectionMenuDeny());
+				csvData.append(WebAppConst.COMMA);
+
+				finalResultList.add(csvData.toString());
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void getMarkValueWiseReportRows(
+			List<DailyStatusReportListInfo> markValueList,
+			String selectedMenuId, TextProvider textProvider) {
+
+		if (!markValueList.isEmpty()) {
+
+			for (DailyStatusReportListInfo record : markValueList) {
+
+				StringBuilder csvData = new StringBuilder();
+
+				if (record.getMarkValue().equals("null")) {
+					csvData.append(textProvider
+							.getText("dailyStatusQuestionWise.report.total"));
+				} else {
+					csvData.append(record.getMarkValue());
+				}
+
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getConfirmBatch());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getSecondTimeScoringWait());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getInspectionMenuWait());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getDenyuScoringWait());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getFirstTimeScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getSecondTimeScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getPendingScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getMismatchScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getOutOfBoundaryScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getDenyuScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getNoGradeScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getScoringSamplingTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getForcedScoringTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getCheckingApproveTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getChekingDenyTemp());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getInspectionMenuApprove());
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(record.getInspectionMenuDeny());
+				csvData.append(WebAppConst.COMMA);
+
+				finalResultList.add(csvData.toString());
+			}
 		}
 	}
 

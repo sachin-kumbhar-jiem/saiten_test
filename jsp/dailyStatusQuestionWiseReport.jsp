@@ -104,6 +104,7 @@
 			    </thead>
 				<tbody>
 				<s:iterator value="gradeWiseReportList" id="dailyStatusInfo" status="stat">
+					
 					<s:if test="%{#stat.index%2==0}">
 						<tr class="even">
 					</s:if>
@@ -141,13 +142,19 @@
 						</s:if>
 						<td><s:property value="#dailyStatusInfo.inspectionMenuApprove"/></td>
 						<td><s:property value="#dailyStatusInfo.inspectionMenuDeny"/></td>
-					</tr>
+					
 				</s:iterator>
-				</tbody>
-			</table>
-			
-			<br/><br/>
-			
+				</tbody>	
+			</table><br/>
+				<div align="right">
+           	    	<s:if test="#session.gradeWiseReportList!=null && #session.gradeWiseReportList.size()!=0">
+			 			<a href="progressReportsDownload?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@GRADE_WISE_DETAILS_REPORT"/>" id="gradeWiseReport" name="gradeWiseReport" class="btn btn-primary btn-x3">
+							<s:text name="label.submit.button.download"></s:text>
+			   			</a>&nbsp;&nbsp;
+           	    	</s:if><s:else>
+           	       		<p class="btn btn-disabled1"><s:text name="label.submit.button.download"></s:text></p>&nbsp;&nbsp;
+           	    	</s:else>
+				</div><br/>
 			<table class="displayTable" style="width: 100%;">
 				<thead>
 					<tr style="height: 25px;">
@@ -176,6 +183,7 @@
 			    </thead>
 				<tbody>
 				<s:iterator value="pendingCategoryWiseReportList" id="dailyStatusInfo" status="stat">
+				  
 					<s:if test="%{#stat.index%2==0}">
 						<tr class="even">
 					</s:if>
@@ -203,10 +211,16 @@
 					</tr>
 				</s:iterator>
 				</tbody>
-			</table>
-			<br/><br/>
-			
-			
+			</table><br/>
+				<div align="right">
+				   <s:if test="#session.pendingCategoryWiseReportList!=null && #session.pendingCategoryWiseReportList.size()!=0">
+				   		<a href="progressReportsDownload?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@PENDING_CATEGORY_WISE_DETAILS_REPORT"/>" id="pendCatWiseRptDownload" name="pendCatWiseRpt" class="btn btn-primary btn-x3">
+					  		<s:text name="label.submit.button.download"></s:text>
+				   		</a>&nbsp;&nbsp;
+				   </s:if><s:else>
+				        <p class="btn btn-disabled1"><s:text name="label.submit.button.download"></s:text></p>&nbsp;&nbsp;
+				   </s:else>
+			   </div><br/>
 			<s:if test="#session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[3]">
 			   <table class="displayTable" style="width: 100%;">
 				 <thead>
@@ -298,27 +312,35 @@
 					</tr>
 				</s:iterator>
 				</tbody>
-			</table>
-			<br/><br/>
+			</table><br/>
+			  <div align="right">
+	           	   <s:if test="#session.markValueWiseReportList!=null && #session.markValueWiseReportList.size()!=0">
+	                	<a href="progressReportsDownload?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@MARK_VALUE_WISE_DETAILS_REPORT"/>" id="markValueWiseRptDownload" name="markValueWiseRpt" class="btn btn-primary btn-x3">
+					  		<s:text name="label.submit.button.download"></s:text>
+				   		</a>&nbsp;&nbsp;
+	           	   </s:if><s:else>
+	                   <p class="btn btn-disabled1"><s:text name="label.submit.button.download"></s:text></p>&nbsp;&nbsp;
+	           	   </s:else>
+			  </div><br/>
 			</s:if>
-			
-			<table style="width: 100%;padding-top: 10px;">
+			<table style="width: 100%;padding-top: 10px; padding-bottom: 40px;">
 			 	<tbody>
 				 	<tr>	
 				 		<td align="center">
+				 		    <div id="dataNotFound"><s:actionerror/></div><br/>
 							<div id="button">
 								<a href="dailyStatusReportSearchList.action<s:if test="#parameters['pageNum'][0] != null">?d-49216-p=<s:property value="%{#parameters['pageNum'][0]}"/>&back=true</s:if><s:else>?back=true</s:else>" class="btn btn-primary btn-xl"><s:text name="label.previous" /></a>
 								<a href="dailyStatusReportSearch.action?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@DAILY_STATUS_REPORT_MENU_ID"/>" class="btn btn-primary btn-xl"  id="forcedScoring">
-					 				<s:text name="label.backtosearch" />				
+					 				<s:text name="label.backtosearch" />			
 								</a>
 							</div>	
-						</td>						
-					</tr>	
+						</td>	
+					</tr>
 				</tbody>
 			</table>
 		</div>
 		</td>
 		</tr>
-		</table>	
+		</table><br/>
 	</tiles:putAttribute>
 </tiles:insertDefinition>

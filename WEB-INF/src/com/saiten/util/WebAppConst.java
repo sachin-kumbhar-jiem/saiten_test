@@ -578,4 +578,12 @@ public interface WebAppConst {
 
 	public static final String SKP_OR_CONDITION = "skpORCondition";
 
+	public static final String TXT_FILE_EXTENSION = ".txt";
+	
+	public static final String GRADE_WISE_DETAILS_REPORT="gradeWiseReport";
+	
+	public static final String MARK_VALUE_WISE_DETAILS_REPORT="markValueWiseReport";
+	
+	public static final String PENDING_CATEGORY_WISE_DETAILS_REPORT="pendingCategoryWiseReport";
+	
 }
