@@ -89,6 +89,31 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 				if (session.get("isQcRecord") != null) {
 					isQcRecord = (Boolean) session.get("isQcRecord");
 				}
+				if ((WebAppConst.SCORE_TYPE[3].equals(questionInfo.getScoreType()))
+						&& (WebAppConst.FIRST_SCORING_MENU_ID.equals(menuId)
+								|| WebAppConst.SECOND_SCORING_MENU_ID.equals(menuId)
+								|| WebAppConst.PENDING_MENU_ID.equals(menuId)
+								|| WebAppConst.OUT_BOUNDARY_MENU_ID.equals(menuId)
+								|| WebAppConst.NO_GRADE_MENU_ID.equals(menuId)
+								|| WebAppConst.MISMATCH_MENU_ID.equals(menuId)
+								|| WebAppConst.SPECIAL_SCORING_BLIND_TYPE_MENU_ID
+										.equals(menuId)
+								|| WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID
+										.equals(menuId)
+								|| WebAppConst.SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID
+										.equals(menuId)
+								|| WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID
+										.equals(menuId) || WebAppConst.SCORE_SAMP_MENU_ID
+									.equals(menuId)
+								|| WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID
+								.equals(menuId))
+						&& (tranDescScoreInfo.getAnswerInfo().getHistorySeq() == null)
+						&& (bookmarkScreenFlag == false)) {
+					List<Short> markValueList = tranDescScoreInfo.getMarkValueList();
+					if ((markValueList != null) && (!markValueList.contains((short) 0))) {
+						session.put("selectedCheckPointList", markValueList);
+					}
+				}
 				if (isQcRecord != null && isQcRecord) {
 					log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
 							+ "Quality record loaded."
@@ -934,7 +959,9 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 								.equals(menuId)
 						|| WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID
 								.equals(menuId) || WebAppConst.SCORE_SAMP_MENU_ID
-							.equals(menuId))
+							.equals(menuId)
+						|| WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID
+						.equals(menuId))
 				&& (tranDescScoreInfo.getAnswerInfo().getHistorySeq() == null)
 				&& (bookmarkScreenFlag == false)) {
 			List<Short> markValueList = tranDescScoreInfo.getMarkValueList();
