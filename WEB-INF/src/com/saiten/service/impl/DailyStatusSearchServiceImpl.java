@@ -54,7 +54,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 	@SuppressWarnings("rawtypes")
 	List finalResultList = new ArrayList();
-	
+
 	@SuppressWarnings("rawtypes")
 	List pendCategoryResultList = new ArrayList();
 
@@ -865,9 +865,11 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 									+ WebAppConst.HYPHEN
 									+ questionInfo.getQuestionNum());
 
-					getProgressReportHeaders(textProvider, selectedMenuId);
+					getProgressReportHeaders(textProvider, selectedMenuId,
+							questionInfo);
 
-					getGradeWiseReportRows(gradeList, textProvider);
+					getGradeWiseReportRows(gradeList, textProvider,
+							questionInfo);
 
 					File txtFile = new File(
 							downloadDir.getPath()
@@ -964,10 +966,11 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 											+ WebAppConst.HYPHEN
 											+ questionInfo.getQuestionNum());
 
-					getProgressReportHeaders(textProvider, selectedMenuId);
+					getProgressReportHeaders(textProvider, selectedMenuId,
+							questionInfo);
 
 					getMarkValueWiseReportRows(markValueList, selectedMenuId,
-							textProvider);
+							textProvider, questionInfo);
 
 					File txtFile = new File(
 							downloadDir.getPath()
@@ -979,7 +982,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 									+ WebAppConst.HYPHEN
 									+ questionInfo.getQuestionNum()
 									+ WebAppConst.CSV_FILE_EXTENSION);
-					
+
 					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
 							finalResultList, WebAppConst.CRLF);
 
@@ -1101,7 +1104,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 	@SuppressWarnings("unchecked")
 	private void getProgressReportHeaders(TextProvider textProvider,
-			String selectedMenuId) {
+			String selectedMenuId, QuestionInfo questionInfo) {
 
 		StringBuilder csvHeaders = new StringBuilder();
 		StringBuilder heading = new StringBuilder();
@@ -1128,8 +1131,17 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.confirm"));
 		csvHeaders.append(WebAppConst.TAB_CHARACTER);
-		csvHeaders.append(textProvider
-				.getText("label.grade.wise.report.checking.Rtg.waiting"));
+
+		if (questionInfo.getQuestionType() == Arrays.asList(
+				WebAppConst.QUESTION_TYPE).get(1)) {
+
+			csvHeaders.append(textProvider
+					.getText("label.grade.wise.report.checking.Rtg.waiting"));
+		} else {
+			csvHeaders.append(textProvider
+					.getText("label.prog.report.2nd.time.scoring.wait"));
+		}
+
 		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.inspection.Rtg.waiting"));
@@ -1185,7 +1197,8 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 	@SuppressWarnings("unchecked")
 	private void getGradeWiseReportRows(
-			List<DailyStatusReportListInfo> gradeList, TextProvider textProvider) {
+			List<DailyStatusReportListInfo> gradeList,
+			TextProvider textProvider, QuestionInfo questionInfo) {
 
 		if (!gradeList.isEmpty()) {
 
@@ -1203,7 +1216,14 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getConfirmBatch());
 				csvData.append(WebAppConst.TAB_CHARACTER);
-				csvData.append(record.getCheckingWorkWait());
+
+				if (questionInfo.getQuestionType() == Arrays.asList(
+						WebAppConst.QUESTION_TYPE).get(1)) {
+					csvData.append(record.getCheckingWorkWait());
+				} else {
+					csvData.append(record.getSecondTimeScoringWait());
+				}
+
 				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getInspectionMenuWait());
 				csvData.append(WebAppConst.TAB_CHARACTER);
@@ -1234,7 +1254,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 				csvData.append(record.getInspectionMenuApprove());
 				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getInspectionMenuDeny());
-				
+
 				finalResultList.add(csvData.toString());
 			}
 		}
@@ -1243,7 +1263,8 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 	@SuppressWarnings("unchecked")
 	private void getMarkValueWiseReportRows(
 			List<DailyStatusReportListInfo> markValueList,
-			String selectedMenuId, TextProvider textProvider) {
+			String selectedMenuId, TextProvider textProvider,
+			QuestionInfo questionInfo) {
 
 		if (!markValueList.isEmpty()) {
 
@@ -1261,7 +1282,15 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getConfirmBatch());
 				csvData.append(WebAppConst.TAB_CHARACTER);
-				csvData.append(record.getCheckingWorkWait());
+
+				if (questionInfo.getQuestionType() == Arrays.asList(
+						WebAppConst.QUESTION_TYPE).get(1)) {
+
+					csvData.append(record.getCheckingWorkWait());
+				} else {
+					csvData.append(record.getSecondTimeScoringWait());
+				}
+
 				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getInspectionMenuWait());
 				csvData.append(WebAppConst.TAB_CHARACTER);
@@ -1292,7 +1321,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 				csvData.append(record.getInspectionMenuApprove());
 				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getInspectionMenuDeny());
-				
+
 				finalResultList.add(csvData.toString());
 			}
 		}
