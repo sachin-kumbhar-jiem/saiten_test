@@ -267,7 +267,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		<!-- <a href="#" id="close" onclick="applyOverflowAuto();"><img src="./material/img/close.png" align="right"></a> -->
 		<a href="#" id="zoomOut" onclick="dropImage()" style="color: black;"><img src="./material/img/magnifier_zoom_out.png" class="border">&nbsp;<s:text name="label.button.zoomOut"></s:text></a> 
 		<a href="#" id="zoomIn" onclick="enlargeImage()" style="color: black;"><img src="./material/img/magnifier_zoom_in.png" class="border">&nbsp;<s:text name="label.button.zoomIn"></s:text></a>
-		<a href="#" id="original_size" onclick="setImageToDefaultSize()" style="color: black;">&nbsp;<s:text name="label.button.dafault.image.size"></s:text></a>
+		<a href="#" id="original_size" onclick="setImageToDefaultSize()" style="color: black;"><img src="./material/img/default1.png" class="border">&nbsp;<s:text name="label.button.dafault.image.size"></s:text></a>
 	</div>	
 	<div >
 				<p class="score_img_top" style="overflow-x: auto;overflow-y: auto;width: 465px;height: 530px;vertical-align: top;">

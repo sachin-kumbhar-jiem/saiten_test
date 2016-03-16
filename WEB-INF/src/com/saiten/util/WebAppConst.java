@@ -586,4 +586,6 @@ public interface WebAppConst {
 	
 	public static final String PENDING_CATEGORY_WISE_DETAILS_REPORT="pendingCategoryWiseReport";
 	
+	public static final Character TAB_CHARACTER = '\t';
+	
 }

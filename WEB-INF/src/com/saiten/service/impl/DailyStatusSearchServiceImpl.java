@@ -54,6 +54,8 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 	@SuppressWarnings("rawtypes")
 	List finalResultList = new ArrayList();
+	
+	@SuppressWarnings("rawtypes")
 	List pendCategoryResultList = new ArrayList();
 
 	@SuppressWarnings({ "unused", "rawtypes" })
@@ -876,9 +878,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 									+ questionInfo.getSubjectCode()
 									+ WebAppConst.HYPHEN
 									+ questionInfo.getQuestionNum()
-									+ WebAppConst.TXT_FILE_EXTENSION);
-
-					txtFile.createNewFile();
+									+ WebAppConst.CSV_FILE_EXTENSION);
 
 					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
 							finalResultList, WebAppConst.CRLF);
@@ -928,9 +928,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 									+ questionInfo.getSubjectCode()
 									+ WebAppConst.HYPHEN
 									+ questionInfo.getQuestionNum()
-									+ WebAppConst.TXT_FILE_EXTENSION);
-
-					txtFile.createNewFile();
+									+ WebAppConst.CSV_FILE_EXTENSION);
 
 					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
 							pendCategoryResultList, WebAppConst.CRLF);
@@ -980,10 +978,8 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 									+ questionInfo.getSubjectCode()
 									+ WebAppConst.HYPHEN
 									+ questionInfo.getQuestionNum()
-									+ WebAppConst.TXT_FILE_EXTENSION);
-
-					txtFile.createNewFile();
-
+									+ WebAppConst.CSV_FILE_EXTENSION);
+					
 					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
 							finalResultList, WebAppConst.CRLF);
 
@@ -1024,34 +1020,34 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 				.getText("label.pending.cat.wise.report.details"));
 		csvHeaders.append(textProvider
 				.getText("label.prog.report.pending.category"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.prog.report.pending.rating.waiting"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("lable.prog.report.1st.pending.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.prog.report.2nd.pending.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.prog.report.pending.pending.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.prog.report.discrepancy.pending.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.prog.report.out.of.boundary.pending.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.prog.report.deny.pending.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.prog.report.no.grade.pending.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.prog.report.script.search.pending.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.prog.report.forced.pending.temp"));
 
@@ -1077,25 +1073,25 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 					csvData.append(record.getPendingCategory());
 				}
 
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getPendingScoringWait());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getFirstTimeScoringPending());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getSecondTimeScoringPending());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getPendingScorePendingTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getMismatchScoringPending());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getOutOfBoundaryPendingTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getDenyuScoringPending());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getNoGradePengingTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getScoringSamplingPending());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getForcedScoringPending());
 
 				pendCategoryResultList.add(csvData.toString());
@@ -1128,57 +1124,57 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 					.getText("label.mark.value.wise.report.markValue"));
 		}
 
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.confirm"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
-				.getText("label.grade.wise.report.2nd.waiting"));
-		csvHeaders.append(WebAppConst.COMMA);
+				.getText("label.grade.wise.report.checking.Rtg.waiting"));
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.inspection.Rtg.waiting"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.deny.Rtg.waiting"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.1st.Rtg.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.2nd.Rtg.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.pending.Rtg.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.discrepancy.Rtg.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.out.of.boundary.Rtg.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.deny.Rtg.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.no.grade.Rtg.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.script.search.Rtg.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.forced.Rtg.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders
 				.append(textProvider
 						.getText("label.grade.wise.report.check.operation.approve.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders.append(textProvider
 				.getText("label.grade.wise.report.check.operation.deny.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders
 				.append(textProvider
 						.getText("label.grade.wise.report.inspection.operation.approve.temp"));
-		csvHeaders.append(WebAppConst.COMMA);
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		csvHeaders
 				.append(textProvider
 						.getText("label.grade.wise.report.inspection.operation.deny.temp"));
@@ -1204,42 +1200,41 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 					csvData.append(record.getGradeNum());
 				}
 
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getConfirmBatch());
-				csvData.append(WebAppConst.COMMA);
-				csvData.append(record.getSecondTimeScoringWait());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
+				csvData.append(record.getCheckingWorkWait());
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getInspectionMenuWait());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getDenyuScoringWait());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getFirstTimeScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getSecondTimeScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getPendingScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getMismatchScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getOutOfBoundaryScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getDenyuScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getNoGradeScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getScoringSamplingTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getForcedScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getCheckingApproveTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getChekingDenyTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getInspectionMenuApprove());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getInspectionMenuDeny());
-				csvData.append(WebAppConst.COMMA);
-
+				
 				finalResultList.add(csvData.toString());
 			}
 		}
@@ -1263,42 +1258,41 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 					csvData.append(record.getMarkValue());
 				}
 
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getConfirmBatch());
-				csvData.append(WebAppConst.COMMA);
-				csvData.append(record.getSecondTimeScoringWait());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
+				csvData.append(record.getCheckingWorkWait());
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getInspectionMenuWait());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getDenyuScoringWait());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getFirstTimeScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getSecondTimeScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getPendingScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getMismatchScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getOutOfBoundaryScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getDenyuScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getNoGradeScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getScoringSamplingTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getForcedScoringTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getCheckingApproveTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getChekingDenyTemp());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getInspectionMenuApprove());
-				csvData.append(WebAppConst.COMMA);
+				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getInspectionMenuDeny());
-				csvData.append(WebAppConst.COMMA);
-
+				
 				finalResultList.add(csvData.toString());
 			}
 		}
