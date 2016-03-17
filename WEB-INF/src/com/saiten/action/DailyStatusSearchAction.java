@@ -290,6 +290,10 @@ public class DailyStatusSearchAction extends ActionSupport implements
 					+ "Loaded daily status detail report for selected question. \n Search Criteria: -{ Subject Code: "
 					+ questionInfo.getSubjectCode() + ", Question No.: "
 					+ questionInfo.getQuestionNum() + "}");
+			
+			
+			// Adding menu id to questionInfo object.
+			questionInfo.setMenuId(sessionQuestionInfo.getMenuId()); 
 
 			session.put("questionInfo", questionInfo);
 			session.put("gradeWiseReportList", gradeWiseReportList);
