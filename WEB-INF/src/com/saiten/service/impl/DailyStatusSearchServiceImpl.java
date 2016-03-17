@@ -53,10 +53,9 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 	private ScoreSearchService scoreSearchService;
 
 	@SuppressWarnings("rawtypes")
-	List finalResultList = new ArrayList();
-
+	private List finalResultList;
 	@SuppressWarnings("rawtypes")
-	List pendCategoryResultList = new ArrayList();
+	private List pendCategoryResultList;
 
 	@SuppressWarnings({ "unused", "rawtypes" })
 	public Map<Byte, String> getScorerRollMapByID(String id) {
@@ -836,9 +835,8 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 			QuestionInfo questionInfo, String selectedMenuId) {
 
 		String fileToDownload = null;
-		List<DailyStatusReportListInfo> gradeList = new ArrayList();
-		List<DailyStatusReportListInfo> markValueList = new ArrayList();
-		List<DailyStatusReportListInfo> pendCategoryList = new ArrayList();
+		finalResultList = new ArrayList();
+		pendCategoryResultList = new ArrayList();
 
 		try {
 			File downloadDir;
@@ -850,6 +848,8 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 					"saiten.daily.report.download.basepath");
 
 			if (selectedMenuId.equals(WebAppConst.GRADE_WISE_DETAILS_REPORT)) {
+
+				List<DailyStatusReportListInfo> gradeList = new ArrayList();
 
 				if (gradeWiseList != null && !gradeWiseList.isEmpty()) {
 					gradeList.addAll(gradeWiseList);
@@ -900,6 +900,8 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 			} else if (selectedMenuId
 					.equals(WebAppConst.PENDING_CATEGORY_WISE_DETAILS_REPORT)) {
 
+				List<DailyStatusReportListInfo> pendCategoryList = new ArrayList();
+
 				if (pendingCategoryWiseList != null
 						&& !pendingCategoryWiseList.isEmpty()) {
 					pendCategoryList.addAll(pendingCategoryWiseList);
@@ -949,6 +951,8 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 			} else if (selectedMenuId
 					.equals(WebAppConst.MARK_VALUE_WISE_DETAILS_REPORT)) {
+
+				List<DailyStatusReportListInfo> markValueList = new ArrayList();
 
 				if (markValueWiseList != null && !markValueWiseList.isEmpty()) {
 					markValueList.addAll(markValueWiseList);
@@ -1202,11 +1206,12 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 		if (!gradeList.isEmpty()) {
 
+			int count = 1;
 			for (DailyStatusReportListInfo record : gradeList) {
 
 				StringBuilder csvData = new StringBuilder();
 
-				if (record.getGradeNum().equals("null")) {
+				if (gradeList.size() == count) {
 					csvData.append(textProvider
 							.getText("dailyStatusQuestionWise.report.total"));
 				} else {
@@ -1256,6 +1261,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 				csvData.append(record.getInspectionMenuDeny());
 
 				finalResultList.add(csvData.toString());
+				count++;
 			}
 		}
 	}

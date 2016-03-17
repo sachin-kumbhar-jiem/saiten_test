@@ -42,55 +42,56 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 	private DailyReportsInfo dailyReportsInfo;
 	private TranScorerAccessLogDAO tranScorerAccessLogDAO;
 
-	@SuppressWarnings("rawtypes")
-	List studCntListForAllQues = new ArrayList();
-	List<String> allQuesCountList = new ArrayList<String>();
+	private List<String> studCntListForAllQues;
+	private List<String> allQuesCountList;
 
-	@SuppressWarnings("rawtypes")
-	List confAndInspWaitCntList = new ArrayList();
-	List<String> confAndInspWaitList = new ArrayList<String>();
+	private List<String> confAndInspWaitCntList;
+	private List<String> confAndInspWaitList;
 
-	@SuppressWarnings("rawtypes")
-	List specifiedQuesCntList = new ArrayList();
-	List<String> specfQuesList = new ArrayList<String>();
+	private List<String> specifiedQuesCntList;
+	private List<String> specfQuesList;
 
-	@SuppressWarnings("rawtypes")
-	List scorerAccessLogList = new ArrayList();
-	List<String> accessLogList = new ArrayList<String>();
+	private List<String> scorerAccessLogList;
+	private List<String> accessLogList;
 
 	@SuppressWarnings("unchecked")
 	public String processDownloadDailyReportRequest(String dailyReports,
 			String quesSequences, String dailyReportCurrentDate)
 			throws Exception {
+
+		allQuesCountList = new ArrayList<String>();
+		confAndInspWaitList = new ArrayList<String>();
+		specfQuesList = new ArrayList<String>();
+		accessLogList = new ArrayList<String>();
 		String fileToDownload = null;
+
 		try {
+			List<String> connectionStringList = new ArrayList<String>();
+
+			List<MstDbInstance> mstDbInstanceList = mstDbInstanceDAO.findAll();
 
 			TextProvider textProvider = (TextProvider) ActionContext
 					.getContext().getActionInvocation().getAction();
 
+			String downloadDirBasePath = textProvider.getTexts(
+					WebAppConst.APPLICATION_PROPERTIES_FILE).getString(
+					"saiten.daily.report.download.basepath");
+
+			String directoryName = getDirectoryName(SaitenUtil
+					.getLoggedinScorerId());
+
+			File downloadDir = null;
+
 			if (dailyReports.equals(WebAppConst.STUD_COUNT_FOR_ALL_QUES)) {
 
-				List<String> connectionStringList = new ArrayList<String>();
+				studCntListForAllQues = new ArrayList<String>();
 
-				@SuppressWarnings("rawtypes")
-				List allQuestionsCountList = new ArrayList();
+				List<String> allQuestionsCountList = new ArrayList<String>();
 
-				List<MstDbInstance> mstDbInstanceList = mstDbInstanceDAO
-						.findAll();
-				
 				for (MstDbInstance mstDbInstance : mstDbInstanceList) {
 					connectionStringList.add(mstDbInstance
 							.getConnectionString());
 				}
-				
-				String downloadDirBasePath = textProvider.getTexts(
-						WebAppConst.APPLICATION_PROPERTIES_FILE).getString(
-						"saiten.daily.report.download.basepath");
-
-				String directoryName = getDirectoryName(SaitenUtil
-						.getLoggedinScorerId());
-
-				File downloadDir;
 
 				for (String connectionString : connectionStringList) {
 
@@ -116,14 +117,16 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 
 					getReportRowsForAllQues(allQuestionsCountList);
 
-					File csvfile = new File(
+					File txtFile = new File(
 							downloadDir.getPath()
 									+ File.separator
 									+ textProvider
 											.getText("daily.csv.data.report.for.all.ques.csv.prefix")
-									+ WebAppConst.CSV_FILE_EXTENSION);
+									+ WebAppConst.TXT_FILE_EXTENSION);
 
-					FileUtils.writeLines(csvfile, WebAppConst.FILE_ENCODING,
+					txtFile.createNewFile();
+
+					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
 							allQuesCountList, WebAppConst.CRLF);
 
 					if (!SaitenFileUtil.isEmptyDirectory(downloadDir)) {
@@ -143,27 +146,14 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 
 				List<String> questionSeqsInfoList = Arrays.asList(quesSequences
 						.split(","));
-				List<String> connectionStringList = new ArrayList<String>();
 
-				@SuppressWarnings("rawtypes")
-				List specQuesCountList = new ArrayList();
-
-				List<MstDbInstance> mstDbInstanceList = mstDbInstanceDAO
-						.findAll();
+				specifiedQuesCntList = new ArrayList<String>();
+				List<String> specQuesCountList = new ArrayList<String>();
 
 				for (MstDbInstance mstDbInstance : mstDbInstanceList) {
 					connectionStringList.add(mstDbInstance
 							.getConnectionString());
 				}
-
-				String downloadDirBasePath = textProvider.getTexts(
-						WebAppConst.APPLICATION_PROPERTIES_FILE).getString(
-						"saiten.daily.report.download.basepath");
-
-				String directoryName = getDirectoryName(SaitenUtil
-						.getLoggedinScorerId());
-
-				File downloadDir;
 
 				for (String connectionString : connectionStringList) {
 
@@ -192,13 +182,15 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 
 					getReportRowsForSpecQues(specQuesCountList);
 
-					File csvfile = new File(
+					File txtFile = new File(
 							downloadDir.getPath()
 									+ File.separator
 									+ textProvider
 											.getText("daily.csv.data.report.for.spec.ques.csv.prefix")
-									+ WebAppConst.CSV_FILE_EXTENSION);
-					FileUtils.writeLines(csvfile, WebAppConst.FILE_ENCODING,
+									+ WebAppConst.TXT_FILE_EXTENSION);
+					txtFile.createNewFile();
+
+					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
 							specfQuesList, WebAppConst.CRLF);
 
 					if (!SaitenFileUtil.isEmptyDirectory(downloadDir)) {
@@ -218,28 +210,15 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 					|| dailyReports
 							.equals(WebAppConst.NOT_CONFIRM_AND_WAIT_STATE)) {
 
-				List<String> connectionStringList = new ArrayList<String>();
+				File csvfile = null;
+				confAndInspWaitCntList = new ArrayList<String>();
 
-				@SuppressWarnings("rawtypes")
-				List questionCountList = new ArrayList();
-
-				List<MstDbInstance> mstDbInstanceList = mstDbInstanceDAO
-						.findAll();
+				List<String> questionCountList = new ArrayList<String>();
 
 				for (MstDbInstance mstDbInstance : mstDbInstanceList) {
 					connectionStringList.add(mstDbInstance
 							.getConnectionString());
 				}
-
-				String downloadDirBasePath = textProvider.getTexts(
-						WebAppConst.APPLICATION_PROPERTIES_FILE).getString(
-						"saiten.daily.report.download.basepath");
-
-				String directoryName = getDirectoryName(SaitenUtil
-						.getLoggedinScorerId());
-
-				File downloadDir = null;
-				File csvfile = null;
 
 				for (String connectionString : connectionStringList) {
 
@@ -309,17 +288,8 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 
 			else if (dailyReports.equals(WebAppConst.LOGIN_LOGOUT_REPORT)) {
 
-				@SuppressWarnings("rawtypes")
-				List tempList = new ArrayList();
-
-				String downloadDirBasePath = textProvider.getTexts(
-						WebAppConst.APPLICATION_PROPERTIES_FILE).getString(
-						"saiten.daily.report.download.basepath");
-
-				String directoryName = getDirectoryName(SaitenUtil
-						.getLoggedinScorerId());
-
-				File downloadDir;
+				List<String> tempList = new ArrayList<String>();
+				scorerAccessLogList = new ArrayList<String>();
 
 				scorerAccessLogList = tranScorerAccessLogDAO
 						.loginLogoutReport(dailyReportCurrentDate);
@@ -373,7 +343,7 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 		return fileToDownload;
 	}
 
-	private void getRowsForLoginLogoutReport(List tempList) {
+	private void getRowsForLoginLogoutReport(List<String> tempList) {
 		if (!tempList.isEmpty()) {
 
 			for (Object record : tempList) {
@@ -413,8 +383,11 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 		accessLogList.add(csvHeaders.toString());
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void getReportRowsForSpecQues(List specQuesCountList) {
 		if (!specQuesCountList.isEmpty()) {
+
+			Map stateMap = SaitenUtil.latestScoringStatesMap();
 
 			for (Object record : specQuesCountList) {
 
@@ -424,7 +397,12 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 
 				csvData.append(objectRecordArray[0]);
 				csvData.append(WebAppConst.COMMA);
-				csvData.append(objectRecordArray[1]);
+
+				if (objectRecordArray[1] != null) {
+					String stateValues = (String) stateMap.get((int) Short
+							.parseShort(objectRecordArray[1].toString()));
+					csvData.append(stateValues);
+				}
 				csvData.append(WebAppConst.COMMA);
 				csvData.append(objectRecordArray[2]);
 
@@ -444,7 +422,7 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 		specfQuesList.add(csvHeaders.toString());
 	}
 
-	private void getDailyCSVReportRows(List questionCountList) {
+	private void getDailyCSVReportRows(List<String> questionCountList) {
 
 		if (!questionCountList.isEmpty()) {
 
