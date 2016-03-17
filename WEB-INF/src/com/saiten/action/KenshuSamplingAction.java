@@ -591,6 +591,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 		answerInfo.setQuestionSeq(tranDescScore.getQuestionSeq());
 		answerInfo.setLatestScreenScorerId(tranDescScore
 				.getLatestScreenScorerId());
+		answerInfo.setPunchText(tranDescScore.getPunchText());
 
 		if (tranDescScore.getSecondLatestScreenScorerId() != null) {
 			answerInfo.setSecondLatestScreenScorerId(tranDescScore
@@ -606,7 +607,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 		tranDescScoreInfoObj.setImageFileName(tranDescScore.getImageFileName());
 		tranDescScoreInfoObj.setLatestScreenScorerId(tranDescScore
 				.getLatestScreenScorerId());
-
+		
 		tranDescScoreInfoObj.setPendingCategory(tranDescScore
 				.getPendingCategory());
 	}
