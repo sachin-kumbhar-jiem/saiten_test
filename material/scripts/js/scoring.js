@@ -1,8 +1,20 @@
 ﻿//function for enable all links & buttons which are disabled.
 function enableLinksAndButtons(){
 	$(':button').prop('disabled', false); // Enable all the button
-	$('a').unbind('click'); // Enable all the links
+	$('a').unbind('click' ); // Enable all the links
+	/*$( "#processDetails" ).bind( "click", function() {
+		 // alert( "The quick brown fox jumps over the lazy dog." );
+		  var childWin = window.open('findProcessDetails.action?answerSequence='+$("#answerSeq").val(),'child', "width=720, height=400, location=no, menubar=no, scrollbars=yes, status=no, toolbar=no");
+		    if (window.focus) {childWin.focus()}
+		});*/
+	//$("#processDetails").bind('click');
 }
+
+function testClick () {
+	var childWin = window.open('findProcessDetails.action?answerSequence='+$("#answerSeq").val(),'child', "width=720, height=400, location=no, menubar=no, scrollbars=yes, status=no, toolbar=no");
+    if (window.focus) {childWin.focus()}
+}
+
 //function for disable all links & buttons which are enabled.
 function disableLinksAndButtons(){
 	$(':button').prop('disabled', true); // Disable all the button

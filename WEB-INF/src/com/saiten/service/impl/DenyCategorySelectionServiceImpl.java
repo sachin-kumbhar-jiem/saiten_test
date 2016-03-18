@@ -15,7 +15,6 @@ public class DenyCategorySelectionServiceImpl implements
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Map<Short, String> findDenyCategoriesByQuestionSeq(int questionSeq) {
-		System.out.println("this is here now");
 		try {
 			List denyCategoryList = mstDenyCategoryDAO
 					.findDenyCategoriesByQuestionSeq(questionSeq);

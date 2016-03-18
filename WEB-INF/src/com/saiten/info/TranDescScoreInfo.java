@@ -1,5 +1,6 @@
 package com.saiten.info;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,8 +8,12 @@ import java.util.List;
  * @version 1.0
  * @created 11-Dec-2012 12:41:32 PM
  */
-public class TranDescScoreInfo {
+public class TranDescScoreInfo implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String answerFormNumber;
 	private AnswerInfo answerInfo;
 	private String helpDocument;
