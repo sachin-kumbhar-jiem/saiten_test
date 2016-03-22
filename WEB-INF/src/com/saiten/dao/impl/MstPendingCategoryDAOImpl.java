@@ -51,17 +51,17 @@ public class MstPendingCategoryDAOImpl extends SaitenHibernateDAOSupport
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT mstPendingCategory.pendingCategory, CONCAT(mstPendingCategory.pendingCategory, '.', mstPendingCategory.pendingDescription) ");
 		query.append("FROM MstPendingCategory as mstPendingCategory ");
-		query.append("WHERE mstPendingCategory.deleteFlag= :DELETE_FLAG AND mstPendingCategory.validFlag = :VALID_FLAG ");
+		query.append("WHERE mstPendingCategory.deleteFlag= :DELETE_FLAG ");
 		query.append("AND mstPendingCategory.mstQuestion.questionSeq = :QUESTION_SEQ ");
 		query.append("ORDER BY mstPendingCategory.pendingCategory");
 
-		String[] paramNames = { "QUESTION_SEQ", "DELETE_FLAG", "VALID_FLAG" };
-		Object[] values = { questionSeq, WebAppConst.DELETE_FLAG,
-				WebAppConst.VALID_FLAG };
+		String[] paramNames = { "QUESTION_SEQ", "DELETE_FLAG" };
+		Object[] values = { questionSeq, WebAppConst.DELETE_FLAG };
 
 		try {
 			return getHibernateTemplate().findByNamedParam(query.toString(),
 					paramNames, values);
+			
 		} catch (RuntimeException re) {
 			throw re;
 		}
