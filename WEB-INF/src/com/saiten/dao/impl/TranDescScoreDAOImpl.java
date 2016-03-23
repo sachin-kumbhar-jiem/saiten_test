@@ -1736,7 +1736,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			throw re;
 		}
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public List getMarkValueWiseAnswerDetails(String questionSeq,
@@ -1749,9 +1749,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 					.append("sum(case when latest_scoring_state=500 then 1 else 0 end) as confirm,  ");
 			queryString
 					.append("sum(case when latest_scoring_state=122 then 1 else 0 end) as firstTimeScoreTemp,  ");
-			queryString
-					.append("sum(case when latest_scoring_state=121 then 1 else 0 end) as firstTimeScoreWait,  ");
-			
+
 			if (questionType == Arrays.asList(WebAppConst.QUESTION_TYPE).get(1)) {
 				queryString
 						.append("sum(case when latest_scoring_state=141 then 1 else 0 end) as checkingWorkWait,  ");
@@ -1787,7 +1785,10 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			queryString
 					.append("sum(case when latest_scoring_state=151 then 1 else 0 end) as inspectionMenuWait,  ");
 			queryString
-					.append("sum(case when latest_scoring_state=191 then 1 else 0 end) as denyScoringWait  ");
+					.append("sum(case when latest_scoring_state=191 then 1 else 0 end) as denyScoringWait,  ");
+
+			queryString
+					.append("sum(case when latest_scoring_state=121 then 1 else 0 end) as firstTimeScoreWait  ");
 
 			queryString.append("FROM tran_desc_score  ");
 
