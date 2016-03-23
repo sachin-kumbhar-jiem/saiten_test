@@ -146,7 +146,7 @@ CSS CONTENT -button css
 .btn-x3 {
   font-size: 12px;
   border-radius: 4px;
-  width: 50px;
+  width: 55px;
   height: 15px;
 }
 
@@ -155,7 +155,7 @@ CSS CONTENT -button css
   pointer-events: none; 
   .opacity(.65);
   .box-shadow(none);
-  width: 50px;
+  width: 55px;
   height: 15px;
   font-size: 12px;  
   border-radius: 4px;

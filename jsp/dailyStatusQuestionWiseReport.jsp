@@ -225,18 +225,21 @@
 			   <table class="displayTable" style="width: 100%;">
 				 <thead>
 					 <tr style="height: 25px;">
-						 <th colspan="18" style="padding-left: 10px;text-align: left;">
+						 <th colspan="19" style="padding-left: 10px;text-align: left;">
 							<s:text name="dailyStatusQuestionWise.report.title.markvalue.details"/>
 						 </th>
 					 </tr>
 					<tr style="height: 20px;">
 						<th style="width:5%;" rowspan="2"><s:text name="label.markvalue"/></th>
 						<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.confirm"/></th>
+						<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.first.time.scoring.wait"/></th>
+						
 						<s:if test="#session.questionType == @com.saiten.util.WebAppConst@LONG_TYPE">
 							<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.checking.scoring.wait"/></th>
 						</s:if><s:else>
 							<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.second.time.scoring.wait"/></th>
 						</s:else>
+						
 						<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.inspection.scoring.wait"/></th>
 						<th style="width:5%;" rowspan="2"><s:text name="dailyStatusQuestionWise.report.title.denial.scoring.wait"/></th>
 						<s:if test="!(#session.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE) && !(#session.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE)">
@@ -285,11 +288,14 @@
 						<td><s:property value="#dailyStatusInfo.markValue"/></td>
 					</s:else>
 						<td><s:property value="#dailyStatusInfo.confirmBatch"/></td>
+						<td><s:property value="#dailyStatusInfo.firstTimeScoringWait"/></td>
+						
 						<s:if test="#session.questionType == @com.saiten.util.WebAppConst@LONG_TYPE">
 							<td><s:property value="#dailyStatusInfo.checkingWorkWait"/></td>
 						</s:if><s:else>
 							<td><s:property value="#dailyStatusInfo.secondTimeScoringWait"/></td>
 						</s:else>
+						
 						<td><s:property value="#dailyStatusInfo.inspectionMenuWait"/></td>
 						<td><s:property value="#dailyStatusInfo.denyuScoringWait"/></td>
 						<td><s:property value="#dailyStatusInfo.firstTimeScoringTemp"/></td>

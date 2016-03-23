@@ -1749,10 +1749,12 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 					.append("sum(case when latest_scoring_state=500 then 1 else 0 end) as confirm,  ");
 			queryString
 					.append("sum(case when latest_scoring_state=122 then 1 else 0 end) as firstTimeScoreTemp,  ");
+			queryString
+					.append("sum(case when latest_scoring_state=121 then 1 else 0 end) as firstTimeScoreWait,  ");
+			
 			if (questionType == Arrays.asList(WebAppConst.QUESTION_TYPE).get(1)) {
 				queryString
 						.append("sum(case when latest_scoring_state=141 then 1 else 0 end) as checkingWorkWait,  ");
-
 			} else {
 				queryString
 						.append("sum(case when latest_scoring_state=131 then 1 else 0 end) as secondTimeScoreWait,  ");
@@ -1794,7 +1796,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			queryString.append("AND  question_seq in (" + questionSeq + ") ");
 
 			queryString
-					.append("AND latest_scoring_state in (500,122,131,132,144,145,162,172,154,155,182,192,212,221,241,151,141,191) ");
+					.append("AND latest_scoring_state in (500,121,122,131,132,144,145,162,172,154,155,182,192,212,221,241,151,141,191) ");
 			queryString.append("GROUP BY mark_value ");
 			queryString.append("WITH ROLLUP ");
 

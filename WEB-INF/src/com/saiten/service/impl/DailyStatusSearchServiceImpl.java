@@ -795,6 +795,9 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 							+ array[16]);
 					dailyStatusReportListInfo.setDenyuScoringWait(""
 							+ array[17]);
+					dailyStatusReportListInfo.setFirstTimeScoringWait(""
+							+ array[18]);
+
 					markValueWiseReportList.add(dailyStatusReportListInfo);
 				}
 			}
@@ -1136,6 +1139,12 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 				.getText("label.grade.wise.report.confirm"));
 		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 
+		if (selectedMenuId.equals(WebAppConst.MARK_VALUE_WISE_DETAILS_REPORT)) {
+			csvHeaders.append(textProvider
+					.getText("label.prog.report.1st.time.scoring.wait"));
+		}
+		csvHeaders.append(WebAppConst.TAB_CHARACTER);
+
 		if (questionInfo.getQuestionType() == Arrays.asList(
 				WebAppConst.QUESTION_TYPE).get(1)) {
 
@@ -1287,6 +1296,9 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 				csvData.append(WebAppConst.TAB_CHARACTER);
 				csvData.append(record.getConfirmBatch());
+				csvData.append(WebAppConst.TAB_CHARACTER);
+
+				csvData.append(record.getFirstTimeScoringWait());
 				csvData.append(WebAppConst.TAB_CHARACTER);
 
 				if (questionInfo.getQuestionType() == Arrays.asList(
