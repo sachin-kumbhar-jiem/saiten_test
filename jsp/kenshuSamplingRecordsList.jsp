@@ -117,7 +117,7 @@
 		 		<s:if test="kenshuSamplingSearchRecordInfoList.size() == 0">
 		 			<span class="errorMessage"><s:text name="error.message.no.records" /></span>
 		 		</s:if><s:else>
-		 			<table class="displayTable" style="width: 80%;">
+		 			<table class="displayTable" style="width: 90%;">
 				<thead>
 					<tr style="height: 25px;">
 						
@@ -127,13 +127,18 @@
 		 				 <th style="padding-left: 10px;text-align: center;width:15%;">
 		 					<s:text name="lable.kenshusampling.ratio.title" />
 		 				</th>
-		 				<th style="padding-left: 10px;text-align: center;width:15%;">
+		 				<th style="padding-left: 10px;text-align: center;width:10%;">
 		 					<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_SEARCH">
 			 					<s:text name="label.kenshu.checked.records" />
 		 					</s:if><s:elseif test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
 		 						<s:text name="label.explained.record" />
 		 					</s:elseif>
 		 				</th>
+		 					<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
+		 						<th style="padding-left: 10px;text-align: center;width:10%;">
+		 							<s:text name="label.kenshu.search.unexplained" />
+		 						</th>
+		 					</s:if>
 		 				<th style="padding-left: 10px;text-align: center;width:20%;">
 		 					<s:text name="lable.kenshusampling.target.number" />
 		 				</th>
@@ -157,16 +162,26 @@
 			 				<td style="width:15%;font-family:verdana">
 			 					<s:property value="#kenshuObj.ratio"/>
 			 				</td>
-			 				<td style="width:15%;font-family:verdana">
+			 				<td style="width:10%;font-family:verdana">
 			 					<s:property value="#kenshuObj.checkedRecordNumber"/>
 			 				</td>
+			 				<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
+		 						<td style="width:10%;font-family:verdana">
+		 						<c:out value="${kenshuObj.totalNumber-kenshuObj.checkedRecordNumber}"/>
+			 				</td>
+		 					</s:if>
 			 				<td style="width:20%;font-family:verdana">
 			 					<s:property value="#kenshuObj.totalNumber"/>
 			 				</td>
 			 				<td style="padding-left: 10px;text-align: left;font-family:verdana">
 			 					<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
 			 						<s:if test="#kenshuObj.totalNumber >= #kenshuObj.checkedRecordNumber">
-										<a href="showKenshuSamplingList.action?slectedGrade=<s:property value="#kenshuObj.gradeNum" />&totalRecordCount=<s:property value="#kenshuObj.totalNumber" />" id="prev" name="prev" style="width:69px; height:15px;color:green;"><s:text name="label.start.grade.wise.answer.checking"></s:text></a>
+										<a href="showKenshuSamplingList.action?slectedGrade=<s:property value="#kenshuObj.gradeNum" />&totalRecordCount=<s:property value="#kenshuObj.totalNumber" />" id="prev" name="prev" style="width:69px; height:15px;color:green;">
+											<s:text name="label.start.grade.wise.answer.checking"></s:text> 
+											<s:text name="label.openbrace"></s:text>
+											<s:property value="acceptanceDisplayInfo.recordSearchCriteria" />
+											<s:text name="label.closingbrace"></s:text>
+											</a>
 			 						</s:if><s:else>
 			 							<a href="#" id="prev" name="prev" style="width:69px; height:15px;color:gray;"><s:text name="label.start.grade.wise.answer.checking"></s:text></a>
 			 						</s:else>

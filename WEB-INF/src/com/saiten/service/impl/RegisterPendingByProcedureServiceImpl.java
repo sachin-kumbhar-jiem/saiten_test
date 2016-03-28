@@ -220,7 +220,7 @@ public class RegisterPendingByProcedureServiceImpl implements
 		scoringStateKey.setMenuId(questionInfo.getMenuId());
 		scoringStateKey.setNoDbUpdate(scorerInfo.getNoDbUpdate());
 		// Get latestScoringState based on selected menuId and noDbUpdate
-		Short scoringState = scoringStatesMap.get(scoringStateKey).get(0);
+		Short scoringState = scoringStatesMap.get(scoringStateKey).get(1);
 
 		String scorerComment = answerInfo.getScorerComment();
 		if ((scorerComment == null) || (scorerComment.equals(""))) {

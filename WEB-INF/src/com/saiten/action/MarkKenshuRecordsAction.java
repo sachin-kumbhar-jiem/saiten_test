@@ -2,6 +2,7 @@ package com.saiten.action;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -11,6 +12,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.info.AnswerInfo;
 import com.saiten.info.KenshuRecordInfo;
+import com.saiten.info.KenshuSamplingSearchRecordInfo;
 import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.info.TranDescScoreInfo;
@@ -21,7 +23,7 @@ import com.saiten.util.WebAppConst;
 
 public class MarkKenshuRecordsAction extends ActionSupport implements
 		SessionAware {
-	
+
 	private static Logger log = Logger.getLogger(MarkKenshuRecordsAction.class);
 
 	/**
@@ -78,13 +80,13 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 
 			session.put("kenshuRecordInfo", kenshuRecordInfo);
 			session.put("tranAcceptance", tranAcceptance);
-			
+
 			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
-			
-			log.info(scorerInfo.getScorerId() + "-"
-					+ questionInfo.getMenuId() + "-"
-					+ "Marking answer explaination -{" + tranDescScoreInfo +"}" );
-			
+
+			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
+					+ "-" + "Marking answer explaination -{"
+					+ tranDescScoreInfo + "}");
+
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -99,13 +101,13 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 
 		try {
 			buildKenshuRecordInfo();
-			
-			TranAcceptance tranAcceptance = (TranAcceptance) session.get("tranAcceptance");
+
+			TranAcceptance tranAcceptance = (TranAcceptance) session
+					.get("tranAcceptance");
 			if (tranAcceptance != null) {
 				tranAcceptance.setComment(null);
 				session.put("tranAcceptance", tranAcceptance);
 			}
-				
 
 			kenshuRecordInfo.setComment(null);
 
@@ -129,13 +131,13 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 			session.put("kenshuRecordInfoMap", kenshuRecordInfoMap);
 
 			session.put("kenshuRecordInfo", kenshuRecordInfo);
-			
+
 			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
-			
-			log.info(scorerInfo.getScorerId() + "-"
-					+ questionInfo.getMenuId() + "-"
-					+ "Unmarking answer explaination -{" + tranDescScoreInfo +"}" );
-			
+
+			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
+					+ "-" + "Unmarking answer explaination -{"
+					+ tranDescScoreInfo + "}");
+
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -172,10 +174,28 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 		kenshuRecordInfo.setComment(markComment);
 	}
 
+	@SuppressWarnings("unchecked")
 	public String setExplainFlag() {
 		try {
 			tranAcceptance = (TranAcceptance) session.get("tranAcceptance");
 			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
+			List<KenshuSamplingSearchRecordInfo> kenshuRecordInfoList = (List<KenshuSamplingSearchRecordInfo>) session
+					.get("kenshuSamplingSearchRecordInfoList");
+			
+			String slectedGrade = (String) session.get("slectedGrade");
+			int number ;
+			for (KenshuSamplingSearchRecordInfo recordObj : kenshuRecordInfoList) {
+				if (recordObj.getGradeNum() == Integer.parseInt(slectedGrade)) {
+					number = recordObj.getCheckedRecordNumber();
+					if (number<recordObj.getTotalNumber()) {
+						recordObj.setCheckedRecordNumber(number+1);
+					}
+				}
+
+			}
+			
+			session.put("kenshuSamplingSearchRecordInfoList",
+					kenshuRecordInfoList);
 
 			QuestionInfo questionInfo = (QuestionInfo) session
 					.get("questionInfo");
@@ -189,13 +209,12 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 
 			markKenshuRecordService.updateRecord(tranAcceptance,
 					connectionString);
-			
+
 			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
-			
-			log.info(scorerInfo.getScorerId() + "-"
-					+ questionInfo.getMenuId() + "-"
-					+ "Explaining Answer  -{" + tranAcceptance +"}" );
-			
+
+			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
+					+ "-" + "Explaining Answer  -{" + tranAcceptance + "}");
+
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -206,12 +225,32 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public String clearExplainFlag() {
 		try {
 			tranAcceptance = (TranAcceptance) session.get("tranAcceptance");
 
 			QuestionInfo questionInfo = (QuestionInfo) session
 					.get("questionInfo");
+			
+			List<KenshuSamplingSearchRecordInfo> kenshuRecordInfoList = (List<KenshuSamplingSearchRecordInfo>) session
+					.get("kenshuSamplingSearchRecordInfoList");
+			
+			String slectedGrade = (String) session.get("slectedGrade");
+			int number ;
+			for (KenshuSamplingSearchRecordInfo recordObj : kenshuRecordInfoList) {
+				if (recordObj.getGradeNum() == Integer.parseInt(slectedGrade)) {
+					number = recordObj.getCheckedRecordNumber();
+					if (number>0) {
+						recordObj.setCheckedRecordNumber(number-1);
+					}
+				}
+
+			}
+			
+			session.put("kenshuSamplingSearchRecordInfoList",
+					kenshuRecordInfoList);
+			
 			String connectionString = null;
 			if (questionInfo != null) {
 				connectionString = questionInfo.getConnectionString();
@@ -222,13 +261,13 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 
 			markKenshuRecordService.updateRecord(tranAcceptance,
 					connectionString);
-			
+
 			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
-			
-			log.info(scorerInfo.getScorerId() + "-"
-					+ questionInfo.getMenuId() + "-"
-					+ "Clearing Explain flag for Answer  -{" + tranAcceptance +"}" );
-			
+
+			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
+					+ "-" + "Clearing Explain flag for Answer  -{"
+					+ tranAcceptance + "}");
+
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {

@@ -73,7 +73,7 @@
 									</c:if>							
 									<c:set var="sessionSubjectCode" value="${sessionScope.kenshuSamplingInfo.subjectCode}" />		
 									<c:choose>
-										<c:when test="${((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
+										<c:when test="${not ((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
 											<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
 										</c:when>
 									<c:otherwise>
@@ -134,7 +134,7 @@
 									</c:if>							
 									<c:set var="sessionSubjectCode" value="${sessionScope.kenshuSamplingInfo.subjectCode}" />		
 									<c:choose>
-										<c:when test="${((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
+										<c:when test="${not ((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
 											<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
 										</c:when>
 									<c:otherwise>
@@ -196,7 +196,7 @@
 								</c:if>							
 								<c:set var="sessionSubjectCode" value="${sessionScope.acceptanceDisplayInfo.subjectCode}" />
 								<c:choose>
-									<c:when test="${((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
+									<c:when test="${not((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
 										<input type="radio" id="subjectCodeA" name="acceptanceDisplayInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
 									</c:when>
 								<c:otherwise>

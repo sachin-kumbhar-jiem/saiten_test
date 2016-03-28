@@ -309,7 +309,15 @@
 					<p class="btn btn-disabled"><s:text name="label.alt.kenshusampling"></s:text></p>
 				</s:else>
 			</td>
-			<td>&nbsp;</td>
+			<td>
+				<s:if test="userMenuIdList.contains(@com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID)">
+					<a href="scoreSearch.action?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID"/>" id="referenceSampling" class="btn btn-primary btn-xl">
+						<s:text name="label.alt.referenceSampling"></s:text>				
+					</a>	
+				</s:if><s:else>
+					<p class="btn btn-disabled"><s:text name="label.alt.referenceSampling"></s:text></p>	
+				</s:else>
+			</td>
 			<td>&nbsp;</td>
 		</tr>
 		

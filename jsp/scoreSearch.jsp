@@ -210,6 +210,9 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 									<tr>
 										<th class="partition">
 											<s:text name="label.scorer.role" />
+											<input type="button" name="scorerCheckButton" value="<s:text name="label.scoresearch.selectall" />"
+											 onclick="changeCheckBox('scoreInputInfo.scoreHistoryInfo.historyScorerRole', true)">
+											<input type="button" name="scorerCheckButton" value="<s:text name="label.scoresearch.cancelall" />" onclick="changeCheckBox('scoreInputInfo.scoreHistoryInfo.historyScorerRole', false)">
 										</th>
 										<td colspan="5" >
 											<s:if test="@org.apache.commons.lang.ArrayUtils@contains(#session.scoreInputInfo.scoreHistoryInfo.historyScorerRole, 1)">
@@ -647,6 +650,10 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 									<tr>
 										<th class="partition">
 											<s:text name="label.scorer.role" />
+											<input type="button" name="currentScorerCheckButton" value="<s:text name="label.scoresearch.selectall" />" 
+											onclick="changeCheckBox('scoreInputInfo.scoreCurrentInfo.currentScorerRole', true)">
+											<input type="button" name="currentScorerCheckButton" value="<s:text name="label.scoresearch.cancelall" />"
+											 onclick="changeCheckBox('scoreInputInfo.scoreCurrentInfo.currentScorerRole', false)">
 										</th>
 										<td colspan="5" >
 											<s:if test="@org.apache.commons.lang.ArrayUtils@contains(#session.scoreInputInfo.scoreCurrentInfo.currentScorerRole, 1)">

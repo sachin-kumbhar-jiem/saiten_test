@@ -343,6 +343,9 @@ function toggleStateSearch() {
 	for(i=0; i < form.stateCheckButton.length; i++) {
 		form.stateCheckButton[i].disabled = isDisable;
 	}
+	for(i=0; i < form.currentScorerCheckButton.length; i++) {
+		form.currentScorerCheckButton[i].disabled = isDisable;
+	}
 	
 	form.punchTextData.disabled = isDisable;
 	form.currentUpdateDateStartYear.disabled = isDisable;
@@ -444,6 +447,9 @@ function toggleProcessSearch() {
 	}
 	for(i=0; i < form.processCheckButton.length; i++) {
 		form.processCheckButton[i].disabled = isDisable;
+	}
+	for(i=0; i < form.scorerCheckButton.length; i++) {
+		form.scorerCheckButton[i].disabled = isDisable;
 	}
 	for(i=0; i < form.eventCheckButton.length; i++) {
 		form.eventCheckButton[i].disabled = isDisable;

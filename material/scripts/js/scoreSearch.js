@@ -4,7 +4,15 @@ $(function () {
 	toggleProcessSearch();
 	
 	if($("input:radio[id=subjectCode]:checked").length == 0){
-		$("input:radio[id=subjectCode]:first").attr('checked', true);
+		
+		var redioBtnNum = $("input:radio[id=subjectCode]:unchecked").length;
+		var i;
+		for (i=0;i<redioBtnNum;i++) {
+			if (!$('input:radio[id=subjectCode]')[i].disabled) {
+				$('input:radio[id=subjectCode]')[i].checked = true;
+				break;
+			}
+		}
 	}
 	//setDefaultCB(); 
 });

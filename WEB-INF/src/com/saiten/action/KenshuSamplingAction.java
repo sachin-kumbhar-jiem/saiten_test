@@ -170,7 +170,11 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 				log.info(scorerInfo.getScorerId() + "-"
 						+ questionInfo.getMenuId() + "-"
-						+ "Search Criteria: -{ " + kenshuSamplingInfo + "}");
+						+ "Search Criteria: -{ " + "Subject:- " + subjectName
+						+ " ,question_number:- "
+						+ kenshuSamplingInfo.getQuestionNum()
+						+ " ,result_count:- "
+						+ kenshuSamplingInfo.getResultCount() + "}");
 
 				if (kenshuSamplingSearch != null) {
 					kenshuSamplingSearchRecordInfoList = kenshuSamplingService
@@ -242,7 +246,13 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 				log.info(scorerInfo.getScorerId() + "-"
 						+ questionInfo.getMenuId() + "-"
-						+ "Search Criteria: -{ " + acceptanceDisplayInfo + "}");
+						+ "Search Criteria: -{ " + "subject:- " + subjectName
+						+ " ,question_number:- "
+						+ acceptanceDisplayInfo.getQuestionNum()
+						+ " ,kenshu_user_id:- "
+						+ acceptanceDisplayInfo.getKenshuUserId()
+						+ " ,record_search_criteria:- "
+						+ acceptanceDisplayInfo.getRecordSearchCriteria() + "}");
 
 				if (acceptanceDisplayRadio != null) {
 					String searchCriteria = new String();
@@ -330,10 +340,29 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 			kenshuSamplingInfo.setGradeNum(grade);
 			kenshuSamplingInfo.setTotalNumber(gradeWiasecount);
+			kenshuSamplingInfo
+					.setCheckedRecordNumber(explainedRecordCount(tranDescScoreInfoGradWiseList));
 			kenshuSamplingInfo.setRatio(Double.valueOf(df.format(ratio)));
 
 			kenshuSamplingSearchRecordInfoList.add(kenshuSamplingInfo);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private int explainedRecordCount(
+			List<TranDescScoreInfo> tranDescScoreInfoList) {
+		int count = 0;
+		Map<Integer, TranAcceptance> tranAcceptanceMap1 = (Map<Integer, TranAcceptance>) session
+				.get("tranAcceptanceMap");
+		for (TranDescScoreInfo tranDescScoreInfo : tranDescScoreInfoList) {
+			TranAcceptance tranAcceptanceObj = tranAcceptanceMap1
+					.get(tranDescScoreInfo.getAnswerInfo().getAnswerSeq());
+			if (tranAcceptanceObj.getExplainFlag() != null
+					&& tranAcceptanceObj.getExplainFlag().equals('T')) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -474,25 +503,31 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 		kenshuSamplingSearchRecordInfoList = (List<KenshuSamplingSearchRecordInfo>) session
 				.get("kenshuSamplingSearchRecordInfoList");
-
-		int checkedRecordNum = updateChakedRecodCount();
-		if (checkedRecordNum == tranDescScoreInfoList.size()) {
-			checkedRecordNum--;
-		}
-		if (prevOrNextFlag != null && prevOrNextFlag == WebAppConst.TRUE) {
-		} else {
-			questionInfo.setPrevRecordCount(checkedRecordNum);
-			questionInfo.setNextRecordCount(tranDescScoreInfoList.size()-(checkedRecordNum+1));
-		}
 		
-		tranDescScoreInfo = tranDescScoreInfoList.get(questionInfo.getPrevRecordCount());
+		String samplingSearch = (String) session.get("samplingSearch");
+		
+		if(samplingSearch.equals(WebAppConst.KENSHU_SAMPLING_SEARCH)) {
+			int checkedRecordNum = updateChakedRecodCount();
+			if (checkedRecordNum == tranDescScoreInfoList.size()) {
+				checkedRecordNum--;
+			}
+			if (prevOrNextFlag != null && prevOrNextFlag == WebAppConst.TRUE) {
+			} else {
+				questionInfo.setPrevRecordCount(checkedRecordNum);
+				questionInfo.setNextRecordCount(tranDescScoreInfoList.size()
+						- (checkedRecordNum + 1));
+			}
+		}
+
+		tranDescScoreInfo = tranDescScoreInfoList.get(questionInfo
+				.getPrevRecordCount());
 
 		scorerInfo = (MstScorerInfo) session.get("scorerInfo");
 
 		log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
 				+ "-" + "Loading answer -{" + tranDescScoreInfo + "}");
 
-		String samplingSearch = (String) session.get("samplingSearch");
+		
 		if (samplingSearch.equals(WebAppConst.ACCEPTANCE_DISPLAY)) {
 			tranAcceptanceMap = (Map<Integer, TranAcceptance>) session
 					.get("tranAcceptanceMap");
@@ -607,7 +642,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 		tranDescScoreInfoObj.setImageFileName(tranDescScore.getImageFileName());
 		tranDescScoreInfoObj.setLatestScreenScorerId(tranDescScore
 				.getLatestScreenScorerId());
-		
+
 		tranDescScoreInfoObj.setPendingCategory(tranDescScore
 				.getPendingCategory());
 	}
@@ -626,7 +661,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 				} else {
 					if (recordObj.getTotalNumber() == number) {
 						recordObj.setCheckedRecordNumber(number);
-					}else {
+					} else {
 						recordObj.setCheckedRecordNumber(number + 1);
 					}
 				}

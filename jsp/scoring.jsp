@@ -674,8 +674,6 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		<tr><td>
 		<div  style="overflow: auto;height: 320px;">
 		<table id="checkbox">
-		<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID"> 
-		</s:if> <s:else>
 		
 		
 		<s:iterator value="#session.questionInfo.checkPointList" id="checkPointObj" status="checkPointStatus">
@@ -733,7 +731,6 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<td class="ans" style='background-color:<s:property value="%{#checkPointObj.bgColor}" /> '><s:property value="%{#checkPointObj.checkPointDescription}" escapeHtml="false" /></td>
 				
 		</s:iterator>
-		</s:else>
 		</table>
 		</div>
 		</td>
