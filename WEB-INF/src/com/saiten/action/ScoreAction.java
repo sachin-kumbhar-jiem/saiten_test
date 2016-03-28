@@ -89,12 +89,14 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 				if (session.get("isQcRecord") != null) {
 					isQcRecord = (Boolean) session.get("isQcRecord");
 				}
+				
+				Double bitValue = tranDescScoreInfo.getAnswerInfo().getBitValue();
+				
 				if ((WebAppConst.SCORE_TYPE[3].equals(questionInfo.getScoreType()))
 						&& (WebAppConst.FIRST_SCORING_MENU_ID.equals(menuId)
 								|| WebAppConst.SECOND_SCORING_MENU_ID.equals(menuId)
 								|| WebAppConst.PENDING_MENU_ID.equals(menuId)
 								|| WebAppConst.OUT_BOUNDARY_MENU_ID.equals(menuId)
-								|| WebAppConst.NO_GRADE_MENU_ID.equals(menuId)
 								|| WebAppConst.MISMATCH_MENU_ID.equals(menuId)
 								|| WebAppConst.SPECIAL_SCORING_BLIND_TYPE_MENU_ID
 										.equals(menuId)
@@ -113,7 +115,17 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 					if ((markValueList != null) && (!markValueList.contains((short) 0))) {
 						session.put("selectedCheckPointList", markValueList);
 					}
+				} else if (bitValue != null) {
+					// Get selected checkPointList for history answer
+					List<Short> selectedCheckPointList = SaitenUtil
+							.getSelectedCheckPointList(bitValue);
+					session.put("selectedCheckPointList", selectedCheckPointList);
+				} else {
+					// bitValue will be null for pending answer. so remove
+					// selectedCheckPointList from session.
+					session.remove("selectedCheckPointList");
 				}
+				
 				if (isQcRecord != null && isQcRecord) {
 					log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
 							+ "Quality record loaded."
@@ -949,7 +961,6 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 						|| WebAppConst.SECOND_SCORING_MENU_ID.equals(menuId)
 						|| WebAppConst.PENDING_MENU_ID.equals(menuId)
 						|| WebAppConst.OUT_BOUNDARY_MENU_ID.equals(menuId)
-						|| WebAppConst.NO_GRADE_MENU_ID.equals(menuId)
 						|| WebAppConst.MISMATCH_MENU_ID.equals(menuId)
 						|| WebAppConst.SPECIAL_SCORING_BLIND_TYPE_MENU_ID
 								.equals(menuId)
