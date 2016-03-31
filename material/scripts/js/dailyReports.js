@@ -104,3 +104,11 @@ function CurrentDateCheck() {
 		return true;
 	}
 }
+
+function clearValidationMsg(){
+	if( $('#dataNotFound').is(':empty') ) { 
+		$('#dataNotFound').empty();
+	}else{
+		$('#dataNotFound').empty();
+	}
+}

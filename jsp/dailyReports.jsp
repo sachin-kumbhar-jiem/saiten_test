@@ -130,7 +130,7 @@
 				</div>
 		</div><br/>
 		<div id="button" style="text-align: right;margin-right: 40px;" >
-	    	  <s:submit id="dailyReportDownload" value='%{getText("label.submit.button.download")}' cssStyle="height: 39px;" cssClass="btn btn-primary btn-xl"></s:submit>
+	    	  <s:submit id="dailyReportDownload" value='%{getText("label.submit.button.download")}' cssStyle="height: 39px;" cssClass="btn btn-primary btn-xl" onclick="clearValidationMsg();"></s:submit>
 		</div>
 			  <div id="dataNotFound"><s:actionerror/></div>
 		</s:form>
