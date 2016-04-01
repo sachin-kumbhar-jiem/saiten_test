@@ -2540,6 +2540,12 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								query.append("AND tranDescScoreHistory.scoring_state NOT IN :DUMMY_SCORING_STATES ");
 							}
 							
+							if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
+									.equals(WebAppConst.FORCED_MENU_ID))) {
+								query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
+								query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
+							}
+							
 							if (searchByScorerRoleId == true) {
 								if (historyScorerRoles != null) {
 									query.append("AND tranDescScoreHistory.scorer_role_id IN :HISTORY_SCORER_ROLES ");
