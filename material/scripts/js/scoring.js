@@ -1,7 +1,9 @@
 ﻿//function for enable all links & buttons which are disabled.
+var counter=1;
 function enableLinksAndButtons(){
 	$(':button').prop('disabled', false); // Enable all the button
 	$('a').unbind('click' ); // Enable all the links
+	
 	/*$( "#processDetails" ).bind( "click", function() {
 		 // alert( "The quick brown fox jumps over the lazy dog." );
 		  var childWin = window.open('findProcessDetails.action?answerSequence='+$("#answerSeq").val(),'child', "width=720, height=400, location=no, menubar=no, scrollbars=yes, status=no, toolbar=no");
@@ -9,6 +11,67 @@ function enableLinksAndButtons(){
 		});*/
 	//$("#processDetails").bind('click');
 }
+
+
+
+function disableEvent (e) {
+	var i;
+	if(id2>i) {
+		//console.log("from if id1 " +id1 +" id2 " + id2);
+		e.preventDefault();
+		//location.reload();
+	}else {
+		i=id1;
+		//console.log(e.type +" " + e.which);
+		//console.log("i " +i +" id2 " + id2);
+		id2++;
+		$('a').bind('keyup', false);
+		$('a').bind('keydown', false);
+		$('a').bind('keypress', false);
+		
+	}
+	//alert(e.type);
+//	$('a').bind('keyup', false);
+	//$('a').bind('keydown', false);
+	/*if(counter++>1) {
+		e.preventDefault();
+	}*/
+	
+	//alert( this );
+	//$("#next" ).unbind( e );
+	
+	//console.log("call is here" + counter);
+	//$('a').bind('keypress', false);
+	/*if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+		alert("working");
+		$('a').bind('keyup', false);
+		$('a').bind('keydown', false);
+		$('a').bind('keypress', false);
+	}*/
+}
+
+
+
+$(window).load(function() {
+    //alert("window load occurred!");
+	$('a').unbind('keyup' );
+	$('a').unbind('keypress' );
+	$('a').unbind('keydown' );
+    var id = document.getElementById("next");
+   // alert(id2);
+   // alert(id);
+    $(id).one('keypress',function(){
+        // Perform something here...
+        //alert("ther you go");
+    });
+});
+
+
+$(document).one('ready',function(){
+    // Perform something here...
+   // alert("ther you go1");
+});
+
 
 function testClick () {
 	var childWin = window.open('findProcessDetails.action?answerSequence='+$("#answerSeq").val(),'child', "width=720, height=400, location=no, menubar=no, scrollbars=yes, status=no, toolbar=no");
@@ -49,6 +112,21 @@ var selectedCheckPoints = [];
 var selectedButtonId;
 
 $(document).ready(function() {
+	
+	$('#next').one( "click", function(e) {
+		// alert("this");
+		  });
+
+
+	$( "a" ).toggle(
+			  function() {
+			    $( this ).addClass( "selected" );
+			    //alert();
+			  }, function() {
+			    $( this ).removeClass( "selected" );
+			  }
+			);
+	
 	//set default focus on '0' checkpoint on every answer loading.
 	
 	//disable all links & buttons on scoring screen, while everytime loading new answer.

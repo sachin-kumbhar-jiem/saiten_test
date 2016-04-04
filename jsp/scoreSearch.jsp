@@ -97,7 +97,7 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 													<c:set var="sessionSubjectCode" value="${sessionScope.scoreInputInfo.subjectCode}" />
 													
 													<c:choose>
-														<c:when test="${not ((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
+														<c:when test="${not ((roleId eq 4) or (roleId eq 6) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
 															<input type="radio" id="subjectCode" name="scoreInputInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
 														</c:when>
 														<c:otherwise>

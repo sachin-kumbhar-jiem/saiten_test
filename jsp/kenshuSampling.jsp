@@ -73,8 +73,8 @@
 									</c:if>							
 									<c:set var="sessionSubjectCode" value="${sessionScope.kenshuSamplingInfo.subjectCode}" />		
 									<c:choose>
-										<c:when test="${not ((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
-											<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
+										<c:when test="${not ((roleId eq 4) or (roleId eq 6) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
+											<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCodeA" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
 										</c:when>
 									<c:otherwise>
 										<c:choose>
@@ -134,8 +134,8 @@
 									</c:if>							
 									<c:set var="sessionSubjectCode" value="${sessionScope.kenshuSamplingInfo.subjectCode}" />		
 									<c:choose>
-										<c:when test="${not ((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
-											<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
+										<c:when test="${not ((roleId eq 4) or (roleId eq 6) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
+											<input type="radio" id="subjectCode" name="kenshuSamplingInfo.subjectCodeA" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
 										</c:when>
 									<c:otherwise>
 										<c:choose>
@@ -166,7 +166,7 @@
 								<s:text name="label.scoresearch.resultcount" />
 							</th>
 							<td class="search_form_class1" colspan="5" style="padding-left: 20px;">
-								<s:textfield id="resultCount" name="kenshuSamplingInfo.resultCount" maxlength="6" size="15" value="%{#session.kenshuSamplingInfo.resultCount}" />
+								<s:textfield id="resultCount" disabled="true" name="kenshuSamplingInfo.resultCount" maxlength="6" size="15" value="%{#session.kenshuSamplingInfo.resultCount}" />
 							</td>
 					</table>
 			</s:if>
@@ -196,8 +196,8 @@
 								</c:if>							
 								<c:set var="sessionSubjectCode" value="${sessionScope.acceptanceDisplayInfo.subjectCode}" />
 								<c:choose>
-									<c:when test="${not((roleId eq 4) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
-										<input type="radio" id="subjectCodeA" name="acceptanceDisplayInfo.subjectCode" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
+									<c:when test="${not((roleId eq 4) or (roleId eq 6) or (fn:contains(loggedInScorerSubjectList,fn:split(subjectNameKey, '-')[1])))}">
+										<input type="radio" id="subjectCodeA.disabled" name="acceptanceDisplayInfo.subjectCode.disabled" value="${fn:split(entry.key, '-')[1]}" disabled="disabled">&nbsp;<c:out value="${entry.value}"/>
 									</c:when>
 								<c:otherwise>
 									<c:choose>

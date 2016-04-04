@@ -190,6 +190,10 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 						<p class="menu_button_without_cursor">
 							<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID">
 								<s:property value="#session.questionInfo.prevRecordCount + 1" /><s:text name="label.forwardslash" /><s:property value="#session.questionInfo.historyRecordCount" />
+								<script type="text/javascript">
+									var id2='<s:property value="#session.questionInfo.prevRecordCount + 1" />';
+									var id1='<s:property value="#session.questionInfo.prevRecordCount + 1" />';
+								</script>
 							</s:if> <s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
 								<s:property value="#session.questionInfo.prevRecordCount + 1" /><s:text name="label.forwardslash" /><s:property value="#session.tranDescScoreInfoList.size()" />
 							</s:elseif><s:else>
@@ -893,12 +897,14 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 						</s:else>
 						
 						<s:if  test="#session.questionInfo.nextRecordCount > @com.saiten.util.WebAppConst@ZERO">
-			  				<a href="showAnswerDetails.action?prevOrNextFlag=<s:property value="%{@com.saiten.util.WebAppConst@FALSE}" />" id="next" name="next" class="btn btn-primary btn-scoring-sm" style="width:99px; height:39px;"><!-- <img class="rollover" src="./material/img/button/next.gif" alt="%{getText('label.next')}" /> --><s:text name="label.next"></s:text></a>
+			  				<a href="showAnswerDetails.action?prevOrNextFlag=<s:property value="%{@com.saiten.util.WebAppConst@FALSE}" />" id="next" name="next" onclick="disableEvent(event);" class="btn btn-primary btn-scoring-sm" style="width:99px; height:39px;"><!-- <img class="rollover" src="./material/img/button/next.gif" alt="%{getText('label.next')}" /> --><s:text name="label.next"></s:text></a>
+			  				
 			  			</s:if>
 			  			<s:else>
 							<!-- <img src="./material/img/button/next.gif" alt="%{getText('label.next')}" /> -->
-							<p class="btn btn-disabled" style="width:97px; height:37px;margin-top: 4px;"><s:text name="label.next"></s:text></p>
-						</s:else>						
+							<p class="btn btn-disabled" style="width:97px; height:37px;margin-top: 4px;" id="next"><s:text name="label.next"></s:text></p>
+						</s:else>
+						<!-- <input type="button" id="hiddenButton" value="name" onclick="disableEvent(event)" name="hiddenButton"> -->						
 					</s:elseif>
 					<s:elseif  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
 						<s:if  test="#session.questionInfo.prevRecordCount > @com.saiten.util.WebAppConst@ZERO">

@@ -78,6 +78,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 	private TranAcceptance tranAcceptance;
 	private MstScorerInfo scorerInfo;
 	private String sessionClearFlag;
+	private List<String> loggedInScorerSubjectList;
 
 	public String onLoad() {
 		scorerInfo = (MstScorerInfo) session.get("scorerInfo");
@@ -87,6 +88,9 @@ public class KenshuSamplingAction extends ActionSupport implements
 			if (sessionClearFlag.equals(Boolean.toString(WebAppConst.TRUE))) {
 				clearSessionInfo();
 			}
+			
+			loggedInScorerSubjectList = scoreSearchService
+					.buildLoggedInScorerSubjectList(scorerInfo.getScorerId());
 
 			scoreSearchInfo = (ScoreSearchInfo) ContextLoader
 					.getCurrentWebApplicationContext().getBean(
@@ -920,6 +924,14 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 	public void setSessionClearFlag(String sessionClearFlag) {
 		this.sessionClearFlag = sessionClearFlag;
+	}
+
+	public List<String> getLoggedInScorerSubjectList() {
+		return loggedInScorerSubjectList;
+	}
+
+	public void setLoggedInScorerSubjectList(List<String> loggedInScorerSubjectList) {
+		this.loggedInScorerSubjectList = loggedInScorerSubjectList;
 	}
 
 	@Override

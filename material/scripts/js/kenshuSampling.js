@@ -1,5 +1,15 @@
 $(document).ready(function(){
 	
+	$("#kenshuSamplingForm").keydown(function (e) {
+        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+        	$('#kenshuSamplingForm').focus();
+            $("#kenshuSearch").click();
+            return false;
+        } else {
+            return true;
+        }
+    });
+	
 	if($("#kenshuSamplingSearch").is(':checked') ) {
 		changeAcceptanceDisplayBlock ();
 	}
