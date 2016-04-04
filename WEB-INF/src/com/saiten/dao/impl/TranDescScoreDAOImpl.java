@@ -817,7 +817,6 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 							query.append("tran_desc_score_history AS tranDescScoreHistory ");
 							query.append("ON tranDescScore.answer_seq = tranDescScoreHistory.answer_seq ");
 							query.append("WHERE tranDescScore.question_seq  = :QUESTION_SEQ ");
-							query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
 
 							if (searchByScorerRoleId == true) {
 								if (currentScorerRoles != null) {
@@ -855,97 +854,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 								query.append("AND tranDescScore.answer_form_num = :ANSWER_FORM_NUM ");
 							}
 
-							if (scoreHistoryInfo != null
-									&& scoreHistoryInfo.isHistoryBlock()) {
 
-								if (!historyScorerIdList.isEmpty()) {
-									query.append("AND tranDescScoreHistory.latest_screen_scorer_id IN :HISTORY_SCORER_ID_LIST ");
-								}
-								// This is for Quality Check Flag
-								/*
-								 * if (WebAppConst.SPEAKING_TYPE
-								 * .equals(questionInfo.getQuestionType()) ||
-								 * WebAppConst.WRITING_TYPE .equals(questionInfo
-								 * .getQuestionType())) {
-								 */
-								if (scoreHistoryInfo
-										.isHistoryQualityCheckFlag()) {
-									query.append("AND tranDescScoreHistory.quality_check_flag IN :QUALITY_CHECK_FLAG ");
-								}
-								/* } */
-
-								if (historyCategoryType != null
-										&& historyCategoryType == 2) {
-									query.append("AND tranDescScoreHistory.grade_seq IS null AND tranDescScoreHistory.pending_category_seq IS null ");
-								} else if (historyCategoryType != null
-										&& historyCategoryType == 3) {
-
-									if (!historyGradeSeqList.isEmpty()
-											&& ArrayUtils.contains(
-													scoreHistoryInfo
-															.getHistoryGradeNum(),
-													-1)) {
-										query.append("AND (tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
-										query.append("OR tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE) ");
-									} else {
-										if (!historyGradeSeqList.isEmpty()) {
-											query.append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
-										}
-
-										if (ArrayUtils.contains(
-												scoreHistoryInfo
-														.getHistoryGradeNum(),
-												-1)) {
-											query.append("AND tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE ");
-										}
-									}
-								} else if (historyCategoryType != null
-										&& historyCategoryType == 4
-										&& !historyPendingCategorySeqList
-												.isEmpty()) {
-									query.append("AND tranDescScoreHistory.pending_category_seq IN :HISTORY_PENDING_CATEGORY_SEQ_LIST ");
-								}
-
-								if (!StringUtils
-										.isBlank(historyIncludeCheckPoints)
-										&& !StringUtils
-												.isBlank(historyExcludeCheckPoints)) {
-									if (scoreInputInfo
-											.getScoreHistoryInfo()
-											.getPastSkpConditions()
-											.equals(WebAppConst.SKP_AND_CONDITION)) {
-										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
-										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
-
-									} else if (scoreInputInfo
-											.getScoreHistoryInfo()
-											.getPastSkpConditions()
-											.equals(WebAppConst.SKP_OR_CONDITION)) {
-										query.append("AND ((tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 OR (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0)");
-									}
-								} else {
-									if (!StringUtils
-											.isBlank(historyIncludeCheckPoints)) {
-										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
-									} else if (!StringUtils
-											.isBlank(historyExcludeCheckPoints)) {
-										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
-									}
-								}
-
-								if (historyEventList != null
-										&& historyEventList.length > 0) {
-									query.append("AND tranDescScoreHistory.event_id IN :HISTORY_EVENT_LIST ");
-								}
-
-								if (historyUpdateStartDate != null) {
-									query.append("AND tranDescScoreHistory.update_date >= :HISTORY_UPDATE_START_DATE ");
-								}
-
-								if (historyUpdateEndDate != null) {
-									query.append("AND tranDescScoreHistory.update_date <= :HISTORY_UPDATE_END_DATE ");
-								}
-							}
 
 							if (scoreCurrentInfo != null
 									&& scoreCurrentInfo.isCurrentBlock()) {
@@ -1058,7 +967,6 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									|| menuId
 											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								query.append("AND tranDescScore.answer_paper_type NOT IN ( :ANSWER_PAPER_TYPES ) ");
-								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 							}
 
 							if (searchByScorerRoleId == true) {
@@ -1068,7 +976,110 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 							}
 
 							query.append("AND tranDescScore.valid_flag = :VALID_FLAG ");
+							query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
 							query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
+							
+							if (scoreHistoryInfo != null
+									&& scoreHistoryInfo.isHistoryBlock()) {
+
+								if (!historyScorerIdList.isEmpty()) {
+									query.append("AND tranDescScoreHistory.latest_screen_scorer_id IN :HISTORY_SCORER_ID_LIST ");
+								}
+								// This is for Quality Check Flag
+								/*
+								 * if (WebAppConst.SPEAKING_TYPE
+								 * .equals(questionInfo.getQuestionType()) ||
+								 * WebAppConst.WRITING_TYPE .equals(questionInfo
+								 * .getQuestionType())) {
+								 */
+								if (scoreHistoryInfo
+										.isHistoryQualityCheckFlag()) {
+									query.append("AND tranDescScoreHistory.quality_check_flag IN :QUALITY_CHECK_FLAG ");
+								}
+								/* } */
+
+								if (historyCategoryType != null
+										&& historyCategoryType == 2) {
+									query.append("AND tranDescScoreHistory.grade_seq IS null AND tranDescScoreHistory.pending_category_seq IS null ");
+								} else if (historyCategoryType != null
+										&& historyCategoryType == 3) {
+
+									if (!historyGradeSeqList.isEmpty()
+											&& ArrayUtils.contains(
+													scoreHistoryInfo
+															.getHistoryGradeNum(),
+													-1)) {
+										query.append("AND (tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
+										query.append("OR tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE) ");
+									} else {
+										if (!historyGradeSeqList.isEmpty()) {
+											query.append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
+										}
+
+										if (ArrayUtils.contains(
+												scoreHistoryInfo
+														.getHistoryGradeNum(),
+												-1)) {
+											query.append("AND tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE ");
+										}
+									}
+								} else if (historyCategoryType != null
+										&& historyCategoryType == 4
+										&& !historyPendingCategorySeqList
+												.isEmpty()) {
+									query.append("AND tranDescScoreHistory.pending_category_seq IN :HISTORY_PENDING_CATEGORY_SEQ_LIST ");
+								}
+
+								if (!StringUtils
+										.isBlank(historyIncludeCheckPoints)
+										&& !StringUtils
+												.isBlank(historyExcludeCheckPoints)) {
+									if (scoreInputInfo
+											.getScoreHistoryInfo()
+											.getPastSkpConditions()
+											.equals(WebAppConst.SKP_AND_CONDITION)) {
+										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
+										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+
+									} else if (scoreInputInfo
+											.getScoreHistoryInfo()
+											.getPastSkpConditions()
+											.equals(WebAppConst.SKP_OR_CONDITION)) {
+										query.append("AND ((tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 OR (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0)");
+									}
+								} else {
+									if (!StringUtils
+											.isBlank(historyIncludeCheckPoints)) {
+										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
+									} else if (!StringUtils
+											.isBlank(historyExcludeCheckPoints)) {
+										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+									}
+								}
+
+								if (historyEventList != null
+										&& historyEventList.length > 0) {
+									query.append("AND tranDescScoreHistory.event_id IN :HISTORY_EVENT_LIST ");
+								}
+
+								if (historyUpdateStartDate != null) {
+									query.append("AND tranDescScoreHistory.update_date >= :HISTORY_UPDATE_START_DATE ");
+								}
+
+								if (historyUpdateEndDate != null) {
+									query.append("AND tranDescScoreHistory.update_date <= :HISTORY_UPDATE_END_DATE ");
+								}
+							}
+							
+							if (menuId
+									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
+									|| menuId
+											.equals(WebAppConst.SCORE_SAMP_MENU_ID)
+									|| menuId
+											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
+							}
+							
 							query.append(") score ");
 							query.append("SET inspect_flag = :LOCK, inspect_group_seq = :INSPECTION_GROUP_SEQ, update_date = :UPDATE_DATE ");
 							query.append(" WHERE target.answer_seq = score.answerSeq ");
