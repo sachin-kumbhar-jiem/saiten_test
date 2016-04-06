@@ -80,7 +80,12 @@ function changeCurrentBlock(checkDisable, textDisable, currentBlockDisable) {
 		currentDenyCategory.item(0).value='';
 	}
 
-	if((radio[4].checked) || !currentBlock[0].checked){
+	/*if((radio[4].checked) || !currentBlock[0].checked){
+		currentIncludeCheckPoints.item(0).value='';
+		currentExcludeCheckPoints.item(0).value='';
+	}*/
+	
+	if(!(currentBlock[0].checked)){
 		currentIncludeCheckPoints.item(0).value='';
 		currentExcludeCheckPoints.item(0).value='';
 	}
@@ -190,7 +195,12 @@ function changeHistoryBlock(checkDisable, textDisable, historyBlockDisable) {
 		historyDenyCategory.item(0).value='';
 	}
 	
-	if((radio[4].checked || !historyBlock[0].checked)){
+	/*if((radio[4].checked || !historyBlock[0].checked)){
+		historyIncludeCheckPoints.item(0).value='';
+		historyExcludeCheckPoints.item(0).value='';
+	}*/
+	
+	if(!(historyBlock[0].checked)){
 		historyIncludeCheckPoints.item(0).value='';
 		historyExcludeCheckPoints.item(0).value='';
 	}
