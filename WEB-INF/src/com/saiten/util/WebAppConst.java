@@ -213,7 +213,7 @@ public interface WebAppConst {
 	public static final Short[] SCORE_SAMPLING_CURRENT_STATES = { 131, 141,
 			151, 500, 501, 161 };
 
-	public static final Short[] STATE_TRANSITION_CURRENT_STATES = { 131, 141,
+	public static final Short[] STATE_TRANSITION_CURRENT_STATES = { 141,
 			500, 501 };
 
 	public static final Short[] FORCED_SCORING_CURRENT_STATES = { 21, 121, 131,
