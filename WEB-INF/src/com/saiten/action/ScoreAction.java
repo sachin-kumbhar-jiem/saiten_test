@@ -69,9 +69,9 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 		try {
 			Date logActionStartTime = new Date();
-			String denyCategoryStr =null;
-			if(session.get("denyCategory") != null) {
-				 denyCategoryStr = session.get("denyCategory").toString();
+			String denyCategoryStr = null;
+			if (session.get("denyCategory") != null) {
+				denyCategoryStr = session.get("denyCategory").toString();
 			}
 
 			if (denyCategoryStr != null && !(denyCategoryStr.isEmpty())) {
@@ -89,14 +89,18 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 				if (session.get("isQcRecord") != null) {
 					isQcRecord = (Boolean) session.get("isQcRecord");
 				}
-				
-				Double bitValue = tranDescScoreInfo.getAnswerInfo().getBitValue();
-				
-				if ((WebAppConst.SCORE_TYPE[3].equals(questionInfo.getScoreType()))
+
+				Double bitValue = tranDescScoreInfo.getAnswerInfo()
+						.getBitValue();
+
+				if ((WebAppConst.SCORE_TYPE[3].equals(questionInfo
+						.getScoreType()))
 						&& (WebAppConst.FIRST_SCORING_MENU_ID.equals(menuId)
-								|| WebAppConst.SECOND_SCORING_MENU_ID.equals(menuId)
+								|| WebAppConst.SECOND_SCORING_MENU_ID
+										.equals(menuId)
 								|| WebAppConst.PENDING_MENU_ID.equals(menuId)
-								|| WebAppConst.OUT_BOUNDARY_MENU_ID.equals(menuId)
+								|| WebAppConst.OUT_BOUNDARY_MENU_ID
+										.equals(menuId)
 								|| WebAppConst.MISMATCH_MENU_ID.equals(menuId)
 								|| WebAppConst.SPECIAL_SCORING_BLIND_TYPE_MENU_ID
 										.equals(menuId)
@@ -105,27 +109,30 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 								|| WebAppConst.SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID
 										.equals(menuId)
 								|| WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID
-										.equals(menuId) || WebAppConst.SCORE_SAMP_MENU_ID
-									.equals(menuId)
-								|| WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID
-								.equals(menuId))
-						&& (tranDescScoreInfo.getAnswerInfo().getHistorySeq() == null)
+										.equals(menuId)
+								|| WebAppConst.SCORE_SAMP_MENU_ID
+										.equals(menuId) || WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID
+									.equals(menuId))
+						&& (tranDescScoreInfo.getAnswerInfo().getHistorySeq() == null )
 						&& (bookmarkScreenFlag == false)) {
-					List<Short> markValueList = tranDescScoreInfo.getMarkValueList();
-					if ((markValueList != null) && (!markValueList.contains((short) 0))) {
+					List<Short> markValueList = tranDescScoreInfo
+							.getMarkValueList();
+					if ((markValueList != null)
+							&& (!markValueList.contains((short) 0))) {
 						session.put("selectedCheckPointList", markValueList);
 					}
 				} else if (bitValue != null) {
 					// Get selected checkPointList for history answer
 					List<Short> selectedCheckPointList = SaitenUtil
 							.getSelectedCheckPointList(bitValue);
-					session.put("selectedCheckPointList", selectedCheckPointList);
+					session.put("selectedCheckPointList",
+							selectedCheckPointList);
 				} else {
 					// bitValue will be null for pending answer. so remove
 					// selectedCheckPointList from session.
 					session.remove("selectedCheckPointList");
 				}
-				
+
 				if (isQcRecord != null && isQcRecord) {
 					log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
 							+ "Quality record loaded."
@@ -176,10 +183,14 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 						.get("loadQcListFlag");
 				if ((qcAnswerSeqList == null || qcAnswerSeqList.isEmpty())
 						&& ((loadQcListFlag != null) && (loadQcListFlag == true))) {
+					
+					Short selectedMarkValue = (Short) session
+							.get("selectedMarkValue");
+					
 					logGetQcAnsSeqListStartTime = new Date();
 					qcAnswerSeqList = scoreService.findQcAnsSeqList(
 							questionInfo.getQuestionSeq(),
-							scorerInfo.getScorerId(),
+							scorerInfo.getScorerId(), selectedMarkValue,
 							questionInfo.getConnectionString());
 					logGetQcAnsSeqListEndTime = new Date();
 					session.remove("loadQcListFlag");
@@ -312,6 +323,8 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 						logFindQcAnswerEndTime = new Date();
 						if (tranDescScoreInfo != null) {
 							session.put("isQcRecord", true);
+							getScoreActionData(questionInfo.getQuestionSeq(),
+									menuId);
 							buildTranDescScoreInfo();
 							log.info(scorerInfo.getScorerId()
 									+ "-"
@@ -969,16 +982,20 @@ public class ScoreAction extends ActionSupport implements SessionAware,
 						|| WebAppConst.SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID
 								.equals(menuId)
 						|| WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID
-								.equals(menuId) || WebAppConst.SCORE_SAMP_MENU_ID
-							.equals(menuId)
-						|| WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID
-						.equals(menuId))
+								.equals(menuId)
+						|| WebAppConst.SCORE_SAMP_MENU_ID.equals(menuId) || WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID
+							.equals(menuId))
 				&& (tranDescScoreInfo.getAnswerInfo().getHistorySeq() == null)
 				&& (bookmarkScreenFlag == false)) {
 			List<Short> markValueList = tranDescScoreInfo.getMarkValueList();
 			session.remove("selectedCheckPointList");
 			if ((markValueList != null) && (!markValueList.contains((short) 0))) {
 				session.put("selectedCheckPointList", markValueList);
+			}else if (tranDescScoreInfo.getAnswerInfo().getQcSeq() != null ) {  // added this condition to show checkpoints for QC record 
+				List<Short> selectedCheckPointList = SaitenUtil
+						.getSelectedCheckPointList(bitValue);
+				session.put("selectedCheckPointList",
+						selectedCheckPointList);
 			}
 		} else if (bitValue != null) {
 			// Get selected checkPointList for history answer

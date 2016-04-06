@@ -25,7 +25,8 @@ public interface ScoreService {
 	public TranDescScoreInfo findAnswer(int quetionSeq, String menuId,
 			String scorerId, String connectionString, Integer gradeNum,
 			Short pendingCategory, Short denyCategory, String answerFormNum,
-			Integer historyRecordCount, int roleId, Short selectedMarkValue, QuestionInfo questionInfo);
+			Integer historyRecordCount, int roleId, Short selectedMarkValue,
+			QuestionInfo questionInfo);
 
 	/**
 	 * @param historySeq
@@ -91,10 +92,11 @@ public interface ScoreService {
 	 * @param questionSeq
 	 * @param scorerId
 	 * @param connectionString
+	 * @param selectedMarkValue
 	 * @return
 	 */
 	public List<Integer> findQcAnsSeqList(int questionSeq, String scorerId,
-			String connectionString);
+			Short selectedMarkValue, String connectionString);
 
 	/**
 	 * @param qcAnswerSeqList
@@ -102,13 +104,14 @@ public interface ScoreService {
 	 * @return
 	 */
 	public TranDescScoreInfo findQualityCheckAnswers(int qcAnswerSeq,
-			String menuId, String scorerId, String connectionString, QuestionInfo questionInfo);
-	
+			String menuId, String scorerId, String connectionString,
+			QuestionInfo questionInfo);
+
 	/**
 	 * 
 	 * @param answerSeq
 	 * @return testSetnum_seq
 	 */
-	public Integer findTestsetNumSeq (Integer answerSeq, String connectionString);
+	public Integer findTestsetNumSeq(Integer answerSeq, String connectionString);
 
 }

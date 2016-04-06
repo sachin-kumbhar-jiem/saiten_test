@@ -96,7 +96,7 @@ public interface TranDescScoreDAO {
 	 */
 	@SuppressWarnings("rawtypes")
 	public List findQcAnsSeqList(List<Integer> quetionSeq, String scorerId,
-			String connectionString);
+			String connectionString, Short selectedMarkValue);
 
 	/**
 	 * @param qcAnswerSeq

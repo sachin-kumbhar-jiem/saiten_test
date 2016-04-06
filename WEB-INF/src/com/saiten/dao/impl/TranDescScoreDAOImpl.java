@@ -298,7 +298,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 
 	@SuppressWarnings({ "rawtypes", "unused" })
 	public List findQcAnsSeqList(final List<Integer> quetionSeq,
-			final String scorerId, String connectionString) {
+			final String scorerId, String connectionString,
+			final Short selectedMarkValue) {
 		HibernateTemplate hibernateTemplate = null;
 
 		/*
@@ -329,7 +330,11 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 		 */
 
 		final StringBuilder query = new StringBuilder();
-		query.append("SELECT R.answer_seq ");
+		if (selectedMarkValue != null) {
+			query.append("SELECT D.answer_seq FROM (");
+		}
+
+		query.append(" SELECT R.answer_seq ");
 		query.append("FROM (SELECT answer_seq ");
 		query.append("from tran_qualitycheck_score ");
 		query.append("WHERE question_seq IN :QUESTION_SEQUENCE ");
@@ -341,7 +346,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 		query.append("and scorer_id = :SCORER_ID ");
 		query.append("and valid_flag= :VALID_FLAG) as S ");
 		query.append("on R.answer_seq =  S.answer_seq ");
-		query.append("WHERE S.answer_seq is null ");
+		query.append("WHERE S.answer_seq is null  ");
+
+		if (selectedMarkValue != null) {
+			query.append(" ) as D ");
+			query.append(" INNER JOIN ");
+			query.append("tran_desc_score as T ");
+			query.append("on T.answer_seq =  D.answer_seq ");
+			query.append("where T.mark_value =:MARK_VALUE");
+		}
 
 		try {
 			/*
@@ -363,6 +376,10 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									quetionSeq);
 							queryObj.setParameter("VALID_FLAG",
 									WebAppConst.VALID_FLAG);
+							if (selectedMarkValue != null) {
+								queryObj.setParameter("MARK_VALUE",
+										selectedMarkValue);
+							}
 							return queryObj.list();
 						}
 
@@ -854,8 +871,6 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 								query.append("AND tranDescScore.answer_form_num = :ANSWER_FORM_NUM ");
 							}
 
-
-
 							if (scoreCurrentInfo != null
 									&& scoreCurrentInfo.isCurrentBlock()) {
 
@@ -978,7 +993,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 							query.append("AND tranDescScore.valid_flag = :VALID_FLAG ");
 							query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
 							query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
-							
+
 							if (scoreHistoryInfo != null
 									&& scoreHistoryInfo.isHistoryBlock()) {
 
@@ -1070,7 +1085,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									query.append("AND tranDescScoreHistory.update_date <= :HISTORY_UPDATE_END_DATE ");
 								}
 							}
-							
+
 							if (menuId
 									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
 									|| menuId
@@ -1079,7 +1094,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 							}
-							
+
 							query.append(") score ");
 							query.append("SET inspect_flag = :LOCK, inspect_group_seq = :INSPECTION_GROUP_SEQ, update_date = :UPDATE_DATE ");
 							query.append(" WHERE target.answer_seq = score.answerSeq ");

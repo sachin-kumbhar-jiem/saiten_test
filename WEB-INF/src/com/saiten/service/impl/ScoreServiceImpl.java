@@ -298,13 +298,14 @@ public class ScoreServiceImpl implements ScoreService {
 
 	@SuppressWarnings({ "unchecked" })
 	public List<Integer> findQcAnsSeqList(int questionSeq, String scorerId,
-			String connectionString) {
+			Short selectedMarkValue, String connectionString) {
 		List<Integer> qcAnswerSeqList = new ArrayList<Integer>();
 		List<Integer> questionSequenceList = new ArrayList<Integer>();
 		questionSequenceList.add(questionSeq);
 
 		qcAnswerSeqList = tranDescScoreDAO.findQcAnsSeqList(
-				questionSequenceList, scorerId, connectionString);
+				questionSequenceList, scorerId, connectionString,
+				selectedMarkValue);
 
 		return qcAnswerSeqList;
 
