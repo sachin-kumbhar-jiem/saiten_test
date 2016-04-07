@@ -877,7 +877,9 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 									+ questionInfo.getSubjectCode()
 									+ WebAppConst.HYPHEN
 									+ questionInfo.getQuestionNum()
-									+ WebAppConst.CSV_FILE_EXTENSION);
+									+ WebAppConst.TXT_FILE_EXTENSION);
+					
+					txtFile.createNewFile();
 
 					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
 							finalResultList, WebAppConst.CRLF);
@@ -924,7 +926,9 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 									+ questionInfo.getSubjectCode()
 									+ WebAppConst.HYPHEN
 									+ questionInfo.getQuestionNum()
-									+ WebAppConst.CSV_FILE_EXTENSION);
+									+ WebAppConst.TXT_FILE_EXTENSION);
+					
+					txtFile.createNewFile();
 
 					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
 							pendCategoryResultList, WebAppConst.CRLF);
@@ -977,7 +981,9 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 									+ questionInfo.getSubjectCode()
 									+ WebAppConst.HYPHEN
 									+ questionInfo.getQuestionNum()
-									+ WebAppConst.CSV_FILE_EXTENSION);
+									+ WebAppConst.TXT_FILE_EXTENSION);
+					
+					txtFile.createNewFile();
 
 					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
 							finalResultList, WebAppConst.CRLF);
