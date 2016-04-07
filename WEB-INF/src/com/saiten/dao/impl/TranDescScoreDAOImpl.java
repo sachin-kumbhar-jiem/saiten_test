@@ -777,6 +777,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 				.getHistoryGradeSeqList() : null;
 		final List historyPendingCategorySeqList = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryPendingCategorySeqList() : null;
+		final List historyDenyCategorySeqList = scoreHistoryInfo != null ? scoreHistoryInfo
+				.getHistoryDenyCategorySeqList() : null;
 		final String historyIncludeCheckPoints = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryIncludeCheckPoints() : null;
 		final String historyExcludeCheckPoints = scoreHistoryInfo != null ? scoreHistoryInfo
@@ -803,6 +805,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 				.getCurrentGradeSeqList() : null;
 		final List currentPendingCategorySeqList = scoreCurrentInfo != null ? scoreCurrentInfo
 				.getCurrentPendingCategorySeqList() : null;
+		final List currentDenyCategorySeqList = scoreCurrentInfo != null ? scoreCurrentInfo
+				.getCurrentDenyCategorySeqList() : null;
 		final String currentIncludeCheckPoints = scoreCurrentInfo != null ? scoreCurrentInfo
 				.getCurrentIncludeCheckPoints() : null;
 		final String currentExcludeCheckPoints = scoreCurrentInfo != null ? scoreCurrentInfo
@@ -925,6 +929,11 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 										&& !currentPendingCategorySeqList
 												.isEmpty()) {
 									query.append("AND tranDescScore.pending_category_seq IN :CURRENT_PENDING_CATEGORY_SEQ_LIST ");
+								} else if (currentCategoryType != null
+										&& currentCategoryType == 5
+										&& !currentDenyCategorySeqList
+												.isEmpty()) {
+									query.append("AND tranDescScore.deny_category_seq IN :CURRENT_DENY_CATEGORY_SEQ_LIST ");
 								}
 
 								if (!StringUtils
@@ -1043,6 +1052,11 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 										&& !historyPendingCategorySeqList
 												.isEmpty()) {
 									query.append("AND tranDescScoreHistory.pending_category_seq IN :HISTORY_PENDING_CATEGORY_SEQ_LIST ");
+								} else if (historyCategoryType != null
+										&& historyCategoryType == 5
+										&& !historyDenyCategorySeqList
+												.isEmpty()) {
+									query.append("AND tranDescScoreHistory.deny_category_seq IN :HISTORY_DENY_CATEGORY_SEQ_LIST ");
 								}
 
 								if (!StringUtils
@@ -1093,6 +1107,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									|| menuId
 											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
+								query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 							}
 
 							query.append(") score ");
@@ -1111,6 +1126,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 								queryObj.setParameterList("ANSWER_PAPER_TYPES",
 										WebAppConst.ANSWER_PAPER_TYPES);
 								queryObj.setParameterList("PENDING_CATEGORIES",
+										WebAppConst.PENDING_CATEGORIES);
+								queryObj.setParameterList("DENY_CATEGORIES",
 										WebAppConst.PENDING_CATEGORIES);
 							}
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
@@ -1223,6 +1240,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 											"CURRENT_PENDING_CATEGORY_SEQ_LIST",
 											scoreCurrentInfo
 													.getCurrentPendingCategorySeqList());
+								} else if (currentCategoryType != null
+										&& currentCategoryType == 5
+										&& !currentDenyCategorySeqList
+												.isEmpty()) {
+
+									queryObj.setParameterList(
+											"CURRENT_DENY_CATEGORY_SEQ_LIST",
+											scoreCurrentInfo
+													.getCurrentDenyCategorySeqList());
 								}
 
 								if (!StringUtils
@@ -1349,6 +1375,14 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									queryObj.setParameterList(
 											"HISTORY_PENDING_CATEGORY_SEQ_LIST",
 											historyPendingCategorySeqList);
+								}  else if (historyCategoryType != null
+										&& historyCategoryType == 5
+										&& !historyDenyCategorySeqList
+												.isEmpty()) {
+
+									queryObj.setParameterList(
+											"HISTORY_DENY_CATEGORY_SEQ_LIST",
+											historyDenyCategorySeqList);
 								}
 
 								if (!StringUtils
