@@ -66,6 +66,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 	private List<DailyStatusReportListInfo> markValueWiseReportList;
 	private InputStream inputStream;
 	private String fileName;
+	private String reportType;
 
 	@SuppressWarnings("rawtypes")
 	public String onLoad() {
@@ -376,7 +377,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 		try {
 			String reportString = dailyStatusSearchService.getProgressReports(
 					gradeWiseList, markValueWiseList, pendingCategoryWiseList,
-					questionInfo, selectedMenuId);
+					questionInfo, reportType);
 
 			if (!StringUtils.isBlank(reportString)) {
 
@@ -655,6 +656,14 @@ public class DailyStatusSearchAction extends ActionSupport implements
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	public void setReportType(String reportType) {
+		this.reportType = reportType;
+	}
+
+	public String getReportType() {
+		return reportType;
 	}
 
 }

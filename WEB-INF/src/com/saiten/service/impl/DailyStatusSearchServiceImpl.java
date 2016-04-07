@@ -835,7 +835,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public String getProgressReports(List gradeWiseList,
 			List markValueWiseList, List pendingCategoryWiseList,
-			QuestionInfo questionInfo, String selectedMenuId) {
+			QuestionInfo questionInfo, String reportType) {
 
 		String fileToDownload = null;
 		finalResultList = new ArrayList();
@@ -850,15 +850,9 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 					WebAppConst.APPLICATION_PROPERTIES_FILE).getString(
 					"saiten.daily.report.download.basepath");
 
-			if (selectedMenuId.equals(WebAppConst.GRADE_WISE_DETAILS_REPORT)) {
-
-				List<DailyStatusReportListInfo> gradeList = new ArrayList();
+			if (reportType.equals(WebAppConst.GRADE_WISE_DETAILS_REPORT)) {
 
 				if (gradeWiseList != null && !gradeWiseList.isEmpty()) {
-					gradeList.addAll(gradeWiseList);
-				}
-
-				if (gradeList != null && !gradeList.isEmpty()) {
 
 					downloadDir = SaitenFileUtil.createDirectory(
 							downloadDirBasePath,
@@ -868,10 +862,10 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 									+ WebAppConst.HYPHEN
 									+ questionInfo.getQuestionNum());
 
-					getProgressReportHeaders(textProvider, selectedMenuId,
+					getProgressReportHeaders(textProvider, reportType,
 							questionInfo);
 
-					getGradeWiseReportRows(gradeList, textProvider,
+					getGradeWiseReportRows(gradeWiseList, textProvider,
 							questionInfo);
 
 					File txtFile = new File(
@@ -900,17 +894,11 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 					SaitenFileUtil.deleteDirectory(downloadDir);
 				}
 
-			} else if (selectedMenuId
+			} else if (reportType
 					.equals(WebAppConst.PENDING_CATEGORY_WISE_DETAILS_REPORT)) {
-
-				List<DailyStatusReportListInfo> pendCategoryList = new ArrayList();
 
 				if (pendingCategoryWiseList != null
 						&& !pendingCategoryWiseList.isEmpty()) {
-					pendCategoryList.addAll(pendingCategoryWiseList);
-				}
-
-				if (pendCategoryList != null && !pendCategoryList.isEmpty()) {
 
 					downloadDir = SaitenFileUtil
 							.createDirectory(
@@ -922,9 +910,10 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 											+ WebAppConst.HYPHEN
 											+ questionInfo.getQuestionNum());
 
-					getPendCategoryReportHeaders(textProvider, selectedMenuId);
+					getPendCategoryReportHeaders(textProvider, reportType);
 
-					getPendCategoryReportRows(pendCategoryList, textProvider);
+					getPendCategoryReportRows(pendingCategoryWiseList,
+							textProvider);
 
 					File txtFile = new File(
 							downloadDir.getPath()
@@ -952,7 +941,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 					SaitenFileUtil.deleteDirectory(downloadDir);
 				}
 
-			} else if (selectedMenuId
+			} else if (reportType
 					.equals(WebAppConst.MARK_VALUE_WISE_DETAILS_REPORT)) {
 
 				List<DailyStatusReportListInfo> markValueList = new ArrayList();
@@ -973,10 +962,10 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 											+ WebAppConst.HYPHEN
 											+ questionInfo.getQuestionNum());
 
-					getProgressReportHeaders(textProvider, selectedMenuId,
+					getProgressReportHeaders(textProvider, reportType,
 							questionInfo);
 
-					getMarkValueWiseReportRows(markValueList, selectedMenuId,
+					getMarkValueWiseReportRows(markValueList, reportType,
 							textProvider, questionInfo);
 
 					File txtFile = new File(
@@ -1021,7 +1010,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 	@SuppressWarnings("unchecked")
 	private void getPendCategoryReportHeaders(TextProvider textProvider,
-			String selectedMenuId) {
+			String reportType) {
 
 		StringBuilder csvHeaders = new StringBuilder();
 		StringBuilder heading = new StringBuilder();
@@ -1067,12 +1056,12 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 	@SuppressWarnings("unchecked")
 	private void getPendCategoryReportRows(
-			List<DailyStatusReportListInfo> pendCategoryList,
+			List<DailyStatusReportListInfo> pendingCategoryWiseList,
 			TextProvider textProvider) {
 
-		if (!pendCategoryList.isEmpty()) {
+		if (!pendingCategoryWiseList.isEmpty()) {
 
-			for (DailyStatusReportListInfo record : pendCategoryList) {
+			for (DailyStatusReportListInfo record : pendingCategoryWiseList) {
 
 				StringBuilder csvData = new StringBuilder();
 
@@ -1111,12 +1100,12 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 	@SuppressWarnings("unchecked")
 	private void getProgressReportHeaders(TextProvider textProvider,
-			String selectedMenuId, QuestionInfo questionInfo) {
+			String reportType, QuestionInfo questionInfo) {
 
 		StringBuilder csvHeaders = new StringBuilder();
 		StringBuilder heading = new StringBuilder();
 
-		if (selectedMenuId.equals(WebAppConst.GRADE_WISE_DETAILS_REPORT)) {
+		if (reportType.equals(WebAppConst.GRADE_WISE_DETAILS_REPORT)) {
 
 			heading.append(textProvider
 					.getText("label.grade.wise.report.grade.wise.details"));
@@ -1124,7 +1113,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 			csvHeaders.append(textProvider
 					.getText("label.grade.wise.report.grade"));
 
-		} else if (selectedMenuId
+		} else if (reportType
 				.equals(WebAppConst.MARK_VALUE_WISE_DETAILS_REPORT)) {
 
 			heading.append(textProvider
@@ -1139,7 +1128,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 				.getText("label.grade.wise.report.confirm"));
 		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 
-		if (selectedMenuId.equals(WebAppConst.MARK_VALUE_WISE_DETAILS_REPORT)) {
+		if (reportType.equals(WebAppConst.MARK_VALUE_WISE_DETAILS_REPORT)) {
 			csvHeaders.append(textProvider
 					.getText("label.prog.report.1st.time.scoring.wait"));
 		}
@@ -1210,17 +1199,17 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 	@SuppressWarnings("unchecked")
 	private void getGradeWiseReportRows(
-			List<DailyStatusReportListInfo> gradeList,
+			List<DailyStatusReportListInfo> gradeWiseList,
 			TextProvider textProvider, QuestionInfo questionInfo) {
 
-		if (!gradeList.isEmpty()) {
+		if (!gradeWiseList.isEmpty()) {
 
 			int count = 1;
-			for (DailyStatusReportListInfo record : gradeList) {
+			for (DailyStatusReportListInfo record : gradeWiseList) {
 
 				StringBuilder csvData = new StringBuilder();
 
-				if (gradeList.size() == count) {
+				if (gradeWiseList.size() == count) {
 					csvData.append(textProvider
 							.getText("dailyStatusQuestionWise.report.total"));
 				} else {
@@ -1277,9 +1266,8 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 	@SuppressWarnings("unchecked")
 	private void getMarkValueWiseReportRows(
-			List<DailyStatusReportListInfo> markValueList,
-			String selectedMenuId, TextProvider textProvider,
-			QuestionInfo questionInfo) {
+			List<DailyStatusReportListInfo> markValueList, String reportType,
+			TextProvider textProvider, QuestionInfo questionInfo) {
 
 		if (!markValueList.isEmpty()) {
 

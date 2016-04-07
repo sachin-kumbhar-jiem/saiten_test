@@ -148,7 +148,7 @@
 			</table><br/>
 				<div align="right">
            	    	<s:if test="#session.gradeWiseReportList!=null && #session.gradeWiseReportList.size()!=0">
-			 			<a href="progressReportsDownload?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@GRADE_WISE_DETAILS_REPORT"/>" id="gradeWiseReport" name="gradeWiseReport" class="btn btn-primary btn-x3">
+			 			<a href="progressReportsDownload?reportType=<s:property value="@com.saiten.util.WebAppConst@GRADE_WISE_DETAILS_REPORT"/>" id="gradeWiseReport" name="gradeWiseReport" class="btn btn-primary btn-x3">
 							<s:text name="label.submit.button.download"></s:text>
 			   			</a>&nbsp;&nbsp;
            	    	</s:if><s:else>
@@ -214,7 +214,7 @@
 			</table><br/>
 				<div align="right">
 				   <s:if test="#session.pendingCategoryWiseReportList!=null && #session.pendingCategoryWiseReportList.size()!=0">
-				   		<a href="progressReportsDownload?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@PENDING_CATEGORY_WISE_DETAILS_REPORT"/>" id="pendCatWiseRptDownload" name="pendCatWiseRpt" class="btn btn-primary btn-x3">
+				   		<a href="progressReportsDownload?reportType=<s:property value="@com.saiten.util.WebAppConst@PENDING_CATEGORY_WISE_DETAILS_REPORT"/>" id="pendCatWiseRptDownload" name="pendCatWiseRpt" class="btn btn-primary btn-x3">
 					  		<s:text name="label.submit.button.download"></s:text>
 				   		</a>&nbsp;&nbsp;
 				   </s:if><s:else>
@@ -321,7 +321,7 @@
 			</table><br/>
 			  <div align="right">
 	           	   <s:if test="#session.markValueWiseReportList!=null && #session.markValueWiseReportList.size()!=0">
-	                	<a href="progressReportsDownload?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@MARK_VALUE_WISE_DETAILS_REPORT"/>" id="markValueWiseRptDownload" name="markValueWiseRpt" class="btn btn-primary btn-x3">
+	                	<a href="progressReportsDownload?reportType=<s:property value="@com.saiten.util.WebAppConst@MARK_VALUE_WISE_DETAILS_REPORT"/>" id="markValueWiseRptDownload" name="markValueWiseRpt" class="btn btn-primary btn-x3">
 					  		<s:text name="label.submit.button.download"></s:text>
 				   		</a>&nbsp;&nbsp;
 	           	   </s:if><s:else>
