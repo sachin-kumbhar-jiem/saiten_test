@@ -17,6 +17,7 @@ import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.info.MstScorerInfo;
 import com.saiten.info.ScorerAccessLogInfo;
 import com.saiten.service.LoginService;
+import com.saiten.service.ScorerLoggingService;
 import com.saiten.util.AESEncryptionDecryptionUtil;
 import com.saiten.util.ErrorCode;
 import com.saiten.util.SaitenMasterUtil;
@@ -30,9 +31,8 @@ import com.saiten.util.WebAppConst;
 public class LoginServiceAction extends ActionSupport implements SessionAware,
 		ServletRequestAware {
 
-	private static Logger log = Logger
-			.getLogger(LoginServiceAction.class);
-	
+	private static Logger log = Logger.getLogger(LoginServiceAction.class);
+
 	/**
 	 * 
 	 */
@@ -45,6 +45,7 @@ public class LoginServiceAction extends ActionSupport implements SessionAware,
 	private Map<String, Object> session;
 	HttpServletRequest request;
 	private String loginPageUrl;
+	private ScorerLoggingService scorerLoggingService;
 
 	private void buildSessionObject() {
 		session.put("scorerInfo", scorerInfo);
@@ -57,14 +58,17 @@ public class LoginServiceAction extends ActionSupport implements SessionAware,
 			// will get encrypted scorerId and password.
 			String scorerId = request.getParameter("scorerId");
 			String password = request.getParameter("password");
+			Integer lmsInstanceId = Integer.valueOf(AESEncryptionDecryptionUtil
+					.decrypt(request.getParameter("instance")));
+			String lmsUrl = scorerLoggingService.getUrlById(lmsInstanceId);
 
-			saitenLMSUrl = saitenApplicationProperties
-					.getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL)
-					+ "?login="
-					+ scorerId
-					+ "&password="
-					+ password
-					+ "&loginError=true";
+			/*
+			 * saitenLMSUrl = saitenApplicationProperties
+			 * .getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL) + "?login=" +
+			 * scorerId + "&password=" + password + "&loginError=true";
+			 */
+			saitenLMSUrl = lmsUrl + "?login=" + scorerId + "&password="
+					+ password + "&loginError=true";
 
 			// decrypt scorerId and password.
 			scorerId = AESEncryptionDecryptionUtil.decrypt(scorerId);
@@ -100,8 +104,9 @@ public class LoginServiceAction extends ActionSupport implements SessionAware,
 					.updateUserLoggingInformation(scorerAccessLogInfo);
 			// put scorerAccessLogInfo into session.
 			session.put("scorerAccessLogInfo", scorerAccessLogInfo);
-			log.info(scorerInfo.getScorerId()+"-"+"Login.");
-			log.info(scorerInfo.getScorerId()+"-"+"LoggedIn from LMS Side.");
+			session.put("lmsInstanceId", lmsInstanceId);
+			log.info(scorerInfo.getScorerId() + "-" + "Login.");
+			log.info(scorerInfo.getScorerId() + "-" + "LoggedIn from LMS Side.");
 			return SUCCESS;
 		} catch (SaitenRuntimeException we) {
 			throw we;
@@ -171,4 +176,12 @@ public class LoginServiceAction extends ActionSupport implements SessionAware,
 		this.loginPageUrl = loginPageUrl;
 	}
 
+	/**
+	 * @param scorerLoggingService
+	 *            the scorerLoggingService to set
+	 */
+	public void setScorerLoggingService(
+			ScorerLoggingService scorerLoggingService) {
+		this.scorerLoggingService = scorerLoggingService;
+	}
 }

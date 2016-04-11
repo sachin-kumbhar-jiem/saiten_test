@@ -130,11 +130,16 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 				String password = mstScorerInfo.getPassword();
 				if (session.get("saitenLoginEnabled") == null) {
 
-					saitenLMSUrl = saitenApplicationProperties
-							.getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL);
+					/*
+					 * saitenLMSUrl = saitenApplicationProperties
+					 * .getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL);
+					 */
+					Integer lmsInstanceId = (Integer) session
+							.get("lmsInstanceId");
 
 					if (backToLms) {
-
+						saitenLMSUrl = scorerLoggingService
+								.getUrlById(lmsInstanceId);
 						scorerId = AESEncryptionDecryptionUtil
 								.encrypt(scorerId);
 
@@ -142,14 +147,16 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 								+ password;
 						log.info(scorerId
 								+ "-"
-								+ "BackToLams. User Logout. Redirecting to Lms. LMS URL: "
+								+ "BackToLms. User Logout. Redirecting to Lms. LMS URL: "
 								+ saitenLMSUrl);
 						Thread.sleep(2000);
+					} else {
+						saitenLMSUrl = saitenApplicationProperties
+								.getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL);
+						log.info(scorerId + "-"
+								+ "User Logout. Redirecting to Lms. LMS URL: "
+								+ saitenLMSUrl);
 					}
-					log.info(scorerId
-							+ "-"
-							+ "User Logout. Redirecting to Lms login page. LMS URL: "
-							+ saitenLMSUrl);
 					RESULT = SUCCESS;
 				} else {
 					log.info(scorerId + "-"
@@ -165,7 +172,7 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 				((SessionMap) session).invalidate();
 			} catch (SaitenRuntimeException we) {
 				throw we;
-			}catch (Exception e) {
+			} catch (Exception e) {
 				throw new SaitenRuntimeException(
 						ErrorCode.LOGOUT_ACTION_EXCEPTION, e);
 			}

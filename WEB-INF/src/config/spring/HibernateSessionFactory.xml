@@ -87,7 +87,8 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	
         	 <value>com/saiten/model/TranScorerAccessLog.hbm.xml</value>
          	 <value>com/saiten/model/TranScorerSessionInfo.hbm.xml</value>
-
+			 <value>com/saiten/model/LmsInstances.hbm.xml</value>
+			 
 		</list>
     </property>	
  

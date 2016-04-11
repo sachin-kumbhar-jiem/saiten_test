@@ -5,6 +5,7 @@ package com.saiten.service.impl;
 
 import org.hibernate.HibernateException;
 
+import com.saiten.dao.LmsInstancesDAO;
 import com.saiten.dao.TranScorerAccessLogDAO;
 import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.info.ScorerAccessLogInfo;
@@ -20,6 +21,8 @@ import com.saiten.util.ErrorCode;
 public class ScorerLoggingServiceImpl implements ScorerLoggingService {
 
 	private TranScorerAccessLogDAO tranScorerAccessLogDAO;
+
+	private LmsInstancesDAO lmsInstancesDAO;
 
 	@Override
 	public void saveOrUpdate(ScorerAccessLogInfo scorerAccessLogInfo) {
@@ -64,6 +67,19 @@ public class ScorerLoggingServiceImpl implements ScorerLoggingService {
 	public void setTranScorerAccessLogDAO(
 			TranScorerAccessLogDAO tranScorerAccessLogDAO) {
 		this.tranScorerAccessLogDAO = tranScorerAccessLogDAO;
+	}
+
+	/**
+	 * @param lmsInstancesDAO
+	 *            the lmsInstancesDAO to set
+	 */
+	public void setLmsInstancesDAO(LmsInstancesDAO lmsInstancesDAO) {
+		this.lmsInstancesDAO = lmsInstancesDAO;
+	}
+
+	@Override
+	public String getUrlById(Integer id) {
+		return lmsInstancesDAO.getUrlById(id);
 	}
 
 }

@@ -12,4 +12,6 @@ import com.saiten.info.ScorerAccessLogInfo;
 public interface ScorerLoggingService {
 
 	public void saveOrUpdate(ScorerAccessLogInfo scorerAccessLogInfo);
+
+	public String getUrlById(Integer id);
 }

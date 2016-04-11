@@ -26,6 +26,7 @@
    	<bean id="loginServiceAction" class="com.saiten.action.LoginServiceAction" scope="request">
 		<property name="loginService" ref="loginService"></property>
 		<property name="saitenApplicationProperties" ref="saitenApplicationProperties"/>
+		<property name="scorerLoggingService" ref="scorerLoggingService"></property>
    	</bean>
 	
    	<bean id="loginService" class="com.saiten.service.impl.LoginServiceImpl">
@@ -34,7 +35,10 @@
    	
    	<bean id="scorerLoggingService" class="com.saiten.service.impl.ScorerLoggingServiceImpl">
    		<property name="tranScorerAccessLogDAO" ref="tranScorerAccessLogDAO"></property>
+   		<property name="lmsInstancesDAO" ref="lmsInstancesDAO"></property>
    	</bean>
+   	
+   	<bean id="lmsInstancesDAO" class="com.saiten.dao.impl.LmsInstancesDAOImpl"/>
    	
    	<bean id="tranScorerAccessLogDAO" class="com.saiten.dao.impl.TranScorerAccessLogDAOImpl"/>
    	
