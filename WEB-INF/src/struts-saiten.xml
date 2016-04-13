@@ -40,7 +40,11 @@
 		<default-interceptor-ref name="logFilterStack" />
 		
 		<global-results>
-			<result name="login" type="redirectAction">redirectToLogin</result>
+			<result name="login" type="redirectAction">
+				<param name="actionName">redirectToLogin</param>
+				<param name="duplicateLogout">${#attr['duplicateLogout']}</param>
+				<param name="lmsInstanceId">${#attr['lmsInstanceId']}</param>	
+			</result>
 			<result name="logout">/jsp/logOut.jsp</result>
 			<result name="error">/error/error.jsp</result>
 		</global-results>

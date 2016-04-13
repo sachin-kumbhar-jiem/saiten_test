@@ -54,6 +54,11 @@ function enableLinksAndButtons(){
 			  <div class="box" >
 				<h1 align="left"></h1>
 				<div style="vertical-align: middle; margin-top: 17%;">
+				<s:if test="#request.sessionTimeout == true">
+					<span class="errorMessage">
+						<s:text name="label.login.through.lms"></s:text>
+					</span>
+				</s:if><s:else>
 					<span class="errorMessage"><s:text name='message.errorMessage' /> 
 						<s:if test="#request.errorCode != null" >
 							<BR /> <s:text name='message.errorcode' /> : <s:property value="#attr['errorCode']"/>
@@ -73,6 +78,7 @@ function enableLinksAndButtons(){
 								<s:text name="label.backToSaitenLMS" />
 							</a>						
 						</s:if>
+				</s:else>
 				</div>
 			</div>
 		  </div>  

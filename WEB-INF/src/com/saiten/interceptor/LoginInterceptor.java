@@ -58,7 +58,8 @@ public class LoginInterceptor extends AbstractInterceptor {
 			if (!StringUtils.isBlank(loginAttempt)) {
 				return invocation.invoke();
 			} else {
-				return ActionSupport.LOGIN;
+				request.setAttribute("sessionTimeout", true);
+				return ActionSupport.ERROR;
 			}
 
 		} else {
@@ -76,6 +77,8 @@ public class LoginInterceptor extends AbstractInterceptor {
 
 			if ((!userStatus.equals(WebAppConst.SCORER_LOGGING_STATUS[0]))
 					&& (StringUtils.isBlank(loginAttempt))) {
+				request.setAttribute("lmsInstanceId", session.get("lmsInstanceId"));
+				request.setAttribute("duplicateLogout", true);
 				session.clear();
 				// invalidate session
 				((SessionMap) session).invalidate();

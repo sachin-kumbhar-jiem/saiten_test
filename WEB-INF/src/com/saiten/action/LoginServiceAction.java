@@ -46,7 +46,6 @@ public class LoginServiceAction extends ActionSupport implements SessionAware,
 	HttpServletRequest request;
 	private String loginPageUrl;
 	private ScorerLoggingService scorerLoggingService;
-
 	private void buildSessionObject() {
 		session.put("scorerInfo", scorerInfo);
 
@@ -117,9 +116,19 @@ public class LoginServiceAction extends ActionSupport implements SessionAware,
 	}
 
 	public String redirectToLoginPage() {
-
-		loginPageUrl = saitenApplicationProperties
-				.getProperty(WebAppConst.LOGIN_PAGE_URL);
+		
+		Boolean isduplicateLogout = Boolean.valueOf(request.getParameter("duplicateLogout"));
+		String isSaitenLoginEnabled = saitenApplicationProperties
+				.getProperty(WebAppConst.IS_SAITEN_LOGIN_FUNCTINALITY_ENABLED);
+		if (isSaitenLoginEnabled.equals("true")) {
+			loginPageUrl = saitenApplicationProperties
+					.getProperty(WebAppConst.LOGIN_PAGE_URL);
+		}else{
+			if(isduplicateLogout == true){
+				loginPageUrl = scorerLoggingService.getUrlById(Integer.valueOf(request.getParameter("lmsInstanceId")));
+			}
+		}
+		
 		return SUCCESS;
 	}
 

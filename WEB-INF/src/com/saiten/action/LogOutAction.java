@@ -136,10 +136,9 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 					 */
 					Integer lmsInstanceId = (Integer) session
 							.get("lmsInstanceId");
-
-					if (backToLms) {
-						saitenLMSUrl = scorerLoggingService
-								.getUrlById(lmsInstanceId);
+					saitenLMSUrl = scorerLoggingService
+							.getUrlById(lmsInstanceId);
+					if (backToLms) {					
 						scorerId = AESEncryptionDecryptionUtil
 								.encrypt(scorerId);
 
@@ -151,8 +150,8 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 								+ saitenLMSUrl);
 						Thread.sleep(2000);
 					} else {
-						saitenLMSUrl = saitenApplicationProperties
-								.getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL);
+						/*saitenLMSUrl = saitenApplicationProperties
+								.getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL);*/
 						log.info(scorerId + "-"
 								+ "User Logout. Redirecting to Lms. LMS URL: "
 								+ saitenLMSUrl);
