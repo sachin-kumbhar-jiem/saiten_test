@@ -878,7 +878,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 									+ WebAppConst.HYPHEN
 									+ questionInfo.getQuestionNum()
 									+ WebAppConst.TXT_FILE_EXTENSION);
-					
+
 					txtFile.createNewFile();
 
 					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
@@ -927,7 +927,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 									+ WebAppConst.HYPHEN
 									+ questionInfo.getQuestionNum()
 									+ WebAppConst.TXT_FILE_EXTENSION);
-					
+
 					txtFile.createNewFile();
 
 					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
@@ -982,7 +982,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 									+ WebAppConst.HYPHEN
 									+ questionInfo.getQuestionNum()
 									+ WebAppConst.TXT_FILE_EXTENSION);
-					
+
 					txtFile.createNewFile();
 
 					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
@@ -1066,12 +1066,13 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 			TextProvider textProvider) {
 
 		if (!pendingCategoryWiseList.isEmpty()) {
+			int counter = 1;
 
 			for (DailyStatusReportListInfo record : pendingCategoryWiseList) {
 
 				StringBuilder csvData = new StringBuilder();
 
-				if (record.getPendingCategory().equals("null")) {
+				if (pendingCategoryWiseList.size() == counter) {
 					csvData.append(textProvider
 							.getText("dailyStatusQuestionWise.report.total"));
 				} else {
@@ -1100,6 +1101,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 				csvData.append(record.getForcedScoringPending());
 
 				pendCategoryResultList.add(csvData.toString());
+				counter++;
 			}
 		}
 	}
@@ -1210,12 +1212,12 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 		if (!gradeWiseList.isEmpty()) {
 
-			int count = 1;
+			int counter = 1;
 			for (DailyStatusReportListInfo record : gradeWiseList) {
 
 				StringBuilder csvData = new StringBuilder();
 
-				if (gradeWiseList.size() == count) {
+				if (gradeWiseList.size() == counter) {
 					csvData.append(textProvider
 							.getText("dailyStatusQuestionWise.report.total"));
 				} else {
@@ -1265,7 +1267,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 				csvData.append(record.getInspectionMenuDeny());
 
 				finalResultList.add(csvData.toString());
-				count++;
+				counter++;
 			}
 		}
 	}
@@ -1276,12 +1278,14 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 			TextProvider textProvider, QuestionInfo questionInfo) {
 
 		if (!markValueList.isEmpty()) {
+			
+			int counter = 1;
 
 			for (DailyStatusReportListInfo record : markValueList) {
 
 				StringBuilder csvData = new StringBuilder();
 
-				if (record.getMarkValue().equals("null")) {
+				if (markValueList.size() == counter) {
 					csvData.append(textProvider
 							.getText("dailyStatusQuestionWise.report.total"));
 				} else {
@@ -1335,6 +1339,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 				csvData.append(record.getInspectionMenuDeny());
 
 				finalResultList.add(csvData.toString());
+				counter++;
 			}
 		}
 	}
