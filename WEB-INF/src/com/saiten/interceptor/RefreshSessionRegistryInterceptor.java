@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.apache.struts2.StrutsStatics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionInformation;
@@ -30,6 +31,9 @@ public class RefreshSessionRegistryInterceptor extends AbstractInterceptor {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private static Logger log = Logger
+			.getLogger(RefreshSessionRegistryInterceptor.class);
+
 	@Autowired
 	private SessionRegistry sessionRegistry;
 
@@ -42,9 +46,7 @@ public class RefreshSessionRegistryInterceptor extends AbstractInterceptor {
 	 */
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
-
-		String result = invocation.invoke();
-
+		String result = null;
 		@SuppressWarnings("rawtypes")
 		final Map session;
 
@@ -57,21 +59,37 @@ public class RefreshSessionRegistryInterceptor extends AbstractInterceptor {
 		session = context.getSession();
 		// Is there a "user" object stored in the user's session?
 		Object mstScorerInfoObj = session.get("scorerInfo");
-		if (mstScorerInfoObj != null) {
-			MstScorerInfo mstScorerInfo = (MstScorerInfo) mstScorerInfoObj;
-			UserQuestionInfo userQuestionInfo = new UserQuestionInfo();
-			userQuestionInfo.setScorerId(mstScorerInfo.getScorerId());
-			List<SessionInformation> userSessions = sessionRegistry
-					.getAllSessions(userQuestionInfo, true);
-			for (SessionInformation userSession : userSessions) {
-				String expiredSessionId = new String();
-				expiredSessionId = userSession.getSessionId();
-				if (!expiredSessionId.equals(sessionId)) {
-					sessionRegistry.removeSessionInformation(expiredSessionId);
-				}
-			}
+		try {
+			result = invocation.invoke();
 
+			if (mstScorerInfoObj != null) {
+				MstScorerInfo mstScorerInfo = (MstScorerInfo) mstScorerInfoObj;
+				log.info(mstScorerInfo.getScorerId() + " execution start.");
+				UserQuestionInfo userQuestionInfo = new UserQuestionInfo();
+				userQuestionInfo.setScorerId(mstScorerInfo.getScorerId());
+				List<SessionInformation> userSessions = sessionRegistry
+						.getAllSessions(userQuestionInfo, true);
+				for (SessionInformation userSession : userSessions) {
+					String expiredSessionId = new String();
+					expiredSessionId = userSession.getSessionId();
+					if (!expiredSessionId.equals(sessionId)) {
+						sessionRegistry
+								.removeSessionInformation(expiredSessionId);
+					}
+				}
+				log.info(mstScorerInfo.getScorerId() + " execution end.");
+			}
+		} catch (Exception e) {
+			if (mstScorerInfoObj != null) {
+				MstScorerInfo mstScorerInfo = (MstScorerInfo) mstScorerInfoObj;
+				log.error("[ ScorerId: " + mstScorerInfo.getScorerId() + "] ",
+						e);
+			} else {
+				log.error("[ ScorerId: " + null + "] ", e);
+			}
+			throw e;
 		}
+
 		return result;
 	}
 
