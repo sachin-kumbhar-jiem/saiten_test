@@ -85,6 +85,14 @@ public class ConfirmScoreAction extends ActionSupport implements SessionAware {
 			buildSessionInfo(gradeInfo, bitValue, menuId);
 
 		} catch (SaitenRuntimeException we) {
+			MstScorerInfo scorerInfo = ((MstScorerInfo) session
+					.get("scorerInfo"));
+			QuestionInfo questionInfo = (QuestionInfo) session
+					.get("questionInfo");
+			TranDescScoreInfo tranDescScoreInfo = (TranDescScoreInfo) session
+					.get("tranDescScoreInfo");
+			log.error(scorerInfo.getScorerId()+"-"+questionInfo.getMenuId()+"-"+"\n"+"TranDescScoreInfo: "+tranDescScoreInfo
+					+ we);
 			throw we;
 		} catch (Exception e) {
 			MstScorerInfo scorerInfo = ((MstScorerInfo) session
