@@ -75,6 +75,10 @@
 	<filter>
 		<filter-name>cacheControlFilter</filter-name>
 		<filter-class>jp.co.jiem.servlet.filter.SetCacheControlHeaderFilter</filter-class>
+		<init-param>
+		        <param-name>excludedURLs</param-name>
+		        <param-value>css|js|jQuery|img</param-value>
+   		</init-param>
 	</filter>
 
 	<!-- filter mappings - cacheControl -->
