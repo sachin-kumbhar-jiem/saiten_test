@@ -1139,8 +1139,8 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 		if (reportType.equals(WebAppConst.MARK_VALUE_WISE_DETAILS_REPORT)) {
 			csvHeaders.append(textProvider
 					.getText("label.prog.report.1st.time.scoring.wait"));
+			csvHeaders.append(WebAppConst.TAB_CHARACTER);
 		}
-		csvHeaders.append(WebAppConst.TAB_CHARACTER);
 
 		if (questionInfo.getQuestionType() == Arrays.asList(
 				WebAppConst.QUESTION_TYPE).get(1)) {
