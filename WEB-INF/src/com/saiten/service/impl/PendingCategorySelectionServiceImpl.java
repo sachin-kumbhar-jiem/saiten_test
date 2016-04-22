@@ -52,15 +52,16 @@ public class PendingCategorySelectionServiceImpl implements
 				Object[] pendingCategoryObj = (Object[]) pendingCategoryListObj;
 				Short pendingCategory = (Short)pendingCategoryObj[0];
 				Map<String, String> configMap = SaitenUtil.getConfigMap();
-				boolean removeTagsFromDescription = Boolean
+				/*boolean removeTagsFromDescription = Boolean
 						.valueOf(configMap.get("removeTagsFromDescription"));
-				if(removeTagsFromDescription){
+				if(removeTagsFromDescription){*/
+				// commented this code. now this will be used for zenkoku also.
 					pendingCategoryMap.put(pendingCategory,
 							(String.valueOf(pendingCategoryObj[1])).replaceAll("\\<.*?>",""));
-				}else{
+				/*}else{
 					pendingCategoryMap.put(pendingCategory,
 							(String.valueOf(pendingCategoryObj[1])));
-				}
+				}*/
 				
 			}
 		}
