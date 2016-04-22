@@ -39,15 +39,16 @@ public class DenyCategorySelectionServiceImpl implements
 				Object[] denyCategoryObj = (Object[]) denyCategoryListObj;
 				Short denyCategory = (Short)denyCategoryObj[0];
 				Map<String, String> configMap = SaitenUtil.getConfigMap();
-				boolean removeTagsFromDescription = Boolean
+				/*boolean removeTagsFromDescription = Boolean
 						.valueOf(configMap.get("removeTagsFromDescription"));
-				if(removeTagsFromDescription){
+				if(removeTagsFromDescription){*/
+				// commented this code. now this will be used for zenkoku also.
 					denyCategoryMap.put(denyCategory,
 							(String.valueOf(denyCategoryObj[1])).replaceAll("\\<.*?>",""));
-				}else{
+				/*}else{
 					denyCategoryMap.put(denyCategory,
 							(String.valueOf(denyCategoryObj[1])));
-				}
+				}*/
 				
 			}
 		}
