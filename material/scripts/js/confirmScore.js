@@ -1,6 +1,6 @@
 
 //Our validation script will go here.
-$(document).ready(function(){
+//$(document).ready(function(){
 	$("#registerScore").click(function(){
 		//$("#registerScore").prop('disabled', true);
 		//$("#registerScore").addClass('btn-disabled');
@@ -33,7 +33,7 @@ $(document).ready(function(){
 			  return false;
 		  }
 	});*/
-});
+//});
 
 /*$(document).ready(function(){
 	$("#registerScore").click(function()	{
