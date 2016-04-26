@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
  pageEncoding="UTF-8"%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %> 
@@ -75,7 +76,7 @@
 						<s:if test="!(#session.pendingCategoryMap.isEmpty())">
 							<s:set id="defaultselectedGrade" name="defaultselectedGrade" value="%{#session.pendingCategoryMap.keySet().toArray()[0]}"/>	
 						</s:if>
-						<s:select id="pendingCategory" name="pendingCategory" list="#session.pendingCategoryMap" cssClass="selectPendingList" value="%{#defaultselectedGrade}" size="11" cssStyle="width:100%;height:220px;word-wrap : break-word;"/>
+						<s:select id="pendingCategory" name="pendingCategory" list="#session.pendingCategoryMap" cssClass="selectPendingList" value="%{#defaultselectedGrade}" size="11" cssStyle="width:100%;height:220px;word-wrap : break-word;" theme="escapeHtml"/>
 					</td>
 					</tr>
 					

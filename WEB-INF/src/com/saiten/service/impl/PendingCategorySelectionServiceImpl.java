@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.hibernate.HibernateException;
 
 import com.saiten.dao.MstPendingCategoryDAO;
@@ -19,8 +20,7 @@ public class PendingCategorySelectionServiceImpl implements
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Map<Short, String> findPendingCategoriesByQuestionSeq(
-			int questionSeq) {
+	public Map<Short, String> findPendingCategoriesByQuestionSeq(int questionSeq) {
 
 		try {
 			List pendingCategoryList = mstPendingCategoryDAO
@@ -43,26 +43,41 @@ public class PendingCategorySelectionServiceImpl implements
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	private Map<Short, String> buildPendingCategoryMap(
-			List pendingCategoryList) {
+	private Map<Short, String> buildPendingCategoryMap(List pendingCategoryList) {
 		Map<Short, String> pendingCategoryMap = new LinkedHashMap<Short, String>();
 
 		if (!pendingCategoryList.isEmpty()) {
 			for (Object pendingCategoryListObj : pendingCategoryList) {
 				Object[] pendingCategoryObj = (Object[]) pendingCategoryListObj;
-				Short pendingCategory = (Short)pendingCategoryObj[0];
+				Short pendingCategory = (Short) pendingCategoryObj[0];
 				Map<String, String> configMap = SaitenUtil.getConfigMap();
-				/*boolean removeTagsFromDescription = Boolean
-						.valueOf(configMap.get("removeTagsFromDescription"));
-				if(removeTagsFromDescription){*/
+				/*
+				 * boolean removeTagsFromDescription = Boolean
+				 * .valueOf(configMap.get("removeTagsFromDescription"));
+				 * if(removeTagsFromDescription){
+				 */
 				// commented this code. now this will be used for zenkoku also.
-					pendingCategoryMap.put(pendingCategory,
-							(String.valueOf(pendingCategoryObj[1])).replaceAll("\\<.*?>",""));
-				/*}else{
-					pendingCategoryMap.put(pendingCategory,
-							(String.valueOf(pendingCategoryObj[1])));
-				}*/
-				
+				/*
+				 * pendingCategoryMap.put(pendingCategory,
+				 * (String.valueOf(pendingCategoryObj
+				 * [1])).replaceAll("\\<.*?>",""));
+				 */
+				/*
+				 * pendingCategoryMap.put(pendingCategory,
+				 * HtmlUtils.htmlEscape(String.valueOf(pendingCategoryObj[1]),
+				 * "UTF-8"));
+				 */
+				pendingCategoryMap.put(pendingCategory, StringEscapeUtils
+						.unescapeHtml4(String.valueOf(pendingCategoryObj[1])));
+				/*
+				 * pendingCategoryMap.put(pendingCategory,
+				 * String.valueOf(pendingCategoryObj[1]));
+				 */
+				/*
+				 * }else{ pendingCategoryMap.put(pendingCategory,
+				 * (String.valueOf(pendingCategoryObj[1]))); }
+				 */
+
 			}
 		}
 		return pendingCategoryMap;

@@ -75,7 +75,7 @@
 						<s:if test="!(#session.denyCategoryMap.isEmpty())">
 							<s:set id="defaultselectedGrade" name="defaultselectedGrade" value="%{#session.deyCategoryMap.keySet().toArray()[0]}"/>	
 						</s:if>
-						<s:select id="denyCategory" name="denyCategory" list="#session.denyCategoryMap" cssClass="selectPendingList" value="%{#defaultselectedGrade}" size="11" cssStyle="width:100%;height:220px;word-wrap : break-word;"/>
+						<s:select id="denyCategory" name="denyCategory" list="#session.denyCategoryMap" cssClass="selectPendingList" value="%{#defaultselectedGrade}" size="11" cssStyle="width:100%;height:220px;word-wrap : break-word;" theme="escapeHtml"/>
 					</td>
 					</tr>
 					
