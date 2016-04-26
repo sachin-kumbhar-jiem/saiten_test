@@ -105,7 +105,7 @@ function changeCurrentBlock(checkDisable, textDisable, currentBlockDisable) {
 		changeCheckBox('scoreInputInfo.scoreCurrentInfo.currentStateList',!currentBlockDisable);
 		
 	    var now = new Date();
-	    now.setDate(now.getDate() - 1);
+	    now.setDate(now.getDate());
 	    
 	    $("#currentUpdateDateStartYear").val(now.getFullYear());
 	    $("#currentUpdateDateStartMonth").val(now.getMonth() + 1);
@@ -219,7 +219,7 @@ function changeHistoryBlock(checkDisable, textDisable, historyBlockDisable) {
 		changeCheckBox('scoreInputInfo.scoreHistoryInfo.historyEventList',!historyBlockDisable);
 		
 		var now = new Date();
-		now.setDate(now.getDate() - 1);
+		now.setDate(now.getDate());
 		    
 		
 		$("#historyUpdateDateStartYear").val(now.getFullYear());
