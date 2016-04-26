@@ -26,20 +26,19 @@ public class MstDenyCategoryDAOImpl extends SaitenHibernateDAOSupport implements
 			throw re;
 		}
 	}
-	
-	@SuppressWarnings ("rawtypes")
+
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List findDenyCategoriesByQuestionSeq(int questionSeq) {
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT mstDenyCategory.denyCategory, CONCAT(mstDenyCategory.denyCategory, '.', mstDenyCategory.denyDescription) ");
 		query.append("FROM MstDenyCategory as mstDenyCategory ");
-		query.append("WHERE mstDenyCategory.deleteFlag= :DELETE_FLAG AND mstDenyCategory.validFlag = :VALID_FLAG ");
+		query.append("WHERE mstDenyCategory.deleteFlag= :DELETE_FLAG ");
 		query.append("AND mstDenyCategory.mstQuestion.questionSeq = :QUESTION_SEQ ");
 		query.append("ORDER BY mstDenyCategory.denyCategory");
 
-		String[] paramNames = { "QUESTION_SEQ", "DELETE_FLAG", "VALID_FLAG" };
-		Object[] values = { questionSeq, WebAppConst.DELETE_FLAG,
-				WebAppConst.VALID_FLAG };
+		String[] paramNames = { "QUESTION_SEQ", "DELETE_FLAG" };
+		Object[] values = { questionSeq, WebAppConst.DELETE_FLAG };
 
 		try {
 			return getHibernateTemplate().findByNamedParam(query.toString(),
@@ -49,7 +48,7 @@ public class MstDenyCategoryDAOImpl extends SaitenHibernateDAOSupport implements
 		}
 
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public List findDenyCategorySeqList(Integer questionSeq,
