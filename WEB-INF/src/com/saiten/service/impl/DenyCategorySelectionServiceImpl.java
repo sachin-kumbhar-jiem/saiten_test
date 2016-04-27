@@ -52,8 +52,10 @@ public class DenyCategorySelectionServiceImpl implements
 				 * (String.valueOf(denyCategoryObj
 				 * [1])).replaceAll("\\<.*?>",""));
 				 */
-				denyCategoryMap.put(denyCategory, StringEscapeUtils
-						.unescapeHtml4(String.valueOf(denyCategoryObj[1])));
+				String denyDescrption = String.valueOf(denyCategoryObj[1]);
+				denyDescrption = denyDescrption.replaceAll("<br>[&nbsp;]+", "&nbsp;");
+				denyDescrption = denyDescrption.replaceAll("<(.|\n)*?>", "");
+				denyCategoryMap.put(denyCategory, denyDescrption);
 				/*
 				 * }else{ denyCategoryMap.put(denyCategory,
 				 * (String.valueOf(denyCategoryObj[1]))); }

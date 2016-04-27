@@ -72,10 +72,26 @@
 						<s:text name="label.selectPendingCategoryTarget" />
 					</td> --%>
 					<td>
-						<s:if test="!(#session.denyCategoryMap.isEmpty())">
+						<%--<s:if test="!(#session.denyCategoryMap.isEmpty())">
 							<s:set id="defaultselectedGrade" name="defaultselectedGrade" value="%{#session.deyCategoryMap.keySet().toArray()[0]}"/>	
 						</s:if>
-						<s:select id="denyCategory" name="denyCategory" list="#session.denyCategoryMap" cssClass="selectPendingList" value="%{#defaultselectedGrade}" size="11" cssStyle="width:100%;height:220px;word-wrap : break-word;" theme="escapeHtml"/>
+						 <s:select id="denyCategory" name="denyCategory" list="#session.denyCategoryMap" cssClass="selectPendingList" value="%{#defaultselectedGrade}" size="11" cssStyle="width:100%;height:220px;word-wrap : break-word;"/> --%>
+						
+						<select name="denyCategory" size="11" id="denyCategory" class="selectPendingList" style="width:100%;height:220px;word-wrap : break-word;overflow-x: auto;">
+							<s:iterator value="#session.denyCategoryMap" id="denyCategoryObj" status="denyCategoryStatus">
+								<s:if test="#denyCategoryStatus.count == 1">
+									<option value="<s:property value="%{#denyCategoryObj.key}"/>"  title="<s:property value="%{#denyCategoryObj.value}" escapeHtml="false"/>" selected="selected">
+										<s:property value="%{#denyCategoryObj.value}" escapeHtml="false"/>
+									</option>
+								</s:if>
+								<s:else>
+									<option value="<s:property value="%{#denyCategoryObj.key}"/>"  title="<s:property value="%{#denyCategoryObj.value}" escapeHtml="false"/>">
+										<s:property value="%{#denyCategoryObj.value}" escapeHtml="false"/>
+									</option>
+								</s:else>
+							</s:iterator>
+						</select>
+						
 					</td>
 					</tr>
 					

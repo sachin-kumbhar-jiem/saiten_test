@@ -1,4 +1,3 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
  pageEncoding="UTF-8"%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %> 
@@ -73,10 +72,26 @@
 						<s:text name="label.selectPendingCategoryTarget" />
 					</td> --%>
 					<td>
-						<s:if test="!(#session.pendingCategoryMap.isEmpty())">
+						<%-- <s:if test="!(#session.pendingCategoryMap.isEmpty())">
 							<s:set id="defaultselectedGrade" name="defaultselectedGrade" value="%{#session.pendingCategoryMap.keySet().toArray()[0]}"/>	
 						</s:if>
-						<s:select id="pendingCategory" name="pendingCategory" list="#session.pendingCategoryMap" cssClass="selectPendingList" value="%{#defaultselectedGrade}" size="11" cssStyle="width:100%;height:220px;word-wrap : break-word;" theme="escapeHtml"/>
+						<s:select id="pendingCategory" name="pendingCategory" list="#session.pendingCategoryMap" cssClass="selectPendingList" value="%{#defaultselectedGrade}" size="11" cssStyle="width:100%;height:220px;word-wrap : break-word;"/> --%>
+						
+						<select name="pendingCategory" size="11" id="pendingCategory" class="selectPendingList" style="width:100%;height:220px;word-wrap : break-word;overflow-x: auto;">
+							<s:iterator value="#session.pendingCategoryMap" id="pendingCategoryObj" status="pendingcategoryStatus" >
+								<s:if test="#pendingcategoryStatus.count == 1">
+									<option value="<s:property value="%{#pendingCategoryObj.key}" />"  title="<s:property value="%{#pendingCategoryObj.value}" escapeHtml="false"/>" selected="selected">
+										<s:property value="%{#pendingCategoryObj.value}" escapeHtml="false" />
+									</option>
+								</s:if>
+								<s:else>
+									<option value="<s:property value="%{#pendingCategoryObj.key}" />"  title="<s:property value="%{#pendingCategoryObj.value}" escapeHtml="false"/>">
+										<s:property value="%{#pendingCategoryObj.value}" escapeHtml="false" />
+									</option>
+								</s:else>
+							</s:iterator>
+						</select>
+						
 					</td>
 					</tr>
 					

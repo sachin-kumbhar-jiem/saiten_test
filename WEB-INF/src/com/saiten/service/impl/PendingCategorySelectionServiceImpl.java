@@ -7,6 +7,8 @@ import java.util.Map;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.hibernate.HibernateException;
 
+import antlr.StringUtils;
+
 import com.saiten.dao.MstPendingCategoryDAO;
 import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.service.PendingCategorySelectionService;
@@ -67,8 +69,10 @@ public class PendingCategorySelectionServiceImpl implements
 				 * HtmlUtils.htmlEscape(String.valueOf(pendingCategoryObj[1]),
 				 * "UTF-8"));
 				 */
-				pendingCategoryMap.put(pendingCategory, StringEscapeUtils
-						.unescapeHtml4(String.valueOf(pendingCategoryObj[1])));
+				String pendingDescrption = String.valueOf(pendingCategoryObj[1]);
+				pendingDescrption = pendingDescrption.replaceAll("<br>[&nbsp;]+", "&nbsp;");
+				pendingDescrption = pendingDescrption.replaceAll("<(.|\n)*?>", "");
+				pendingCategoryMap.put(pendingCategory, pendingDescrption);
 				/*
 				 * pendingCategoryMap.put(pendingCategory,
 				 * String.valueOf(pendingCategoryObj[1]));
