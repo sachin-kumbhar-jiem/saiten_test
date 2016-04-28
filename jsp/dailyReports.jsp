@@ -126,6 +126,18 @@
 					           <input type="date" name="dailyReportsInfo.currentDate" value='<s:property value="dailyReportsInfo.currentDate"/>' id="sysDate" disabled="disabled"/>
 					       </td>
 					   </tr>
+					   
+					   <tr>
+					       <th class="partition">
+					            <div id="allQuestionCountForWgOnly" style="display:block">
+					                <input type="radio" name="dailyReports" id="studCountForAllQuesForWgOnly" value="studCountForAllQuesForWgOnly" onclick="allQuesCount();"/>
+					            </div>
+					       </th>
+					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
+					            <font color ="white" title="calibri" size="11"><b><s:text name="label.ques.wise.stud.count.all.ques.for.wg.only"/></b></font>
+					       </td>
+					   </tr>
+					   
 				  </table>
 				</div>
 		</div><br/>

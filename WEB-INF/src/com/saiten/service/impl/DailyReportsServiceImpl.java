@@ -54,7 +54,7 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 	private List<String> scorerAccessLogList;
 	private List<String> accessLogList;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked" })
 	public String processDownloadDailyReportRequest(String dailyReports,
 			String quesSequences, String dailyReportCurrentDate)
 			throws Exception {
@@ -80,6 +80,10 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 			String directoryName = getDirectoryName(SaitenUtil
 					.getLoggedinScorerId());
 
+			for (MstDbInstance mstDbInstance : mstDbInstanceList) {
+				connectionStringList.add(mstDbInstance.getConnectionString());
+			}
+
 			File downloadDir = null;
 
 			if (dailyReports.equals(WebAppConst.STUD_COUNT_FOR_ALL_QUES)) {
@@ -87,12 +91,6 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 				studCntListForAllQues = new ArrayList<String>();
 
 				List<String> allQuestionsCountList = new ArrayList<String>();
-
-				for (MstDbInstance mstDbInstance : mstDbInstanceList) {
-					connectionStringList.add(mstDbInstance
-							.getConnectionString());
-				}
-
 				for (String connectionString : connectionStringList) {
 
 					studCntListForAllQues = tranDescScoreDAO
@@ -100,7 +98,6 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 
 					if (studCntListForAllQues != null
 							&& !studCntListForAllQues.isEmpty()) {
-
 						allQuestionsCountList.addAll(studCntListForAllQues);
 					}
 				}
@@ -150,11 +147,6 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 				specifiedQuesCntList = new ArrayList<String>();
 				List<String> specQuesCountList = new ArrayList<String>();
 
-				for (MstDbInstance mstDbInstance : mstDbInstanceList) {
-					connectionStringList.add(mstDbInstance
-							.getConnectionString());
-				}
-
 				for (String connectionString : connectionStringList) {
 
 					if (questionSeqsInfoList != null) {
@@ -165,7 +157,6 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 
 					if (specifiedQuesCntList != null
 							&& !specifiedQuesCntList.isEmpty()) {
-
 						specQuesCountList.addAll(specifiedQuesCntList);
 					}
 				}
@@ -212,14 +203,7 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 
 				File csvfile = null;
 				confAndInspWaitCntList = new ArrayList<String>();
-
 				List<String> questionCountList = new ArrayList<String>();
-
-				for (MstDbInstance mstDbInstance : mstDbInstanceList) {
-					connectionStringList.add(mstDbInstance
-							.getConnectionString());
-				}
-
 				for (String connectionString : connectionStringList) {
 
 					confAndInspWaitCntList = tranDescScoreDAO
@@ -331,6 +315,59 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 					}
 					SaitenFileUtil.deleteDirectory(downloadDir);
 				}
+			}
+
+			else if (dailyReports
+					.equals(WebAppConst.STUD_COUNT_FOR_ALL_QUES_FOR_WG_ONLY)) {
+
+				studCntListForAllQues = new ArrayList<String>();
+				List<String> allQuestionsCountList = new ArrayList<String>();
+
+				for (String connectionString : connectionStringList) {
+					studCntListForAllQues = tranDescScoreDAO
+							.getQuesStatewiseStudCountForAllQues(connectionString);
+
+					if (studCntListForAllQues != null
+							&& !studCntListForAllQues.isEmpty()) {
+						allQuestionsCountList.addAll(studCntListForAllQues);
+					}
+				}
+
+				if (allQuestionsCountList != null
+						&& !allQuestionsCountList.isEmpty()) {
+					downloadDir = SaitenFileUtil
+							.createDirectory(
+									downloadDirBasePath,
+									textProvider
+											.getText("daily.report.for.wg.only.for.all.ques.count.zip.prefix")
+											+ directoryName);
+					getReportHeadersForAllQues(textProvider);
+					getReportRowsForAllQuesWGOnly(allQuestionsCountList);
+
+					File txtFile = new File(
+							downloadDir.getPath()
+									+ File.separator
+									+ textProvider
+											.getText("daily.report.for.wg.only.for.all.ques.count.txt.prefix")
+									+ WebAppConst.TXT_FILE_EXTENSION);
+
+					txtFile.createNewFile();
+
+					FileUtils.writeLines(txtFile, WebAppConst.FILE_ENCODING,
+							allQuesCountList, WebAppConst.CRLF);
+
+					if (!SaitenFileUtil.isEmptyDirectory(downloadDir)) {
+
+						SaitenFileUtil.createZipFileFromDirectory(
+								downloadDir.getPath(), downloadDir.getPath()
+										+ WebAppConst.ZIP_FILE_EXTENSION);
+
+						fileToDownload = downloadDir.getPath()
+								+ WebAppConst.ZIP_FILE_EXTENSION;
+					}
+					SaitenFileUtil.deleteDirectory(downloadDir);
+				}
+
 			}
 
 		} catch (HibernateException he) {
@@ -458,6 +495,7 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 
 	@SuppressWarnings("rawtypes")
 	private void getReportRowsForAllQues(List allQuestionsCountList) {
+
 		if (!allQuestionsCountList.isEmpty()) {
 
 			Map stateMap = SaitenUtil.latestScoringStatesMap();
@@ -494,6 +532,34 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 		csvHeaders.append(textProvider.getText("label.count"));
 
 		allQuesCountList.add(csvHeaders.toString());
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void getReportRowsForAllQuesWGOnly(List allQuestionsCountList) {
+		if (!allQuestionsCountList.isEmpty()) {
+
+			Map stateMap = SaitenUtil.latestScoringStatesMapForWg();
+
+			for (Object record : allQuestionsCountList) {
+
+				Object[] objectRecordArray = (Object[]) record;
+
+				StringBuilder csvData = new StringBuilder();
+
+				csvData.append(objectRecordArray[0]);
+				csvData.append(WebAppConst.COMMA);
+
+				if (objectRecordArray[1] != null) {
+					String stateValues = (String) stateMap.get((int) Short
+							.parseShort(objectRecordArray[1].toString()));
+					csvData.append(stateValues);
+				}
+				csvData.append(WebAppConst.COMMA);
+				csvData.append(objectRecordArray[2]);
+
+				allQuesCountList.add(csvData.toString());
+			}
+		}
 	}
 
 	private String getDirectoryName(String userID) {

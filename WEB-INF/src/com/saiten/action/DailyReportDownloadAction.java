@@ -38,7 +38,6 @@ public class DailyReportDownloadAction extends ActionSupport {
 	public String downloadReport() {
 
 		try {
-
 			if (dailyReports.equals(WebAppConst.SPECIFIC_STUD_QUES_COUNT)) {
 				quesSequences = dailyReportsInfo.questionSequences;
 			}

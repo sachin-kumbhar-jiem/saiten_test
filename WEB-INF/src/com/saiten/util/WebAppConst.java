@@ -588,4 +588,6 @@ public interface WebAppConst {
 	
 	public static final Character TAB_CHARACTER = '\t';
 	
+	public static final String STUD_COUNT_FOR_ALL_QUES_FOR_WG_ONLY = "studCountForAllQuesForWgOnly";
+	
 }
