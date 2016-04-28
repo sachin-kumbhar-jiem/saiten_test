@@ -53,7 +53,9 @@ public class DenyCategorySelectionServiceImpl implements
 				 * [1])).replaceAll("\\<.*?>",""));
 				 */
 				String denyDescrption = String.valueOf(denyCategoryObj[1]);
+				denyDescrption = denyDescrption.replaceAll("\n<br>[&nbsp;]+", "&nbsp;");
 				denyDescrption = denyDescrption.replaceAll("<br>[&nbsp;]+", "&nbsp;");
+				denyDescrption = denyDescrption.replaceAll("<br>\n[&nbsp;]+", "&nbsp;");
 				denyDescrption = denyDescrption.replaceAll("<(.|\n)*?>", "");
 				denyCategoryMap.put(denyCategory, denyDescrption);
 				/*

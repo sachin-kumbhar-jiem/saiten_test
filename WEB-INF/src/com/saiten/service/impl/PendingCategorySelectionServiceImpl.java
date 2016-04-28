@@ -70,7 +70,9 @@ public class PendingCategorySelectionServiceImpl implements
 				 * "UTF-8"));
 				 */
 				String pendingDescrption = String.valueOf(pendingCategoryObj[1]);
+				pendingDescrption = pendingDescrption.replaceAll("\n<br>[&nbsp;]+", "&nbsp;");
 				pendingDescrption = pendingDescrption.replaceAll("<br>[&nbsp;]+", "&nbsp;");
+				pendingDescrption = pendingDescrption.replaceAll("<br>\n[&nbsp;]+", "&nbsp;");
 				pendingDescrption = pendingDescrption.replaceAll("<(.|\n)*?>", "");
 				pendingCategoryMap.put(pendingCategory, pendingDescrption);
 				/*
