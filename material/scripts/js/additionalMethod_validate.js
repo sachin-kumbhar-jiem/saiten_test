@@ -192,7 +192,10 @@ function isQuestionNumValid(value, element){
 		dataType:"json",
 		cache: false,
 		success: function(json, status, request){
-			if(json.result.isQuestionNumValid == "invalid"){
+			if(json.result.statusCode == 401){
+				isSuccess = false;
+				location.href = 'scoreSearch.action';
+			}else if(json.result.isQuestionNumValid == "invalid"){
 				isSuccess = false;
 			} else {
 				isSuccess = true;

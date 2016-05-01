@@ -1989,6 +1989,12 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware,
 
 	public String validateQuestionNum() {
 		try {
+			if (session.get("scorerInfo") == null) {
+				// Return statusCode as a JSON response for invalid session
+				result = SaitenUtil.getAjaxCallStatusCode(session);
+				return SUCCESS;
+			}
+			
 			result = SaitenUtil.validateQuestionNum(session, questionNum,
 					subjectCode);
 		} catch (Exception e) {
