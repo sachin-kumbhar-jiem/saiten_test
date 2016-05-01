@@ -393,7 +393,8 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 															<input type="checkbox" id="historyGradeNum" name="scoreInputInfo.scoreHistoryInfo.historyGradeNum" value="8" onchange="checkAtLeastOneHistoryGradeSelected()">
 														</s:if>
 														<s:else>
-															<input type="checkbox" id="historyGradeNum" name="scoreInputInfo.scoreHistoryInfo.historyGradeNum" value="4" onchange="checkAtLeastOneHistoryGradeSelected()">
+															<input type="checkbox" id="historyGradeNum" name="scoreInputInfo.scoreHistoryInfo.historyGradeNum" value="8" onchange="checkAtLeastOneHistoryGradeSelected()">
+															<!-- value passed was 4. changed it to 8 -->
 														</s:else>
 														<s:text name="label.scoresearch.grade8" />
 													</td>
