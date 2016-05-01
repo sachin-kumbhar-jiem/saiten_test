@@ -390,7 +390,7 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 													</td>
 													<td class="inner">
 														<s:if test="@org.apache.commons.lang.ArrayUtils@contains(#session.scoreInputInfo.scoreHistoryInfo.historyGradeNum, 8)">
-															<input type="checkbox" id="historyGradeNum" name="scoreInputInfo.scoreHistoryInfo.historyGradeNum" value="8" onchange="checkAtLeastOneHistoryGradeSelected()">
+															<input type="checkbox" id="historyGradeNum" name="scoreInputInfo.scoreHistoryInfo.historyGradeNum" value="8" onchange="checkAtLeastOneHistoryGradeSelected()" checked="checked">
 														</s:if>
 														<s:else>
 															<input type="checkbox" id="historyGradeNum" name="scoreInputInfo.scoreHistoryInfo.historyGradeNum" value="8" onchange="checkAtLeastOneHistoryGradeSelected()">
