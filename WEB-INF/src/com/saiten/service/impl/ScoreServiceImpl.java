@@ -87,9 +87,9 @@ public class ScoreServiceImpl implements ScoreService {
 				boolean qualityFromPendingMenu = Boolean.valueOf(configMap
 						.get("qualityFromPendingMenu"));
 				Integer randomNumberRange = null;
-				for (int count = 0; count <= 2; count++) {
+				for (int count = 0; count <= 5; count++) {
 					boolean passByRandomFlag = false;
-					if ((count == 0) || (count == 1)) {
+					if (count < 5) {
 						randomNumberRange = Integer
 								.valueOf(saitenGlobalProperties
 										.getProperty(WebAppConst.RANDOM_NUMBER));
