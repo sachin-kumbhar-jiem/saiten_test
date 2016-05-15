@@ -219,15 +219,15 @@
 			</c:choose> 
 			<c:set var="gradeNum" value="${historyInfoResult.gradeNum}"></c:set>
 			<c:set var="result" value="${historyInfoResult.result}"></c:set>
-			<c:set var="pendingCategory" value="${historyInfoResult.pendingCategory}"></c:set>
+			<c:set var="hisPendingCategory" value="${historyInfoResult.pendingCategory}"></c:set>
           	<c:choose>
           	<c:when test="${sessionScope.questionInfo.questionType ne speakingType && sessionScope.questionInfo.questionType ne writingType}">
           	<c:choose>
-				<c:when test="${empty gradeNum && not empty pendingCategory}">
+				<c:when test="${empty gradeNum && not empty hisPendingCategory}">
 					<display:column titleKey="label.header.grade" class="displayColumnType">
 						<a href="<c:out value="${historyScore}"/>">&nbsp;</a>
 					</display:column>
-				</c:when><c:when test="${empty gradeNum && empty pendingCategory}">
+				</c:when><c:when test="${empty gradeNum && empty hisPendingCategory}">
 					<display:column titleKey="label.header.grade" class="displayColumnType">
 						<a href="<c:out value="${historyScore}"/>"><fmt:message key="label.hyphen" bundle="${global}"></fmt:message></a>
 					</display:column>
@@ -238,8 +238,8 @@
 				</c:otherwise>
 			</c:choose>
 			<c:choose>
-			<c:when test="${fn:contains(result, 'F') || fn:contains(result, 'D') || fn:contains(result, 'S') || empty pendingCategory}">
-				<c:if test="${empty pendingCategory && empty result}">
+			<c:when test="${fn:contains(result, 'F') || fn:contains(result, 'D') || fn:contains(result, 'S') || empty hisPendingCategory}">
+				<c:if test="${empty hisPendingCategory && empty result}">
 					<display:column titleKey="label.header.result"  class="displayColumnVarid">
    					<a href="<c:out value="${historyScore}"/>"><fmt:message key="label.hyphen" bundle="${global}"></fmt:message></a>
    					</display:column>
@@ -284,13 +284,13 @@
 			</c:choose>
 			
           	<c:choose>
-				<c:when test="${empty pendingCategory}">
+				<c:when test="${empty hisPendingCategory}">
 					<display:column titleKey="label.header.pendingCategory" class="displayColumnPendingCategory">
 						<a href="<c:out value="${historyScore}"/>">&nbsp;</a>
 					</display:column>
 				</c:when><c:otherwise>
 					<display:column titleKey="label.header.pendingCategory" class="displayColumnPendingCategory">
-						<a href="<c:out value="${historyScore}"/>"><c:out value="${pendingCategory}"/></a>
+						<a href="<c:out value="${historyScore}"/>"><c:out value="${hisPendingCategory}"/></a>
 					</display:column>
 				</c:otherwise>
 			</c:choose>
@@ -351,7 +351,6 @@
 					<s:text name="label.button.resetScoreHistory"></s:text>
 				</a>
 		</s:else>
-		
 	</div>
 </td>
  </tr>

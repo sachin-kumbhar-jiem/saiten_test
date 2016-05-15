@@ -58,13 +58,13 @@ public class MstDenyCategoryDAOImpl extends SaitenHibernateDAOSupport implements
 		query.append("FROM MstDenyCategory as mstDenyCategory ");
 		query.append("WHERE mstDenyCategory.mstQuestion.questionSeq = :QUESTION_SEQ ");
 		query.append("AND mstDenyCategory.denyCategory IN :DENY_CATEGORY_LIST ");
-		query.append("AND mstDenyCategory.deleteFlag= :DELETE_FLAG AND mstDenyCategory.validFlag = :VALID_FLAG ");
+		query.append("AND mstDenyCategory.deleteFlag= :DELETE_FLAG ");
 		query.append("ORDER BY mstDenyCategory.denyCategorySeq");
 
 		String[] paramNames = { "QUESTION_SEQ", "DENY_CATEGORY_LIST",
-				"DELETE_FLAG", "VALID_FLAG" };
+				"DELETE_FLAG" };
 		Object[] values = { questionSeq, denyCategoryList,
-				WebAppConst.DELETE_FLAG, WebAppConst.VALID_FLAG };
+				WebAppConst.DELETE_FLAG };
 
 		try {
 			return getHibernateTemplate().findByNamedParam(query.toString(),
