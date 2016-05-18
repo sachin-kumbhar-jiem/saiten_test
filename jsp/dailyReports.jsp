@@ -59,14 +59,13 @@
 					   <tr>
 					       <th class="partition">
 					            <div id="allQuesCnt" style="display:block">
-					                <input type="radio" name="dailyReports" id="studCountForAllQues" value="studCountForAllQues" onclick="allQuesCount();" checked="checked"/>
+					                <input type="radio" name="dailyReports" id="studCountForAllQues" value="studCountForAllQues" onclick="disableAndClearFields();" checked="checked"/>
 					            </div>
 					       </th>
 					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
 					            <font color ="white" title="calibri" size="11"><b><s:text name="label.ques.wise.stud.count.all.ques"/></b></font>
 					       </td>
 					   </tr>
-					     
 					   <tr>
 					       <th class="partition">
 					            <div id="specfQuesCnt">
@@ -77,7 +76,6 @@
 					            <font color ="white" title="calibri" size="11"><b><s:text name="label.ques.wise.stud.count.specific.ques"/></b></font>
 					       </td>
 					   </tr>
-					   
 					   <tr>
 					   	  <th class="partition"></th>
 					      <td>
@@ -85,29 +83,26 @@
 					          <br/><br/><s:textarea name="dailyReportsInfo.questionSequences" id="questionSeq" disabled="true"/>
 					      </td>
 					   </tr>
-					   
 					   <tr>
 					       <th class="partition">
 					            <div id="confirmAndWait">
-					                <input type="radio" name="dailyReports" id="confirmAndWait" value="confirmAndWait" onclick="confAndWait();"/>
+					                <input type="radio" name="dailyReports" id="confirmAndWait" value="confirmAndWait" onclick="disableAndClearFields();"/>
 					            </div>
 					       </th>
 					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
 					            <font color ="white" title="calibri" size="11"><b><s:text name="label.confirm.inspect.wait.count"/></b></font>
 					       </td>
 					   </tr>
-					  
 					   <tr>
 					       <th class="partition">
 					            <div id="notConfirmAndWait">
-					                <input type="radio" name="dailyReports" id="notConfirmAndWait" value="notConfirmAndWait" onclick="notConfAndWait();"/>
+					                <input type="radio" name="dailyReports" id="notConfirmAndWait" value="notConfirmAndWait" onclick="disableAndClearFields();"/>
 					            </div>
 					       </th>
 					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
 					            <font color ="white" title="calibri" size="11"><b><s:text name="label.not.confirm.inspect.wait.count"/></b></font>
 					       </td>
 					   </tr>
-					   
 					   <tr>
 					       <th class="partition">
 					            <div id="login_logout_report">
@@ -118,7 +113,6 @@
 					            <font color ="white" title="calibri" size="11"><b><s:text name="label.daily.login.report"/></b></font>
 					       </td>
 					   </tr>
-					   
 					   <tr>
 					       <th class="partition"></th>
 					       <td>
@@ -126,18 +120,36 @@
 					           <input type="date" name="dailyReportsInfo.currentDate" value='<s:property value="dailyReportsInfo.currentDate"/>' id="sysDate" disabled="disabled"/>
 					       </td>
 					   </tr>
-					   
 					   <tr>
 					       <th class="partition">
 					            <div id="allQuestionCountForWgOnly" style="display:block">
-					                <input type="radio" name="dailyReports" id="studCountForAllQuesForWgOnly" value="studCountForAllQuesForWgOnly" onclick="allQuesCount();"/>
+					                <input type="radio" name="dailyReports" id="studCountForAllQuesForWgOnly" value="studCountForAllQuesForWgOnly" onclick="disableAndClearFields();"/>
 					            </div>
 					       </th>
 					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
 					            <font color ="white" title="calibri" size="11"><b><s:text name="label.ques.wise.stud.count.all.ques.for.wg.only"/></b></font>
 					       </td>
 					   </tr>
-					   
+					   <tr>
+					       <th class="partition">
+					            <div id="gradeIsAvailable" style="display:block">
+					                <input type="radio" name="dailyReports" id="gradeIsAvailable" value="gradeWiseCountGradeIsAvailable" onclick="disableAndClearFields();"/>
+					            </div>
+					       </th>
+					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
+					            <font color ="white" title="calibri" size="11"><b><s:text name="label.daily.reports.gradewise.count.where.grade.is.available"/></b></font>
+					       </td>
+					   </tr>
+					   <tr>
+					       <th class="partition">
+					            <div id="pendingCategoryIsSet" style="display:block">
+					                <input type="radio" name="dailyReports" id="pendingCategoryIsSet" value="pendingCategoryIsSet" onclick="disableAndClearFields();"/>
+					            </div>
+					       </th>
+					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
+					            <font color ="white" title="calibri" size="11"><b><s:text name="label.daily.reports.question.seq.wise.count.where.pending.category.is.set"/></b></font>
+					       </td>
+					   </tr>
 				  </table>
 				</div>
 		</div><br/>

@@ -1375,7 +1375,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									queryObj.setParameterList(
 											"HISTORY_PENDING_CATEGORY_SEQ_LIST",
 											historyPendingCategorySeqList);
-								}  else if (historyCategoryType != null
+								} else if (historyCategoryType != null
 										&& historyCategoryType == 5
 										&& !historyDenyCategorySeqList
 												.isEmpty()) {
@@ -2193,6 +2193,72 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									WebAppConst.CONFIRM_AND_INSPECTION_WAIT_STATES);
 
 							System.out.println("queryObj :: " + queryObj);
+							return queryObj.list();
+						}
+					});
+
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List questionSeqGradeCountWhereGradeIsAvailable(
+			String connectionString) {
+
+		try {
+			final StringBuilder queryString = new StringBuilder();
+			queryString.append("SELECT ");
+			queryString.append("question_seq,grade_num,count(*) ");
+			queryString.append("FROM ");
+			queryString.append("tran_desc_score t ");
+			queryString.append("WHERE ");
+			queryString.append("grade_num is not null ");
+			queryString.append("GROUP BY ");
+			queryString.append("question_seq,grade_num ");
+			queryString.append("ORDER BY ");
+			queryString.append("question_seq,grade_num");
+
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<List>() {
+						public List doInHibernate(Session session)
+								throws HibernateException {
+							Query queryObj = session.createSQLQuery(queryString
+									.toString());
+							return queryObj.list();
+						}
+					});
+
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List questionSeqWiseCountWherePendingCategorySet(
+			String connectionString) {
+
+		try {
+			final StringBuilder queryString = new StringBuilder();
+			queryString.append("SELECT ");
+			queryString.append("question_seq,count(*) ");
+			queryString.append("FROM ");
+			queryString.append("tran_desc_score t ");
+			queryString.append("WHERE ");
+			queryString.append("pending_category is not null ");
+			queryString.append("GROUP BY ");
+			queryString.append("question_seq ");
+			queryString.append("ORDER BY ");
+			queryString.append("question_seq");
+
+			return getHibernateTemplate(connectionString).execute(
+					new HibernateCallback<List>() {
+						public List doInHibernate(Session session)
+								throws HibernateException {
+							Query queryObj = session.createSQLQuery(queryString
+									.toString());
 							return queryObj.list();
 						}
 					});

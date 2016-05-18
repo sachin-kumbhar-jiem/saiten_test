@@ -61,7 +61,7 @@ function quesSeqValidation(){
 	}
 }
 
-function allQuesCount(){
+function disableAndClearFields(){
 	document.getElementById("questionSeq").disabled = true;
 	document.getElementById("questionSeq").value = "";
 	document.getElementById("sysDate").disabled = true;
@@ -70,20 +70,6 @@ function allQuesCount(){
 
 function specQuesCount(){
 	document.getElementById("questionSeq").disabled = false;
-	document.getElementById("questionSeq").value = "";
-	document.getElementById("sysDate").disabled = true;
-	document.getElementById("sysDate").value="";
-}
-
-function confAndWait(){
-	document.getElementById("questionSeq").disabled = true;
-	document.getElementById("questionSeq").value = "";
-	document.getElementById("sysDate").disabled = true;
-	document.getElementById("sysDate").value="";
-}
-
-function notConfAndWait(){
-	document.getElementById("questionSeq").disabled = true;
 	document.getElementById("questionSeq").value = "";
 	document.getElementById("sysDate").disabled = true;
 	document.getElementById("sysDate").value="";
