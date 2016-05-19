@@ -54,12 +54,6 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 	private List<String> scorerAccessLogList;
 	private List<String> accessLogList;
 
-	private List<String> questionWiseCountListForPendCategory;
-	private List<String> pendingCategoryIsSetlist;
-
-	private List<String> gradeWiseCountListForGradeAvailable;
-	private List<String> gradeIsAvailablelist;
-
 	@SuppressWarnings({ "unchecked" })
 	public String processDownloadDailyReportRequest(String dailyReports,
 			String quesSequences, String dailyReportCurrentDate)
@@ -69,8 +63,6 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 		confAndInspWaitList = new ArrayList<String>();
 		specfQuesList = new ArrayList<String>();
 		accessLogList = new ArrayList<String>();
-		gradeIsAvailablelist = new ArrayList<String>();
-		pendingCategoryIsSetlist = new ArrayList<String>();
 		String fileToDownload = null;
 
 		try {
@@ -378,108 +370,6 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 
 			}
 
-			else if (dailyReports
-					.equals(WebAppConst.GRADEWISE_COUNT_WHERE_GRADE_IS_AVAILABLE)) {
-
-				List<String> gradeCountList = new ArrayList<String>();
-				for (String connectionString : connectionStringList) {
-
-					gradeWiseCountListForGradeAvailable = tranDescScoreDAO
-							.questionSeqGradeCountWhereGradeIsAvailable(connectionString);
-
-					if (gradeWiseCountListForGradeAvailable != null
-							&& !gradeWiseCountListForGradeAvailable.isEmpty()) {
-						gradeCountList
-								.addAll(gradeWiseCountListForGradeAvailable);
-					}
-				}
-
-				if (!gradeCountList.isEmpty() && gradeCountList != null) {
-
-					downloadDir = SaitenFileUtil
-							.createDirectory(
-									downloadDirBasePath,
-									textProvider
-											.getText("daily.report.for.gradewise.count.where.grade.is.available.zip.prefix")
-											+ directoryName);
-					getHeadersForGradeAvailable(textProvider);
-					getReportRowsForGradeAvailability(gradeCountList);
-
-					File csvFile = new File(
-							downloadDir.getPath()
-									+ File.separator
-									+ textProvider
-											.getText("daily.report.for.gradewise.count.where.grade.is.available.csv.prefix")
-									+ WebAppConst.CSV_FILE_EXTENSION);
-
-					FileUtils.writeLines(csvFile, WebAppConst.FILE_ENCODING,
-							gradeIsAvailablelist, WebAppConst.CRLF);
-
-					if (!SaitenFileUtil.isEmptyDirectory(downloadDir)) {
-
-						SaitenFileUtil.createZipFileFromDirectory(
-								downloadDir.getPath(), downloadDir.getPath()
-										+ WebAppConst.ZIP_FILE_EXTENSION);
-
-						fileToDownload = downloadDir.getPath()
-								+ WebAppConst.ZIP_FILE_EXTENSION;
-					}
-					SaitenFileUtil.deleteDirectory(downloadDir);
-
-				}
-
-			} else if (dailyReports
-					.equals(WebAppConst.QUES_SEQ_WISE_COUNT_WHERE_PENDING_CATEGORY_IS_SET)) {
-
-				List<String> pendingCategoryCountList = new ArrayList<String>();
-
-				for (String connectionString : connectionStringList) {
-					questionWiseCountListForPendCategory = tranDescScoreDAO
-							.questionSeqWiseCountWherePendingCategorySet(connectionString);
-
-					if (questionWiseCountListForPendCategory != null
-							&& !questionWiseCountListForPendCategory.isEmpty()) {
-						pendingCategoryCountList
-								.addAll(questionWiseCountListForPendCategory);
-					}
-				}
-
-				if (!pendingCategoryCountList.isEmpty()
-						&& pendingCategoryCountList != null) {
-
-					downloadDir = SaitenFileUtil
-							.createDirectory(
-									downloadDirBasePath,
-									textProvider
-											.getText("daily.report.for.question.wise.count.where.pending.category.is.set.zip.prefix")
-											+ directoryName);
-					getHeadersWherePendingCategorySet(textProvider);
-					getReportRowsForPendingCategorySet(pendingCategoryCountList);
-
-					File csvFile = new File(
-							downloadDir.getPath()
-									+ File.separator
-									+ textProvider
-											.getText("daily.report.for.question.wise.count.where.pending.category.is.set.csv.prefix")
-									+ WebAppConst.CSV_FILE_EXTENSION);
-
-					FileUtils.writeLines(csvFile, WebAppConst.FILE_ENCODING,
-							pendingCategoryIsSetlist, WebAppConst.CRLF);
-
-					if (!SaitenFileUtil.isEmptyDirectory(downloadDir)) {
-
-						SaitenFileUtil.createZipFileFromDirectory(
-								downloadDir.getPath(), downloadDir.getPath()
-										+ WebAppConst.ZIP_FILE_EXTENSION);
-
-						fileToDownload = downloadDir.getPath()
-								+ WebAppConst.ZIP_FILE_EXTENSION;
-					}
-					SaitenFileUtil.deleteDirectory(downloadDir);
-				}
-
-			}
-
 		} catch (HibernateException he) {
 			throw new SaitenRuntimeException(
 					ErrorCode.DOWNLOAD_DAILY_REPORT_HIBERNATE_EXCEPTION, he);
@@ -488,64 +378,6 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 					ErrorCode.DOWNLOAD_DAILY_REPORT_SERVICE_EXCEPTION, e);
 		}
 		return fileToDownload;
-	}
-
-	private void getReportRowsForPendingCategorySet(
-			List<String> pendingCategoryCountList) {
-
-		if (!pendingCategoryCountList.isEmpty()) {
-
-			for (Object record : pendingCategoryCountList) {
-
-				Object[] objectRecordArray = (Object[]) record;
-
-				StringBuilder csvData = new StringBuilder();
-				csvData.append(objectRecordArray[0]);
-				csvData.append(WebAppConst.COMMA);
-				csvData.append(objectRecordArray[1]);
-				pendingCategoryIsSetlist.add(csvData.toString());
-			}
-		}
-	}
-
-	private void getHeadersWherePendingCategorySet(TextProvider textProvider) {
-		StringBuilder csvHeaders = new StringBuilder();
-		csvHeaders.append(textProvider.getText("label.question.seq"));
-		csvHeaders.append(WebAppConst.COMMA);
-		csvHeaders.append(textProvider.getText("label.count"));
-
-		pendingCategoryIsSetlist.add(csvHeaders.toString());
-	}
-
-	private void getHeadersForGradeAvailable(TextProvider textProvider) {
-
-		StringBuilder csvHeaders = new StringBuilder();
-		csvHeaders.append(textProvider.getText("label.question.seq"));
-		csvHeaders.append(WebAppConst.COMMA);
-		csvHeaders.append(textProvider.getText("label.grade.num"));
-		csvHeaders.append(WebAppConst.COMMA);
-		csvHeaders.append(textProvider.getText("label.count"));
-
-		gradeIsAvailablelist.add(csvHeaders.toString());
-	}
-
-	private void getReportRowsForGradeAvailability(List<String> gradeCountList) {
-		if (!gradeCountList.isEmpty()) {
-
-			for (Object record : gradeCountList) {
-
-				Object[] objectRecordArray = (Object[]) record;
-
-				StringBuilder csvData = new StringBuilder();
-				csvData.append(objectRecordArray[0]);
-				csvData.append(WebAppConst.COMMA);
-				csvData.append(objectRecordArray[1]);
-				csvData.append(WebAppConst.COMMA);
-				csvData.append(objectRecordArray[2]);
-				gradeIsAvailablelist.add(csvData.toString());
-			}
-		}
-
 	}
 
 	private void getRowsForLoginLogoutReport(List<String> tempList) {
@@ -657,6 +489,7 @@ public class DailyReportsServiceImpl extends ActionSupport implements
 		csvHeaders.append(textProvider.getText("label.grade.num"));
 		csvHeaders.append(WebAppConst.COMMA);
 		csvHeaders.append(textProvider.getText("label.count"));
+
 		confAndInspWaitList.add(csvHeaders.toString());
 	}
 

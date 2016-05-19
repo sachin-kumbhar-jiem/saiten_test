@@ -1,5 +1,6 @@
 package com.saiten.util;
 
+
 /**
  * @author sachin
  * @version 1.0
@@ -59,13 +60,13 @@ public interface WebAppConst {
 
 	public static final int LOGIN_ATTEMPT = 1;
 
-	public static final String SCORER_ROLE = "採点者";
+	public static final String SCORER_ROLE = "æŽ¡ç‚¹è€…";
 
-	public static final String SV_ROLE = "監督者";
+	public static final String SV_ROLE = "ç›£ç�£è€…";
 
 	public static final String WG_ROLE = "WG";
 
-	public static final String ADMIN_ROLE = "管理者";
+	public static final String ADMIN_ROLE = "ç®¡ç�†è€…";
 
 	public static final String FIRST_SCORING_MENU_ID = "FIRST_SCORING_MENU_ID";
 
@@ -212,8 +213,8 @@ public interface WebAppConst {
 	public static final Short[] SCORE_SAMPLING_CURRENT_STATES = { 131, 141,
 			151, 500, 501, 161 };
 
-	public static final Short[] STATE_TRANSITION_CURRENT_STATES = { 141, 500,
-			501 };
+	public static final Short[] STATE_TRANSITION_CURRENT_STATES = { 141,
+			500, 501 };
 
 	public static final Short[] FORCED_SCORING_CURRENT_STATES = { 21, 121, 131,
 			141, 151, 161, 171, 181, 191, 211, 251, 253, 255, 257, 500, 501 };
@@ -578,19 +579,15 @@ public interface WebAppConst {
 	public static final String SKP_OR_CONDITION = "skpORCondition";
 
 	public static final String TXT_FILE_EXTENSION = ".txt";
-
-	public static final String GRADE_WISE_DETAILS_REPORT = "gradeWiseReport";
-
-	public static final String MARK_VALUE_WISE_DETAILS_REPORT = "markValueWiseReport";
-
-	public static final String PENDING_CATEGORY_WISE_DETAILS_REPORT = "pendingCategoryWiseReport";
-
+	
+	public static final String GRADE_WISE_DETAILS_REPORT="gradeWiseReport";
+	
+	public static final String MARK_VALUE_WISE_DETAILS_REPORT="markValueWiseReport";
+	
+	public static final String PENDING_CATEGORY_WISE_DETAILS_REPORT="pendingCategoryWiseReport";
+	
 	public static final Character TAB_CHARACTER = '\t';
-
+	
 	public static final String STUD_COUNT_FOR_ALL_QUES_FOR_WG_ONLY = "studCountForAllQuesForWgOnly";
-
-	public static final String GRADEWISE_COUNT_WHERE_GRADE_IS_AVAILABLE = "gradeWiseCountGradeIsAvailable";
-
-	public static final String QUES_SEQ_WISE_COUNT_WHERE_PENDING_CATEGORY_IS_SET = "pendingCategoryIsSet";
-
+	
 }

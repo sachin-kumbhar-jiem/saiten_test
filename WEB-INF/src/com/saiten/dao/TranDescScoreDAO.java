@@ -206,9 +206,5 @@ public interface TranDescScoreDAO {
 	
 	public List getMarkValueWiseAnswerDetails(String questionSeq,
 			String connectionString, Character questionType);
-	
-	public List questionSeqGradeCountWhereGradeIsAvailable(String connectionString);
-	
-	public List questionSeqWiseCountWherePendingCategorySet(String connectionString);
-		
+
 }
