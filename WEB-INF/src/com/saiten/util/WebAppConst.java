@@ -60,13 +60,13 @@ public interface WebAppConst {
 
 	public static final int LOGIN_ATTEMPT = 1;
 
-	public static final String SCORER_ROLE = "æŽ¡ç‚¹è€…";
+	public static final String SCORER_ROLE = "採点者";
 
-	public static final String SV_ROLE = "ç›£ç�£è€…";
+	public static final String SV_ROLE = "監督者";
 
 	public static final String WG_ROLE = "WG";
 
-	public static final String ADMIN_ROLE = "ç®¡ç�†è€…";
+	public static final String ADMIN_ROLE = "管理者";
 
 	public static final String FIRST_SCORING_MENU_ID = "FIRST_SCORING_MENU_ID";
 
