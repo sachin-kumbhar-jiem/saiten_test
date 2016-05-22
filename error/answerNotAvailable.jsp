@@ -31,6 +31,16 @@ function enableLinksAndButtons(){
 	$('a').unbind('click'); // Enable all the links
 }
 </script>
+
+<script language="JavaScript">
+	function setFoucs() {
+		var nextButton = document.getElementById('scoreSamplingNext');
+		if (nextButton != null) {
+			nextButton.focus();
+		}
+	}
+</script>
+
 <link href="./material/css/modalPopLite.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="./material/css/import.css" media="all">
 		
@@ -52,7 +62,7 @@ function enableLinksAndButtons(){
 	<s:set id="bodyColor" name="bodyColor" value="%{'admin-body-color'}" />
 </s:else>
 
-<body class="<s:property value="%{#bodyColor}"/>" onload="enableLinksAndButtons();">
+<body class="<s:property value="%{#bodyColor}"/>" onload="enableLinksAndButtons(); setFoucs();">
 <div>
 	<div id="wrapper">
 		<div id="contents" class="text14">
@@ -148,7 +158,7 @@ function enableLinksAndButtons(){
 						<br><br>
 						<a href="scoreSearch.action?selectedMenuId=SCORE_SAMP_MENU_ID" id="back" name="back" class="btn btn-primary btn-xl"><!-- <img class="rollover" src="./material/img/button/sampling_bn-back.gif" alt="%{getText('label.backtosearch')}" /> --><s:text name="label.backtosearch"></s:text></a>
 						&nbsp;&nbsp;
-						<a href="scoreSampling.action" class="btn btn-primary btn-xl"><!-- <img class="rollover" src="./material/img/button/next_button.gif" alt="%{getText('label.next')}"/> --><s:text name="label.next"></s:text></a>
+						<a  href="scoreSampling.action" class="btn btn-primary btn-xl" id="scoreSamplingNext"><!-- <img class="rollover" src="./material/img/button/next_button.gif" alt="%{getText('label.next')}"/> --><s:text name="label.next"></s:text></a>
 					</s:if>
 					<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID">
 						<br><br>
