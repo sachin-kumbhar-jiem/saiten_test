@@ -153,9 +153,13 @@ public class KenshuSamplingServiceImpl implements KenshuSamplingService,
 				 * tranDescScoreInfo .setMarkValueList((List<Short>)
 				 * answerRecordObj[7]);
 				 */
+				
+				if (answerRecordObj[8] != null) {
+					answerInfo.setLatestScreenScorerId(answerRecordObj[8]
+							.toString());
+				}
 
-				answerInfo.setLatestScreenScorerId(answerRecordObj[8]
-						.toString());
+				
 
 				if (answerRecordObj[9] != null) {
 					answerInfo.setSecondLatestScreenScorerId(answerRecordObj[9]

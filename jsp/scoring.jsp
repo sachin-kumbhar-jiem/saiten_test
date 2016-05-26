@@ -334,14 +334,14 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
 					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>	
 				</s:if> <s:else>
-					<s:if test="#session.tranAcceptance == null || #session.tranAcceptance.comment == '' || #session.tranAcceptance.comment == null" >
+					<s:if test="#session.tranAcceptance == null " >
 						<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;"></s:textarea>
 					</s:if><s:else>
 						<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
 					</s:else>
 				</s:else>
 			</s:if> <s:else>
-				<s:if test="#session.kenshuRecordInfo == null || #session.kenshuRecordInfo.comment == '' || #session.kenshuRecordInfo.comment == null" >
+				<s:if test="#session.kenshuRecordInfo == null " >
 					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.kenshuRecordInfo.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;"></s:textarea>
 				</s:if><s:else>
 					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.kenshuRecordInfo.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
@@ -355,14 +355,14 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
 					<p class="btn btn-disabled" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></p>	
 				</s:if> <s:else>
-					<s:if test="#session.tranAcceptance == null || #session.tranAcceptance.comment == '' || #session.tranAcceptance.comment == null" >
+					<s:if test="#session.tranAcceptance == null " >
 						<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>	
 					</s:if> <s:else>
 						<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
 					</s:else>
 				</s:else>
 			</s:if> <s:else>
-				<s:if test="#session.kenshuRecordInfo == null || #session.kenshuRecordInfo.comment == '' || #session.kenshuRecordInfo.comment == null" >
+				<s:if test="#session.kenshuRecordInfo == null " >
 					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>	
 				</s:if> <s:else>
 					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
@@ -457,14 +457,14 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
 					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>	
 				</s:if> <s:else>
-					<s:if test="#session.tranAcceptance == null || #session.tranAcceptance.comment == '' || #session.tranAcceptance.comment == null" >
+					<s:if test="#session.tranAcceptance == null " >
 						<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;"></s:textarea>
 					</s:if><s:else>
 						<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
 					</s:else>
 				</s:else>
 			</s:if> <s:else>
-				<s:if test="#session.kenshuRecordInfo == null || #session.kenshuRecordInfo.comment == '' || #session.kenshuRecordInfo.comment == null" >
+				<s:if test="#session.kenshuRecordInfo == null " >
 					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.kenshuRecordInfo.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;"></s:textarea>
 				</s:if><s:else>
 					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.kenshuRecordInfo.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
@@ -477,14 +477,14 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
 					<p class="btn btn-disabled" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></p>	
 				</s:if> <s:else>
-					<s:if test="#session.tranAcceptance == null || #session.tranAcceptance.comment == '' || #session.tranAcceptance.comment == null" >
+					<s:if test="#session.tranAcceptance == null " >
 						<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>	
 					</s:if> <s:else>
 						<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
 					</s:else>
 				</s:else>
 			</s:if> <s:else>
-				<s:if test="#session.kenshuRecordInfo == null || #session.kenshuRecordInfo.comment == '' || #session.kenshuRecordInfo.comment == null" >
+				<s:if test="#session.kenshuRecordInfo == null " >
 					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>	
 				</s:if> <s:else>
 					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
@@ -566,14 +566,14 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
 					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>	
 				</s:if> <s:else>
-					<s:if test="#session.tranAcceptance == null || #session.tranAcceptance.comment == '' || #session.tranAcceptance.comment == null" >
+					<s:if test="#session.tranAcceptance == null " >
 						<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;"></s:textarea>
 					</s:if><s:else>
 						<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
 					</s:else>
 				</s:else>
 			</s:if> <s:else>
-				<s:if test="#session.kenshuRecordInfo == null || #session.kenshuRecordInfo.comment == '' || #session.kenshuRecordInfo.comment == null" >
+				<s:if test="#session.kenshuRecordInfo == null " >
 					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.kenshuRecordInfo.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;"></s:textarea>
 				</s:if><s:else>
 					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.kenshuRecordInfo.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
@@ -586,14 +586,14 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
 					<p class="btn btn-disabled" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></p>	
 				</s:if> <s:else>
-					<s:if test="#session.tranAcceptance == null || #session.tranAcceptance.comment == '' || #session.tranAcceptance.comment == null" >
+					<s:if test="#session.tranAcceptance == null " >
 						<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>	
 					</s:if> <s:else>
 						<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
 					</s:else>
 				</s:else>
 			</s:if> <s:else>
-				<s:if test="#session.kenshuRecordInfo == null || #session.kenshuRecordInfo.comment == '' || #session.kenshuRecordInfo.comment == null" >
+				<s:if test="#session.kenshuRecordInfo == null " >
 					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>	
 				</s:if> <s:else>
 					<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
@@ -1020,19 +1020,8 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 					<s:textarea  name="scorerComment" id="scorerComment" value="%{#session.tranDescScoreInfo.answerInfo.scorerComment}" disabled="true"></s:textarea>					
 				</s:if>
 				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
-					<s:if test="#session.samplingSearch == @com.saiten.util.WebAppConst@ACCEPTANCE_DISPLAY">
-						<s:textarea  name="scorerComment" id="scorerComment" value="%{getText('label.scoring.openingbracket') + getText('label.kenshu.userId') + getText('label.colon') + #session.tranAcceptance.markBy + getText('label.scoring.closingbracket')}" disabled="true"></s:textarea>	
-					</s:if>
-					<s:elseif test="(#session.tranDescScoreInfo.latestScreenScorerId == '') || (#session.tranDescScoreInfo.latestScreenScorerId == null)" >
-							<s:textarea  name="scorerComment" id="scorerComment" value="" disabled="true"></s:textarea>
-						</s:elseif><s:else>
-									<s:if test="((#session.tranDescScoreInfo.answerInfo.scorerComment != null) && (#session.tranDescScoreInfo.answerInfo.scorerComment != ''))"> 
-												<s:textarea  name="scorerComment" id="scorerComment" value="%{getText('label.scoring.openingbracket') + getText('label.scoresearch.scorerid') + getText('label.colon') + #session.tranDescScoreInfo.latestScreenScorerId + getText('label.scoring.closingbracket') + '  ' + #session.tranDescScoreInfo.answerInfo.scorerComment}" disabled="true"></s:textarea>
-									</s:if><s:else>
-												<s:textarea  name="scorerComment" id="scorerComment" value="%{getText('label.scoring.openingbracket') + getText('label.scoresearch.scorerid') + getText('label.colon') + #session.tranDescScoreInfo.latestScreenScorerId + getText('label.scoring.closingbracket')}" disabled="true"></s:textarea>
-									</s:else>
-							</s:else>
-				</s:elseif>
+					 <s:textarea  name="scorerComment" id="scorerComment" value="" disabled="true"></s:textarea>	 
+				</s:elseif> 
 				<s:else>
 					<s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID">
 						<s:if test="(#session.tranDescScoreInfo.latestScreenScorerId == '') || (#session.tranDescScoreInfo.latestScreenScorerId == null)" >

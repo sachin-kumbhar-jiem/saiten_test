@@ -85,8 +85,11 @@ public class KenshuSamplingAction extends ActionSupport implements
 		log.info(scorerInfo.getScorerId() + "-" + selectedMenuId + "-"
 				+ "Kenshu Sampling Screen loading.");
 		try {
+			clearSessionInfo();
 			if (sessionClearFlag.equals(Boolean.toString(WebAppConst.TRUE))) {
-				clearSessionInfo();
+				session.remove("samplingSearch");
+				session.remove("kenshuSamplingInfo");
+				session.remove("acceptanceDisplayInfo");
 			}
 			
 			loggedInScorerSubjectList = scoreSearchService
@@ -112,6 +115,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 			session.put("scoreSearchInfo", scoreSearchInfo);
 			session.put("searchCriteria", searchCriteria);
+			
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -129,6 +133,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 			if (kenshuSamplingSearch != null) {
 				session.put("samplingSearch", kenshuSamplingSearch);
+				
 			}
 			if (acceptanceDisplayRadio != null) {
 				session.put("samplingSearch", acceptanceDisplayRadio);
@@ -141,6 +146,8 @@ public class KenshuSamplingAction extends ActionSupport implements
 				if (kenshuSamplingSearch != null) {
 					session.put("samplingSearch", kenshuSamplingSearch);
 				}
+				
+				session.remove("acceptanceDisplayInfo");
 
 				if (kenshuSamplingInfo == null) {
 					kenshuSamplingInfo = (KenshuSamplingInfo) session
@@ -219,6 +226,8 @@ public class KenshuSamplingAction extends ActionSupport implements
 				if (acceptanceDisplayRadio != null) {
 					session.put("samplingSearch", acceptanceDisplayRadio);
 				}
+				
+				session.remove("kenshuSamplingInfo");
 
 				if (acceptanceDisplayInfo == null) {
 					acceptanceDisplayInfo = (AcceptanceDisplayInfo) session
@@ -679,12 +688,12 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 	private void clearSessionInfo() {
 		session.remove("searchCriteria");
-		session.remove("samplingSearch");
-		session.remove("kenshuSamplingInfo");
+		//session.remove("samplingSearch");
+		//session.remove("kenshuSamplingInfo");
 		session.remove("kenshuSamplingSearchRecordInfoList");
 		session.remove("questionInfo");
 		session.remove("kenshuSamplingGradeWiaseMap");
-		session.remove("acceptanceDisplayInfo");
+		//session.remove("acceptanceDisplayInfo");
 		session.remove("tranAcceptanceList");
 		session.remove("kenshuSamplingSearchRecordInfoList");
 		session.remove("kenshuSamplingGradeWiaseMap");
