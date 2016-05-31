@@ -2665,11 +2665,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									|| menuId
 											.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
-								query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
+								//query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
 							} else if (menuId
 									.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
-								query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
+								//query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 
 							}
 							
@@ -2697,8 +2697,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										WebAppConst.ANSWER_PAPER_TYPES);
 								queryObj.setParameterList("PENDING_CATEGORIES",
 										WebAppConst.PENDING_CATEGORIES);
-								queryObj.setParameterList("DENY_CATEGORIES",
-										WebAppConst.PENDING_CATEGORIES);
+								/*queryObj.setParameterList("DENY_CATEGORIES",
+										WebAppConst.PENDING_CATEGORIES);*/
 							}
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
@@ -4905,7 +4905,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									|| menuId
 											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
-								query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
+								//query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 							}
 							
 							query.append("GROUP BY tranDescScore.answer_seq ");
@@ -4949,8 +4949,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										WebAppConst.ANSWER_PAPER_TYPES);
 								queryObj.setParameterList("PENDING_CATEGORIES",
 										WebAppConst.PENDING_CATEGORIES);
-								queryObj.setParameterList("DENY_CATEGORIES",
-										WebAppConst.PENDING_CATEGORIES);
+								/*queryObj.setParameterList("DENY_CATEGORIES",
+										WebAppConst.PENDING_CATEGORIES);*/
 							}
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {

@@ -334,7 +334,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
 					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>	
 				</s:if> <s:else>
-					<s:if test="#session.tranAcceptance == null " >
+					<s:if test="#session.tranAcceptance == null || #session.tranAcceptance.markFlag == @com.saiten.util.WebAppConst@DELETE_FLAG" >
 						<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;"></s:textarea>
 					</s:if><s:else>
 						<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
@@ -355,7 +355,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
 					<p class="btn btn-disabled" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></p>	
 				</s:if> <s:else>
-					<s:if test="#session.tranAcceptance == null " >
+					<s:if test="#session.tranAcceptance == null || #session.tranAcceptance.markFlag == @com.saiten.util.WebAppConst@DELETE_FLAG" >
 						<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>	
 					</s:if> <s:else>
 						<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
@@ -457,7 +457,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
 					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>	
 				</s:if> <s:else>
-					<s:if test="#session.tranAcceptance == null " >
+					<s:if test="#session.tranAcceptance == null || #session.tranAcceptance.markFlag == @com.saiten.util.WebAppConst@DELETE_FLAG" >
 						<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;"></s:textarea>
 					</s:if><s:else>
 						<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
@@ -477,7 +477,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
 					<p class="btn btn-disabled" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></p>	
 				</s:if> <s:else>
-					<s:if test="#session.tranAcceptance == null " >
+					<s:if test="#session.tranAcceptance == null || #session.tranAcceptance.markFlag == @com.saiten.util.WebAppConst@DELETE_FLAG" >
 						<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>	
 					</s:if> <s:else>
 						<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	
@@ -566,7 +566,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
 					<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>	
 				</s:if> <s:else>
-					<s:if test="#session.tranAcceptance == null " >
+					<s:if test="#session.tranAcceptance == null || #session.tranAcceptance.markFlag == @com.saiten.util.WebAppConst@DELETE_FLAG" >
 						<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;"></s:textarea>
 					</s:if><s:else>
 						<s:textarea  name="kenshuComment" id="kenshuComment" value="%{#session.tranAcceptance.comment}" maxlength="512" cssStyle="width: 350px; height: 50px;" disabled="true"></s:textarea>
@@ -586,7 +586,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<s:if test="#session.tranAcceptance.explainFlag == @com.saiten.util.WebAppConst@VALID_FLAG">
 					<p class="btn btn-disabled" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></p>	
 				</s:if> <s:else>
-					<s:if test="#session.tranAcceptance == null " >
+					<s:if test="#session.tranAcceptance == null || #session.tranAcceptance.markFlag == @com.saiten.util.WebAppConst@DELETE_FLAG" >
 						<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.mark.look_afterwoards"></s:text></a>	
 					</s:if> <s:else>
 						<a  onclick="doKenshuMarkUnmark();" id="kenshumarkUnamrk" class="btn btn-primary btn-scoring-sm" style="width:60px; height:20px; text-align: center;"><s:text name="label.unmark.look_afterwoards"></s:text></a>	

@@ -10,8 +10,10 @@ import org.apache.struts2.interceptor.SessionAware;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.saiten.exception.SaitenRuntimeException;
+import com.saiten.info.AcceptanceDisplayInfo;
 import com.saiten.info.AnswerInfo;
 import com.saiten.info.KenshuRecordInfo;
+import com.saiten.info.KenshuSamplingInfo;
 import com.saiten.info.KenshuSamplingSearchRecordInfo;
 import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
@@ -35,7 +37,7 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 	private MarkKenshuRecordService markKenshuRecordService;
 	private String markComment;
 	private TranDescScoreInfo tranDescScoreInfo;
-	private Map<Integer, KenshuRecordInfo> kenshuRecordInfoMap;
+	private Map<String, KenshuRecordInfo> kenshuRecordInfoMap;
 	private TranAcceptance tranAcceptance;
 	private MstScorerInfo scorerInfo;
 
@@ -58,6 +60,7 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 			TranAcceptance tranAcceptance = (TranAcceptance) session
 					.get("tranAcceptance");
 			if (tranAcceptance != null) {
+				tranAcceptance.setMarkFlag(WebAppConst.VALID_FLAG);
 				tranAcceptance.setComment(markComment);
 			}
 
@@ -69,19 +72,30 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 				kenshuRecordInfo.setAcceptenceSeq(acceptanceSeq);
 			}
 
-			kenshuRecordInfoMap = (Map<Integer, KenshuRecordInfo>) session
+			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
+			kenshuRecordInfoMap = (Map<String, KenshuRecordInfo>) session
 					.get("kenshuRecordInfoMap");
 			if (kenshuRecordInfoMap == null) {
-				kenshuRecordInfoMap = new HashMap<Integer, KenshuRecordInfo>();
+				kenshuRecordInfoMap = new HashMap<String, KenshuRecordInfo>();
 			}
-			kenshuRecordInfoMap.put(kenshuRecordInfo.getAnswerSeq(),
-					kenshuRecordInfo);
+
+			String samplingSearch = (String) session.get("samplingSearch");
+			if (samplingSearch.equals(WebAppConst.KENSHU_SAMPLING_SEARCH)) {
+				kenshuRecordInfoMap.put(kenshuRecordInfo.getAnswerSeq()
+						.toString() + scorerInfo.getScorerId(),
+						kenshuRecordInfo);
+			} else {
+				AcceptanceDisplayInfo acceptanceDisplayInfo = (AcceptanceDisplayInfo) session
+						.get("acceptanceDisplayInfo");
+				kenshuRecordInfoMap.put(kenshuRecordInfo.getAnswerSeq()
+						.toString() + acceptanceDisplayInfo.getKenshuUserId(),
+						kenshuRecordInfo);
+			}
+
 			session.put("kenshuRecordInfoMap", kenshuRecordInfoMap);
 
 			session.put("kenshuRecordInfo", kenshuRecordInfo);
 			session.put("tranAcceptance", tranAcceptance);
-
-			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
 
 			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
 					+ "-" + "Marking answer explaination -{"
@@ -106,6 +120,7 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 					.get("tranAcceptance");
 			if (tranAcceptance != null) {
 				tranAcceptance.setComment(null);
+				tranAcceptance.setMarkFlag(WebAppConst.DELETE_FLAG);
 				session.put("tranAcceptance", tranAcceptance);
 			}
 
@@ -121,18 +136,28 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 			markKenshuRecordService
 					.doUnMark(kenshuRecordInfo, connectionString);
 
-			kenshuRecordInfoMap = (Map<Integer, KenshuRecordInfo>) session
+			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
+
+			kenshuRecordInfoMap = (Map<String, KenshuRecordInfo>) session
 					.get("kenshuRecordInfoMap");
 			if (kenshuRecordInfoMap == null) {
-				kenshuRecordInfoMap = new HashMap<Integer, KenshuRecordInfo>();
+				kenshuRecordInfoMap = new HashMap<String, KenshuRecordInfo>();
 			}
-			kenshuRecordInfoMap.put(kenshuRecordInfo.getAnswerSeq(),
-					kenshuRecordInfo);
+
+			String samplingSearch = (String) session.get("samplingSearch");
+			if (samplingSearch.equals(WebAppConst.KENSHU_SAMPLING_SEARCH)) {
+				kenshuRecordInfoMap.remove(kenshuRecordInfo.getAnswerSeq()
+						+ scorerInfo.getScorerId());
+			} else {
+				AcceptanceDisplayInfo acceptanceDisplayInfo = (AcceptanceDisplayInfo) session
+						.get("acceptanceDisplayInfo");
+				kenshuRecordInfoMap.remove(kenshuRecordInfo.getAnswerSeq()
+						+ acceptanceDisplayInfo.getKenshuUserId());
+			}
+
 			session.put("kenshuRecordInfoMap", kenshuRecordInfoMap);
 
 			session.put("kenshuRecordInfo", kenshuRecordInfo);
-
-			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
 
 			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
 					+ "-" + "Unmarking answer explaination -{"
@@ -166,10 +191,22 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 			}
 		}
 
-		MstScorerInfo mstScorerInfo = (MstScorerInfo) session.get("scorerInfo");
-		if (mstScorerInfo != null) {
+		String samplingSearch = (String) session.get("samplingSearch");
+		if (samplingSearch.equals(WebAppConst.KENSHU_SAMPLING_SEARCH)) {
+			MstScorerInfo mstScorerInfo = (MstScorerInfo) session
+					.get("scorerInfo");
 			kenshuRecordInfo.setMarkBy(mstScorerInfo.getScorerId());
+		} else {
+			AcceptanceDisplayInfo acceptanceDisplayInfo = (AcceptanceDisplayInfo) session
+					.get("acceptanceDisplayInfo");
+			kenshuRecordInfo.setMarkBy(acceptanceDisplayInfo.getKenshuUserId());
 		}
+
+		/*
+		 * MstScorerInfo mstScorerInfo = (MstScorerInfo)
+		 * session.get("scorerInfo"); if (mstScorerInfo != null) {
+		 * kenshuRecordInfo.setMarkBy(mstScorerInfo.getScorerId()); }
+		 */
 
 		kenshuRecordInfo.setComment(markComment);
 	}
@@ -181,19 +218,19 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 			scorerInfo = (MstScorerInfo) session.get("scorerInfo");
 			List<KenshuSamplingSearchRecordInfo> kenshuRecordInfoList = (List<KenshuSamplingSearchRecordInfo>) session
 					.get("kenshuSamplingSearchRecordInfoList");
-			
+
 			String slectedGrade = (String) session.get("slectedGrade");
-			int number ;
+			int number;
 			for (KenshuSamplingSearchRecordInfo recordObj : kenshuRecordInfoList) {
 				if (recordObj.getGradeNum() == Integer.parseInt(slectedGrade)) {
 					number = recordObj.getCheckedRecordNumber();
-					if (number<recordObj.getTotalNumber()) {
-						recordObj.setCheckedRecordNumber(number+1);
+					if (number < recordObj.getTotalNumber()) {
+						recordObj.setCheckedRecordNumber(number + 1);
 					}
 				}
 
 			}
-			
+
 			session.put("kenshuSamplingSearchRecordInfoList",
 					kenshuRecordInfoList);
 
@@ -232,25 +269,25 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 
 			QuestionInfo questionInfo = (QuestionInfo) session
 					.get("questionInfo");
-			
+
 			List<KenshuSamplingSearchRecordInfo> kenshuRecordInfoList = (List<KenshuSamplingSearchRecordInfo>) session
 					.get("kenshuSamplingSearchRecordInfoList");
-			
+
 			String slectedGrade = (String) session.get("slectedGrade");
-			int number ;
+			int number;
 			for (KenshuSamplingSearchRecordInfo recordObj : kenshuRecordInfoList) {
 				if (recordObj.getGradeNum() == Integer.parseInt(slectedGrade)) {
 					number = recordObj.getCheckedRecordNumber();
-					if (number>0) {
-						recordObj.setCheckedRecordNumber(number-1);
+					if (number > 0) {
+						recordObj.setCheckedRecordNumber(number - 1);
 					}
 				}
 
 			}
-			
+
 			session.put("kenshuSamplingSearchRecordInfoList",
 					kenshuRecordInfoList);
-			
+
 			String connectionString = null;
 			if (questionInfo != null) {
 				connectionString = questionInfo.getConnectionString();
@@ -311,12 +348,12 @@ public class MarkKenshuRecordsAction extends ActionSupport implements
 		this.tranDescScoreInfo = tranDescScoreInfo;
 	}
 
-	public Map<Integer, KenshuRecordInfo> getKenshuRecordInfoMap() {
+	public Map<String, KenshuRecordInfo> getKenshuRecordInfoMap() {
 		return kenshuRecordInfoMap;
 	}
 
 	public void setKenshuRecordInfoMap(
-			Map<Integer, KenshuRecordInfo> kenshuRecordInfoMap) {
+			Map<String, KenshuRecordInfo> kenshuRecordInfoMap) {
 		this.kenshuRecordInfoMap = kenshuRecordInfoMap;
 	}
 

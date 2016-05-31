@@ -1,5 +1,6 @@
 package com.saiten.dao.impl;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -15,6 +16,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.impl.SessionFactoryImpl;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
@@ -44,7 +46,6 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 	 * @see com.saiten.dao.TranDescScoreDAO#findAnswer(int, java.lang.String,
 	 * java.lang.String, java.util.LinkedHashMap, java.lang.String)
 	 */
-	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(TranDescScoreDAOImpl.class);
 
 	@SuppressWarnings({ "rawtypes" })
@@ -475,6 +476,20 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			if (passByRandomFlag == true) {
 				Random randomGenerator = new Random();
 				randomNumber = randomGenerator.nextInt(randomNumberRange);
+				/*
+				 * log.info(scorerId + "-" + menuId + "-" +
+				 * "fetchAnswerPassByRandomNumber." + "-{ Question Sequence: "+
+				 * questionSeq + ", randomNumber: "+ randomNumber +
+				 * ", gradeNum: " + gradeNum + ", inspectGroupSeq: " +
+				 * inspectGroupSeq + ", pendingCategory: " + pendingCategory +
+				 * ", denyCategory: " + denyCategory + ", answerFormNum: " +
+				 * answerFormNum + ", selectedMarkValue: " + selectedMarkValue +
+				 * ", date: " + date + ", roleId: " + roleId +
+				 * ", qualityFromPendingMenu: " + qualityFromPendingMenu +
+				 * ", qualityFromDenyMenu: " + qualityFromDenyMenu +
+				 * ", secondAndThirdLatestScorerIdFlag: " +
+				 * secondAndThirdLatestScorerIdFlag + "}");
+				 */
 				answerRecords = hibernateTemplate.findByNamedQuery(
 						"fetchAnswerPassByRandomNumber", questionSeq,
 						randomNumber, scorerId,
@@ -484,6 +499,19 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 						qualityFromPendingMenu, qualityFromDenyMenu,
 						secondAndThirdLatestScorerIdFlag);
 			} else {
+				/*log.info(scorerId + "-" + menuId + "-"
+						+ "fetchAnswerOrderByRandom."
+						+ "-{ Question Sequence: " + questionSeq
+						+ ", gradeNum: " + gradeNum + ", inspectGroupSeq: "
+						+ inspectGroupSeq + ", pendingCategory: "
+						+ pendingCategory + ", denyCategory: " + denyCategory
+						+ ", answerFormNum: " + answerFormNum
+						+ ", selectedMarkValue: " + selectedMarkValue
+						+ ", date: " + date + ", roleId: " + roleId
+						+ ", qualityFromPendingMenu: " + qualityFromPendingMenu
+						+ ", qualityFromDenyMenu: " + qualityFromDenyMenu
+						+ ", secondAndThirdLatestScorerIdFlag: "
+						+ secondAndThirdLatestScorerIdFlag + "}");*/
 				answerRecords = hibernateTemplate.findByNamedQuery(
 						"fetchAnswerOrderByRandom", questionSeq, scorerId,
 						menuIdAndScoringStateMap.get(menuId), gradeNum,
@@ -1107,7 +1135,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									|| menuId
 											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
-								query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
+								// query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 							}
 
 							query.append(") score ");
@@ -1127,8 +1155,10 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 										WebAppConst.ANSWER_PAPER_TYPES);
 								queryObj.setParameterList("PENDING_CATEGORIES",
 										WebAppConst.PENDING_CATEGORIES);
-								queryObj.setParameterList("DENY_CATEGORIES",
-										WebAppConst.PENDING_CATEGORIES);
+								/*
+								 * queryObj.setParameterList("DENY_CATEGORIES",
+								 * WebAppConst.PENDING_CATEGORIES);
+								 */
 							}
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								queryObj.setParameter("INSPECT_FLAG",
@@ -1375,7 +1405,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									queryObj.setParameterList(
 											"HISTORY_PENDING_CATEGORY_SEQ_LIST",
 											historyPendingCategorySeqList);
-								}  else if (historyCategoryType != null
+								} else if (historyCategoryType != null
 										&& historyCategoryType == 5
 										&& !historyDenyCategorySeqList
 												.isEmpty()) {
@@ -1579,7 +1609,14 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			}
 
 			queryString.append("group by questionSeq  ");
-
+			/*
+			 * try {
+			 * System.out.println(((SessionFactoryImpl)getHibernateTemplateReplica
+			 * (connectionString).getSessionFactory()).getSettings().
+			 * getConnectionProvider().getConnection().getMetaData().getURL());
+			 * } catch (SQLException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); }
+			 */
 			return getHibernateTemplate(connectionString).find(
 					queryString.toString());
 		} catch (RuntimeException re) {
@@ -1659,6 +1696,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 					.append(" and scoringState in (122,123,132,133,162,163,172,173,154,155,192,193,221,222,241,242) ");
 			queryString.append("group by scorerId  ");
 
+			/*
+			 * try {
+			 * System.out.println(((SessionFactoryImpl)getHibernateTemplateReplica
+			 * (connectionString).getSessionFactory()).getSettings().
+			 * getConnectionProvider().getConnection().getMetaData().getURL());
+			 * } catch (SQLException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); }
+			 */
+
 			return getHibernateTemplate(connectionString).find(
 					queryString.toString());
 		} catch (RuntimeException re) {
@@ -1728,6 +1774,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			queryString.append("GROUP BY grade_num ");
 			queryString.append("WITH ROLLUP ");
 
+			/*
+			 * try {
+			 * System.out.println(((SessionFactoryImpl)getHibernateTemplateReplica
+			 * (connectionString).getSessionFactory()).getSettings().
+			 * getConnectionProvider().getConnection().getMetaData().getURL());
+			 * } catch (SQLException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); }
+			 */
+
 			return getHibernateTemplate(connectionString).execute(
 					new HibernateCallback<List>() {
 						public List doInHibernate(Session session)
@@ -1782,6 +1837,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 					.append("AND latest_scoring_state in (123,133,161,163,173,183,193,213,222,242) ");
 			queryString.append("GROUP BY pending_category ");
 			queryString.append("WITH ROLLUP ");
+
+			/*
+			 * try {
+			 * System.out.println(((SessionFactoryImpl)getHibernateTemplateReplica
+			 * (connectionString).getSessionFactory()).getSettings().
+			 * getConnectionProvider().getConnection().getMetaData().getURL());
+			 * } catch (SQLException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); }
+			 */
 
 			return getHibernateTemplate(connectionString).execute(
 					new HibernateCallback<List>() {
@@ -1860,6 +1924,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 					.append("AND latest_scoring_state in (500,121,122,131,132,144,145,162,172,154,155,182,192,212,221,241,151,141,191) ");
 			queryString.append("GROUP BY mark_value ");
 			queryString.append("WITH ROLLUP ");
+
+			/*
+			 * try {
+			 * System.out.println(((SessionFactoryImpl)getHibernateTemplateReplica
+			 * (connectionString).getSessionFactory()).getSettings().
+			 * getConnectionProvider().getConnection().getMetaData().getURL());
+			 * } catch (SQLException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); }
+			 */
 
 			return getHibernateTemplate(connectionString).execute(
 					new HibernateCallback<List>() {
@@ -1970,8 +2043,10 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 		query.append("WHERE t.questionSeq = :QUESTION_SEQ ");
 		query.append("AND t.latestScoringState IN (:KESNHU_SAMPLING_STATES) ");
 		query.append("AND t.validFlag = :VALID_FLAG ");
-		query.append("AND (t.kenshuSamplingFlag IS NULL ");
-		query.append("OR t.kenshuSamplingFlag = :FALSE) ");
+		/*
+		 * query.append("AND (t.kenshuSamplingFlag IS NULL ");
+		 * query.append("OR t.kenshuSamplingFlag = :FALSE) ");
+		 */
 		query.append(" GROUP BY t.gradeNum");
 
 		try {
@@ -1986,7 +2061,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									WebAppConst.KENSU_RECORDS_STATES);
 							queryObj.setParameter("VALID_FLAG",
 									WebAppConst.VALID_FLAG);
-							queryObj.setParameter("FALSE", WebAppConst.F);
+							// queryObj.setParameter("FALSE", WebAppConst.F);
 							// queryObj.setMaxResults(recordCont);
 							return queryObj.list();
 						}
@@ -2068,8 +2143,10 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 		query.append(" AND t.gradeNum = :GRADE_NUM ");
 		query.append("AND t.latestScoringState IN (:KESNHU_SAMPLING_STATES) ");
 		query.append("AND t.validFlag = :VALID_FLAG ");
-		query.append("AND (t.kenshuSamplingFlag IS NULL ");
-		query.append("OR t.kenshuSamplingFlag = :FALSE) ");
+		/*
+		 * query.append("AND (t.kenshuSamplingFlag IS NULL ");
+		 * query.append("OR t.kenshuSamplingFlag = :FALSE) ");
+		 */
 		query.append("ORDER BY RAND() ");
 		try {
 			return getHibernateTemplate(connectionString).execute(
@@ -2084,7 +2161,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 									WebAppConst.KENSU_RECORDS_STATES);
 							queryObj.setParameter("VALID_FLAG",
 									WebAppConst.VALID_FLAG);
-							queryObj.setParameter("FALSE", WebAppConst.F);
+							// queryObj.setParameter("FALSE", WebAppConst.F);
 							queryObj.setMaxResults(recordCount);
 							return queryObj.list();
 						}
@@ -2107,6 +2184,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			queryString.append("question_seq,latest_scoring_state ");
 			queryString.append(" ORDER BY ");
 			queryString.append("question_seq,latest_scoring_state");
+
+			/*
+			 * try {
+			 * System.out.println(((SessionFactoryImpl)getHibernateTemplateReplica
+			 * (connectionString).getSessionFactory()).getSettings().
+			 * getConnectionProvider().getConnection().getMetaData().getURL());
+			 * } catch (SQLException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); }
+			 */
 
 			return getHibernateTemplate(connectionString).execute(
 					new HibernateCallback<List>() {
@@ -2139,6 +2225,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			queryString.append("question_seq,latest_scoring_state");
 			queryString.append(" ORDER BY");
 			queryString.append(" question_seq,latest_scoring_state");
+
+			/*
+			 * try {
+			 * System.out.println(((SessionFactoryImpl)getHibernateTemplateReplica
+			 * (connectionString).getSessionFactory()).getSettings().
+			 * getConnectionProvider().getConnection().getMetaData().getURL());
+			 * } catch (SQLException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); }
+			 */
 
 			return getHibernateTemplate(connectionString).execute(
 					new HibernateCallback<List>() {
@@ -2181,6 +2276,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 
 			queryString.append(" GROUP BY ");
 			queryString.append("question_seq,grade_num");
+
+			/*
+			 * try {
+			 * System.out.println(((SessionFactoryImpl)getHibernateTemplateReplica
+			 * (connectionString).getSessionFactory()).getSettings().
+			 * getConnectionProvider().getConnection().getMetaData().getURL());
+			 * } catch (SQLException e) { // TODO Auto-generated catch block
+			 * e.printStackTrace(); }
+			 */
 
 			return getHibernateTemplate(connectionString).execute(
 					new HibernateCallback<List>() {

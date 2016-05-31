@@ -70,7 +70,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 	private AcceptanceDisplayInfo acceptanceDisplayInfo;
 	private String kenshuSamplingSearch;
 	private String acceptanceDisplayRadio;
-	private Map<Integer, KenshuRecordInfo> kenshuRecordInfoMap;
+	private Map<String, KenshuRecordInfo> kenshuRecordInfoMap;
 	private KenshuRecordInfo kenshuRecordInfo;
 	public static final String FAILURE = "failure";
 	private List<TranAcceptance> tranAcceptanceList;
@@ -91,7 +91,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 				session.remove("kenshuSamplingInfo");
 				session.remove("acceptanceDisplayInfo");
 			}
-			
+
 			loggedInScorerSubjectList = scoreSearchService
 					.buildLoggedInScorerSubjectList(scorerInfo.getScorerId());
 
@@ -115,7 +115,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 			session.put("scoreSearchInfo", scoreSearchInfo);
 			session.put("searchCriteria", searchCriteria);
-			
+
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
@@ -133,7 +133,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 			if (kenshuSamplingSearch != null) {
 				session.put("samplingSearch", kenshuSamplingSearch);
-				
+
 			}
 			if (acceptanceDisplayRadio != null) {
 				session.put("samplingSearch", acceptanceDisplayRadio);
@@ -146,7 +146,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 				if (kenshuSamplingSearch != null) {
 					session.put("samplingSearch", kenshuSamplingSearch);
 				}
-				
+
 				session.remove("acceptanceDisplayInfo");
 
 				if (kenshuSamplingInfo == null) {
@@ -226,7 +226,7 @@ public class KenshuSamplingAction extends ActionSupport implements
 				if (acceptanceDisplayRadio != null) {
 					session.put("samplingSearch", acceptanceDisplayRadio);
 				}
-				
+
 				session.remove("kenshuSamplingInfo");
 
 				if (acceptanceDisplayInfo == null) {
@@ -516,10 +516,10 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 		kenshuSamplingSearchRecordInfoList = (List<KenshuSamplingSearchRecordInfo>) session
 				.get("kenshuSamplingSearchRecordInfoList");
-		
+
 		String samplingSearch = (String) session.get("samplingSearch");
-		
-		if(samplingSearch.equals(WebAppConst.KENSHU_SAMPLING_SEARCH)) {
+
+		if (samplingSearch.equals(WebAppConst.KENSHU_SAMPLING_SEARCH)) {
 			int checkedRecordNum = updateChakedRecodCount();
 			if (checkedRecordNum == tranDescScoreInfoList.size()) {
 				checkedRecordNum--;
@@ -540,7 +540,6 @@ public class KenshuSamplingAction extends ActionSupport implements
 		log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
 				+ "-" + "Loading answer -{" + tranDescScoreInfo + "}");
 
-		
 		if (samplingSearch.equals(WebAppConst.ACCEPTANCE_DISPLAY)) {
 			tranAcceptanceMap = (Map<Integer, TranAcceptance>) session
 					.get("tranAcceptanceMap");
@@ -559,11 +558,22 @@ public class KenshuSamplingAction extends ActionSupport implements
 			} else {
 				return FAILURE;
 			}
-			kenshuRecordInfoMap = (Map<Integer, KenshuRecordInfo>) session
+			kenshuRecordInfoMap = (Map<String, KenshuRecordInfo>) session
 					.get("kenshuRecordInfoMap");
+
 			if (kenshuRecordInfoMap != null) {
-				kenshuRecordInfo = kenshuRecordInfoMap.get(tranDescScoreInfo
-						.getAnswerInfo().getAnswerSeq());
+				if (samplingSearch.equals(WebAppConst.KENSHU_SAMPLING_SEARCH)) {
+					kenshuRecordInfo = kenshuRecordInfoMap
+							.get(tranDescScoreInfo.getAnswerInfo()
+									.getAnswerSeq() + scorerInfo.getScorerId());
+				} else {
+					AcceptanceDisplayInfo acceptanceDisplayInfo = (AcceptanceDisplayInfo) session
+							.get("acceptanceDisplayInfo");
+					kenshuRecordInfo = kenshuRecordInfoMap
+							.get(tranDescScoreInfo.getAnswerInfo()
+									.getAnswerSeq()
+									+ acceptanceDisplayInfo.getKenshuUserId());
+				}
 			}
 			session.put("kenshuRecordInfo", kenshuRecordInfo);
 		}
@@ -688,12 +698,12 @@ public class KenshuSamplingAction extends ActionSupport implements
 
 	private void clearSessionInfo() {
 		session.remove("searchCriteria");
-		//session.remove("samplingSearch");
-		//session.remove("kenshuSamplingInfo");
+		// session.remove("samplingSearch");
+		// session.remove("kenshuSamplingInfo");
 		session.remove("kenshuSamplingSearchRecordInfoList");
 		session.remove("questionInfo");
 		session.remove("kenshuSamplingGradeWiaseMap");
-		//session.remove("acceptanceDisplayInfo");
+		// session.remove("acceptanceDisplayInfo");
 		session.remove("tranAcceptanceList");
 		session.remove("kenshuSamplingSearchRecordInfoList");
 		session.remove("kenshuSamplingGradeWiaseMap");
@@ -877,12 +887,12 @@ public class KenshuSamplingAction extends ActionSupport implements
 		this.acceptanceDisplayRadio = acceptanceDisplayRadio;
 	}
 
-	public Map<Integer, KenshuRecordInfo> getKenshuRecordInfoMap() {
+	public Map<String, KenshuRecordInfo> getKenshuRecordInfoMap() {
 		return kenshuRecordInfoMap;
 	}
 
 	public void setKenshuRecordInfoMap(
-			Map<Integer, KenshuRecordInfo> kenshuRecordInfoMap) {
+			Map<String, KenshuRecordInfo> kenshuRecordInfoMap) {
 		this.kenshuRecordInfoMap = kenshuRecordInfoMap;
 	}
 
@@ -939,7 +949,8 @@ public class KenshuSamplingAction extends ActionSupport implements
 		return loggedInScorerSubjectList;
 	}
 
-	public void setLoggedInScorerSubjectList(List<String> loggedInScorerSubjectList) {
+	public void setLoggedInScorerSubjectList(
+			List<String> loggedInScorerSubjectList) {
 		this.loggedInScorerSubjectList = loggedInScorerSubjectList;
 	}
 
