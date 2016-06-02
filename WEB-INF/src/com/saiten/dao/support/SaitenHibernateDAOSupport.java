@@ -53,4 +53,13 @@ public abstract class SaitenHibernateDAOSupport implements ServletContextAware {
 		return getHibernateTemplate(saitenApplicationProperties
 				.getProperty(WebAppConst.SAITEN_MASTERDB_URL));
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public HibernateTemplate getHibernateTemplateReplica (String connectionString) {
+		// Get HibernateTemplate corresponding to the transaction database URL
+		return ((LinkedHashMap<String, HibernateTemplate>) servletContext
+				.getAttribute("hibernateTemplateReplicaMap")).get(connectionString);
+	}
+
 }

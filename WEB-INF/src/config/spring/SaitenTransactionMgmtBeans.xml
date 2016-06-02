@@ -39,7 +39,27 @@
    	</bean>
    	
    	<bean id="saitenTranDb5TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-      	<property name="sessionFactory" ref="saitenTranDb5SessionFactory" />
+      	<property name="sessionFactory" ref="saitenTranDb5SessionFactory" /> 
+   	</bean>
+   	
+   	<bean id="saitenReplicaTranDb1TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+   	 	 <property name="sessionFactory" ref="saitenReplicaTranDb1SessionFactory" />
+  	</bean>	
+  	
+  	<bean id="saitenReplicaTranDb2TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+      	<property name="sessionFactory" ref="saitenReplicaTranDb2SessionFactory" />
+   	</bean>
+   	
+   	<bean id="saitenReplicaTranDb3TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+      	<property name="sessionFactory" ref="saitenReplicaTranDb3SessionFactory" />
+   	</bean>
+   	
+   	<bean id="saitenReplicaTranDb4TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+      	<property name="sessionFactory" ref="saitenReplicaTranDb4SessionFactory" />
+   	</bean>
+   	
+   	<bean id="saitenReplicaTranDb5TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+      	<property name="sessionFactory" ref="saitenReplicaTranDb5SessionFactory" /> 
    	</bean>
  
 </beans>

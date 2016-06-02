@@ -107,11 +107,29 @@ public class SaitenInitializeListener extends AbstractInitializeListener {
 		LinkedHashMap<String, HibernateTemplate> hibernateTemplateMap = new LinkedHashMap<String, HibernateTemplate>();
 		LinkedHashMap<String, PlatformTransactionManager> platformTransactionManagerMap = new LinkedHashMap<String, PlatformTransactionManager>();
 
+		LinkedHashMap<String, HibernateTemplate> hibernateTemplateReplicaMap = new LinkedHashMap<String, HibernateTemplate>();
+		LinkedHashMap<String, PlatformTransactionManager> platformTransactionManagerReplicaMap = new LinkedHashMap<String, PlatformTransactionManager>();
+
 		String key = null;
 		String hibernateTemplateBeanId = null;
 		String transactionManagerBeanId = null;
 
-		for (int i = 0; i < saitenDbProperties.size() / 4; i++) {
+		String keyReplica = null;
+		String hibernateTemplateBeanIdReplica = null;
+		String transactionManagerBeanIdReplica = null;
+
+		Properties applicationProperties = (Properties) ctx
+				.getBean("saitenApplicationProperties");
+		int databaseCount = 0;
+
+		if (Boolean.valueOf((String) applicationProperties
+				.get(WebAppConst.REPLICATION_ON))) {
+			databaseCount = saitenDbProperties.size() / 8;
+		} else {
+			databaseCount = (saitenDbProperties.size() / 4) - 1;
+		}
+
+		for (int i = 0; i <= databaseCount; i++) {
 
 			if (i == 0) {
 				// Master DB
@@ -130,6 +148,15 @@ public class SaitenInitializeListener extends AbstractInitializeListener {
 				hibernateTemplateBeanId = "saitenTranDb" + j + "SessionFactory";
 				transactionManagerBeanId = "saitenTranDb" + j
 						+ "TransactionManager";
+
+				if (Boolean.valueOf((String) applicationProperties
+						.get(WebAppConst.REPLICATION_ON))) {
+					keyReplica = "saiten.replica.transactiondb" + j + ".url";
+					hibernateTemplateBeanIdReplica = "saitenReplicaTranDb" + j
+							+ "SessionFactory";
+					transactionManagerBeanIdReplica = "saitenReplicaTranDb" + j
+							+ "TransactionManager";
+				}
 			}
 
 			HibernateTemplate hibernateTemplate = new HibernateTemplate(
@@ -145,6 +172,24 @@ public class SaitenInitializeListener extends AbstractInitializeListener {
 			platformTransactionManagerMap.put(
 					saitenDbProperties.getProperty(key),
 					platformTransactionManager);
+
+			if (keyReplica != null) {
+				HibernateTemplate hibernateTemplateReplica = new HibernateTemplate(
+						(SessionFactory) ctx
+								.getBean(hibernateTemplateBeanIdReplica));
+
+				PlatformTransactionManager platformTransactionManagerReplica = (PlatformTransactionManager) ctx
+						.getBean(transactionManagerBeanIdReplica);
+
+				hibernateTemplateReplicaMap.put(
+						saitenDbProperties.getProperty(key),
+						hibernateTemplateReplica);
+
+				platformTransactionManagerReplicaMap.put(
+						saitenDbProperties.getProperty(key),
+						platformTransactionManagerReplica);
+			}
+
 		}
 
 		// Get ServletContext
@@ -154,6 +199,10 @@ public class SaitenInitializeListener extends AbstractInitializeListener {
 		context.setAttribute("hibernateTemplateMap", hibernateTemplateMap);
 		context.setAttribute("platformTransactionManagerMap",
 				platformTransactionManagerMap);
+		context.setAttribute("hibernateTemplateReplicaMap",
+				hibernateTemplateReplicaMap);
+		context.setAttribute("platformTransactionManagerReplicaMap",
+				platformTransactionManagerReplicaMap);
 	}
 
 	private void buildSaitenConfigObject() {

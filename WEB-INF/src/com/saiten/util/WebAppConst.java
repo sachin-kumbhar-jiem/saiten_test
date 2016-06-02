@@ -590,4 +590,6 @@ public interface WebAppConst {
 	
 	public static final String STUD_COUNT_FOR_ALL_QUES_FOR_WG_ONLY = "studCountForAllQuesForWgOnly";
 	
+	public static final String REPLICATION_ON = "replication.on";
+	
 }

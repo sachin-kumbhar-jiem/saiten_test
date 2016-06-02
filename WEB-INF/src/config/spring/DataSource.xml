@@ -99,4 +99,65 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
     <property name="maxIdleTime" value="14400" />
  </bean>
  
+ 
+ <bean id="saitenReplicaTranDb1DataSource" 
+         class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	<property name="driverClass" value="${saiten.replica.transactiondb1.driverClassName}" />
+	<property name="jdbcUrl" value="${saiten.replica.transactiondb1.url}?useUnicode=true&amp;characterEncoding=UTF-8&amp;noAccessToProcedureBodies=true" />
+	<property name="user" value="${saiten.replica.transactiondb1.username}" />
+	<property name="password" value="${saiten.replica.transactiondb1.password}" />
+	<property name="acquireIncrement" value="1" />
+    <property name="minPoolSize" value="2" />
+    <property name="maxPoolSize" value="2" />
+    <property name="maxIdleTime" value="14400" />
+ </bean>
+ 
+ <bean id="saitenReplicaTranDb2DataSource" 
+         class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	<property name="driverClass" value="${saiten.replica.transactiondb2.driverClassName}" />
+	<property name="jdbcUrl" value="${saiten.replica.transactiondb2.url}?useUnicode=true&amp;characterEncoding=UTF-8&amp;noAccessToProcedureBodies=true" />
+	<property name="user" value="${saiten.replica.transactiondb2.username}" />
+	<property name="password" value="${saiten.replica.transactiondb2.password}" />
+	<property name="acquireIncrement" value="1" />
+    <property name="minPoolSize" value="2" />
+    <property name="maxPoolSize" value="2" />
+    <property name="maxIdleTime" value="14400" />
+ </bean>
+ 
+<bean id="saitenReplicaTranDb3DataSource" 
+         class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	<property name="driverClass" value="${saiten.replica.transactiondb3.driverClassName}" />
+	<property name="jdbcUrl" value="${saiten.replica.transactiondb3.url}?useUnicode=true&amp;characterEncoding=UTF-8&amp;noAccessToProcedureBodies=true" />
+	<property name="user" value="${saiten.replica.transactiondb3.username}" />
+	<property name="password" value="${saiten.replica.transactiondb3.password}" />
+	<property name="acquireIncrement" value="1" />
+    <property name="minPoolSize" value="2" />
+    <property name="maxPoolSize" value="2" />
+    <property name="maxIdleTime" value="14400" />
+ </bean>
+ 
+ <bean id="saitenReplicaTranDb4DataSource" 
+         class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	<property name="driverClass" value="${saiten.replica.transactiondb4.driverClassName}" />
+	<property name="jdbcUrl" value="${saiten.replica.transactiondb4.url}?useUnicode=true&amp;characterEncoding=UTF-8&amp;noAccessToProcedureBodies=true" />
+	<property name="user" value="${saiten.replica.transactiondb4.username}" />
+	<property name="password" value="${saiten.replica.transactiondb4.password}" />
+	<property name="acquireIncrement" value="1" />
+    <property name="minPoolSize" value="2" />
+    <property name="maxPoolSize" value="2" />
+    <property name="maxIdleTime" value="14400" />
+ </bean>
+ 
+  <bean id="saitenReplicaTranDb5DataSource" 
+         class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	<property name="driverClass" value="${saiten.replica.transactiondb5.driverClassName}" />
+	<property name="jdbcUrl" value="${saiten.replica.transactiondb5.url}?useUnicode=true&amp;characterEncoding=UTF-8&amp;noAccessToProcedureBodies=true" />
+	<property name="user" value="${saiten.replica.transactiondb5.username}" />
+	<property name="password" value="${saiten.replica.transactiondb5.password}" />
+	<property name="acquireIncrement" value="1" />
+    <property name="minPoolSize" value="2" />
+    <property name="maxPoolSize" value="2" />
+    <property name="maxIdleTime" value="14400" />
+ </bean>
+ 
 </beans>
