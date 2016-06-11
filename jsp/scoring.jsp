@@ -1135,12 +1135,14 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				<a href="scoreSearch.action?selectedMenuId=REFERENCE_SAMP_MENU_ID" id="back" name="back" class="btn btn-primary btn-xl"><!-- <img class="rollover" src="./material/img/button/sampling_bn-back.gif" alt="%{getText('label.backtosearch')}" /> --><s:text name="label.backtosearch"></s:text></a>
 			</s:if><s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID">
 				<a href="scoreSearch.action?selectedMenuId=SCORE_SAMP_MENU_ID" id="back" name="back" class="btn btn-primary btn-xl"><!-- <img class="rollover" src="./material/img/button/sampling_bn-back.gif" alt="%{getText('label.backtosearch')}" /> --><s:text name="label.backtosearch"></s:text></a>
+				<s:if test="#session.historyScreenFlag != true">
 				<s:if test="#session.recordNumber < #session.answerRecordsList.size()" >
 			  		<a href="scoreSampling?prevOrNextFlag=<s:property value="%{@com.saiten.util.WebAppConst@FALSE}" />" id="next" name="next" class="btn btn-primary btn-xl" style="width:99px;margin-left:150px"><!-- <img class="rollover" src="./material/img/button/next.gif" alt="%{getText('label.next')}" /> --><s:text name="label.next"></s:text></a>
 				</s:if>	
 				<s:else>
 					<p class="btn btn-disabled" style="width:99px;margin-left:150px"><s:text name="label.next"></s:text></p>
 				</s:else>
+				</s:if>
 			</s:elseif><s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID">
 				<a href="scoreSearch.action?selectedMenuId=FORCED_MENU_ID" id="back" name="back" class="btn btn-primary btn-xl"><!-- <img class="rollover" src="./material/img/button/sampling_bn-back.gif" alt="%{getText('label.backtosearch')}" /> --><s:text name="label.backtosearch"></s:text></a>
 				<a href="backToForcedScoringList.action" id="back" name="back" class="btn btn-primary btn-xl"><!-- <img class="rollover" src="./material/img/button/search1_bn-login.gif" alt="%{getText('label.backtosearch')}" /> --><s:text name="label.alt.backtoList"></s:text></a>
