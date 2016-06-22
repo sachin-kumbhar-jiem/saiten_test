@@ -794,6 +794,10 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 
 		final String menuId = questionInfo.getMenuId();
 		final String answerFormNum = scoreInputInfo.getAnswerFormNum();
+		final String subjectCode = scoreInputInfo.getSubjectCode();
+		final Integer objScoreStartRange = scoreInputInfo
+				.getObjScoreStartRange();
+		final Integer objScoreEndRange = scoreInputInfo.getObjScoreEndRange();
 
 		final List<String> historyScorerIdList = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryScorerIdList() : null;
@@ -860,6 +864,13 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 							query.append(" UPDATE tran_desc_score target, ");
 							query.append(" (SELECT distinct tranDescScore.answer_seq as answerSeq ");
 							query.append("FROM tran_desc_score AS tranDescScore ");
+							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
+									&& (objScoreStartRange != null)
+									&& (objScoreEndRange != null)) {
+								query.append("INNER JOIN ");
+								query.append("tran_obj_score_percentage AS tranObjScorePercentage  ");
+								query.append("ON tranDescScore.answer_form_num = tranObjScorePercentage.answer_form_num ");
+							}
 							query.append("INNER JOIN ");
 							query.append("tran_desc_score_history AS tranDescScoreHistory ");
 							query.append("ON tranDescScore.answer_seq = tranDescScoreHistory.answer_seq ");
@@ -885,6 +896,11 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 							}
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+								if ((objScoreStartRange != null)
+										&& (objScoreEndRange != null)) {
+									query.append("AND tranObjScorePercentage.subject_code = :SUBJECT_CODE ");
+									query.append("AND tranObjScorePercentage.result_percentage between :OBJ_SCORE_START_RANGE and :OBJ_SCORE_END_RANGE ");
+								}
 								query.append("AND tranDescScore.inspect_flag = :INSPECT_FLAG ");
 								/*
 								 * if (WebAppConst.SPEAKING_TYPE
@@ -1159,6 +1175,17 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 								 */
 							}
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+								if ((objScoreStartRange != null)
+										&& (objScoreEndRange != null)) {
+									queryObj.setParameter("SUBJECT_CODE",
+											subjectCode);
+									queryObj.setParameter(
+											"OBJ_SCORE_START_RANGE",
+											objScoreStartRange);
+									queryObj.setParameter(
+											"OBJ_SCORE_END_RANGE",
+											objScoreEndRange);
+								}
 								queryObj.setParameter("INSPECT_FLAG",
 										WebAppConst.F);
 								if (!selectAllFlag) {
@@ -1607,7 +1634,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			}
 
 			queryString.append("group by questionSeq  ");
-			
+
 			HibernateTemplate hibernateTemplateReplica = getHibernateTemplateReplica(connectionString);
 			if (hibernateTemplateReplica != null) {
 				return getHibernateTemplateReplica(connectionString).find(
@@ -1693,7 +1720,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			queryString
 					.append(" and scoringState in (122,123,132,133,162,163,172,173,154,155,192,193,221,222,241,242) ");
 			queryString.append("group by scorerId  ");
-			
+
 			HibernateTemplate hibernateTemplateReplica = getHibernateTemplateReplica(connectionString);
 			if (hibernateTemplateReplica != null) {
 				return getHibernateTemplateReplica(connectionString).find(
@@ -1702,7 +1729,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 				return getHibernateTemplate(connectionString).find(
 						queryString.toString());
 			}
-			
+
 		} catch (RuntimeException re) {
 			throw re;
 		}
@@ -1769,15 +1796,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 					.append("AND latest_scoring_state in (500,122,131,132,144,145,162,172,154,155,182,192,212,221,241,151,141,191) ");
 			queryString.append("GROUP BY grade_num ");
 			queryString.append("WITH ROLLUP ");
-			
+
 			HibernateTemplate hibernateTemplateReplica = getHibernateTemplateReplica(connectionString);
 			if (hibernateTemplateReplica != null) {
 				return getHibernateTemplateReplica(connectionString).execute(
 						new HibernateCallback<List>() {
 							public List doInHibernate(Session session)
 									throws HibernateException {
-								Query queryObj = session.createSQLQuery(queryString
-										.toString());
+								Query queryObj = session
+										.createSQLQuery(queryString.toString());
 								return queryObj.list();
 							}
 						});
@@ -1786,14 +1813,12 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 						new HibernateCallback<List>() {
 							public List doInHibernate(Session session)
 									throws HibernateException {
-								Query queryObj = session.createSQLQuery(queryString
-										.toString());
+								Query queryObj = session
+										.createSQLQuery(queryString.toString());
 								return queryObj.list();
 							}
 						});
 			}
-
-			
 
 		} catch (RuntimeException re) {
 			throw re;
@@ -1846,8 +1871,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 						new HibernateCallback<List>() {
 							public List doInHibernate(Session session)
 									throws HibernateException {
-								Query queryObj = session.createSQLQuery(queryString
-										.toString());
+								Query queryObj = session
+										.createSQLQuery(queryString.toString());
 								return queryObj.list();
 							}
 						});
@@ -1856,8 +1881,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 						new HibernateCallback<List>() {
 							public List doInHibernate(Session session)
 									throws HibernateException {
-								Query queryObj = session.createSQLQuery(queryString
-										.toString());
+								Query queryObj = session
+										.createSQLQuery(queryString.toString());
 								return queryObj.list();
 							}
 						});
@@ -1931,15 +1956,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 					.append("AND latest_scoring_state in (500,121,122,131,132,144,145,162,172,154,155,182,192,212,221,241,151,141,191) ");
 			queryString.append("GROUP BY mark_value ");
 			queryString.append("WITH ROLLUP ");
-			
+
 			HibernateTemplate hibernateTemplateReplica = getHibernateTemplateReplica(connectionString);
 			if (hibernateTemplateReplica != null) {
 				return getHibernateTemplateReplica(connectionString).execute(
 						new HibernateCallback<List>() {
 							public List doInHibernate(Session session)
 									throws HibernateException {
-								Query queryObj = session.createSQLQuery(queryString
-										.toString());
+								Query queryObj = session
+										.createSQLQuery(queryString.toString());
 								return queryObj.list();
 							}
 						});
@@ -1948,8 +1973,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 						new HibernateCallback<List>() {
 							public List doInHibernate(Session session)
 									throws HibernateException {
-								Query queryObj = session.createSQLQuery(queryString
-										.toString());
+								Query queryObj = session
+										.createSQLQuery(queryString.toString());
 								return queryObj.list();
 							}
 						});
@@ -2195,15 +2220,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			queryString.append("question_seq,latest_scoring_state ");
 			queryString.append(" ORDER BY ");
 			queryString.append("question_seq,latest_scoring_state");
-			
+
 			HibernateTemplate hibernateTemplateReplica = getHibernateTemplateReplica(connectionString);
 			if (hibernateTemplateReplica != null) {
 				return getHibernateTemplateReplica(connectionString).execute(
 						new HibernateCallback<List>() {
 							public List doInHibernate(Session session)
 									throws HibernateException {
-								Query queryObj = session.createSQLQuery(queryString
-										.toString());
+								Query queryObj = session
+										.createSQLQuery(queryString.toString());
 								return queryObj.list();
 							}
 						});
@@ -2212,8 +2237,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 						new HibernateCallback<List>() {
 							public List doInHibernate(Session session)
 									throws HibernateException {
-								Query queryObj = session.createSQLQuery(queryString
-										.toString());
+								Query queryObj = session
+										.createSQLQuery(queryString.toString());
 								return queryObj.list();
 							}
 						});
@@ -2240,15 +2265,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 			queryString.append("question_seq,latest_scoring_state");
 			queryString.append(" ORDER BY");
 			queryString.append(" question_seq,latest_scoring_state");
-			
+
 			HibernateTemplate hibernateTemplateReplica = getHibernateTemplateReplica(connectionString);
 			if (hibernateTemplateReplica != null) {
 				return getHibernateTemplateReplica(connectionString).execute(
 						new HibernateCallback<List>() {
 							public List doInHibernate(Session session)
 									throws HibernateException {
-								Query queryObj = session.createSQLQuery(queryString
-										.toString());
+								Query queryObj = session
+										.createSQLQuery(queryString.toString());
 								queryObj.setParameterList("QUE_SEQ_INFO_LIST",
 										queSeqsInfoList);
 								return queryObj.list();
@@ -2260,8 +2285,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 						new HibernateCallback<List>() {
 							public List doInHibernate(Session session)
 									throws HibernateException {
-								Query queryObj = session.createSQLQuery(queryString
-										.toString());
+								Query queryObj = session
+										.createSQLQuery(queryString.toString());
 								queryObj.setParameterList("QUE_SEQ_INFO_LIST",
 										queSeqsInfoList);
 								return queryObj.list();
@@ -2299,15 +2324,15 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 
 			queryString.append(" GROUP BY ");
 			queryString.append("question_seq,grade_num");
-			
+
 			HibernateTemplate hibernateTemplateReplica = getHibernateTemplateReplica(connectionString);
 			if (hibernateTemplateReplica != null) {
 				return getHibernateTemplateReplica(connectionString).execute(
 						new HibernateCallback<List>() {
 							public List doInHibernate(Session session)
 									throws HibernateException {
-								Query queryObj = session.createSQLQuery(queryString
-										.toString());
+								Query queryObj = session
+										.createSQLQuery(queryString.toString());
 								queryObj.setParameterList(
 										"CONFIRM_AND_INSPECTION_WAIT_STATE",
 										WebAppConst.CONFIRM_AND_INSPECTION_WAIT_STATES);
@@ -2322,8 +2347,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements
 						new HibernateCallback<List>() {
 							public List doInHibernate(Session session)
 									throws HibernateException {
-								Query queryObj = session.createSQLQuery(queryString
-										.toString());
+								Query queryObj = session
+										.createSQLQuery(queryString.toString());
 								queryObj.setParameterList(
 										"CONFIRM_AND_INSPECTION_WAIT_STATE",
 										WebAppConst.CONFIRM_AND_INSPECTION_WAIT_STATES);

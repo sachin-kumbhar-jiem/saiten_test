@@ -143,6 +143,20 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 										</td>
 										</s:if>
 									</tr>
+									<!-- New code Start -->
+									<s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@STATE_TRAN_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID">
+										<tr>
+											<th class="partition">
+												<s:text name="label.scoresearch.objscorerange"></s:text>
+											</th>
+											<td colspan="5">
+												<s:textfield id="objScoreStartRange" name="scoreInputInfo.objScoreStartRange" maxlength="3" size="5" value="%{#session.scoreInputInfo.objScoreStartRange}"/>
+												<s:text name="label.scoresearch.tilde"></s:text>
+												<s:textfield id="objScoreEndRange" name="scoreInputInfo.objScoreEndRange" maxlength="3" size="5" value="%{#session.scoreInputInfo.objScoreEndRange}"/>
+											</td>
+										</tr>
+									</s:if>
+									<!-- New code End -->
 									<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID">
 										<tr>
 											<th class="partition">

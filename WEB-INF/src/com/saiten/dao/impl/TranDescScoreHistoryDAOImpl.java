@@ -2157,6 +2157,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		final String menuId = questionInfo.getMenuId();
 		final boolean samplingFlag = scoreInputInfo.isSamplingFlag();
 		final String answerFormNum = scoreInputInfo.getAnswerFormNum();
+		final String subjectCode = scoreInputInfo.getSubjectCode();
+		final Integer objScoreStartRange = scoreInputInfo
+				.getObjScoreStartRange();
+		final Integer objScoreEndRange = scoreInputInfo.getObjScoreEndRange();
 
 		final List<String> historyScorerIdList = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryScorerIdList() : null;
@@ -2282,6 +2286,15 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							query.append("FROM tran_desc_score AS tranDescScore ");
 							
 							if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
+									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID))
+									&& (objScoreStartRange != null)
+									&& (objScoreEndRange != null)) {
+								query.append("INNER JOIN ");
+								query.append("tran_obj_score_percentage AS tranObjScorePercentage  ");
+								query.append("ON tranDescScore.answer_form_num = tranObjScorePercentage.answer_form_num ");
+							}
+
+							if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
 									.equals(WebAppConst.FORCED_MENU_ID))) {
 								query.append("INNER JOIN ");
 								query.append("tran_desc_score_history AS tranDescScoreHistory ");
@@ -2297,7 +2310,6 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									query.append("ON tranDescScore.answer_seq = tranLookAfterwards.answer_seq ");
 								}
 							}
-							
 
 							query.append("WHERE tranDescScore.question_seq  = :QUESTION_SEQ ");
 
@@ -2317,6 +2329,14 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 							query.append("AND tranDescScore.lock_flag = :UNLOCK ");
 							query.append("AND tranDescScore.valid_flag = :VALID_FLAG ");
+							
+							if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
+									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID))
+									&& (objScoreStartRange != null)
+									&& (objScoreEndRange != null)) {
+								query.append("AND tranObjScorePercentage.subject_code = :SUBJECT_CODE ");
+								query.append("AND tranObjScorePercentage.result_percentage between :OBJ_SCORE_START_RANGE and :OBJ_SCORE_END_RANGE ");
+							}
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								query.append("AND tranDescScore.inspect_flag = :INSPECT_FLAG ");
@@ -2347,8 +2367,6 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							if (!StringUtils.isBlank(answerFormNum)) {
 								query.append("AND tranDescScore.answer_form_num = :ANSWER_FORM_NUM ");
 							}
-
-							
 
 							if (scoreCurrentInfo != null
 									&& scoreCurrentInfo.isCurrentBlock()) {
@@ -2490,8 +2508,6 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								query.append("AND tranDescScore.answer_paper_type NOT IN ( :ANSWER_PAPER_TYPES ) ");
 							}
 
-							
-
 							if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 								if (scoreCurrentInfo != null
 										&& scoreCurrentInfo
@@ -2528,7 +2544,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								if (!menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 									query.append("ORDER BY updateDate DESC ");
 								}
-							} 
+							}
 							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
 									.equals(WebAppConst.FORCED_MENU_ID))) {
 								query.append("INNER JOIN ");
@@ -2539,13 +2555,13 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
 								query.append("AND tranDescScoreHistory.scoring_state NOT IN :DUMMY_SCORING_STATES ");
 							}
-							
+
 							if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
 									.equals(WebAppConst.FORCED_MENU_ID))) {
 								query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
 								query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
 							}
-							
+
 							if (searchByScorerRoleId == true) {
 								if (historyScorerRoles != null) {
 									query.append("AND tranDescScoreHistory.scorer_role_id IN :HISTORY_SCORER_ROLES ");
@@ -2560,8 +2576,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									 */
 								}
 							}
-							
-							
+
 							if (scoreHistoryInfo != null
 									&& scoreHistoryInfo.isHistoryBlock()) {
 
@@ -2665,19 +2680,19 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									|| menuId
 											.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
-								//query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
+								// query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
 							} else if (menuId
 									.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
-								//query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
+								// query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 
 							}
-							
+
 							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
 									.equals(WebAppConst.FORCED_MENU_ID))) {
 								query.append("LIMIT :RECORD_COUNT_LIMIT ");
 							}
-							
+
 							if ((forceAndStateTransitionFlag != null)
 									&& (forceAndStateTransitionFlag == WebAppConst.FALSE)) {
 								query.append("GROUP BY tranDescScore.answer_seq ");
@@ -2697,8 +2712,22 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										WebAppConst.ANSWER_PAPER_TYPES);
 								queryObj.setParameterList("PENDING_CATEGORIES",
 										WebAppConst.PENDING_CATEGORIES);
-								/*queryObj.setParameterList("DENY_CATEGORIES",
-										WebAppConst.PENDING_CATEGORIES);*/
+								/*
+								 * queryObj.setParameterList("DENY_CATEGORIES",
+								 * WebAppConst.PENDING_CATEGORIES);
+								 */
+							}
+							
+							if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
+									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID))
+									&& (objScoreStartRange != null)
+									&& (objScoreEndRange != null)) {
+								queryObj.setParameter("SUBJECT_CODE",
+										subjectCode);
+								queryObj.setParameter("OBJ_SCORE_START_RANGE",
+										objScoreStartRange);
+								queryObj.setParameter("OBJ_SCORE_END_RANGE",
+										objScoreEndRange);
 							}
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
@@ -4454,6 +4483,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		final String menuId = questionInfo.getMenuId();
 		final boolean samplingFlag = scoreInputInfo.isSamplingFlag();
 		final String answerFormNum = scoreInputInfo.getAnswerFormNum();
+		final String subjectCode = scoreInputInfo.getSubjectCode();
+		final Integer objScoreStartRange = scoreInputInfo
+				.getObjScoreStartRange();
+		final Integer objScoreEndRange = scoreInputInfo.getObjScoreEndRange();
 
 		final List<String> historyScorerIdList = scoreHistoryInfo != null ? scoreHistoryInfo
 				.getHistoryScorerIdList() : null;
@@ -4579,6 +4612,13 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								query.append(", tranLookAfterwards.look_aft_seq AS lookAftSeq ");
 							}
 							query.append("FROM tran_desc_score AS tranDescScore ");
+							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
+									&& (objScoreStartRange != null)
+									&& (objScoreEndRange != null)) {
+								query.append("INNER JOIN ");
+								query.append("tran_obj_score_percentage AS tranObjScorePercentage ");
+								query.append("ON tranDescScore.answer_form_num = tranObjScorePercentage.answer_form_num ");
+							}
 							query.append("INNER JOIN ");
 							query.append("tran_desc_score_history AS tranDescScoreHistory ");
 							query.append("ON tranDescScore.answer_seq = tranDescScoreHistory.answer_seq ");
@@ -4593,7 +4633,6 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								query.append("ON tranDescScore.answer_seq = tranLookAfterwards.answer_seq ");
 							}
 							query.append("WHERE tranDescScore.question_seq  = :QUESTION_SEQ ");
-							
 
 							if (searchByScorerRoleId == true) {
 								if (currentScorerRoles != null) {
@@ -4612,6 +4651,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							query.append("AND tranDescScore.lock_flag = :UNLOCK ");
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+								if ((objScoreStartRange != null)
+										&& (objScoreEndRange != null)) {
+									query.append("AND tranObjScorePercentage.subject_code = :SUBJECT_CODE ");
+									query.append("AND tranObjScorePercentage.result_percentage between :OBJ_SCORE_START_RANGE and :OBJ_SCORE_END_RANGE ");
+								}
 								query.append("AND tranDescScore.inspect_flag = :INSPECT_FLAG ");
 								/*
 								 * if (WebAppConst.SPEAKING_TYPE
@@ -4638,8 +4682,6 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							if (!StringUtils.isBlank(answerFormNum)) {
 								query.append("AND tranDescScore.answer_form_num = :ANSWER_FORM_NUM ");
 							}
-
-
 
 							if (scoreCurrentInfo != null
 									&& scoreCurrentInfo.isCurrentBlock()) {
@@ -4798,8 +4840,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							query.append("AND tranDescScore.valid_flag = :VALID_FLAG ");
 							query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
 							query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
-							
-							
+
 							if (scoreHistoryInfo != null
 									&& scoreHistoryInfo.isHistoryBlock()) {
 
@@ -4897,7 +4938,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									query.append("AND tranDescScoreHistory.update_date <= :HISTORY_UPDATE_END_DATE ");
 								}
 							}
-							
+
 							if (menuId
 									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
 									|| menuId
@@ -4905,9 +4946,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									|| menuId
 											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
-								//query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
+								// query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
 							}
-							
+
 							query.append("GROUP BY tranDescScore.answer_seq ");
 							if ((forceAndStateTransitionFlag != null)
 									&& (forceAndStateTransitionFlag == WebAppConst.TRUE)) {
@@ -4949,11 +4990,24 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 										WebAppConst.ANSWER_PAPER_TYPES);
 								queryObj.setParameterList("PENDING_CATEGORIES",
 										WebAppConst.PENDING_CATEGORIES);
-								/*queryObj.setParameterList("DENY_CATEGORIES",
-										WebAppConst.PENDING_CATEGORIES);*/
+								/*
+								 * queryObj.setParameterList("DENY_CATEGORIES",
+								 * WebAppConst.PENDING_CATEGORIES);
+								 */
 							}
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+								if ((objScoreStartRange != null)
+										&& (objScoreEndRange != null)) {
+									queryObj.setParameter("SUBJECT_CODE",
+											subjectCode);
+									queryObj.setParameter(
+											"OBJ_SCORE_START_RANGE",
+											objScoreStartRange);
+									queryObj.setParameter(
+											"OBJ_SCORE_END_RANGE",
+											objScoreEndRange);
+								}
 								queryObj.setParameter("INSPECT_FLAG",
 										WebAppConst.F);
 								/*
@@ -5983,6 +6037,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 					registerScoreInfo.getHistoryRecordCount(),
 					registerScoreInfo.getLastUpdateDate(),
 					registerScoreInfo.getIsScoreOrPending());
+
 		} catch (RuntimeException re) {
 			throw re;
 		}

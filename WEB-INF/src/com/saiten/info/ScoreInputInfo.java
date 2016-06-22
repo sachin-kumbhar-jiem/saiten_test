@@ -13,6 +13,9 @@ public class ScoreInputInfo {
 	private Integer resultCount;
 	private ScoreHistoryInfo scoreHistoryInfo;
 	private ScoreCurrentInfo scoreCurrentInfo;
+	private Integer objScoreStartRange;
+	private Integer objScoreEndRange;
+
 
 	public ScoreHistoryInfo getScoreHistoryInfo() {
 		return scoreHistoryInfo;
@@ -68,6 +71,34 @@ public class ScoreInputInfo {
 
 	public void setSamplingFlag(boolean samplingFlag) {
 		this.samplingFlag = samplingFlag;
+	}
+	
+	/**
+	 * @return the objScoreStartRange
+	 */
+	public Integer getObjScoreStartRange() {
+		return objScoreStartRange;
+	}
+
+	/**
+	 * @param objScoreStartRange the objScoreStartRange to set
+	 */
+	public void setObjScoreStartRange(Integer objScoreStartRange) {
+		this.objScoreStartRange = objScoreStartRange;
+	}
+
+	/**
+	 * @return the objScoreEndRange
+	 */
+	public Integer getObjScoreEndRange() {
+		return objScoreEndRange;
+	}
+
+	/**
+	 * @param objScoreEndRange the objScoreEndRange to set
+	 */
+	public void setObjScoreEndRange(Integer objScoreEndRange) {
+		this.objScoreEndRange = objScoreEndRange;
 	}
 
 	@Override
