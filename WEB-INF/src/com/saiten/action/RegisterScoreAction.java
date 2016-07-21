@@ -53,6 +53,7 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 	private Integer denyCategory;
 	private boolean bookMarkFlag;
 	private boolean qualityCheckFlag;
+	public static final String RESET_SCORE_HISTORY = "resetScoreHistory";
 
 	@SuppressWarnings("unchecked")
 	public String doRegister() {
@@ -65,6 +66,9 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 		Integer historyRecordCount = null;
 		String approveOrDeny = session.get("approveOrDeny").toString();
+		// boolean historyScreenFlag = (Boolean)
+		// session.get("historyScreenFlag");
+		Boolean historyScreenFlag = (Boolean) session.get("historyScreenFlag");
 
 		try {
 
@@ -175,6 +179,7 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 
 			}
 			/* platformTransactionManager.commit(transactionStatus); */
+
 			// Modify session info after answer evaluation
 			updateSessionInfo(tranDescScoreInfo);
 
@@ -201,14 +206,19 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 		}
 
 		return !lockFlag ? getRedirectAction(questionInfo.getMenuId(),
-				historyRecordCount) : FAILURE;
+				historyRecordCount, historyScreenFlag) : FAILURE;
 	}
 
-	private String getRedirectAction(String menuId, Integer historyRecordCount) {
+	private String getRedirectAction(String menuId, Integer historyRecordCount,
+			Boolean historyScreenFlag) {
 
 		String redirectAction = null;
+
 		TranDescScoreInfo sessionTranDescScoreInfo = (TranDescScoreInfo) session
 				.get("tranDescScoreInfo");
+		if(historyScreenFlag != null && historyScreenFlag) {
+			return RESET_SCORE_HISTORY;
+		}
 		if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
 				&& (sessionTranDescScoreInfo == null)) {
 			return SCORE_SAMPLING;

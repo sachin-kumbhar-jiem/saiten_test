@@ -46,6 +46,7 @@ public class RegisterPendingAction extends ActionSupport implements
 	public static final String SCORE_SAMPLING = "scoreSampling";
 	public static final String BACK_TO_FORCED_SCORING_LIST = "backToForcedScoringList";
 	private boolean qualityCheckFlag;
+	public static final String RESET_SCORE_HISTORY = "resetScoreHistory";
 
 	@SuppressWarnings("unchecked")
 	public String doRegister() {
@@ -56,6 +57,7 @@ public class RegisterPendingAction extends ActionSupport implements
 		 */
 
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
+		Boolean historyScreenFlag = (Boolean) session.get("historyScreenFlag");
 
 		try {
 			MstScorerInfo scorerInfo = (MstScorerInfo) session
@@ -156,15 +158,18 @@ public class RegisterPendingAction extends ActionSupport implements
 					ErrorCode.REGISTER_PENDING_ACTION_EXCEPTION, e);
 		}
 
-		return !lockFlag ? getRedirectAction(questionInfo.getMenuId())
-				: FAILURE;
+		return !lockFlag ? getRedirectAction(questionInfo.getMenuId(),
+				historyScreenFlag) : FAILURE;
 	}
 
-	private String getRedirectAction(String menuId) {
+	private String getRedirectAction(String menuId, Boolean historyScreenFlag) {
 
 		String redirectAction = null;
 		TranDescScoreInfo sessionTranDescScoreInfo = (TranDescScoreInfo) session
 				.get("tranDescScoreInfo");
+		if(historyScreenFlag != null && historyScreenFlag) {
+			return RESET_SCORE_HISTORY;
+		}
 		if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
 				&& (sessionTranDescScoreInfo == null)) {
 			redirectAction = SCORE_SAMPLING;

@@ -150,6 +150,10 @@
 			<result name="scoreSampling" type="redirectAction">scoreSampling</result>
 			<result name="specialSampling" type="redirectAction">specialSampling</result>
 			<result name="backToForcedScoringList" type="redirectAction">backToForcedScoringList</result>
+			<result name="resetScoreHistory" type="redirectAction">
+				<param name="actionName">resetScoreHistory</param>
+				<param name="backToScoringFlag">true</param>
+			</result>
 			<result name="failure" type="redirectAction">
 				<param name="actionName">showScoringError</param>
 				<param name="lockFlag">${lockFlag}</param>
@@ -157,6 +161,10 @@
 		</action>
 		
 		<action name="registerPending" class="registerPending" method="doRegister">
+			<result name="resetScoreHistory" type="redirectAction">
+				<param name="actionName">resetScoreHistory</param>
+				<param name="backToScoringFlag">true</param>
+			</result>
 			<result name="success" type="redirectAction">scoreAction</result>
 			<result name="scoreSampling" type="redirectAction">scoreSampling</result>
 			<result name="backToForcedScoringList" type="redirectAction">backToForcedScoringList</result>
