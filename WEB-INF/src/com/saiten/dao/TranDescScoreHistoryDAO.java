@@ -3,6 +3,7 @@ package com.saiten.dao;
 import java.util.Date;
 import java.util.List;
 
+import com.saiten.info.DailyReportsInfo;
 import com.saiten.info.DailyScoreInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.info.RatingInfo;
@@ -239,4 +240,7 @@ public interface TranDescScoreHistoryDAO {
 
 	public List registerAnswer(RegisterScoreInfo registerScoreInfo,
 			String connectionString);
+
+	public List<String> getDateAndTimeWiseQuestionCount(
+			String connectionString, DailyReportsInfo dailyReportsInfo);
 }

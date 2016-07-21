@@ -120,5 +120,10 @@ var QUES_SEQ_ARE_MANDATORY='<s:text name="error.question.seq.are.mandatory"/>';
 var ENTER_VALID_INPUT='<s:text name="error.enter.valid.input"/>';
 var CURRENT_DATE_IS_REQUIRED='<s:text name="error.select.the.date"/>';
 
+var START_DATE_IS_REQUIRED='<s:text name="error.select.the.start.date"/>';
+var END_DATE_IS_REQUIRED='<s:text name="error.select.the.end.date"/>';
+var START_DATE_CANT_GREATER_THAN_END_DATE='<s:text name="error.start.date.can.not.greater.than.end.date"/>';
+var START_DATE_AND_END_DATE_CANT_GREATER_THAN_CURR_DATE='<s:text name="error.start.and.end.date.can.not.greater.than.curr.date"/>';
+var DIFF_COMPARISON_BETWEEN_START_AND_END_TIME='<s:text name="error.diff.comparison.between.start.time.and.end.time"/>';
 </script>		
 </html>

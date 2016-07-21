@@ -3,8 +3,11 @@ package com.saiten.action;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.interceptor.SessionAware;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.saiten.exception.SaitenRuntimeException;
@@ -17,7 +20,8 @@ import com.saiten.util.WebAppConst;
  * @author rahul
  * 
  */
-public class DailyReportDownloadAction extends ActionSupport {
+public class DailyReportDownloadAction extends ActionSupport implements
+		SessionAware {
 
 	/**
 	 * 
@@ -30,14 +34,28 @@ public class DailyReportDownloadAction extends ActionSupport {
 	private String dailyReports;
 	private String quesSequences;
 	private String dailyReportCurrentDate;
+	private Map<String, Object> session;
+	private Map<String, String> hoursMap;
+	private Map<String, String> minsMap;
+	private Map<String, String> secsMap;
 
 	public String onLoad() {
+		try {
+			hoursMap = getHours();
+			minsMap = getMinutes();
+			secsMap = minsMap;
+			setSessionParams();
+			session.remove("dailyReports");
+		} catch (Exception e) {
+			throw new SaitenRuntimeException(
+					ErrorCode.DOWNLOAD_DAILY_REPORT_ACTION_EXCEPTION, e);
+		}
 		return SUCCESS;
 	}
 
 	public String downloadReport() {
 
-		try {
+		try {	
 			if (dailyReports.equals(WebAppConst.SPECIFIC_STUD_QUES_COUNT)) {
 				quesSequences = dailyReportsInfo.questionSequences;
 			}
@@ -48,9 +66,12 @@ public class DailyReportDownloadAction extends ActionSupport {
 
 			String downloadFilePath = dailyReportsService
 					.processDownloadDailyReportRequest(dailyReports,
-							quesSequences, dailyReportCurrentDate);
-
-			if (!StringUtils.isBlank(downloadFilePath)) {
+							quesSequences, dailyReportCurrentDate,
+							dailyReportsInfo);
+			
+            session.put("dailyReports", dailyReports);
+			
+            if (!StringUtils.isBlank(downloadFilePath)) {
 
 				File fileToDownload = new File(downloadFilePath);
 
@@ -69,6 +90,30 @@ public class DailyReportDownloadAction extends ActionSupport {
 					ErrorCode.DOWNLOAD_DAILY_REPORT_ACTION_EXCEPTION, e);
 		}
 		return SUCCESS;
+	}
+
+	private void setSessionParams() {
+		session.put("hoursMap", hoursMap);
+		session.put("minsMap", minsMap);
+		session.put("secsMap", secsMap);
+	}
+
+	public static Map<String, String> getHours() {
+
+		Map<String, String> hoursMap = new LinkedHashMap<String, String>();
+		for (int i = WebAppConst.CLOCK_FIRST_HOUR; i <= WebAppConst.CLOCK_LAST_HOUR; i++) {
+			hoursMap.put(String.format("%02d", i), String.format("%02d", i));
+		}
+		return hoursMap;
+	}
+
+	public static Map<String, String> getMinutes() {
+
+		Map<String, String> minutesMap = new LinkedHashMap<String, String>();
+		for (int i = WebAppConst.CLOCK_FIRST_MINUTE; i <= WebAppConst.CLOCK_LAST_MINUTE; i++) {
+			minutesMap.put(String.format("%02d", i), String.format("%02d", i));
+		}
+		return minutesMap;
 	}
 
 	public String getDailyReportCurrentDate() {
@@ -125,5 +170,37 @@ public class DailyReportDownloadAction extends ActionSupport {
 
 	public void setDailyReports(String dailyReports) {
 		this.dailyReports = dailyReports;
+	}
+
+	public Map<String, Object> getSession() {
+		return session;
+	}
+
+	public void setSession(Map<String, Object> session) {
+		this.session = session;
+	}
+
+	public Map<String, String> getHoursMap() {
+		return hoursMap;
+	}
+
+	public void setHoursMap(Map<String, String> hoursMap) {
+		this.hoursMap = hoursMap;
+	}
+
+	public Map<String, String> getMinsMap() {
+		return minsMap;
+	}
+
+	public void setMinsMap(Map<String, String> minsMap) {
+		this.minsMap = minsMap;
+	}
+
+	public Map<String, String> getSecsMap() {
+		return secsMap;
+	}
+
+	public void setSecsMap(Map<String, String> secsMap) {
+		this.secsMap = secsMap;
 	}
 }

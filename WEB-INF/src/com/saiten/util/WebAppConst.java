@@ -592,4 +592,9 @@ public interface WebAppConst {
 	
 	public static final String REPLICATION_ON = "replication.on";
 	
+    public static final String GRADEWISE_COUNT_WHERE_GRADE_IS_AVAILABLE = "gradeWiseCountGradeIsAvailable";
+
+	public static final String QUES_SEQ_WISE_COUNT_WHERE_PENDING_CATEGORY_IS_SET = "pendingCategoryIsSet";
+	
+	public static final String QUESTION_WISE_COUNT_FOR_HISTORY_RECORDS = "historyRecordsCount";
 }

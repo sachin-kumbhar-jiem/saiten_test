@@ -377,6 +377,7 @@
    	    <property name="mstDbInstanceDAO" ref="mstDbInstanceDAO" />
    	    <property name="dailyReportsInfo" ref="dailyReportsInfo" />
    	    <property name="tranScorerAccessLogDAO" ref="tranScorerAccessLogDAO" />
+   	    <property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO" />
    	</bean>
    	 	
    	<bean id="dailyReportsInfo" class="com.saiten.info.DailyReportsInfo"></bean>

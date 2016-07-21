@@ -48,7 +48,6 @@
 		    <div class="search_box">
 		       <h1 align="left">
 		       <s:text name="label.daily.reports"/></h1>
-		       
 			   <div id="dailyReport">
 				   <table class="search_form search_table_width">
 				       <tr>
@@ -59,85 +58,166 @@
 					   <tr>
 					       <th class="partition">
 					            <div id="allQuesCnt" style="display:block">
-					                <input type="radio" name="dailyReports" id="studCountForAllQues" value="studCountForAllQues" onclick="allQuesCount();" checked="checked"/>
+					               <input type="radio" name="dailyReports" id="studCountForAllQues" value="studCountForAllQues" onclick="allQuesCount();" checked="checked"/>
 					            </div>
 					       </th>
 					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
 					            <font color ="white" title="calibri" size="11"><b><s:text name="label.ques.wise.stud.count.all.ques"/></b></font>
 					       </td>
 					   </tr>
-					     
 					   <tr>
 					       <th class="partition">
 					            <div id="specfQuesCnt">
-					                <input type="radio" name="dailyReports" id="specifiedStudQuesCnt" value="specifiedStudQuesCnt" onclick="specQuesCount();"/>
+					               <s:if test="#session.dailyReports==@com.saiten.util.WebAppConst@SPECIFIC_STUD_QUES_COUNT">
+					                    <input type="radio" name="dailyReports" id="specifiedStudQuesCnt" value="specifiedStudQuesCnt" onclick="specQuesCount();" checked="checked"/>
+					               </s:if><s:else>
+					                   <input type="radio" name="dailyReports" id="specifiedStudQuesCnt" value="specifiedStudQuesCnt" onclick="specQuesCount();"/>
+					               </s:else>					                
 					            </div>
 					       </th>
 					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
 					            <font color ="white" title="calibri" size="11"><b><s:text name="label.ques.wise.stud.count.specific.ques"/></b></font>
 					       </td>
 					   </tr>
-					   
 					   <tr>
 					   	  <th class="partition"></th>
-					      <td>
+					      <td colspan="5">
 					          <font color ="black" title="calibri" size="11"><b>&nbsp;&nbsp;<s:text name="label.question.sequences"/></b></font>
 					          <br/><br/><s:textarea name="dailyReportsInfo.questionSequences" id="questionSeq" disabled="true"/>
 					      </td>
 					   </tr>
-					   
 					   <tr>
 					       <th class="partition">
 					            <div id="confirmAndWait">
-					                <input type="radio" name="dailyReports" id="confirmAndWait" value="confirmAndWait" onclick="confAndWait();"/>
+					                <s:if test="#session.dailyReports==@com.saiten.util.WebAppConst@CONFIRM_AND_WAIT_STATE">
+					                   <input type="radio" name="dailyReports" id="confirmAndWait" value="confirmAndWait" onclick="confAndWait();" checked="checked"/>
+					                </s:if><s:else>
+					                    <input type="radio" name="dailyReports" id="confirmAndWait" value="confirmAndWait" onclick="confAndWait();"/>
+					                </s:else>
 					            </div>
 					       </th>
 					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
 					            <font color ="white" title="calibri" size="11"><b><s:text name="label.confirm.inspect.wait.count"/></b></font>
 					       </td>
 					   </tr>
-					  
 					   <tr>
 					       <th class="partition">
 					            <div id="notConfirmAndWait">
-					                <input type="radio" name="dailyReports" id="notConfirmAndWait" value="notConfirmAndWait" onclick="notConfAndWait();"/>
+					                <s:if test="#session.dailyReports==@com.saiten.util.WebAppConst@NOT_CONFIRM_AND_WAIT_STATE">					               
+					                    <input type="radio" name="dailyReports" id="notConfirmAndWait" value="notConfirmAndWait" onclick="notConfAndWait();" checked="checked"/>
+					                </s:if><s:else>
+					                   <input type="radio" name="dailyReports" id="notConfirmAndWait" value="notConfirmAndWait" onclick="notConfAndWait();"/>
+					                </s:else>					                
 					            </div>
 					       </th>
 					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
 					            <font color ="white" title="calibri" size="11"><b><s:text name="label.not.confirm.inspect.wait.count"/></b></font>
 					       </td>
 					   </tr>
-					   
 					   <tr>
 					       <th class="partition">
 					            <div id="login_logout_report">
-					                <input type="radio" name="dailyReports" id="loginLogoutReport" value="loginLogoutReport" onclick="enableDisableAndClearFields();"/>
+					               <s:if test="#session.dailyReports==@com.saiten.util.WebAppConst@LOGIN_LOGOUT_REPORT">					              			                    
+					                     <input type="radio" name="dailyReports" id="loginLogoutReport" value="loginLogoutReport" onclick="enableDisableAndClearFields();" checked="checked"/>
+					               </s:if><s:else>					                                 
+					                     <input type="radio" name="dailyReports" id="loginLogoutReport" value="loginLogoutReport" onclick="enableDisableAndClearFields();" />
+					               </s:else>
 					            </div>
 					       </th>
 					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
 					            <font color ="white" title="calibri" size="11"><b><s:text name="label.daily.login.report"/></b></font>
 					       </td>
 					   </tr>
-					   
 					   <tr>
 					       <th class="partition"></th>
-					       <td>
+					       <td colspan="5">
 					           <font color ="black" title="calibri" size="11">&nbsp;&nbsp;<b><s:text name="label.daily.login.report.select.date"/></b></font>&nbsp;
 					           <input type="date" name="dailyReportsInfo.currentDate" value='<s:property value="dailyReportsInfo.currentDate"/>' id="sysDate" disabled="disabled"/>
 					       </td>
 					   </tr>
-					   
 					   <tr>
 					       <th class="partition">
 					            <div id="allQuestionCountForWgOnly" style="display:block">
-					                <input type="radio" name="dailyReports" id="studCountForAllQuesForWgOnly" value="studCountForAllQuesForWgOnly" onclick="allQuesCount();"/>
+					                <s:if test="#session.dailyReports==@com.saiten.util.WebAppConst@STUD_COUNT_FOR_ALL_QUES_FOR_WG_ONLY">
+					                      <input type="radio" name="dailyReports" id="studCountForAllQuesForWgOnly" value="studCountForAllQuesForWgOnly" onclick="allQuesCount();" checked="checked"/>
+					                </s:if><s:else>
+					                     <input type="radio" name="dailyReports" id="studCountForAllQuesForWgOnly" value="studCountForAllQuesForWgOnly" onclick="allQuesCount();"/>
+					                </s:else>					                
 					            </div>
 					       </th>
 					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
 					            <font color ="white" title="calibri" size="11"><b><s:text name="label.ques.wise.stud.count.all.ques.for.wg.only"/></b></font>
 					       </td>
 					   </tr>
-					   
+					   <tr>
+					       <th class="partition">
+					            <div id="gradeIsAvailable" style="display:block">
+					              <s:if test="#session.dailyReports==@com.saiten.util.WebAppConst@GRADEWISE_COUNT_WHERE_GRADE_IS_AVAILABLE">
+					                   <input type="radio" name="dailyReports" id="gradeIsAvailable" value="gradeWiseCountGradeIsAvailable" onclick="allQuesCount();" checked="checked"/>
+					              </s:if><s:else>
+					                   <input type="radio" name="dailyReports" id="gradeIsAvailable" value="gradeWiseCountGradeIsAvailable" onclick="allQuesCount();"/>
+					              </s:else>					                
+					            </div>
+					       </th>
+					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
+					            <font color ="white" title="calibri" size="11"><b><s:text name="label.daily.reports.gradewise.count.where.grade.is.available"/></b></font>
+					       </td>
+					   </tr>
+					   <tr>
+					       <th class="partition">
+					            <div id="pendingCategoryIsSet" style="display:block">
+					                 <s:if test="#session.dailyReports==@com.saiten.util.WebAppConst@QUES_SEQ_WISE_COUNT_WHERE_PENDING_CATEGORY_IS_SET">
+					                     <input type="radio" name="dailyReports" id="pendingCategoryIsSet" value="pendingCategoryIsSet" onclick="allQuesCount();" checked="checked"/>
+					                 </s:if><s:else>
+					                     <input type="radio" name="dailyReports" id="pendingCategoryIsSet" value="pendingCategoryIsSet" onclick="allQuesCount();"/>
+					                 </s:else>           
+					            </div>
+					       </th>
+					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
+					            <font color ="white" title="calibri" size="11"><b><s:text name="label.daily.reports.question.seq.wise.count.where.pending.category.is.set"/></b></font>
+					       </td>
+					  </tr>
+					  <tr>
+					       <th class="partition">
+					            <div id="historyRecordsCount" style="display:block">
+					                <s:if test="#session.dailyReports==@com.saiten.util.WebAppConst@QUESTION_WISE_COUNT_FOR_HISTORY_RECORDS">					                  
+					                    <input type="radio" name="dailyReports" id="historyRecordsCount" value="historyRecordsCount" onclick="historyRecordCount();" checked="checked"/>   
+					                </s:if><s:else>					                    
+					                    <input type="radio" name="dailyReports" id="historyRecordsCount" value="historyRecordsCount" onclick="historyRecordCount();"/>
+					                </s:else>
+					             
+					            </div>
+					       </th>
+					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
+					            <font color ="white" title="calibri" size="11"><b><s:text name="label.daily.report.for.date.and.time.wise.count"/></b></font>
+					       </td>
+					   </tr>
+					   <tr>
+					       <th class="partition">
+					            <s:text name="label.daily.report.from.date"/>
+					       </th>
+					       <td style="border-right-width: 0px;" >&nbsp;&nbsp;&nbsp;
+					           <input type="date" name="dailyReportsInfo.fromDate" value='<s:property value="dailyReportsInfo.fromDate"/>' id="startDate" disabled="disabled"/>
+					      </td>
+					      <td style=" border-left-width: 0px;">
+					           <s:text name="label.hours"/>&nbsp;<s:select name="dailyReportsInfo.startHours" list="%{session.hoursMap}" id="startHours" disabled="true"></s:select> 
+							   &nbsp;<s:text name="label.minutes"/>&nbsp;<s:select name="dailyReportsInfo.startMinutes" list="%{session.minsMap}" id="startMinutes" disabled="true"></s:select>
+							   &nbsp;<s:text name="label.seconds"/>&nbsp;<s:select name="dailyReportsInfo.startSeconds" list="%{session.secsMap}" id="startSeconds" disabled="true"></s:select>
+					      </td>
+					   </tr>
+					   <tr>
+					       <th class="partition">
+					           <s:text name="label.daily.report.to.date"/>
+					       </th>
+					       <td style="border-right-width: 0px;">&nbsp;&nbsp;&nbsp;
+					           <input type="date" name="dailyReportsInfo.toDate" value='<s:property value="dailyReportsInfo.toDate"/>' id="endDate" disabled="disabled"/>
+					      </td>
+					      <td style=" border-left-width: 0px;">
+					           <s:text name="label.hours"/>&nbsp;<s:select name="dailyReportsInfo.endHours" list="%{session.hoursMap}" id="endHours" disabled="true"></s:select> 
+							   &nbsp;<s:text name="label.minutes"/>&nbsp;<s:select name="dailyReportsInfo.endMinutes" list="%{session.minsMap}" id="endMinutes" disabled="true"></s:select>
+							   &nbsp;<s:text name="label.seconds"/>&nbsp;<s:select name="dailyReportsInfo.endSeconds" list="%{session.secsMap}" id="endSeconds" disabled="true"></s:select>
+					      </td>
+					   </tr>
 				  </table>
 				</div>
 		</div><br/>

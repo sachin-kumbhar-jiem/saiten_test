@@ -21,6 +21,7 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 
 import com.saiten.dao.TranDescScoreHistoryDAO;
 import com.saiten.dao.support.SaitenHibernateDAOSupport;
+import com.saiten.info.DailyReportsInfo;
 import com.saiten.info.DailyScoreInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.info.RatingInfo;
@@ -2220,9 +2221,20 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		 * Date().getTime());
 		 */
 		try {
-			List answerRecordsList = getHibernateTemplate(
-					questionInfo.getConnectionString()).execute(
-					new HibernateCallback<List>() {
+			HibernateTemplate hibernateTemplate;
+			if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
+				hibernateTemplate = getHibernateTemplateReplica(questionInfo
+						.getConnectionString());
+				if (hibernateTemplate == null) {
+					hibernateTemplate = getHibernateTemplate(questionInfo
+							.getConnectionString());
+				}
+			} else {
+				hibernateTemplate = getHibernateTemplate(questionInfo
+						.getConnectionString());
+			}
+			List answerRecordsList = hibernateTemplate
+					.execute(new HibernateCallback<List>() {
 
 						public List doInHibernate(Session session)
 								throws HibernateException {
@@ -6041,6 +6053,61 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		} catch (RuntimeException re) {
 			throw re;
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getDateAndTimeWiseQuestionCount(
+			String connectionString, final DailyReportsInfo dailyReportsInfo) {
 
+		try {
+			final StringBuilder queryString = new StringBuilder();
+			queryString.append("SELECT ");
+			queryString
+					.append("th.question_seq, th.scoring_state,count(th.history_seq) ");
+			queryString.append("FROM ");
+			queryString.append("tran_desc_score_history th, ");
+			queryString.append("(SELECT max(history_seq) mhis_seq ");
+			queryString.append("FROM tran_desc_score_history t  where ");
+			queryString
+					.append("t.create_date BETWEEN :FROM_DATE AND :TO_DATE group by answer_seq) ");
+			queryString
+					.append("as thmax where th.history_seq = thmax.mhis_seq ");
+			queryString.append("group by  ");
+			queryString.append("th.scoring_state,th.question_seq");
+
+			HibernateTemplate hibernateTemplate = getHibernateTemplateReplica(connectionString);
+			if (hibernateTemplate == null) {
+				hibernateTemplate = getHibernateTemplate(connectionString);
+			}
+
+			return hibernateTemplate
+					.execute(new HibernateCallback<List<String>>() {
+						public List<String> doInHibernate(Session session)
+								throws HibernateException {
+							Query queryObj = session.createSQLQuery(queryString
+									.toString());
+							queryObj.setParameter("FROM_DATE",
+									dailyReportsInfo.fromDate
+											+ WebAppConst.SINGLE_SPACE
+											+ dailyReportsInfo.startHours
+											+ WebAppConst.COLON
+											+ dailyReportsInfo.startMinutes
+											+ WebAppConst.COLON
+											+ dailyReportsInfo.startSeconds);
+							queryObj.setParameter("TO_DATE",
+									dailyReportsInfo.toDate
+											+ WebAppConst.SINGLE_SPACE
+											+ dailyReportsInfo.endHours
+											+ WebAppConst.COLON
+											+ dailyReportsInfo.endMinutes
+											+ WebAppConst.COLON
+											+ dailyReportsInfo.endSeconds);
+							return queryObj.list();
+						}
+					});
+
+		} catch (RuntimeException re) {
+			throw re;
+		}
 	}
 }
