@@ -168,7 +168,12 @@ $(document).ready(function(){
 					    	    	     	"questionwiseFromValidDate" : {
 					    	    	     		checkForFromValidDayVal: DURATION_CHECK_LEAPYEAR_FROM_DATE
 					    	    	     	}
-				    	    		}
+				    	    		},
+				    	    	    submitHandler: function(form){
+				    	    	    	form.search.disabled = true;
+				    	    		    $('#search').addClass('btn-disabled');
+				    	    		    form.submit();
+				    	            }
 			
 	                });
 	    	    } // check if question num not null
@@ -200,7 +205,12 @@ $(document).ready(function(){
 		    	    	     	"questionwiseFromValidDate" : {
 		    	    	     		checkForFromValidDayVal: DURATION_CHECK_LEAPYEAR_FROM_DATE
 		    	    	     	}
-	    	    		}
+	    	    		},
+	    	    	    submitHandler: function(form){
+	    	    	    	form.search.disabled = true;
+	    	    		    $('#search').addClass('btn-disabled');
+	    	    		    form.submit();
+	    	            }
 	    	    	   });
 	    	    		
 	    	       }   

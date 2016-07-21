@@ -12,6 +12,12 @@
 		</s:elseif>
 	</tiles:putAttribute>
 	<tiles:putAttribute name="head-addition">
+	    <script type="text/javascript">
+		     function disableButton(){
+		       $("#showList").blur(); 
+		   	   $('#showList').addClass('btn-disabled');
+		     }
+  		</script>
 	</tiles:putAttribute>
 	<tiles:putAttribute name="body-title">
 		<!-- This portion will contain perticular page body title. -->
@@ -72,12 +78,12 @@
 								<p class="btn btn-disabled"><s:text name="label.alt.displayList"></s:text></p>
 							</s:if><s:else>
 								<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID">
-									<a href="loadForcedScoringList.action?forceAndStateTransitionFlag=<s:property value="%{@com.saiten.util.WebAppConst@TRUE}" />" class="btn btn-primary btn-xl">
+									<a href="loadForcedScoringList.action?forceAndStateTransitionFlag=<s:property value="%{@com.saiten.util.WebAppConst@TRUE}" />" class="btn btn-primary btn-xl" id="showList" onclick="disableButton()">
 										<!-- <img src="./material/img/button/search1_bn-login.gif" class="rollover"> -->
 										<s:text name="label.alt.displayList"></s:text>
   									</a>
 								</s:if><s:else>
-									<a href="showSearchList.action?forceAndStateTransitionFlag=<s:property value="%{@com.saiten.util.WebAppConst@TRUE}" />" class="btn btn-primary btn-xl">
+									<a href="showSearchList.action?forceAndStateTransitionFlag=<s:property value="%{@com.saiten.util.WebAppConst@TRUE}" />" class="btn btn-primary btn-xl" id="showList" onclick="disableButton()">
 										<!-- <img src="./material/img/button/search1_bn-login.gif" class="rollover"> -->
 										<s:text name="label.alt.displayList"></s:text>
   									</a>

@@ -379,7 +379,12 @@ $(document).ready(function(){
 			"currentDenyCategoryHidden" :{
 				checkCurrentDenyCategoryLength: MAX_LENGTH_DENY_CATEGORY_5
 			}
-	    }	    
+	    },
+	    submitHandler: function(form){
+	    	form.search.disabled = true;
+		    $('#search').addClass('btn-disabled');
+		    form.submit();
+        }
 	
 	});
 	

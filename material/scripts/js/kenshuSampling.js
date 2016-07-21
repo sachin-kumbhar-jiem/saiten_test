@@ -98,7 +98,12 @@ $(document).ready(function(){
 		        "acceptanceDisplayInfo.kenshuUserId" : {
 		        	required: REQUIRED
 		        }
-		 }
+		 },
+		    submitHandler: function(form){
+		    	form.kenshuSearch.disabled = true;
+			    $('#kenshuSearch').addClass('btn-disabled');
+			    form.submit();
+	        }
 		
 	});
 

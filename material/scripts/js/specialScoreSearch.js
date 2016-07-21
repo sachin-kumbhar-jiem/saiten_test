@@ -44,6 +44,9 @@ $(document).ready(function(){
 	        }
 	    },
 	    submitHandler : function(form) {
+	    	form.search.disabled = true;
+		    $('#search').addClass('btn-disabled');
+		    
 	    	var specialScoringType = $("input:radio[name='specialScoreInputInfo.specialScoringType']:checked").val();
 	    	
 	    	if($("#questionNum").val()!='') {

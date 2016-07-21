@@ -15,6 +15,21 @@
 				cursor: default;
 			}
 		</style>
+		
+		<script> 
+      		function clickAndDisable(id) {
+       			if(id == "gradeWiseReport"){
+        				$("#gradeWiseReport").blur(); 
+      					$('#gradeWiseReport').addClass('btn-disabled');
+       			}else if(id == "pendCatWiseRptDownload"){
+        				$("#pendCatWiseRptDownload").blur(); 
+      					$('#pendCatWiseRptDownload').addClass('btn-disabled');
+      			}else if(id == "markValueWiseRptDownload"){
+        				$("#markValueWiseRptDownload").blur(); 
+      					$('#markValueWiseRptDownload').addClass('btn-disabled');
+       			} 
+    		}
+  		</script>
 	</tiles:putAttribute>
 	<tiles:putAttribute name="body-title">
 		<!-- This portion will contain perticular page body title. -->
@@ -148,7 +163,7 @@
 			</table><br/>
 				<div align="right">
            	    	<s:if test="#session.gradeWiseReportList!=null && #session.gradeWiseReportList.size()!=0">
-			 			<a href="progressReportsDownload?reportType=<s:property value="@com.saiten.util.WebAppConst@GRADE_WISE_DETAILS_REPORT"/>" id="gradeWiseReport" name="gradeWiseReport" class="btn btn-primary btn-x3">
+			 			<a href="progressReportsDownload?reportType=<s:property value="@com.saiten.util.WebAppConst@GRADE_WISE_DETAILS_REPORT"/>" id="gradeWiseReport" name="gradeWiseReport" class="btn btn-primary btn-x3" onclick="clickAndDisable(this.id);">
 							<s:text name="label.submit.button.download"></s:text>
 			   			</a>&nbsp;&nbsp;
            	    	</s:if><s:else>
@@ -214,7 +229,7 @@
 			</table><br/>
 				<div align="right">
 				   <s:if test="#session.pendingCategoryWiseReportList!=null && #session.pendingCategoryWiseReportList.size()!=0">
-				   		<a href="progressReportsDownload?reportType=<s:property value="@com.saiten.util.WebAppConst@PENDING_CATEGORY_WISE_DETAILS_REPORT"/>" id="pendCatWiseRptDownload" name="pendCatWiseRpt" class="btn btn-primary btn-x3">
+				   		<a href="progressReportsDownload?reportType=<s:property value="@com.saiten.util.WebAppConst@PENDING_CATEGORY_WISE_DETAILS_REPORT"/>" id="pendCatWiseRptDownload" name="pendCatWiseRpt" class="btn btn-primary btn-x3" onclick="clickAndDisable(this.id);">
 					  		<s:text name="label.submit.button.download"></s:text>
 				   		</a>&nbsp;&nbsp;
 				   </s:if><s:else>
@@ -321,7 +336,7 @@
 			</table><br/>
 			  <div align="right">
 	           	   <s:if test="#session.markValueWiseReportList!=null && #session.markValueWiseReportList.size()!=0">
-	                	<a href="progressReportsDownload?reportType=<s:property value="@com.saiten.util.WebAppConst@MARK_VALUE_WISE_DETAILS_REPORT"/>" id="markValueWiseRptDownload" name="markValueWiseRpt" class="btn btn-primary btn-x3">
+	                	<a href="progressReportsDownload?reportType=<s:property value="@com.saiten.util.WebAppConst@MARK_VALUE_WISE_DETAILS_REPORT"/>" id="markValueWiseRptDownload" name="markValueWiseRpt" class="btn btn-primary btn-x3" onclick="clickAndDisable(this.id);">
 					  		<s:text name="label.submit.button.download"></s:text>
 				   		</a>&nbsp;&nbsp;
 	           	   </s:if><s:else>
