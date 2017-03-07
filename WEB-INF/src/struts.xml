@@ -14,7 +14,8 @@
 	<constant name="struts.ui.templateDir" value="template" />
 	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
 	<constant name="struts.enable.DynamicMethodInvocation" value="true"/>
-<constant name="struts.mapper.action.prefix.enabled" value="true"/>
+	<constant name="struts.mapper.action.prefix.enabled" value="true"/>
+	<constant name="struts.multipart.maxSize" value="52428800" />
 	
 	<!-- Jersey start -->
 	<constant name="struts.action.excludePattern" value="/service/.*"></constant>

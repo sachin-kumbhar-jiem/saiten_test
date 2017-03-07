@@ -122,9 +122,9 @@
 									</tr>
 							</table>	
 				    </div>
-				    		&nbsp;&nbsp;<s:text name="label.specialscoresearch.comment1"></s:text><br><br>
+				    		&nbsp;&nbsp;<span class="infoMsgColor"><s:text name="label.specialscoresearch.comment1"></s:text></span><br><br>
 				    		
-				    		<s:text name="label.specialscoresearch.comment2"></s:text><br><br>
+				    		<span class="infoMsgColor"><s:text name="label.specialscoresearch.comment2"></s:text></span><br><br>
 				    				
 				    				<a>
 							    		<%-- <s:submit type="image" src="./material/img/button/SerchCrt_bn-login.gif" cssClass="rollover infobutton_without_margin" id="search" cssStyle="width: 144px; height: 39px;" label="%{getText('label.next')}"/> --%>

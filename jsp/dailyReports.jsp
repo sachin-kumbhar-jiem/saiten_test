@@ -218,6 +218,21 @@
 							   &nbsp;<s:text name="label.seconds"/>&nbsp;<s:select name="dailyReportsInfo.endSeconds" list="%{session.secsMap}" id="endSeconds" disabled="true"></s:select>
 					      </td>
 					   </tr>
+					    <tr>
+					       <th class="partition">
+					            <div id="objectiveReport" style="display:block">
+					                <s:if test="#session.dailyReports==@com.saiten.util.WebAppConst@GRADE_WISE_OBJECTIVE_RECORDS">					                  
+					                    <input type="radio" name="dailyReports" id="objectiveReport" value="objectiveReport" onclick="objectiveRep();" checked="checked"/>   
+					                </s:if><s:else>					                    
+					                    <input type="radio" name="dailyReports" id="objectiveReport" value="objectiveReport" onclick="objectiveRep();"/>
+					                </s:else>
+					             
+					            </div>
+					       </th>
+					       <td colspan="5" style="padding-left: 30px;" bgcolor="#4A6C9A" > 
+					            <font color ="white" title="calibri" size="11"><b><s:text name="label.report.for.markvalue.objective.student.count"/></b></font>
+					       </td>
+					    </tr>
 				  </table>
 				</div>
 		</div><br/>

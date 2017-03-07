@@ -39,6 +39,7 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 	private RegisterScoreService registerScoreService;
 	private RegisterScoreByProcedureService registerScoreByProcedureService;
 	private Map<String, Object> session;
+	@SuppressWarnings("unused")
 	private SaitenTransactionManager saitenTransactionManager;
 	private boolean lockFlag;
 	public static final String FAILURE = "failure";
@@ -73,31 +74,24 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 		try {
 
 			Date logActionStartTime = new Date();
-			MstScorerInfo scorerInfo = (MstScorerInfo) session
-					.get("scorerInfo");
+			MstScorerInfo scorerInfo = (MstScorerInfo) session.get("scorerInfo");
 			String menuId = questionInfo.getMenuId();
-			TranDescScoreInfo tranDescScoreInfo = (TranDescScoreInfo) session
-					.get("tranDescScoreInfo");
+			TranDescScoreInfo tranDescScoreInfo = (TranDescScoreInfo) session.get("tranDescScoreInfo");
 			AnswerInfo answerInfo = tranDescScoreInfo.getAnswerInfo();
-			Integer gradeSeq = ((GradeInfo) session.get("gradeInfo"))
-					.getGradeSeq();
-			String gradeNumText = ((GradeInfo) session.get("gradeInfo"))
-					.getGradeNum();
+			Integer gradeSeq = ((GradeInfo) session.get("gradeInfo")).getGradeSeq();
+			String gradeNumText = ((GradeInfo) session.get("gradeInfo")).getGradeNum();
 			Integer gradeNum = null;
 			if (gradeNumText != null) {
 				if (!gradeNumText.contains("-")) {
 					gradeNum = Integer.valueOf(gradeNumText);
 				}
 			}
-			log.info(scorerInfo.getScorerId() + "-" + menuId + "-"
-					+ "Record going to score \n TranDescScoreInfo: "
-					+ tranDescScoreInfo + " \n Grade Seq: " + gradeSeq
-					+ ", Grade Num: " + gradeNum + ", Timestamp: "
+			log.info(scorerInfo.getScorerId() + "-" + menuId + "-" + "Record going to score \n TranDescScoreInfo: "
+					+ tranDescScoreInfo + " \n Grade Seq: " + gradeSeq + ", Grade Num: " + gradeNum + ", Timestamp: "
 					+ new Date().getTime() + "}");
 			Short denyCategory = null;
 			if (approveOrDeny.equals(WebAppConst.DENY)) {
-				denyCategory = SaitenUtil
-						.getDenyCategoryByDenyCategorySeq(denyCategorySeq);
+				denyCategory = SaitenUtil.getDenyCategoryByDenyCategorySeq(denyCategorySeq);
 			}
 			historyRecordCount = (Integer) session.get("historyRecordCount");
 
@@ -114,23 +108,19 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 				isQcRecord = (Boolean) session.get("isQcRecord");
 			}
 
-			if ((qcAnswerSeqList != null && !qcAnswerSeqList.isEmpty()
-					&& (isQcRecord != null && isQcRecord) && (tranDescScoreInfo
-					.getAnswerInfo().getHistorySeq() == null))
+			if ((qcAnswerSeqList != null && !qcAnswerSeqList.isEmpty() && (isQcRecord != null && isQcRecord)
+					&& (tranDescScoreInfo.getAnswerInfo().getHistorySeq() == null))
 					|| (tranDescScoreInfo.getAnswerInfo().getQcSeq() != null)) {
 				// register qc answer using stored procedure.
 				// NOTE: for register without using stored procedure replace
 				// 'registerScoreByProcedureService' with 'registerScoreService'
 				// in below line.
-				lockFlag = registerScoreByProcedureService.registerQcScoring(
-						questionInfo, scorerInfo, answerInfo, gradeSeq,
-						gradeNum, session.get("approveOrDeny").toString(),
-						tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
-						historyRecordCount,
+				lockFlag = registerScoreByProcedureService.registerQcScoring(questionInfo, scorerInfo, answerInfo,
+						gradeSeq, gradeNum, session.get("approveOrDeny").toString(),
+						tranDescScoreInfo.getAnswerInfo().getUpdateDate(), historyRecordCount,
 						tranDescScoreInfo.getAnswerFormNumber());
 				if (tranDescScoreInfo.getAnswerInfo().getQcSeq() == null) {
-					qcAnswerSeqList.remove(Integer.valueOf(answerInfo
-							.getAnswerSeq()));
+					qcAnswerSeqList.remove(Integer.valueOf(answerInfo.getAnswerSeq()));
 					session.remove("isQcRecord");
 				}
 				session.put("qcAnswerSeqList", qcAnswerSeqList);
@@ -142,39 +132,24 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 				// procedure.
 				if (menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID)
 						|| menuId.equals(WebAppConst.SECOND_SCORING_MENU_ID)
-						|| menuId.equals(WebAppConst.CHECKING_MENU_ID)
-						|| menuId.equals(WebAppConst.DENY_MENU_ID)
-						|| menuId.equals(WebAppConst.PENDING_MENU_ID)
-						|| menuId.equals(WebAppConst.INSPECTION_MENU_ID)
-						|| menuId.equals(WebAppConst.MISMATCH_MENU_ID)
-						|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
+						|| menuId.equals(WebAppConst.CHECKING_MENU_ID) || menuId.equals(WebAppConst.DENY_MENU_ID)
+						|| menuId.equals(WebAppConst.PENDING_MENU_ID) || menuId.equals(WebAppConst.INSPECTION_MENU_ID)
+						|| menuId.equals(WebAppConst.MISMATCH_MENU_ID) || menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
 						|| menuId.equals(WebAppConst.OUT_BOUNDARY_MENU_ID)
-						|| menuId
-								.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)
-						|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
-						|| menuId.equals(WebAppConst.FORCED_MENU_ID)
-						|| menuId
-								.equals(WebAppConst.SPECIAL_SCORING_BLIND_TYPE_MENU_ID)
-						|| menuId
-								.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID)
-						|| menuId
-								.equals(WebAppConst.SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID)
-						|| menuId
-								.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)) {
-					lockFlag = registerScoreByProcedureService.registerScoring(
-							questionInfo, scorerInfo, answerInfo, gradeSeq,
-							gradeNum, denyCategorySeq, denyCategory, session
-									.get("approveOrDeny").toString(),
-							tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
-							historyRecordCount, tranDescScoreInfo
-									.getAnswerFormNumber());
+						|| menuId.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)
+						|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID)
+						|| menuId.equals(WebAppConst.SPECIAL_SCORING_BLIND_TYPE_MENU_ID)
+						|| menuId.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID)
+						|| menuId.equals(WebAppConst.SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID)
+						|| menuId.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)) {
+					lockFlag = registerScoreByProcedureService.registerScoring(questionInfo, scorerInfo, answerInfo,
+							gradeSeq, gradeNum, denyCategorySeq, denyCategory, session.get("approveOrDeny").toString(),
+							tranDescScoreInfo.getAnswerInfo().getUpdateDate(), historyRecordCount,
+							tranDescScoreInfo.getAnswerFormNumber());
 				} else {
-					lockFlag = registerScoreService.registerScoring(
-							questionInfo, scorerInfo, answerInfo, gradeSeq,
-							gradeNum, denyCategorySeq, denyCategory, session
-									.get("approveOrDeny").toString(),
-							tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
-							historyRecordCount);
+					lockFlag = registerScoreService.registerScoring(questionInfo, scorerInfo, answerInfo, gradeSeq,
+							gradeNum, denyCategorySeq, denyCategory, session.get("approveOrDeny").toString(),
+							tranDescScoreInfo.getAnswerInfo().getUpdateDate(), historyRecordCount);
 				}
 
 			}
@@ -185,8 +160,7 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 
 			Date logActionEndTime = new Date();
 			String actionName = "registerScore";
-			long total = logActionEndTime.getTime()
-					- logActionStartTime.getTime();
+			long total = logActionEndTime.getTime() - logActionStartTime.getTime();
 			log.info(actionName + "-Total: " + total);
 		} catch (SaitenRuntimeException we) {
 			/*
@@ -201,34 +175,27 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 			 * platformTransactionManager.rollback(transactionStatus);
 			 */
 
-			throw new SaitenRuntimeException(
-					ErrorCode.REGISTER_SCORE_ACTION_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.REGISTER_SCORE_ACTION_EXCEPTION, e);
 		}
 
-		return !lockFlag ? getRedirectAction(questionInfo.getMenuId(),
-				historyRecordCount, historyScreenFlag) : FAILURE;
+		return !lockFlag ? getRedirectAction(questionInfo.getMenuId(), historyRecordCount, historyScreenFlag) : FAILURE;
 	}
 
-	private String getRedirectAction(String menuId, Integer historyRecordCount,
-			Boolean historyScreenFlag) {
+	private String getRedirectAction(String menuId, Integer historyRecordCount, Boolean historyScreenFlag) {
 
 		String redirectAction = null;
 
-		TranDescScoreInfo sessionTranDescScoreInfo = (TranDescScoreInfo) session
-				.get("tranDescScoreInfo");
-		if(historyScreenFlag != null && historyScreenFlag) {
+		TranDescScoreInfo sessionTranDescScoreInfo = (TranDescScoreInfo) session.get("tranDescScoreInfo");
+		if (historyScreenFlag != null && historyScreenFlag && !menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 			return RESET_SCORE_HISTORY;
 		}
-		if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
-				&& (sessionTranDescScoreInfo == null)) {
+		if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID) && (sessionTranDescScoreInfo == null)) {
 			return SCORE_SAMPLING;
 		}
-		if (menuId.equals(WebAppConst.FORCED_MENU_ID)
-				&& (sessionTranDescScoreInfo == null)) {
+		if (menuId.equals(WebAppConst.FORCED_MENU_ID) && (sessionTranDescScoreInfo == null)) {
 			redirectAction = BACK_TO_FORCED_SCORING_LIST;
-		} else if (((menuId
-				.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID) || menuId
-				.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)) && historyRecordCount != null)
+		} else if (((menuId.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID)
+				|| menuId.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)) && historyRecordCount != null)
 				&& sessionTranDescScoreInfo == null) {
 			redirectAction = SPECIAL_SAMPLING;
 		} else {
@@ -242,10 +209,8 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 	 * @param tranDescScoreInfo
 	 */
 	private void updateSessionInfo(TranDescScoreInfo tranDescScoreInfo) {
-		QuestionInfo sessionQuestionInfo = (QuestionInfo) session
-				.get("questionInfo");
-		TranDescScoreInfo tranDescScoreInfoCopy = (TranDescScoreInfo) session
-				.get("tranDescScoreInfoCopy");
+		QuestionInfo sessionQuestionInfo = (QuestionInfo) session.get("questionInfo");
+		TranDescScoreInfo tranDescScoreInfoCopy = (TranDescScoreInfo) session.get("tranDescScoreInfoCopy");
 		String menuId = sessionQuestionInfo.getMenuId();
 
 		if ((tranDescScoreInfo.getAnswerInfo().getHistorySeq() != null)
@@ -262,31 +227,22 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 			if (!lockFlag) {
 				// Do not update historyRecordCount if lock is acquired by two
 				// or more users
-				if (menuId
-						.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID)
-						|| menuId
-								.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)) {
-					session.put("historyRecordCount",
-							(Integer) session.get("historyRecordCount") + 1);
+				if (menuId.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID)
+						|| menuId.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)) {
+					session.put("historyRecordCount", (Integer) session.get("historyRecordCount") + 1);
 				} else {
-					sessionQuestionInfo
-							.setHistoryRecordCount(sessionQuestionInfo
-									.getHistoryRecordCount() + 1);
+					sessionQuestionInfo.setHistoryRecordCount(sessionQuestionInfo.getHistoryRecordCount() + 1);
 				}
 			}
 		}
 
 		// Re-initialize prev and next history counters
 		if (menuId.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID)
-				|| menuId
-						.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)) {
-			session.put("prevRecordCount",
-					(Integer) session.get("historyRecordCount"));
-			session.put("nextRecordCount",
-					(Integer) WebAppConst.MINUS_ONE.intValue());
+				|| menuId.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)) {
+			session.put("prevRecordCount", (Integer) session.get("historyRecordCount"));
+			session.put("nextRecordCount", (Integer) WebAppConst.MINUS_ONE.intValue());
 		} else {
-			sessionQuestionInfo.setPrevRecordCount(sessionQuestionInfo
-					.getHistoryRecordCount());
+			sessionQuestionInfo.setPrevRecordCount(sessionQuestionInfo.getHistoryRecordCount());
 			sessionQuestionInfo.setNextRecordCount(WebAppConst.MINUS_ONE);
 
 			session.put("questionInfo", sessionQuestionInfo);
@@ -298,26 +254,20 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public String update() {
-		List scoreSamplingInfoList = (List<ScoreSamplingInfo>) session
-				.get("scoreSamplingInfoList");
+		List scoreSamplingInfoList = (List<ScoreSamplingInfo>) session.get("scoreSamplingInfoList");
 		MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 		if (selectAllFlag == true) {
-			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId()
-					+ "-" + "Set inspection flag for all searched records.");
+			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId() + "-"
+					+ "Set inspection flag for all searched records.");
 			totalRecordsCount = (Integer) session.get("searchResultCount");
 		} else {
-			log.info(scorerInfo.getScorerId()
-					+ "-"
-					+ questionInfo.getMenuId()
-					+ "-"
-					+ "Set inspection flag for selected records. \n Answer Sequences: "
-					+ answerSeq);
+			log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId() + "-"
+					+ "Set inspection flag for selected records. \n Answer Sequences: " + answerSeq);
 			totalRecordsCount = answerSeq.size();
 		}
 
-		ScoreInputInfo scoreInputInfo = (ScoreInputInfo) session
-				.get("scoreInputInfo");
+		ScoreInputInfo scoreInputInfo = (ScoreInputInfo) session.get("scoreInputInfo");
 		/*
 		 * Short[] currentStateList = null; if
 		 * (scoreInputInfo.getScoreCurrentInfo() != null) { currentStateList =
@@ -325,13 +275,11 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 		 */
 
 		synchronized (RegisterScoreAction.class) {
-			Integer inspectGroupSeq = registerScoreService
-					.findMaxInspectGroupSeq(questionInfo.getQuestionSeq(),
-							questionInfo.getConnectionString());
+			Integer inspectGroupSeq = registerScoreService.findMaxInspectGroupSeq(questionInfo.getQuestionSeq(),
+					questionInfo.getConnectionString());
 
-			updatedCount = registerScoreService.updateInspectFlag(answerSeq,
-					questionInfo, scoreSamplingInfoList, selectAllFlag,
-					scoreInputInfo, inspectGroupSeq);
+			updatedCount = registerScoreService.updateInspectFlag(answerSeq, questionInfo, scoreSamplingInfoList,
+					selectAllFlag, scoreInputInfo, inspectGroupSeq);
 
 			session.put("inspectGroupSeq", inspectGroupSeq);
 		}
@@ -366,8 +314,7 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 	 * 
 	 * @param saitenTransactionManager
 	 */
-	public void setSaitenTransactionManager(
-			SaitenTransactionManager saitenTransactionManager) {
+	public void setSaitenTransactionManager(SaitenTransactionManager saitenTransactionManager) {
 		this.saitenTransactionManager = saitenTransactionManager;
 	}
 
@@ -375,8 +322,7 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 	 * 
 	 * @param registerScoreService
 	 */
-	public void setRegisterScoreService(
-			RegisterScoreService registerScoreService) {
+	public void setRegisterScoreService(RegisterScoreService registerScoreService) {
 		this.registerScoreService = registerScoreService;
 	}
 
@@ -476,8 +422,7 @@ public class RegisterScoreAction extends ActionSupport implements SessionAware {
 	 * @param registerScoreByProcedureService
 	 *            the registerScoreByProcedureService to set
 	 */
-	public void setRegisterScoreByProcedureService(
-			RegisterScoreByProcedureService registerScoreByProcedureService) {
+	public void setRegisterScoreByProcedureService(RegisterScoreByProcedureService registerScoreByProcedureService) {
 		this.registerScoreByProcedureService = registerScoreByProcedureService;
 	}
 

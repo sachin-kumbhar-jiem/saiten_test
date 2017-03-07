@@ -12,6 +12,7 @@ import com.saiten.util.SaitenUtil;
  */
 public class HistoryInfo {
 
+	private Integer answerSeq;
 	private String answerNumber;
 	private Character bookmarkFlag;
 	private String comment;
@@ -28,6 +29,14 @@ public class HistoryInfo {
 	private Integer qcSeq;
 	private boolean qcFlag;
 	private int isQualityRecord;
+
+	public Integer getAnswerSeq() {
+		return answerSeq;
+	}
+
+	public void setAnswerSeq(Integer answerSeq) {
+		this.answerSeq = answerSeq;
+	}
 
 	public String getAnswerNumber() {
 		return answerNumber;
@@ -142,56 +151,40 @@ public class HistoryInfo {
 			return false;
 		HistoryInfo castOther = (HistoryInfo) other;
 
-		return ((this.getHistorySequence() == castOther.getHistorySequence()) || (this
-				.getHistorySequence() != null
-				&& castOther.getHistorySequence() != null && this
-				.getHistorySequence().equals(castOther.getHistorySequence())))
-				&& (this.getConnectionString() == castOther
-						.getConnectionString() || (this.getConnectionString() != null
-						&& castOther.getConnectionString() != null && this
-						.getConnectionString().equals(
-								castOther.getConnectionString())));
+		return ((this.getHistorySequence() == castOther.getHistorySequence())
+				|| (this.getHistorySequence() != null && castOther.getHistorySequence() != null
+						&& this.getHistorySequence().equals(castOther.getHistorySequence())))
+				&& (this.getConnectionString() == castOther.getConnectionString()
+						|| (this.getConnectionString() != null && castOther.getConnectionString() != null
+								&& this.getConnectionString().equals(castOther.getConnectionString())));
 	}
 
 	public int hashCode() {
 		int result = 17;
 
-		result = 37
-				* result
-				+ (getHistorySequence() == null ? 0 : this.getHistorySequence()
-						.hashCode());
-		result = 37
-				* result
-				+ (getConnectionString() == null ? 0 : this
-						.getConnectionString().hashCode());
+		result = 37 * result + (getHistorySequence() == null ? 0 : this.getHistorySequence().hashCode());
+		result = 37 * result + (getConnectionString() == null ? 0 : this.getConnectionString().hashCode());
 		return result;
 	}
 
 	public void copy(TranDescScoreHistory tranDescScoreHistory) {
 		this.setBookmarkFlag(tranDescScoreHistory.getBookMarkFlag());
 		this.setAnswerNumber(tranDescScoreHistory.getAnswerFormNum());
-		this.setScoringStateName(SaitenUtil
-				.getStateNameByScoringState((Short) tranDescScoreHistory
-						.getScoringState()));
+		this.setScoringStateName(SaitenUtil.getStateNameByScoringState((Short) tranDescScoreHistory.getScoringState()));
 		this.setUpdateDate(tranDescScoreHistory.getUpdateDate());
 		Integer gradeSeq = tranDescScoreHistory.getGradeSeq();
 		Integer questionSeqence = tranDescScoreHistory.getQuestionSeq();
 		if (gradeSeq != null) {
-			this.setGradeNum(SaitenUtil.getGradeNumByGradeSequence(gradeSeq,
-					questionSeqence));
-			this.setResult(SaitenUtil.getResultByGradeSequence(gradeSeq,
-					questionSeqence));
+			this.setGradeNum(SaitenUtil.getGradeNumByGradeSequence(gradeSeq, questionSeqence));
+			this.setResult(SaitenUtil.getResultByGradeSequence(gradeSeq, questionSeqence));
 		}
-		this.setPendingCategory(SaitenUtil
-				.getPendingCategoryByPendingCategorySeq(tranDescScoreHistory
-						.getPendingCategorySeq()));
+		this.setPendingCategory(
+				SaitenUtil.getPendingCategoryByPendingCategorySeq(tranDescScoreHistory.getPendingCategorySeq()));
 		this.setComment(tranDescScoreHistory.getScorerComment());
 		this.setQuestionSequence(questionSeqence);
 		this.setConnectionString(connectionString);
-		this.setSubjectName(SaitenUtil
-				.getSubjectNameByQuestionSequence(questionSeqence));
-		this.setQuestionNumber(SaitenUtil
-				.getQuestionNumByQuestionSequence(questionSeqence));
+		this.setSubjectName(SaitenUtil.getSubjectNameByQuestionSequence(questionSeqence));
+		this.setQuestionNumber(SaitenUtil.getQuestionNumByQuestionSequence(questionSeqence));
 	}
 
 	/**
@@ -232,11 +225,11 @@ public class HistoryInfo {
 	}
 
 	/**
-	 * @param isQualityRecord the isQualityRecord to set
+	 * @param isQualityRecord
+	 *            the isQualityRecord to set
 	 */
 	public void setIsQualityRecord(int isQualityRecord) {
 		this.isQualityRecord = isQualityRecord;
 	}
-
 
 }

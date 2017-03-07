@@ -48,3 +48,13 @@
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
 />
+<#assign hasFieldErrors = parameters.name?exists && fieldErrors?exists && fieldErrors[parameters.name]?exists/>
+<#if hasFieldErrors>
+
+<#list fieldErrors[parameters.name] as error>
+    <#rt/>
+        </BR><span class="errorMessage">${error?html}</span><#t/>
+    <#lt/>
+</#list>
+
+</#if>

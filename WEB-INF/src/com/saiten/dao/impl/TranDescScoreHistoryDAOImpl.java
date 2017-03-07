@@ -38,8 +38,7 @@ import com.saiten.util.WebAppConst;
  * @version 1.0
  * @created 11-Dec-2012 12:56:32 PM
  */
-public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
-		implements TranDescScoreHistoryDAO {
+public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport implements TranDescScoreHistoryDAO {
 
 	/*
 	 * (non-Javadoc)
@@ -50,8 +49,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public int findHistoryRecordCount(String scorerId,
-			List<Integer> questionSeq, String connectionString,
+	public int findHistoryRecordCount(String scorerId, List<Integer> questionSeq, String connectionString,
 			List<Short> scoringStateList, boolean bookmarkScreenFlag) {
 		StringBuilder query = new StringBuilder();
 
@@ -103,14 +101,13 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			valueList.add(new Date());
 		}
 
-		String[] paramNames = paramNameList.toArray(new String[paramNameList
-				.size()]);
+		String[] paramNames = paramNameList.toArray(new String[paramNameList.size()]);
 		Object[] values = valueList.toArray(new Object[valueList.size()]);
 
 		try {
 			return Integer.valueOf(DataAccessUtils.uniqueResult(
-					getHibernateTemplate(connectionString).findByNamedParam(
-							query.toString(), paramNames, values)).toString());
+					getHibernateTemplate(connectionString).findByNamedParam(query.toString(), paramNames, values))
+					.toString());
 
 		} catch (RuntimeException re) {
 			throw re;
@@ -127,10 +124,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List findHistoryInfoList(final String scorerId,
-			final List<Short> scoringStateList,
-			final List<Integer> questionSequence,
-			final String connectionString, final Integer startRecord,
+	public List findHistoryInfoList(final String scorerId, final List<Short> scoringStateList,
+			final List<Integer> questionSequence, final String connectionString, final Integer startRecord,
 			final Integer endRecord, final boolean bookmarkScreenFlag) {
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT tranDescScoreHistory.historySeq, ");
@@ -142,7 +137,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("tranDescScoreHistory.pendingCategorySeq, ");
 		query.append("tranDescScoreHistory.scorerComment, ");
 		query.append("tranDescScoreHistory.questionSeq, ");
-		query.append("tranDescScoreHistory.qualityCheckFlag ");
+		query.append("tranDescScoreHistory.qualityCheckFlag, ");
+		query.append(" tranDescScoreHistory.tranDescScore.answerSeq ");
 		query.append("FROM TranDescScoreHistory as tranDescScoreHistory ");
 		query.append("WHERE tranDescScoreHistory.scorerId = :SCORER_ID ");
 		query.append("AND tranDescScoreHistory.questionSeq IN :QUESTION_SEQUENCE ");
@@ -164,34 +160,27 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 		try {
 
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<List>() {
-						public List doInHibernate(Session session)
-								throws HibernateException {
-							Query queryObj = session.createQuery(query
-									.toString());
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<List>() {
+				public List doInHibernate(Session session) throws HibernateException {
+					Query queryObj = session.createQuery(query.toString());
 
-							queryObj.setParameter("SCORER_ID", scorerId);
-							queryObj.setParameterList("QUESTION_SEQUENCE",
-									questionSequence);
-							queryObj.setParameterList("SCORING_STATE_LIST",
-									scoringStateList);
-							queryObj.setParameter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							if (bookmarkScreenFlag) {
-								queryObj.setParameter("BOOKMARK_FLAG_TRUE",
-										WebAppConst.BOOKMARK_FLAG_TRUE);
-							} else {
-								queryObj.setParameter("CREATE_DATE", new Date());
-							}
+					queryObj.setParameter("SCORER_ID", scorerId);
+					queryObj.setParameterList("QUESTION_SEQUENCE", questionSequence);
+					queryObj.setParameterList("SCORING_STATE_LIST", scoringStateList);
+					queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					if (bookmarkScreenFlag) {
+						queryObj.setParameter("BOOKMARK_FLAG_TRUE", WebAppConst.BOOKMARK_FLAG_TRUE);
+					} else {
+						queryObj.setParameter("CREATE_DATE", new Date());
+					}
 
-							if (endRecord != null) {
-								queryObj.setFirstResult(startRecord);
-								queryObj.setMaxResults(endRecord);
-							}
-							return queryObj.list();
-						}
-					});
+					if (endRecord != null) {
+						queryObj.setFirstResult(startRecord);
+						queryObj.setMaxResults(endRecord);
+					}
+					return queryObj.list();
+				}
+			});
 
 		} catch (RuntimeException re) {
 			throw re;
@@ -199,27 +188,28 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	}
 
 	@SuppressWarnings("rawtypes")
-	public List findQcAndHistoryInfoList(final String scorerId,
-			final List<Short> scoringStateList,
-			final List<Integer> questionSequence,
-			final String connectionString, final Integer startRecord,
+	public List findQcAndHistoryInfoList(final String scorerId, final List<Short> scoringStateList,
+			final List<Integer> questionSequence, final String connectionString, final Integer startRecord,
 			final Integer endRecord, final boolean bookmarkScreenFlag) {
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT unr.seq,unr.flag,unr.answer_form_num, ");
 		query.append("unr.scoring_state,unr.update_date, ");
 		query.append("unr.grade_seq,unr.pending_category_seq, ");
-		query.append("unr.scorer_comment,unr.question_seq,unr.tbl from ");
-		query.append("(SELECT tran_history.history_seq As seq, tran_history.book_mark_flag As flag, tran_history.answer_form_num, ");
+		query.append("unr.scorer_comment,unr.question_seq,unr.tbl,unr.answer_seq from ");
+		query.append(
+				"(SELECT tran_history.history_seq As seq, tran_history.book_mark_flag As flag, tran_history.answer_form_num, ");
 		query.append("tran_history.scoring_state, tran_history.update_date, tran_history.grade_seq, ");
 		query.append("tran_history.pending_category_seq, tran_history.scorer_comment, ");
-		query.append("tran_history.question_seq, 0 as tbl ");
+		query.append("tran_history.question_seq, 0 as tbl, ");
+		query.append("tran_history.answer_seq ");
 		query.append("FROM tran_desc_score_history as tran_history ");
 		query.append("JOIN tran_desc_score as tran ");
 		query.append("WHERE tran_history.answer_seq = tran.answer_seq ");
 		query.append("AND tran_history.scorer_id = :SCORER_ID ");
 		query.append("AND tran_history.question_seq IN :QUESTION_SEQUENCE ");
 		query.append("AND tran_history.scoring_state IN :SCORING_STATE_LIST ");
-		query.append("AND tran_history.valid_flag = :VALID_FLAG AND DATE_FORMAT(tran_history.create_date, '%Y-%m-%d') = DATE_FORMAT(:CREATE_DATE, '%Y-%m-%d') ");
+		query.append(
+				"AND tran_history.valid_flag = :VALID_FLAG AND DATE_FORMAT(tran_history.create_date, '%Y-%m-%d') = DATE_FORMAT(:CREATE_DATE, '%Y-%m-%d') ");
 		query.append("AND tran.latest_scorer_id = :SCORER_ID ");
 		query.append("AND tran.question_seq IN :QUESTION_SEQUENCE ");
 		query.append("AND tran.latest_scoring_state IN :SCORING_STATE_LIST ");
@@ -230,7 +220,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("SELECT qc_seq As seq, ref_flag As flag, answer_form_num, ");
 		query.append("scoring_state, update_date, grade_seq, ");
 		query.append("pending_category_seq, scorer_comment, ");
-		query.append("question_seq, 1 as tbl ");
+		query.append("question_seq, 1 as tbl, ");
+		query.append("answer_seq ");
 		query.append("FROM tran_qualitycheck_score ");
 		query.append("WHERE scorer_id = :SCORER_ID ");
 		query.append("AND question_seq IN :QUESTION_SEQUENCE ");
@@ -248,34 +239,28 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 		try {
 
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<List>() {
-						public List doInHibernate(Session session)
-								throws HibernateException {
-							SQLQuery queryObj = session.createSQLQuery(query
-									.toString());
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<List>() {
+				public List doInHibernate(Session session) throws HibernateException {
+					SQLQuery queryObj = session.createSQLQuery(query.toString());
 
-							queryObj.setParameter("SCORER_ID", scorerId);
-							queryObj.setParameterList("QUESTION_SEQUENCE",
-									questionSequence);
-							queryObj.setParameterList("SCORING_STATE_LIST",
-									scoringStateList);
-							queryObj.setParameter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							queryObj.setParameter("CREATE_DATE", new Date());
-							/*
-							 * if (bookmarkScreenFlag) {
-							 * queryObj.setParameter("BOOKMARK_FLAG_TRUE",
-							 * WebAppConst.BOOKMARK_FLAG_TRUE); }
-							 */
+					queryObj.setParameter("SCORER_ID", scorerId);
+					queryObj.setParameterList("QUESTION_SEQUENCE", questionSequence);
+					queryObj.setParameterList("SCORING_STATE_LIST", scoringStateList);
+					queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					queryObj.setParameter("CREATE_DATE", new Date());
+					/*
+					 * if (bookmarkScreenFlag) {
+					 * queryObj.setParameter("BOOKMARK_FLAG_TRUE",
+					 * WebAppConst.BOOKMARK_FLAG_TRUE); }
+					 */
 
-							if (endRecord != null) {
-								queryObj.setFirstResult(startRecord);
-								queryObj.setMaxResults(endRecord);
-							}
-							return queryObj.list();
-						}
-					});
+					if (endRecord != null) {
+						queryObj.setFirstResult(startRecord);
+						queryObj.setMaxResults(endRecord);
+					}
+					return queryObj.list();
+				}
+			});
 
 		} catch (RuntimeException re) {
 			throw re;
@@ -289,11 +274,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * java.lang.String)
 	 */
 	@Override
-	public TranDescScoreHistory findById(Integer historySeq,
-			String connectionString) {
+	public TranDescScoreHistory findById(Integer historySeq, String connectionString) {
 		try {
-			return getHibernateTemplate(connectionString).get(
-					TranDescScoreHistory.class, historySeq);
+			return getHibernateTemplate(connectionString).get(TranDescScoreHistory.class, historySeq);
 		} catch (RuntimeException re) {
 			throw re;
 		}
@@ -302,9 +285,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.saiten.dao.TranDescScoreHistoryDAO#findHistoryAnswer(java.lang.Integer
-	 * , java.lang.String)
+	 * @see com.saiten.dao.TranDescScoreHistoryDAO#findHistoryAnswer(java.lang.
+	 * Integer , java.lang.String)
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -324,13 +306,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("AND tranDescScoreHistory.tranDescScore.validFlag = :VALID_FLAG ");
 
 		String[] paramNames = { "HISTORY_SEQUENCE", "VALID_FLAG", "UNLOCK" };
-		Object[] values = { historySeq, WebAppConst.VALID_FLAG,
-				WebAppConst.UNLOCK };
+		Object[] values = { historySeq, WebAppConst.VALID_FLAG, WebAppConst.UNLOCK };
 		try {
 			HibernateTemplate hibernateTemplate = getHibernateTemplate(connectionString);
 
-			return hibernateTemplate.findByNamedParam(query.toString(),
-					paramNames, values);
+			return hibernateTemplate.findByNamedParam(query.toString(), paramNames, values);
 		} catch (RuntimeException re) {
 			throw re;
 		}
@@ -343,8 +323,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * TranDescScoreHistory, java.lang.String)
 	 */
 	@Override
-	public void save(TranDescScoreHistory tranDescScoreHistory,
-			String connectionString) {
+	public void save(TranDescScoreHistory tranDescScoreHistory, String connectionString) {
 		try {
 			getHibernateTemplate(connectionString).save(tranDescScoreHistory);
 		} catch (RuntimeException re) {
@@ -360,8 +339,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * java.lang.String)
 	 */
 	@Override
-	public int deleteBookmarks(final List<Integer> historySequenceList,
-			final String connectionString) {
+	public int deleteBookmarks(final List<Integer> historySequenceList, final String connectionString) {
 		final StringBuilder query = new StringBuilder();
 		query.append("UPDATE TranDescScoreHistory ");
 		query.append("SET bookMarkFlag= :BOOKMARK_FLAG_FALSE ");
@@ -369,22 +347,17 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("WHERE historySeq IN :HISTORY_SEQUENCE_LIST ");
 
 		try {
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<Integer>() {
-						public Integer doInHibernate(Session session)
-								throws HibernateException {
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<Integer>() {
+				public Integer doInHibernate(Session session) throws HibernateException {
 
-							Query queryObj = session.createQuery(query
-									.toString());
+					Query queryObj = session.createQuery(query.toString());
 
-							queryObj.setParameter("BOOKMARK_FLAG_FALSE",
-									WebAppConst.BOOKMARK_FLAG_FALSE);
-							queryObj.setParameterList("HISTORY_SEQUENCE_LIST",
-									historySequenceList);
-							queryObj.setParameter("CREATE_DATE", new Date());
-							return queryObj.executeUpdate();
-						}
-					});
+					queryObj.setParameter("BOOKMARK_FLAG_FALSE", WebAppConst.BOOKMARK_FLAG_FALSE);
+					queryObj.setParameterList("HISTORY_SEQUENCE_LIST", historySequenceList);
+					queryObj.setParameter("CREATE_DATE", new Date());
+					return queryObj.executeUpdate();
+				}
+			});
 		} catch (RuntimeException re) {
 			throw re;
 		}
@@ -400,10 +373,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List findPrevOrNextHistoryAnswer(final int quetionSeq,
-			final String menuId, final String scorerId,
-			final String connectionString, final List<Short> scoringStateList,
-			final Date updateDate, final boolean isPrevious) {
+	public List findPrevOrNextHistoryAnswer(final int quetionSeq, final String menuId, final String scorerId,
+			final String connectionString, final List<Short> scoringStateList, final Date updateDate,
+			final boolean isPrevious) {
 
 		// HibernateTemplate hibernateTemplate = null;
 
@@ -464,43 +436,35 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 			 * values.toArray());
 			 */
 
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<List>() {
-						public List doInHibernate(Session session)
-								throws HibernateException {
-							Query queryObj = session.createQuery(query
-									.toString());
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<List>() {
+				public List doInHibernate(Session session) throws HibernateException {
+					Query queryObj = session.createQuery(query.toString());
 
-							queryObj.setParameter("SCORER_ID", scorerId);
-							queryObj.setParameter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							queryObj.setParameterList("SCORING_STATE_LIST",
-									scoringStateList);
-							queryObj.setParameter("QUESTION_SEQUENCE",
-									quetionSeq);
-							queryObj.setParameter("CREATE_DATE", new Date());
+					queryObj.setParameter("SCORER_ID", scorerId);
+					queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					queryObj.setParameterList("SCORING_STATE_LIST", scoringStateList);
+					queryObj.setParameter("QUESTION_SEQUENCE", quetionSeq);
+					queryObj.setParameter("CREATE_DATE", new Date());
 
-							if (updateDate != null) {
-								queryObj.setParameter("LATEST_UPDATE_DATE",
-										updateDate);
-							}
-							queryObj.setMaxResults(WebAppConst.ANSWER_RECORD_FETCH_SIZE);
-							return queryObj.list();
-						}
-					});
+					if (updateDate != null) {
+						queryObj.setParameter("LATEST_UPDATE_DATE", updateDate);
+					}
+					queryObj.setMaxResults(WebAppConst.ANSWER_RECORD_FETCH_SIZE);
+					return queryObj.list();
+				}
+			});
 		} catch (RuntimeException re) {
 			throw re;
 		} /*
-		 * finally { if (hibernateTemplate != null) {
-		 * hibernateTemplate.setMaxResults(WebAppConst.ZERO); } }
-		 */
+			 * finally { if (hibernateTemplate != null) {
+			 * hibernateTemplate.setMaxResults(WebAppConst.ZERO); } }
+			 */
 	}
 
 	@SuppressWarnings("rawtypes")
-	public List findPrevOrNextHistoryAndQcAnswer(final int quetionSeq,
-			final String menuId, final String scorerId,
-			final String connectionString, final List<Short> scoringStateList,
-			final Date updateDate, final boolean isPrevious) {
+	public List findPrevOrNextHistoryAndQcAnswer(final int quetionSeq, final String menuId, final String scorerId,
+			final String connectionString, final List<Short> scoringStateList, final Date updateDate,
+			final boolean isPrevious) {
 
 		// HibernateTemplate hibernateTemplate = null;
 
@@ -562,29 +526,22 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 		try {
 
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<List>() {
-						public List doInHibernate(Session session)
-								throws HibernateException {
-							SQLQuery queryObj = session.createSQLQuery(query
-									.toString());
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<List>() {
+				public List doInHibernate(Session session) throws HibernateException {
+					SQLQuery queryObj = session.createSQLQuery(query.toString());
 
-							queryObj.setParameter("SCORER_ID", scorerId);
-							queryObj.setParameter("QUESTION_SEQUENCE",
-									quetionSeq);
-							queryObj.setParameterList("SCORING_STATE_LIST",
-									scoringStateList);
-							queryObj.setParameter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							queryObj.setParameter("CREATE_DATE", new Date());
-							if (updateDate != null) {
-								queryObj.setParameter("LATEST_UPDATE_DATE",
-										updateDate);
-							}
+					queryObj.setParameter("SCORER_ID", scorerId);
+					queryObj.setParameter("QUESTION_SEQUENCE", quetionSeq);
+					queryObj.setParameterList("SCORING_STATE_LIST", scoringStateList);
+					queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					queryObj.setParameter("CREATE_DATE", new Date());
+					if (updateDate != null) {
+						queryObj.setParameter("LATEST_UPDATE_DATE", updateDate);
+					}
 
-							return queryObj.list();
-						}
-					});
+					return queryObj.list();
+				}
+			});
 
 		} catch (RuntimeException re) {
 			throw re;
@@ -660,9 +617,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * ((forceAndStateTransitionFlag == null) || (forceAndStateTransitionFlag ==
 	 * WebAppConst.TRUE)) { query.append(
 	 * "SELECT t.answer_seq AS answerSeq, t.answer_form_num AS answerFormNum, "
-	 * );
-	 * query.append("t.image_file_name AS imageFileName, t.grade_seq AS gradeSeq, "
-	 * ); query.append(
+	 * ); query.
+	 * append("t.image_file_name AS imageFileName, t.grade_seq AS gradeSeq, " );
+	 * query.append(
 	 * "t.bit_value AS bitValue, t.latest_scorer_id AS latestScorerId, "); if
 	 * (!(menuId .equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
 	 * .equals(WebAppConst.FORCED_MENU_ID))) { query.append(
@@ -681,8 +638,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "t.question_seq AS questionSeq, t.latest_screen_scorer_id AS latestScreenScorerId, "
 	 * ); } if (menuId.equals(WebAppConst.FORCED_MENU_ID) &&
 	 * (forceAndStateTransitionFlag != null && forceAndStateTransitionFlag ==
-	 * WebAppConst.TRUE)) {
-	 * query.append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory "
+	 * WebAppConst.TRUE)) { query.
+	 * append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory "
 	 * ); query.append("WHERE scoreHistory.answer_seq = t.answer_seq ");
 	 * query.append("AND scoreHistory.question_seq = :QUESTION_SEQ ");
 	 * query.append(
@@ -729,8 +686,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "AND (tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
 	 * query.
 	 * append("OR tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE) "
-	 * ); } else { if (!historyGradeSeqList.isEmpty()) {
-	 * query.append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST "
+	 * ); } else { if (!historyGradeSeqList.isEmpty()) { query.
+	 * append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST "
 	 * ); }
 	 * 
 	 * if (ArrayUtils.contains( scoreHistoryInfo .getHistoryGradeNum(), -1)) {
@@ -808,16 +765,16 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * query.append
 	 * ("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "); }
 	 * 
-	 * if (currentUpdateStartDate != null) {
-	 * query.append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE "
-	 * ); }
+	 * if (currentUpdateStartDate != null) { query.
+	 * append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE " );
+	 * }
 	 * 
 	 * if (currentUpdateEndDate != null) {
 	 * query.append("AND tranDescScore.update_date <= :CURRENT_UPDATE_END_DATE "
 	 * ); } } else if (menuId .equals(WebAppConst.SCORE_SAMP_MENU_ID) || menuId
 	 * .equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-	 * .equals(WebAppConst.FORCED_MENU_ID)) {
-	 * query.append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "
+	 * .equals(WebAppConst.FORCED_MENU_ID)) { query.
+	 * append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "
 	 * ); }
 	 * 
 	 * if ((scoreHistoryInfo == null || !scoreHistoryInfo .isHistoryBlock()) &&
@@ -1036,9 +993,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * ((forceAndStateTransitionFlag == null) || (forceAndStateTransitionFlag ==
 	 * WebAppConst.TRUE)) { query.append(
 	 * "SELECT t.answer_seq AS answerSeq, t.answer_form_num AS answerFormNum, "
-	 * );
-	 * query.append("t.image_file_name AS imageFileName, t.grade_seq AS gradeSeq, "
-	 * ); query.append(
+	 * ); query.
+	 * append("t.image_file_name AS imageFileName, t.grade_seq AS gradeSeq, " );
+	 * query.append(
 	 * "t.bit_value AS bitValue, t.latest_scorer_id AS latestScorerId, "); if
 	 * (!(menuId .equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
 	 * .equals(WebAppConst.FORCED_MENU_ID))) { query.append(
@@ -1057,8 +1014,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "t.question_seq AS questionSeq, t.latest_screen_scorer_id AS latestScreenScorerId, "
 	 * ); } if (menuId.equals(WebAppConst.FORCED_MENU_ID) &&
 	 * (forceAndStateTransitionFlag != null && forceAndStateTransitionFlag ==
-	 * WebAppConst.TRUE)) {
-	 * query.append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory "
+	 * WebAppConst.TRUE)) { query.
+	 * append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory "
 	 * ); query.append("WHERE scoreHistory.answer_seq = t.answer_seq ");
 	 * query.append("AND scoreHistory.question_seq = :QUESTION_SEQ ");
 	 * query.append(
@@ -1132,9 +1089,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * currentUpdateEndDate = scoreCurrentInfo != null ? scoreCurrentInfo
 	 * .getCurrentUpdateEndDate() : null;
 	 * 
-	 * System.out.println(">>>>>>>>>>>>>> fetchRandomAnswerSequences start: "+new
-	 * Date().getTime()); try { List answerRecordsList = getHibernateTemplate(
-	 * questionInfo.getConnectionString()).execute( new
+	 * System.out.println(">>>>>>>>>>>>>> fetchRandomAnswerSequences start: "
+	 * +new Date().getTime()); try { List answerRecordsList =
+	 * getHibernateTemplate( questionInfo.getConnectionString()).execute( new
 	 * HibernateCallback<List>() {
 	 * 
 	 * public List doInHibernate(Session session) throws HibernateException {
@@ -1197,12 +1154,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "AND t1.pending_category_seq IN :HISTORY_PENDING_CATEGORY_SEQ_LIST "); }
 	 * 
 	 * if (!StringUtils .isBlank(historyIncludeCheckPoints) && !StringUtils
-	 * .isBlank(historyExcludeCheckPoints)) {
-	 * countSubQuery.append("AND (t1.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 "
-	 * );
-	 * countSubQuery.append("AND (t1.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 "
-	 * ); } else { if (!StringUtils .isBlank(historyIncludeCheckPoints)) {
-	 * countSubQuery
+	 * .isBlank(historyExcludeCheckPoints)) { countSubQuery.
+	 * append("AND (t1.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 " );
+	 * countSubQuery.
+	 * append("AND (t1.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 " ); } else {
+	 * if (!StringUtils .isBlank(historyIncludeCheckPoints)) { countSubQuery
 	 * .append("AND (t1.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 "); } else
 	 * if (!StringUtils .isBlank(historyExcludeCheckPoints)) {
 	 * countSubQuery.append
@@ -1245,12 +1201,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "AND t.pending_category_seq IN :CURRENT_PENDING_CATEGORY_SEQ_LIST "); }
 	 * 
 	 * if (!StringUtils .isBlank(currentIncludeCheckPoints) && !StringUtils
-	 * .isBlank(currentExcludeCheckPoints)) {
-	 * countSubQuery.append("AND (t.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 "
-	 * );
-	 * countSubQuery.append("AND (t.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 "
-	 * ); } else { if (!StringUtils .isBlank(currentIncludeCheckPoints)) {
-	 * countSubQuery
+	 * .isBlank(currentExcludeCheckPoints)) { countSubQuery.
+	 * append("AND (t.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 " );
+	 * countSubQuery.
+	 * append("AND (t.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 " ); } else {
+	 * if (!StringUtils .isBlank(currentIncludeCheckPoints)) { countSubQuery
 	 * .append("AND (t.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 "); } else if
 	 * (!StringUtils .isBlank(currentExcludeCheckPoints)) {
 	 * countSubQuery.append(
@@ -1320,8 +1275,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "AND (tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
 	 * query.
 	 * append("OR tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE) "
-	 * ); } else { if (!historyGradeSeqList.isEmpty()) {
-	 * query.append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST "
+	 * ); } else { if (!historyGradeSeqList.isEmpty()) { query.
+	 * append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST "
 	 * ); }
 	 * 
 	 * if (ArrayUtils.contains( scoreHistoryInfo .getHistoryGradeNum(), -1)) {
@@ -1399,16 +1354,16 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * query.append
 	 * ("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "); }
 	 * 
-	 * if (currentUpdateStartDate != null) {
-	 * query.append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE "
-	 * ); }
+	 * if (currentUpdateStartDate != null) { query.
+	 * append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE " );
+	 * }
 	 * 
 	 * if (currentUpdateEndDate != null) {
 	 * query.append("AND tranDescScore.update_date <= :CURRENT_UPDATE_END_DATE "
 	 * ); } } else if (menuId .equals(WebAppConst.SCORE_SAMP_MENU_ID) || menuId
 	 * .equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-	 * .equals(WebAppConst.FORCED_MENU_ID)) {
-	 * query.append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "
+	 * .equals(WebAppConst.FORCED_MENU_ID)) { query.
+	 * append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "
 	 * ); }
 	 * 
 	 * if ((scoreHistoryInfo == null || !scoreHistoryInfo .isHistoryBlock()) &&
@@ -1681,8 +1636,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * // here is count means no of comments. if
 	 * (menuId.equals(WebAppConst.FORCED_MENU_ID) &&
 	 * (forceAndStateTransitionFlag != null && forceAndStateTransitionFlag ==
-	 * WebAppConst.TRUE)) {
-	 * query.append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory "
+	 * WebAppConst.TRUE)) { query.
+	 * append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory "
 	 * );
 	 * query.append("WHERE scoreHistory.answer_seq = tranDescScore.answer_seq "
 	 * ); query.append("AND scoreHistory.question_seq = :QUESTION_SEQ ");
@@ -1869,8 +1824,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "AND (tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
 	 * query.
 	 * append("OR tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE) "
-	 * ); } else { if (!historyGradeSeqList.isEmpty()) {
-	 * query.append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST "
+	 * ); } else { if (!historyGradeSeqList.isEmpty()) { query.
+	 * append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST "
 	 * ); }
 	 * 
 	 * if (ArrayUtils.contains( scoreHistoryInfo .getHistoryGradeNum(), -1)) {
@@ -1948,16 +1903,16 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * query.append
 	 * ("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "); }
 	 * 
-	 * if (currentUpdateStartDate != null) {
-	 * query.append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE "
-	 * ); }
+	 * if (currentUpdateStartDate != null) { query.
+	 * append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE " );
+	 * }
 	 * 
 	 * if (currentUpdateEndDate != null) {
 	 * query.append("AND tranDescScore.update_date <= :CURRENT_UPDATE_END_DATE "
 	 * ); } } else if (menuId .equals(WebAppConst.SCORE_SAMP_MENU_ID) || menuId
 	 * .equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-	 * .equals(WebAppConst.FORCED_MENU_ID)) {
-	 * query.append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "
+	 * .equals(WebAppConst.FORCED_MENU_ID)) { query.
+	 * append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "
 	 * ); }
 	 * 
 	 * if ((scoreHistoryInfo == null || !scoreHistoryInfo .isHistoryBlock()) &&
@@ -2142,79 +2097,61 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	// Percentage rand() query: merged rand() and count.
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List searchAnswerRecords(final QuestionInfo questionInfo,
-			final ScoreInputInfo scoreInputInfo,
-			final Boolean forceAndStateTransitionFlag,
-			final Integer startRecord, final Integer endRecord,
+	public List searchAnswerRecords(final QuestionInfo questionInfo, final ScoreInputInfo scoreInputInfo,
+			final Boolean forceAndStateTransitionFlag, final Integer startRecord, final Integer endRecord,
 			final String orderByRandAttempt) {
 
 		Map<String, String> configMap = SaitenUtil.getConfigMap();
-		final boolean searchByScorerRoleId = Boolean.valueOf(configMap
-				.get("search.by.scorer_role_id"));
+		final boolean searchByScorerRoleId = Boolean.valueOf(configMap.get("search.by.scorer_role_id"));
 
-		final ScoreHistoryInfo scoreHistoryInfo = scoreInputInfo
-				.getScoreHistoryInfo();
+		final ScoreHistoryInfo scoreHistoryInfo = scoreInputInfo.getScoreHistoryInfo();
 
 		final String menuId = questionInfo.getMenuId();
 		final boolean samplingFlag = scoreInputInfo.isSamplingFlag();
 		final String answerFormNum = scoreInputInfo.getAnswerFormNum();
 		final String subjectCode = scoreInputInfo.getSubjectCode();
-		final Integer objScoreStartRange = scoreInputInfo
-				.getObjScoreStartRange();
+		final Integer objScoreStartRange = scoreInputInfo.getObjScoreStartRange();
 		final Integer objScoreEndRange = scoreInputInfo.getObjScoreEndRange();
 
-		final List<String> historyScorerIdList = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryScorerIdList() : null;
-		final Integer historyCategoryType = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryCategoryType() : null;
-		final List historyGradeSeqList = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryGradeSeqList() : null;
-		final List historyPendingCategorySeqList = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryPendingCategorySeqList() : null;
-		final List historyDenyCategorySeqList = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryDenyCategorySeqList() : null;
-		final String historyIncludeCheckPoints = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryIncludeCheckPoints() : null;
-		final String historyExcludeCheckPoints = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryExcludeCheckPoints() : null;
-		final Short[] historyEventList = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryEventList() : null;
-		final Date historyUpdateStartDate = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryUpdateStartDate() : null;
-		final Date historyUpdateEndDate = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryUpdateEndDate() : null;
-		final Integer[] historyScorerRoles = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryScorerRole() : null;
+		final List<String> historyScorerIdList = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryScorerIdList()
+				: null;
+		final Integer historyCategoryType = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryCategoryType() : null;
+		final List historyGradeSeqList = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryGradeSeqList() : null;
+		final List historyPendingCategorySeqList = scoreHistoryInfo != null
+				? scoreHistoryInfo.getHistoryPendingCategorySeqList() : null;
+		final List historyDenyCategorySeqList = scoreHistoryInfo != null
+				? scoreHistoryInfo.getHistoryDenyCategorySeqList() : null;
+		final String historyIncludeCheckPoints = scoreHistoryInfo != null
+				? scoreHistoryInfo.getHistoryIncludeCheckPoints() : null;
+		final String historyExcludeCheckPoints = scoreHistoryInfo != null
+				? scoreHistoryInfo.getHistoryExcludeCheckPoints() : null;
+		final Short[] historyEventList = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryEventList() : null;
+		final Date historyUpdateStartDate = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryUpdateStartDate()
+				: null;
+		final Date historyUpdateEndDate = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryUpdateEndDate() : null;
+		final Integer[] historyScorerRoles = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryScorerRole() : null;
 
-		final ScoreCurrentInfo scoreCurrentInfo = scoreInputInfo
-				.getScoreCurrentInfo();
+		final ScoreCurrentInfo scoreCurrentInfo = scoreInputInfo.getScoreCurrentInfo();
 
-		final String punchText = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getPunchText() : null;
-		final String punchTextCondition = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getPunchTextData() : null;
-		final List<String> currentScorerIdList = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentScorerIdList() : null;
-		final Integer currentCategoryType = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentCategoryType() : null;
-		final List currentGradeSeqList = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentGradeSeqList() : null;
-		final List currentPendingCategorySeqList = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentPendingCategorySeqList() : null;
-		final List currentDenyCategorySeqList = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentDenyCategorySeqList() : null;
-		final String currentIncludeCheckPoints = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentIncludeCheckPoints() : null;
-		final String currentExcludeCheckPoints = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentExcludeCheckPoints() : null;
-		final Short[] currentStateList = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentStateList() : null;
-		final Date currentUpdateStartDate = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentUpdateStartDate() : null;
-		final Date currentUpdateEndDate = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentUpdateEndDate() : null;
-		final Integer[] currentScorerRoles = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentScorerRole() : null;
+		final String punchText = scoreCurrentInfo != null ? scoreCurrentInfo.getPunchText() : null;
+		final String punchTextCondition = scoreCurrentInfo != null ? scoreCurrentInfo.getPunchTextData() : null;
+		final List<String> currentScorerIdList = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentScorerIdList()
+				: null;
+		final Integer currentCategoryType = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentCategoryType() : null;
+		final List currentGradeSeqList = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentGradeSeqList() : null;
+		final List currentPendingCategorySeqList = scoreCurrentInfo != null
+				? scoreCurrentInfo.getCurrentPendingCategorySeqList() : null;
+		final List currentDenyCategorySeqList = scoreCurrentInfo != null
+				? scoreCurrentInfo.getCurrentDenyCategorySeqList() : null;
+		final String currentIncludeCheckPoints = scoreCurrentInfo != null
+				? scoreCurrentInfo.getCurrentIncludeCheckPoints() : null;
+		final String currentExcludeCheckPoints = scoreCurrentInfo != null
+				? scoreCurrentInfo.getCurrentExcludeCheckPoints() : null;
+		final Short[] currentStateList = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentStateList() : null;
+		final Date currentUpdateStartDate = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentUpdateStartDate()
+				: null;
+		final Date currentUpdateEndDate = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentUpdateEndDate() : null;
+		final Integer[] currentScorerRoles = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentScorerRole() : null;
 
 		/*
 		 * System.out.println(">>>>>>>>>>>>>> searchAnswerRecords start: " + new
@@ -2223,907 +2160,810 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		try {
 			HibernateTemplate hibernateTemplate;
 			if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
-				hibernateTemplate = getHibernateTemplateReplica(questionInfo
-						.getConnectionString());
+				hibernateTemplate = getHibernateTemplateReplica(questionInfo.getConnectionString());
 				if (hibernateTemplate == null) {
-					hibernateTemplate = getHibernateTemplate(questionInfo
-							.getConnectionString());
+					hibernateTemplate = getHibernateTemplate(questionInfo.getConnectionString());
 				}
 			} else {
-				hibernateTemplate = getHibernateTemplate(questionInfo
-						.getConnectionString());
+				hibernateTemplate = getHibernateTemplate(questionInfo.getConnectionString());
 			}
-			List answerRecordsList = hibernateTemplate
-					.execute(new HibernateCallback<List>() {
+			List answerRecordsList = hibernateTemplate.execute(new HibernateCallback<List>() {
 
-						public List doInHibernate(Session session)
-								throws HibernateException {
-							StringBuilder query = new StringBuilder();
-							if ((forceAndStateTransitionFlag == null)
-									|| (forceAndStateTransitionFlag == WebAppConst.TRUE)) {
-								query.append("SELECT distinct t.answer_seq AS answerSeq, t.answer_form_num AS answerFormNum, ");
-								query.append("t.image_file_name AS imageFileName, t.grade_seq AS gradeSeq, ");
-								query.append("t.bit_value AS bitValue, t.latest_scorer_id AS latestScorerId, ");
-								if (!(menuId
-										.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-										.equals(WebAppConst.FORCED_MENU_ID))) {
-									query.append("(SELECT scorer_comment FROM tran_desc_score_history AS scoreHistory ");
-									query.append("WHERE scoreHistory.answer_seq = score.answerSeq ");
-									query.append("AND scoreHistory.update_date = ");
-									query.append("(SELECT max(history.update_date) FROM tran_desc_score_history history ");
-									query.append("WHERE history.answer_seq = scoreHistory.answer_seq and history.valid_flag = 'T') AND scoreHistory.valid_flag = 'T') AS scorerComment, ");
-								}
-								query.append("t.punch_text AS punchText, ");
-								query.append("t.pending_category_seq AS pendingCategorySeq, t.latest_scoring_state, ");
-								query.append("t.deny_category_seq AS denyCategorySeq, ");
-								if (((forceAndStateTransitionFlag != null) && (forceAndStateTransitionFlag == WebAppConst.TRUE))
-										|| (menuId
-												.equals(WebAppConst.REFERENCE_SAMP_MENU_ID) && (forceAndStateTransitionFlag == null))) {
-									query.append("t.question_seq AS questionSeq, t.latest_screen_scorer_id AS latestScreenScorerId, ");
-								}
+				public List doInHibernate(Session session) throws HibernateException {
+					StringBuilder query = new StringBuilder();
+					if ((forceAndStateTransitionFlag == null) || (forceAndStateTransitionFlag == WebAppConst.TRUE)) {
+						query.append("SELECT distinct t.answer_seq AS answerSeq, t.answer_form_num AS answerFormNum, ");
+						query.append("t.image_file_name AS imageFileName, t.grade_seq AS gradeSeq, ");
+						query.append("t.bit_value AS bitValue, t.latest_scorer_id AS latestScorerId, ");
+						if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
+								|| menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+							query.append("(SELECT scorer_comment FROM tran_desc_score_history AS scoreHistory ");
+							query.append("WHERE scoreHistory.answer_seq = score.answerSeq ");
+							query.append("AND scoreHistory.update_date = ");
+							query.append("(SELECT max(history.update_date) FROM tran_desc_score_history history ");
+							query.append(
+									"WHERE history.answer_seq = scoreHistory.answer_seq and history.valid_flag = 'T') AND scoreHistory.valid_flag = 'T') AS scorerComment, ");
+						}
+						query.append("t.punch_text AS punchText, ");
+						query.append("t.pending_category_seq AS pendingCategorySeq, t.latest_scoring_state, ");
+						query.append("t.deny_category_seq AS denyCategorySeq, ");
+						if (((forceAndStateTransitionFlag != null) && (forceAndStateTransitionFlag == WebAppConst.TRUE))
+								|| (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
+										&& (forceAndStateTransitionFlag == null))) {
+							query.append(
+									"t.question_seq AS questionSeq, t.latest_screen_scorer_id AS latestScreenScorerId, ");
+						}
 
-								// here is count means no of comments.
-								if (menuId.equals(WebAppConst.FORCED_MENU_ID)
-										&& (forceAndStateTransitionFlag != null && forceAndStateTransitionFlag == WebAppConst.TRUE)) {
-									query.append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory ");
-									query.append("WHERE scoreHistory.answer_seq = score.answerSeq ");
-									query.append("AND scoreHistory.question_seq = :QUESTION_SEQ ");
-									query.append("AND scoreHistory.scorer_comment != '' AND scoreHistory.scorer_comment is not null ) AS commentCount, ");
-								}
-								query.append("t.mark_value AS markValue, ");
-								query.append("t.update_date AS updateDate ");
-								if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
-									query.append(", score.lookAftSeq AS lookAftSeq ");
-								}
-								if (menuId
-										.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
-									query.append(", t.latest_screen_scorer_id AS latestScreenScorerId ");
-									query.append(", t.second_latest_screen_scorer_id AS secondLatestScreenScorerId ");
-								}
+						// here is count means no of comments.
+						if (menuId.equals(WebAppConst.FORCED_MENU_ID) && (forceAndStateTransitionFlag != null
+								&& forceAndStateTransitionFlag == WebAppConst.TRUE)) {
+							query.append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory ");
+							query.append("WHERE scoreHistory.answer_seq = score.answerSeq ");
+							query.append("AND scoreHistory.question_seq = :QUESTION_SEQ ");
+							query.append(
+									"AND scoreHistory.scorer_comment != '' AND scoreHistory.scorer_comment is not null ) AS commentCount, ");
+						}
+						query.append("t.mark_value AS markValue, ");
+						query.append("t.update_date AS updateDate ");
+						if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
+							query.append(", score.lookAftSeq AS lookAftSeq ");
+						}
+						if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
+							query.append(", t.latest_screen_scorer_id AS latestScreenScorerId ");
+							query.append(", t.second_latest_screen_scorer_id AS secondLatestScreenScorerId ");
+						}
+					} else {
+						// getting count to display on countPage, for
+						// FORCED_SCORING and STATE_TRANSITION.
+						query.append("SELECT SUM(rowCount) ");
+						query.append("FROM (SELECT count(distinct tranDescScore.answer_seq) as rowCount ");
+					}
+					if ((forceAndStateTransitionFlag == null) || (forceAndStateTransitionFlag == WebAppConst.TRUE)) {
+						query.append("FROM tran_desc_score AS t, ");
+						query.append("(SELECT tranDescScore.answer_seq AS answerSeq ");
+						if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
+							query.append(", tranLookAfterwards.look_aft_seq AS lookAftSeq ");
+						}
+					}
+
+					query.append("FROM tran_desc_score AS tranDescScore ");
+
+					if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
+							|| menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) && (objScoreStartRange != null)
+							&& (objScoreEndRange != null)) {
+						query.append("INNER JOIN ");
+						query.append("tran_obj_score_percentage AS tranObjScorePercentage  ");
+						query.append("ON tranDescScore.answer_form_num = tranObjScorePercentage.answer_form_num ");
+					}
+
+					if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+						query.append("INNER JOIN ");
+						query.append("tran_desc_score_history AS tranDescScoreHistory ");
+						query.append("ON tranDescScore.answer_seq = tranDescScoreHistory.answer_seq ");
+						if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
+							if (scoreCurrentInfo != null && scoreCurrentInfo.isLookAfterwardsFlag()) {
+								query.append("INNER JOIN tran_look_afterwards AS tranLookAfterwards ");
 							} else {
-								// getting count to display on countPage, for
-								// FORCED_SCORING and STATE_TRANSITION.
-								query.append("SELECT SUM(rowCount) ");
-								query.append("FROM (SELECT count(distinct tranDescScore.answer_seq) as rowCount ");
+								query.append("LEFT JOIN tran_look_afterwards AS tranLookAfterwards ");
 							}
-							if ((forceAndStateTransitionFlag == null)
-									|| (forceAndStateTransitionFlag == WebAppConst.TRUE)) {
-								query.append("FROM tran_desc_score AS t, ");
-								query.append("(SELECT tranDescScore.answer_seq AS answerSeq ");
-								if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
-									query.append(", tranLookAfterwards.look_aft_seq AS lookAftSeq ");
-								}
-							}
+							query.append("ON tranDescScore.answer_seq = tranLookAfterwards.answer_seq ");
+						}
+					}
 
-							query.append("FROM tran_desc_score AS tranDescScore ");
-							
-							if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID))
-									&& (objScoreStartRange != null)
-									&& (objScoreEndRange != null)) {
-								query.append("INNER JOIN ");
-								query.append("tran_obj_score_percentage AS tranObjScorePercentage  ");
-								query.append("ON tranDescScore.answer_form_num = tranObjScorePercentage.answer_form_num ");
-							}
+					query.append("WHERE tranDescScore.question_seq  = :QUESTION_SEQ ");
 
-							if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
-								query.append("INNER JOIN ");
-								query.append("tran_desc_score_history AS tranDescScoreHistory ");
-								query.append("ON tranDescScore.answer_seq = tranDescScoreHistory.answer_seq ");
-								if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
-									if (scoreCurrentInfo != null
-											&& scoreCurrentInfo
-													.isLookAfterwardsFlag()) {
-										query.append("INNER JOIN tran_look_afterwards AS tranLookAfterwards ");
-									} else {
-										query.append("LEFT JOIN tran_look_afterwards AS tranLookAfterwards ");
-									}
-									query.append("ON tranDescScore.answer_seq = tranLookAfterwards.answer_seq ");
-								}
-							}
+					if (searchByScorerRoleId == true) {
+						if (currentScorerRoles != null) {
+							query.append("AND tranDescScore.answer_seq = ");
+							query.append("( SELECT answer_seq FROM tran_desc_score_history his1 ");
+							query.append("WHERE his1.history_seq = ");
+							query.append("( SELECT max(history_seq) FROM tran_desc_score_history his2 ");
+							query.append("WHERE his2.answer_seq = tranDescScore.answer_seq ");
+							query.append(") ");
+							query.append("AND his1.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
 
-							query.append("WHERE tranDescScore.question_seq  = :QUESTION_SEQ ");
+							query.append(") ");
+						}
+					}
 
-							if (searchByScorerRoleId == true) {
-								if (currentScorerRoles != null) {
-									query.append("AND tranDescScore.answer_seq = ");
-									query.append("( SELECT answer_seq FROM tran_desc_score_history his1 ");
-									query.append("WHERE his1.history_seq = ");
-									query.append("( SELECT max(history_seq) FROM tran_desc_score_history his2 ");
-									query.append("WHERE his2.answer_seq = tranDescScore.answer_seq ");
-									query.append(") ");
-									query.append("AND his1.scorer_role_id IN ( :CURRENT_SCORER_ROLES ) ");
+					query.append("AND tranDescScore.lock_flag = :UNLOCK ");
+					query.append("AND tranDescScore.valid_flag = :VALID_FLAG ");
 
-									query.append(") ");
-								}
-							}
+					if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
+							|| menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) && (objScoreStartRange != null)
+							&& (objScoreEndRange != null)) {
+						query.append("AND tranObjScorePercentage.subject_code = :SUBJECT_CODE ");
+						query.append(
+								"AND tranObjScorePercentage.result_percentage between :OBJ_SCORE_START_RANGE and :OBJ_SCORE_END_RANGE ");
+					}
 
-							query.append("AND tranDescScore.lock_flag = :UNLOCK ");
-							query.append("AND tranDescScore.valid_flag = :VALID_FLAG ");
-							
-							if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID))
-									&& (objScoreStartRange != null)
-									&& (objScoreEndRange != null)) {
-								query.append("AND tranObjScorePercentage.subject_code = :SUBJECT_CODE ");
-								query.append("AND tranObjScorePercentage.result_percentage between :OBJ_SCORE_START_RANGE and :OBJ_SCORE_END_RANGE ");
-							}
+					if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+						query.append("AND tranDescScore.inspect_flag = :INSPECT_FLAG ");
+						/*
+						 * if (WebAppConst.SPEAKING_TYPE
+						 * .equals(questionInfo.getQuestionType()) ||
+						 * WebAppConst.WRITING_TYPE .equals(questionInfo
+						 * .getQuestionType())) {
+						 */
+						query.append("AND tranDescScore.quality_check_flag = :QUALITY_FLAG ");
+						/* } */
 
-							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								query.append("AND tranDescScore.inspect_flag = :INSPECT_FLAG ");
-								/*
-								 * if (WebAppConst.SPEAKING_TYPE
-								 * .equals(questionInfo.getQuestionType()) ||
-								 * WebAppConst.WRITING_TYPE .equals(questionInfo
-								 * .getQuestionType())) {
-								 */
-								query.append("AND tranDescScore.quality_check_flag = :QUALITY_FLAG ");
-								/* } */
+					}
 
-							}
+					if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
+						query.append("AND tranDescScore.sampling_flag IN :SAMPLING_FLAG_LIST ");
+						/*
+						 * if (WebAppConst.SPEAKING_TYPE
+						 * .equals(questionInfo.getQuestionType()) ||
+						 * WebAppConst.WRITING_TYPE .equals(questionInfo
+						 * .getQuestionType())) {
+						 */
+						query.append("AND tranDescScore.quality_check_flag = :QUALITY_FLAG ");
+						/* } */
 
-							if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
-								query.append("AND tranDescScore.sampling_flag IN :SAMPLING_FLAG_LIST ");
-								/*
-								 * if (WebAppConst.SPEAKING_TYPE
-								 * .equals(questionInfo.getQuestionType()) ||
-								 * WebAppConst.WRITING_TYPE .equals(questionInfo
-								 * .getQuestionType())) {
-								 */
-								query.append("AND tranDescScore.quality_check_flag = :QUALITY_FLAG ");
-								/* } */
+					}
 
-							}
+					if (!StringUtils.isBlank(answerFormNum)) {
+						query.append("AND tranDescScore.answer_form_num = :ANSWER_FORM_NUM ");
+					}
 
-							if (!StringUtils.isBlank(answerFormNum)) {
-								query.append("AND tranDescScore.answer_form_num = :ANSWER_FORM_NUM ");
-							}
+					if (scoreCurrentInfo != null && scoreCurrentInfo.isCurrentBlock()) {
 
-							if (scoreCurrentInfo != null
-									&& scoreCurrentInfo.isCurrentBlock()) {
-
-								if (!StringUtils.isBlank(punchText)) {
-									query.append("AND tranDescScore.punch_text like :PUNCH_TEXT escape '"
-											+ WebAppConst.ESCAPE_CHARACTER
-											+ "'");
-								}
-
-								if (!currentScorerIdList.isEmpty()) {
-									query.append("AND tranDescScore.latest_screen_scorer_id IN :CURRENT_SCORER_ID_LIST ");
-								}
-
-								// This is for Quality Check Flag
-								/*
-								 * if (WebAppConst.SPEAKING_TYPE
-								 * .equals(questionInfo.getQuestionType()) ||
-								 * WebAppConst.WRITING_TYPE .equals(questionInfo
-								 * .getQuestionType())) {
-								 */
-								if (scoreCurrentInfo
-										.isCurrentQualityCheckFlag()) {
-									query.append("AND tranDescScore.quality_check_flag IN :QUALITY_CHECK_FLAG ");
-								}
-								/* } */
-
-								if (currentCategoryType != null
-										&& currentCategoryType == 2) {
-									query.append("AND tranDescScore.grade_seq IS null AND tranDescScore.pending_category_seq IS null ");
-								} else if (currentCategoryType != null
-										&& currentCategoryType == 3) {
-
-									if (!currentGradeSeqList.isEmpty()
-											&& ArrayUtils.contains(
-													scoreCurrentInfo
-															.getCurrentGradeNum(),
-													-1)) {
-										query.append("AND (tranDescScore.grade_seq IN :CURRENT_GRADE_SEQ_LIST ");
-										query.append("OR tranDescScore.latest_scoring_state = :NO_GRADE_SCORING_STATE) ");
-									} else {
-										if (!currentGradeSeqList.isEmpty()) {
-											query.append("AND tranDescScore.grade_seq IN :CURRENT_GRADE_SEQ_LIST ");
-										}
-
-										if (ArrayUtils.contains(
-												scoreCurrentInfo
-														.getCurrentGradeNum(),
-												-1)) {
-											query.append("AND tranDescScore.latest_scoring_state = :NO_GRADE_SCORING_STATE ");
-										}
-									}
-								} else if (currentCategoryType != null
-										&& currentCategoryType == 4
-										&& !currentPendingCategorySeqList
-												.isEmpty()) {
-									query.append("AND tranDescScore.pending_category_seq IN :CURRENT_PENDING_CATEGORY_SEQ_LIST ");
-								} else if (currentCategoryType != null
-										&& currentCategoryType == 5
-										&& !currentDenyCategorySeqList
-												.isEmpty()) {
-									query.append("AND tranDescScore.deny_category_seq IN :CURRENT_DENY_CATEGORY_SEQ_LIST ");
-								}
-
-								if (!StringUtils
-										.isBlank(currentIncludeCheckPoints)
-										&& !StringUtils
-												.isBlank(currentExcludeCheckPoints)) {
-
-									if (scoreInputInfo
-											.getScoreCurrentInfo()
-											.getCurrentSkpConditions()
-											.equals(WebAppConst.SKP_AND_CONDITION)) {
-										query.append("AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
-										query.append("AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
-
-									} else if (scoreInputInfo
-											.getScoreCurrentInfo()
-											.getCurrentSkpConditions()
-											.equals(WebAppConst.SKP_OR_CONDITION)) {
-										query.append("AND ((tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 OR (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0)");
-									}
-
-								} else {
-									if (!StringUtils
-											.isBlank(currentIncludeCheckPoints)) {
-										query.append("AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
-									} else if (!StringUtils
-											.isBlank(currentExcludeCheckPoints)) {
-										query.append("AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
-									}
-								}
-
-								if (currentStateList != null
-										&& currentStateList.length > 0) {
-									query.append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST ");
-								}
-
-								if (currentUpdateStartDate != null) {
-									query.append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE ");
-								}
-
-								if (currentUpdateEndDate != null) {
-									query.append("AND tranDescScore.update_date <= :CURRENT_UPDATE_END_DATE ");
-								}
-							} else if (menuId
-									.equals(WebAppConst.SCORE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.STATE_TRAN_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.FORCED_MENU_ID)) {
-								query.append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST ");
-							}
-
-							if ((scoreHistoryInfo == null || !scoreHistoryInfo
-									.isHistoryBlock())
-									&& (scoreCurrentInfo == null || !scoreCurrentInfo
-											.isCurrentBlock())) {
-								if (menuId
-										.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
-									query.append("AND tranDescScore.latest_scoring_state NOT IN :SPECIAL_SCORING_AND_BATCH_STATES ");
-								} else if (menuId
-										.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
-									query.append("AND tranDescScore.latest_scoring_state NOT IN :SPECIAL_SCORING_STATES ");
-								}
-
-							}
-							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
-								query.append("AND tranDescScore.latest_scoring_state NOT IN :DUMMY_SCORING_STATES ");
-							}
-
-							if (menuId
-									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.SCORE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								query.append("AND tranDescScore.answer_paper_type NOT IN ( :ANSWER_PAPER_TYPES ) ");
-							}
-
-							if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
-								if (scoreCurrentInfo != null
-										&& scoreCurrentInfo
-												.isLookAfterwardsFlag()) {
-									query.append("AND tranLookAfterwards.look_aft_flag = :VALID_FLAG ");
-								}
-							}
-
-							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
-								query.append("ORDER BY RAND() ");
-							}
-							if ((forceAndStateTransitionFlag != null)
-									&& (forceAndStateTransitionFlag == WebAppConst.TRUE)
-									&& (menuId
-											.equals(WebAppConst.FORCED_MENU_ID))) {
-								query.append("ORDER BY tranDescScore.update_date DESC ");
-								query.append("LIMIT ");
-								if (endRecord != null) {
-									if (startRecord > 0) {
-										query.append(startRecord + " , "
-												+ endRecord);
-									} else {
-										query.append(endRecord + " ");
-									}
-								}
-							}
-							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
-								query.append(") score ");
-							} else if ((forceAndStateTransitionFlag != null)
-									&& (forceAndStateTransitionFlag == WebAppConst.TRUE)) {
-								query.append(") score ");
-								if (!menuId.equals(WebAppConst.FORCED_MENU_ID)) {
-									query.append("ORDER BY updateDate DESC ");
-								}
-							}
-							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
-								query.append("INNER JOIN ");
-								query.append("tran_desc_score_history AS tranDescScoreHistory ");
-								query.append("ON score.answerSeq = tranDescScoreHistory.answer_seq ");
-								query.append("WHERE t.answer_seq = score.answerSeq ");
-								query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
-								query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
-								query.append("AND tranDescScoreHistory.scoring_state NOT IN :DUMMY_SCORING_STATES ");
-							}
-
-							if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
-								query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
-								query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
-							}
-
-							if (searchByScorerRoleId == true) {
-								if (historyScorerRoles != null) {
-									query.append("AND tranDescScoreHistory.scorer_role_id IN :HISTORY_SCORER_ROLES ");
-									/*
-									 * query.append(
-									 * " AND tranDescScoreHistory.history_seq = "
-									 * ); query.append(
-									 * " (SELECT MAX(history_Seq) from tran_desc_score_history as tranDescScoreHistory "
-									 * ); query.append(
-									 * "WHERE tranDescScoreHistory.answer_seq =tranDescScore.answer_seq)"
-									 * );
-									 */
-								}
-							}
-
-							if (scoreHistoryInfo != null
-									&& scoreHistoryInfo.isHistoryBlock()) {
-
-								if (!historyScorerIdList.isEmpty()) {
-									query.append("AND tranDescScoreHistory.latest_screen_scorer_id IN :HISTORY_SCORER_ID_LIST ");
-								}
-								// This is for Quality Check Flag
-								/*
-								 * if (WebAppConst.SPEAKING_TYPE
-								 * .equals(questionInfo.getQuestionType()) ||
-								 * WebAppConst.WRITING_TYPE .equals(questionInfo
-								 * .getQuestionType())) {
-								 */
-								if (scoreHistoryInfo
-										.isHistoryQualityCheckFlag()) {
-									query.append("AND tranDescScoreHistory.quality_check_flag IN :QUALITY_CHECK_FLAG ");
-								}
-								/* } */
-
-								if (historyCategoryType != null
-										&& historyCategoryType == 2) {
-									query.append("AND tranDescScoreHistory.grade_seq IS null AND tranDescScoreHistory.pending_category_seq IS null ");
-								} else if (historyCategoryType != null
-										&& historyCategoryType == 3) {
-
-									if (!historyGradeSeqList.isEmpty()
-											&& ArrayUtils.contains(
-													scoreHistoryInfo
-															.getHistoryGradeNum(),
-													-1)) {
-										query.append("AND (tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
-										query.append("OR tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE) ");
-									} else {
-										if (!historyGradeSeqList.isEmpty()) {
-											query.append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
-										}
-
-										if (ArrayUtils.contains(
-												scoreHistoryInfo
-														.getHistoryGradeNum(),
-												-1)) {
-											query.append("AND tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE ");
-										}
-									}
-								} else if (historyCategoryType != null
-										&& historyCategoryType == 4
-										&& !historyPendingCategorySeqList
-												.isEmpty()) {
-									query.append("AND tranDescScoreHistory.pending_category_seq IN :HISTORY_PENDING_CATEGORY_SEQ_LIST ");
-								} else if (historyCategoryType != null
-										&& historyCategoryType == 5
-										&& !historyDenyCategorySeqList
-												.isEmpty()) {
-									query.append("AND tranDescScoreHistory.deny_category_seq IN :HISTORY_DENY_CATEGORY_SEQ_LIST ");
-								}
-
-								if (!StringUtils
-										.isBlank(historyIncludeCheckPoints)
-										&& !StringUtils
-												.isBlank(historyExcludeCheckPoints)) {
-
-									if (scoreInputInfo
-											.getScoreHistoryInfo()
-											.getPastSkpConditions()
-											.equals(WebAppConst.SKP_AND_CONDITION)) {
-										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
-										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
-
-									} else if (scoreInputInfo
-											.getScoreHistoryInfo()
-											.getPastSkpConditions()
-											.equals(WebAppConst.SKP_OR_CONDITION)) {
-										query.append("AND ((tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 OR (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0)");
-									}
-
-								} else {
-									if (!StringUtils
-											.isBlank(historyIncludeCheckPoints)) {
-										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
-									} else if (!StringUtils
-											.isBlank(historyExcludeCheckPoints)) {
-										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
-									}
-								}
-
-								if (historyEventList != null
-										&& historyEventList.length > 0) {
-									query.append("AND tranDescScoreHistory.event_id IN :HISTORY_EVENT_LIST ");
-								}
-
-								if (historyUpdateStartDate != null) {
-									query.append("AND tranDescScoreHistory.update_date >= :HISTORY_UPDATE_START_DATE ");
-								}
-
-								if (historyUpdateEndDate != null) {
-									query.append("AND tranDescScoreHistory.update_date <= :HISTORY_UPDATE_END_DATE ");
-								}
-							}
-							if (menuId
-									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
-								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
-								// query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
-							} else if (menuId
-									.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
-								// query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
-
-							}
-
-							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
-								query.append("LIMIT :RECORD_COUNT_LIMIT ");
-							}
-
-							if ((forceAndStateTransitionFlag != null)
-									&& (forceAndStateTransitionFlag == WebAppConst.FALSE)) {
-								query.append("GROUP BY tranDescScore.answer_seq ");
-								query.append(") score ");
-							}
-
-							SQLQuery queryObj = session.createSQLQuery(query
-									.toString());
-
-							if (menuId
-									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.SCORE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								queryObj.setParameterList("ANSWER_PAPER_TYPES",
-										WebAppConst.ANSWER_PAPER_TYPES);
-								queryObj.setParameterList("PENDING_CATEGORIES",
-										WebAppConst.PENDING_CATEGORIES);
-								/*
-								 * queryObj.setParameterList("DENY_CATEGORIES",
-								 * WebAppConst.PENDING_CATEGORIES);
-								 */
-							}
-							
-							if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID))
-									&& (objScoreStartRange != null)
-									&& (objScoreEndRange != null)) {
-								queryObj.setParameter("SUBJECT_CODE",
-										subjectCode);
-								queryObj.setParameter("OBJ_SCORE_START_RANGE",
-										objScoreStartRange);
-								queryObj.setParameter("OBJ_SCORE_END_RANGE",
-										objScoreEndRange);
-							}
-
-							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								queryObj.setParameter("INSPECT_FLAG",
-										WebAppConst.F);
-								/*
-								 * if (WebAppConst.SPEAKING_TYPE
-								 * .equals(questionInfo.getQuestionType()) ||
-								 * WebAppConst.WRITING_TYPE .equals(questionInfo
-								 * .getQuestionType())) {
-								 */
-								queryObj.setParameter("QUALITY_FLAG",
-										WebAppConst.QUALITY_MARK_FLAG_FALSE);
-								/* } */
-
-							}
-
-							if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
-								if (samplingFlag == WebAppConst.TRUE) {
-									queryObj.setParameterList(
-											"SAMPLING_FLAG_LIST",
-											WebAppConst.SCORE_SAMPLING_FLAG_LIST);
-								} else {
-									queryObj.setParameterList(
-											"SAMPLING_FLAG_LIST",
-											ArrayUtils
-													.subarray(
-															WebAppConst.SCORE_SAMPLING_FLAG_LIST,
-															0, 1));
-								}
-								/*
-								 * if (WebAppConst.SPEAKING_TYPE
-								 * .equals(questionInfo.getQuestionType()) ||
-								 * WebAppConst.WRITING_TYPE .equals(questionInfo
-								 * .getQuestionType())) {
-								 */
-								queryObj.setParameter("QUALITY_FLAG",
-										WebAppConst.QUALITY_MARK_FLAG_FALSE);
-								/* } */
-
-							}
-
-							if (!StringUtils.isBlank(answerFormNum)) {
-								queryObj.setParameter("ANSWER_FORM_NUM",
-										answerFormNum);
-							}
-
-							setHistoryParameters(queryObj);
-
-							setCurrentParameters(queryObj);
-
-							queryObj.setInteger("QUESTION_SEQ",
-									questionInfo.getQuestionSeq());
-							queryObj.setCharacter("UNLOCK", WebAppConst.UNLOCK);
-							queryObj.setCharacter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
-								queryObj.setInteger("RECORD_COUNT_LIMIT",
-										scoreInputInfo.getResultCount());
-							}
-
-							if ((scoreHistoryInfo == null || !scoreHistoryInfo
-									.isHistoryBlock())
-									&& (scoreCurrentInfo == null || !scoreCurrentInfo
-											.isCurrentBlock())) {
-								if (menuId
-										.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
-									queryObj.setParameterList(
-											"SPECIAL_SCORING_AND_BATCH_STATES",
-											WebAppConst.SPECIAL_SCORING_AND_BATCH_STATES);
-								} else if (menuId
-										.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
-									queryObj.setParameterList(
-											"SPECIAL_SCORING_STATES",
-											WebAppConst.SPECIAL_SCORING_STATES);
-								}
-
-							}
-							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
-								queryObj.setParameterList(
-										"DUMMY_SCORING_STATES",
-										WebAppConst.DUMMY_SCORING_STATES);
-							}
-
-							return queryObj.list();
-
+						if (!StringUtils.isBlank(punchText)) {
+							query.append("AND tranDescScore.punch_text like :PUNCH_TEXT escape '"
+									+ WebAppConst.ESCAPE_CHARACTER + "'");
 						}
 
-						public void setCurrentParameters(SQLQuery queryObj) {
-
-							if (scoreCurrentInfo != null
-									&& scoreCurrentInfo.isCurrentBlock()) {
-
-								if (!StringUtils.isBlank(punchText)) {
-									if (punchTextCondition == null
-											|| punchTextCondition.equals("0")) {
-										queryObj.setParameter("PUNCH_TEXT",
-												punchText);
-									} else if (punchTextCondition.equals("1")) {
-										queryObj.setParameter("PUNCH_TEXT",
-												punchText + "%");
-									} else if (punchTextCondition.equals("2")) {
-										queryObj.setParameter("PUNCH_TEXT", "%"
-												+ punchText);
-									} else if (punchTextCondition.equals("3")) {
-										queryObj.setParameter("PUNCH_TEXT", "%"
-												+ punchText + "%");
-									}
-								}
-
-								if (!currentScorerIdList.isEmpty()) {
-									queryObj.setParameterList(
-											"CURRENT_SCORER_ID_LIST",
-											currentScorerIdList);
-								}
-
-								if (scoreCurrentInfo
-										.isCurrentQualityCheckFlag()) {
-									/*
-									 * if (WebAppConst.SPEAKING_TYPE
-									 * .equals(questionInfo .getQuestionType())
-									 * || WebAppConst.WRITING_TYPE
-									 * .equals(questionInfo .getQuestionType()))
-									 * {
-									 */
-									queryObj.setParameterList(
-											"QUALITY_CHECK_FLAG",
-											ArrayUtils
-													.subarray(
-															WebAppConst.QUALITY_MARK_FLAG_LIST,
-															0, 1));
-									/* } */
-
-								} /*
-								 * else { if (WebAppConst.SPEAKING_TYPE
-								 * .equals(questionInfo .getQuestionType()) ||
-								 * WebAppConst.WRITING_TYPE .equals(questionInfo
-								 * .getQuestionType())) {
-								 * queryObj.setParameterList(
-								 * "QUALITY_CHECK_FLAG",
-								 * WebAppConst.QUALITY_MARK_FLAG_LIST); }
-								 * 
-								 * }
-								 */
-
-								if (currentCategoryType != null
-										&& currentCategoryType == 3) {
-
-									if (!currentGradeSeqList.isEmpty()) {
-										queryObj.setParameterList(
-												"CURRENT_GRADE_SEQ_LIST",
-												currentGradeSeqList);
-									}
-
-									if (ArrayUtils.contains(scoreCurrentInfo
-											.getCurrentGradeNum(), -1)) {
-										queryObj.setShort(
-												"NO_GRADE_SCORING_STATE",
-												WebAppConst.NO_GRADE_SCORING_STATE);
-									}
-								} else if (currentCategoryType != null
-										&& currentCategoryType == 4
-										&& !currentPendingCategorySeqList
-												.isEmpty()) {
-
-									queryObj.setParameterList(
-											"CURRENT_PENDING_CATEGORY_SEQ_LIST",
-											scoreCurrentInfo
-													.getCurrentPendingCategorySeqList());
-								} else if (currentCategoryType != null
-										&& currentCategoryType == 5
-										&& !currentDenyCategorySeqList
-												.isEmpty()) {
-
-									queryObj.setParameterList(
-											"CURRENT_DENY_CATEGORY_SEQ_LIST",
-											currentDenyCategorySeqList);
-								}
-
-								if (!StringUtils
-										.isBlank(currentIncludeCheckPoints)
-										&& !StringUtils
-												.isBlank(currentExcludeCheckPoints)) {
-									queryObj.setInteger(
-											"CURRENT_INCLUDE_BIT_VALUE",
-											scoreCurrentInfo
-													.getCurrentIncludeBitValue());
-									queryObj.setInteger(
-											"CURRENT_EXCLUDE_BIT_VALUE",
-											scoreCurrentInfo
-													.getCurrentExcludeBitValue());
-								} else {
-									if (!StringUtils
-											.isBlank(currentIncludeCheckPoints)) {
-										queryObj.setInteger(
-												"CURRENT_INCLUDE_BIT_VALUE",
-												scoreCurrentInfo
-														.getCurrentIncludeBitValue());
-									} else if (!StringUtils
-											.isBlank(currentExcludeCheckPoints)) {
-										queryObj.setInteger(
-												"CURRENT_EXCLUDE_BIT_VALUE",
-												scoreCurrentInfo
-														.getCurrentExcludeBitValue());
-									}
-								}
-
-								if (currentStateList != null
-										&& currentStateList.length > 0) {
-									queryObj.setParameterList(
-											"CURRENT_STATE_LIST",
-											scoreCurrentInfo
-													.getCurrentStateList());
-								}
-
-								if (currentUpdateStartDate != null) {
-									queryObj.setParameter(
-											"CURRENT_UPDATE_START_DATE",
-											currentUpdateStartDate);
-								}
-
-								if (currentUpdateEndDate != null) {
-									queryObj.setParameter(
-											"CURRENT_UPDATE_END_DATE",
-											currentUpdateEndDate);
-								}
-							} else if (menuId
-									.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
-								queryObj.setParameterList(
-										"CURRENT_STATE_LIST",
-										WebAppConst.SCORE_SAMPLING_CURRENT_STATES);
-							} else if (menuId
-									.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								queryObj.setParameterList(
-										"CURRENT_STATE_LIST",
-										WebAppConst.STATE_TRANSITION_CURRENT_STATES);
-							} else if (menuId
-									.equals(WebAppConst.FORCED_MENU_ID)) {
-								queryObj.setParameterList(
-										"CURRENT_STATE_LIST",
-										WebAppConst.FORCED_SCORING_CURRENT_STATES);
-							}
-
-							if (searchByScorerRoleId == true) {
-								if (currentScorerRoles != null) {
-									queryObj.setParameterList(
-											"CURRENT_SCORER_ROLES",
-											Arrays.asList(currentScorerRoles));
-								}
-							}
-
+						if (!currentScorerIdList.isEmpty()) {
+							query.append("AND tranDescScore.latest_screen_scorer_id IN :CURRENT_SCORER_ID_LIST ");
 						}
 
-						public void setHistoryParameters(SQLQuery queryObj) {
+						// This is for Quality Check Flag
+						/*
+						 * if (WebAppConst.SPEAKING_TYPE
+						 * .equals(questionInfo.getQuestionType()) ||
+						 * WebAppConst.WRITING_TYPE .equals(questionInfo
+						 * .getQuestionType())) {
+						 */
+						if (scoreCurrentInfo.isCurrentQualityCheckFlag()) {
+							query.append("AND tranDescScore.quality_check_flag IN :QUALITY_CHECK_FLAG ");
+						}
+						/* } */
 
-							if (scoreHistoryInfo != null
-									&& scoreHistoryInfo.isHistoryBlock()) {
+						if (currentCategoryType != null && currentCategoryType == 2) {
+							query.append(
+									"AND tranDescScore.grade_seq IS null AND tranDescScore.pending_category_seq IS null ");
+						} else if (currentCategoryType != null && currentCategoryType == 3) {
 
-								if (!historyScorerIdList.isEmpty()) {
-									queryObj.setParameterList(
-											"HISTORY_SCORER_ID_LIST",
-											historyScorerIdList);
-								}
-								if (scoreHistoryInfo
-										.isHistoryQualityCheckFlag()) {
-									/*
-									 * if (WebAppConst.SPEAKING_TYPE
-									 * .equals(questionInfo .getQuestionType())
-									 * || WebAppConst.WRITING_TYPE
-									 * .equals(questionInfo .getQuestionType()))
-									 * {
-									 */
-									queryObj.setParameterList(
-											"QUALITY_CHECK_FLAG",
-											ArrayUtils
-													.subarray(
-															WebAppConst.QUALITY_MARK_FLAG_LIST,
-															0, 1));
-									/* } */
-
-								} /*
-								 * else { if (WebAppConst.SPEAKING_TYPE
-								 * .equals(questionInfo .getQuestionType()) ||
-								 * WebAppConst.WRITING_TYPE .equals(questionInfo
-								 * .getQuestionType())) {
-								 * queryObj.setParameterList(
-								 * "QUALITY_CHECK_FLAG",
-								 * WebAppConst.QUALITY_MARK_FLAG_LIST); } }
-								 */
-
-								if (historyCategoryType != null
-										&& historyCategoryType == 3) {
-
-									if (!historyGradeSeqList.isEmpty()) {
-										queryObj.setParameterList(
-												"HISTORY_GRADE_SEQ_LIST",
-												historyGradeSeqList);
-									}
-
-									if (ArrayUtils.contains(scoreHistoryInfo
-											.getHistoryGradeNum(), -1)) {
-										queryObj.setShort(
-												"NO_GRADE_SCORING_STATE",
-												WebAppConst.NO_GRADE_SCORING_STATE);
-									}
-								} else if (historyCategoryType != null
-										&& historyCategoryType == 4
-										&& !historyPendingCategorySeqList
-												.isEmpty()) {
-
-									queryObj.setParameterList(
-											"HISTORY_PENDING_CATEGORY_SEQ_LIST",
-											historyPendingCategorySeqList);
-								} else if (historyCategoryType != null
-										&& historyCategoryType == 5
-										&& !historyDenyCategorySeqList
-												.isEmpty()) {
-
-									queryObj.setParameterList(
-											"HISTORY_DENY_CATEGORY_SEQ_LIST",
-											historyDenyCategorySeqList);
+							if (!currentGradeSeqList.isEmpty()
+									&& ArrayUtils.contains(scoreCurrentInfo.getCurrentGradeNum(), -1)) {
+								query.append("AND (tranDescScore.grade_seq IN :CURRENT_GRADE_SEQ_LIST ");
+								query.append("OR tranDescScore.latest_scoring_state = :NO_GRADE_SCORING_STATE) ");
+							} else {
+								if (!currentGradeSeqList.isEmpty()) {
+									query.append("AND tranDescScore.grade_seq IN :CURRENT_GRADE_SEQ_LIST ");
 								}
 
-								if (!StringUtils
-										.isBlank(historyIncludeCheckPoints)
-										&& !StringUtils
-												.isBlank(historyExcludeCheckPoints)) {
-									queryObj.setInteger(
-											"HISTORY_INCLUDE_BIT_VALUE",
-											scoreHistoryInfo
-													.getHistoryIncludeBitValue());
-									queryObj.setInteger(
-											"HISTORY_EXCLUDE_BIT_VALUE",
-											scoreHistoryInfo
-													.getHistoryExcludeBitValue());
-								} else {
-									if (!StringUtils
-											.isBlank(historyIncludeCheckPoints)) {
-										queryObj.setInteger(
-												"HISTORY_INCLUDE_BIT_VALUE",
-												scoreHistoryInfo
-														.getHistoryIncludeBitValue());
-									} else if (!StringUtils
-											.isBlank(historyExcludeCheckPoints)) {
-										queryObj.setInteger(
-												"HISTORY_EXCLUDE_BIT_VALUE",
-												scoreHistoryInfo
-														.getHistoryExcludeBitValue());
-									}
+								if (ArrayUtils.contains(scoreCurrentInfo.getCurrentGradeNum(), -1)) {
+									query.append("AND tranDescScore.latest_scoring_state = :NO_GRADE_SCORING_STATE ");
+								}
+							}
+						} else if (currentCategoryType != null && currentCategoryType == 4
+								&& !currentPendingCategorySeqList.isEmpty()) {
+							query.append(
+									"AND tranDescScore.pending_category_seq IN :CURRENT_PENDING_CATEGORY_SEQ_LIST ");
+						} else if (currentCategoryType != null && currentCategoryType == 5
+								&& !currentDenyCategorySeqList.isEmpty()) {
+							query.append("AND tranDescScore.deny_category_seq IN :CURRENT_DENY_CATEGORY_SEQ_LIST ");
+						}
+
+						if (!StringUtils.isBlank(currentIncludeCheckPoints)
+								&& !StringUtils.isBlank(currentExcludeCheckPoints)) {
+
+							if (scoreInputInfo.getScoreCurrentInfo().getCurrentSkpConditions()
+									.equals(WebAppConst.SKP_AND_CONDITION)) {
+
+								if (scoreCurrentInfo.getCurrentSkpIncludeConditions()
+										.equals(WebAppConst.SKP_AND_CONDITION)) {
+									query.append(
+											"AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) = :CURRENT_INCLUDE_BIT_VALUE ");
+								} else if (scoreCurrentInfo.getCurrentSkpIncludeConditions()
+										.equals(WebAppConst.SKP_OR_CONDITION)) {
+									query.append("AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
 								}
 
-								if (historyEventList != null
-										&& historyEventList.length > 0) {
-									queryObj.setParameterList(
-											"HISTORY_EVENT_LIST",
-											historyEventList);
+								if (scoreCurrentInfo.getCurrentSkpExcludeConditions()
+										.equals(WebAppConst.SKP_AND_CONDITION)) {
+									query.append(
+											"AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) != :CURRENT_EXCLUDE_BIT_VALUE ");
+								} else if (scoreCurrentInfo.getCurrentSkpExcludeConditions()
+										.equals(WebAppConst.SKP_OR_CONDITION)) {
+									query.append("AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
 								}
 
-								if (historyUpdateStartDate != null) {
-									queryObj.setParameter(
-											"HISTORY_UPDATE_START_DATE",
-											historyUpdateStartDate);
+							} else if (scoreInputInfo.getScoreCurrentInfo().getCurrentSkpConditions()
+									.equals(WebAppConst.SKP_OR_CONDITION)) {
+								// query.append("AND ((tranDescScore.bit_value &
+								// :CURRENT_INCLUDE_BIT_VALUE) > 0 OR
+								// (tranDescScore.bit_value &
+								// :CURRENT_EXCLUDE_BIT_VALUE) = 0)");
+								query.append("AND ( ");
+								if (scoreCurrentInfo.getCurrentSkpIncludeConditions()
+										.equals(WebAppConst.SKP_AND_CONDITION)) {
+									query.append(
+											"(tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) = :CURRENT_INCLUDE_BIT_VALUE ");
+								} else if (scoreCurrentInfo.getCurrentSkpIncludeConditions()
+										.equals(WebAppConst.SKP_OR_CONDITION)) {
+									query.append("(tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
 								}
-
-								if (historyUpdateEndDate != null) {
-									queryObj.setParameter(
-											"HISTORY_UPDATE_END_DATE",
-											historyUpdateEndDate);
+								query.append("OR ");
+								if (scoreCurrentInfo.getCurrentSkpExcludeConditions()
+										.equals(WebAppConst.SKP_AND_CONDITION)) {
+									query.append(
+											"(tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) != :CURRENT_EXCLUDE_BIT_VALUE ");
+								} else if (scoreCurrentInfo.getCurrentSkpExcludeConditions()
+										.equals(WebAppConst.SKP_OR_CONDITION)) {
+									query.append("(tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
 								}
-
-								if (searchByScorerRoleId == true) {
-									if (historyScorerRoles != null) {
-										queryObj.setParameterList(
-												"HISTORY_SCORER_ROLES",
-												Arrays.asList(historyScorerRoles));
-									}
-								}
-
+								query.append(") ");
 							}
 
+						} else {
+							if (!StringUtils.isBlank(currentIncludeCheckPoints)) {
+								if (scoreCurrentInfo.getCurrentSkpIncludeConditions()
+										.equals(WebAppConst.SKP_AND_CONDITION)) {
+									query.append(
+											"AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) = :CURRENT_INCLUDE_BIT_VALUE ");
+								} else if (scoreCurrentInfo.getCurrentSkpIncludeConditions()
+										.equals(WebAppConst.SKP_OR_CONDITION)) {
+									query.append("AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
+								}
+
+							} else if (!StringUtils.isBlank(currentExcludeCheckPoints)) {
+								if (scoreCurrentInfo.getCurrentSkpExcludeConditions()
+										.equals(WebAppConst.SKP_AND_CONDITION)) {
+									query.append(
+											"AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) != :CURRENT_EXCLUDE_BIT_VALUE ");
+								} else if (scoreCurrentInfo.getCurrentSkpExcludeConditions()
+										.equals(WebAppConst.SKP_OR_CONDITION)) {
+									query.append("AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+								}
+							}
 						}
-					});
+
+						if (currentStateList != null && currentStateList.length > 0) {
+							query.append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST ");
+						}
+
+						if (currentUpdateStartDate != null) {
+							query.append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE ");
+						}
+
+						if (currentUpdateEndDate != null) {
+							query.append("AND tranDescScore.update_date <= :CURRENT_UPDATE_END_DATE ");
+						}
+					} else if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
+							|| menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
+							|| menuId.equals(WebAppConst.FORCED_MENU_ID)) {
+						query.append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST ");
+					}
+
+					if ((scoreHistoryInfo == null || !scoreHistoryInfo.isHistoryBlock())
+							&& (scoreCurrentInfo == null || !scoreCurrentInfo.isCurrentBlock())) {
+						if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
+							query.append(
+									"AND tranDescScore.latest_scoring_state NOT IN :SPECIAL_SCORING_AND_BATCH_STATES ");
+						} else if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
+							query.append("AND tranDescScore.latest_scoring_state NOT IN :SPECIAL_SCORING_STATES ");
+						}
+
+					}
+					if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+						query.append("AND tranDescScore.latest_scoring_state NOT IN :DUMMY_SCORING_STATES ");
+					}
+
+					if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
+							|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
+							|| menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+						query.append("AND tranDescScore.answer_paper_type NOT IN ( :ANSWER_PAPER_TYPES ) ");
+					}
+
+					if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
+						if (scoreCurrentInfo != null && scoreCurrentInfo.isLookAfterwardsFlag()) {
+							query.append("AND tranLookAfterwards.look_aft_flag = :VALID_FLAG ");
+						}
+					}
+
+					if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+						query.append("ORDER BY RAND() ");
+					}
+					if ((forceAndStateTransitionFlag != null) && (forceAndStateTransitionFlag == WebAppConst.TRUE)
+							&& (menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+						query.append("ORDER BY tranDescScore.update_date DESC ");
+						query.append("LIMIT ");
+						if (endRecord != null) {
+							if (startRecord > 0) {
+								query.append(startRecord + " , " + endRecord);
+							} else {
+								query.append(endRecord + " ");
+							}
+						}
+					}
+					if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+						query.append(") score ");
+					} else if ((forceAndStateTransitionFlag != null)
+							&& (forceAndStateTransitionFlag == WebAppConst.TRUE)) {
+						query.append(") score ");
+						if (!menuId.equals(WebAppConst.FORCED_MENU_ID)) {
+							query.append("ORDER BY updateDate DESC ");
+						}
+					}
+					if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+						query.append("INNER JOIN ");
+						query.append("tran_desc_score_history AS tranDescScoreHistory ");
+						query.append("ON score.answerSeq = tranDescScoreHistory.answer_seq ");
+						query.append("WHERE t.answer_seq = score.answerSeq ");
+						query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
+						query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
+						query.append("AND tranDescScoreHistory.scoring_state NOT IN :DUMMY_SCORING_STATES ");
+					}
+
+					if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+						query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
+						query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
+					}
+
+					if (searchByScorerRoleId == true) {
+						if (historyScorerRoles != null) {
+							query.append("AND tranDescScoreHistory.scorer_role_id IN :HISTORY_SCORER_ROLES ");
+							/*
+							 * query.append(
+							 * " AND tranDescScoreHistory.history_seq = " );
+							 * query.append(
+							 * " (SELECT MAX(history_Seq) from tran_desc_score_history as tranDescScoreHistory "
+							 * ); query.append(
+							 * "WHERE tranDescScoreHistory.answer_seq =tranDescScore.answer_seq)"
+							 * );
+							 */
+						}
+					}
+
+					if (scoreHistoryInfo != null && scoreHistoryInfo.isHistoryBlock()) {
+
+						if (!historyScorerIdList.isEmpty()) {
+							query.append(
+									"AND tranDescScoreHistory.latest_screen_scorer_id IN :HISTORY_SCORER_ID_LIST ");
+						}
+						// This is for Quality Check Flag
+						/*
+						 * if (WebAppConst.SPEAKING_TYPE
+						 * .equals(questionInfo.getQuestionType()) ||
+						 * WebAppConst.WRITING_TYPE .equals(questionInfo
+						 * .getQuestionType())) {
+						 */
+						if (scoreHistoryInfo.isHistoryQualityCheckFlag()) {
+							query.append("AND tranDescScoreHistory.quality_check_flag IN :QUALITY_CHECK_FLAG ");
+						}
+						/* } */
+
+						if (historyCategoryType != null && historyCategoryType == 2) {
+							query.append(
+									"AND tranDescScoreHistory.grade_seq IS null AND tranDescScoreHistory.pending_category_seq IS null ");
+						} else if (historyCategoryType != null && historyCategoryType == 3) {
+
+							if (!historyGradeSeqList.isEmpty()
+									&& ArrayUtils.contains(scoreHistoryInfo.getHistoryGradeNum(), -1)) {
+								query.append("AND (tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
+								query.append("OR tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE) ");
+							} else {
+								if (!historyGradeSeqList.isEmpty()) {
+									query.append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
+								}
+
+								if (ArrayUtils.contains(scoreHistoryInfo.getHistoryGradeNum(), -1)) {
+									query.append("AND tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE ");
+								}
+							}
+						} else if (historyCategoryType != null && historyCategoryType == 4
+								&& !historyPendingCategorySeqList.isEmpty()) {
+							query.append(
+									"AND tranDescScoreHistory.pending_category_seq IN :HISTORY_PENDING_CATEGORY_SEQ_LIST ");
+						} else if (historyCategoryType != null && historyCategoryType == 5
+								&& !historyDenyCategorySeqList.isEmpty()) {
+							query.append(
+									"AND tranDescScoreHistory.deny_category_seq IN :HISTORY_DENY_CATEGORY_SEQ_LIST ");
+						}
+
+						if (!StringUtils.isBlank(historyIncludeCheckPoints)
+								&& !StringUtils.isBlank(historyExcludeCheckPoints)) {
+
+							if (scoreInputInfo.getScoreHistoryInfo().getPastSkpConditions()
+									.equals(WebAppConst.SKP_AND_CONDITION)) {
+								if (scoreHistoryInfo.getPastSkpIncludeConditions()
+										.equals(WebAppConst.SKP_AND_CONDITION)) {
+									query.append(
+											"AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) = :HISTORY_INCLUDE_BIT_VALUE ");
+								} else if (scoreHistoryInfo.getPastSkpIncludeConditions()
+										.equals(WebAppConst.SKP_OR_CONDITION)) {
+									query.append(
+											"AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
+								}
+								if (scoreHistoryInfo.getPastSkpExcludeConditions()
+										.equals(WebAppConst.SKP_AND_CONDITION)) {
+									query.append(
+											"AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) != :HISTORY_EXCLUDE_BIT_VALUE ");
+								} else if (scoreHistoryInfo.getPastSkpExcludeConditions()
+										.equals(WebAppConst.SKP_OR_CONDITION)) {
+									query.append(
+											"AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+								}
+
+							} else if (scoreInputInfo.getScoreHistoryInfo().getPastSkpConditions()
+									.equals(WebAppConst.SKP_OR_CONDITION)) {
+								// query.append("AND
+								// ((tranDescScoreHistory.bit_value &
+								// :HISTORY_INCLUDE_BIT_VALUE) > 0 OR
+								// (tranDescScoreHistory.bit_value &
+								// :HISTORY_EXCLUDE_BIT_VALUE) = 0)");
+								query.append("AND ( ");
+								if (scoreHistoryInfo.getPastSkpIncludeConditions()
+										.equals(WebAppConst.SKP_AND_CONDITION)) {
+									query.append(
+											"(tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) = :HISTORY_INCLUDE_BIT_VALUE ");
+								} else if (scoreHistoryInfo.getPastSkpIncludeConditions()
+										.equals(WebAppConst.SKP_OR_CONDITION)) {
+									query.append("(tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
+								}
+								query.append("OR ");
+								if (scoreHistoryInfo.getPastSkpExcludeConditions()
+										.equals(WebAppConst.SKP_AND_CONDITION)) {
+									query.append(
+											"(tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) != :HISTORY_EXCLUDE_BIT_VALUE ");
+								} else if (scoreHistoryInfo.getPastSkpExcludeConditions()
+										.equals(WebAppConst.SKP_OR_CONDITION)) {
+									query.append("(tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+								}
+								query.append(") ");
+							}
+
+						} else {
+							if (!StringUtils.isBlank(historyIncludeCheckPoints)) {
+								if (scoreHistoryInfo.getPastSkpIncludeConditions()
+										.equals(WebAppConst.SKP_AND_CONDITION)) {
+									query.append(
+											"AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) = :HISTORY_INCLUDE_BIT_VALUE ");
+								} else if (scoreHistoryInfo.getPastSkpIncludeConditions()
+										.equals(WebAppConst.SKP_OR_CONDITION)) {
+									query.append(
+											"AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
+								}
+							} else if (!StringUtils.isBlank(historyExcludeCheckPoints)) {
+								if (scoreHistoryInfo.getPastSkpExcludeConditions()
+										.equals(WebAppConst.SKP_AND_CONDITION)) {
+									query.append(
+											"AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) != :HISTORY_EXCLUDE_BIT_VALUE ");
+								} else if (scoreHistoryInfo.getPastSkpExcludeConditions()
+										.equals(WebAppConst.SKP_OR_CONDITION)) {
+									query.append(
+											"AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+								}
+							}
+						}
+
+						if (historyEventList != null && historyEventList.length > 0) {
+							query.append("AND tranDescScoreHistory.event_id IN :HISTORY_EVENT_LIST ");
+						}
+
+						if (historyUpdateStartDate != null) {
+							query.append("AND tranDescScoreHistory.update_date >= :HISTORY_UPDATE_START_DATE ");
+						}
+
+						if (historyUpdateEndDate != null) {
+							query.append("AND tranDescScoreHistory.update_date <= :HISTORY_UPDATE_END_DATE ");
+						}
+					}
+					if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
+							|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
+						query.append(
+								"AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND t.answer_seq = th.answer_seq )<=0 ");
+						// query.append("AND ( SELECT count(*) from
+						// tran_desc_score_history th where deny_category in (
+						// :DENY_CATEGORIES ) AND t.answer_seq = th.answer_seq
+						// )<=0 ");
+					} else if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+						query.append(
+								"AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
+						// query.append("AND ( SELECT count(*) from
+						// tran_desc_score_history th where deny_category in (
+						// :DENY_CATEGORIES ) AND tranDescScore.answer_seq =
+						// th.answer_seq )<=0 ");
+
+					}
+
+					if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+						query.append("LIMIT :RECORD_COUNT_LIMIT ");
+					}
+
+					if ((forceAndStateTransitionFlag != null) && (forceAndStateTransitionFlag == WebAppConst.FALSE)) {
+						query.append("GROUP BY tranDescScore.answer_seq ");
+						query.append(") score ");
+					}
+
+					SQLQuery queryObj = session.createSQLQuery(query.toString());
+
+					if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
+							|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
+							|| menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+						queryObj.setParameterList("ANSWER_PAPER_TYPES", WebAppConst.ANSWER_PAPER_TYPES);
+						queryObj.setParameterList("PENDING_CATEGORIES", WebAppConst.PENDING_CATEGORIES);
+						/*
+						 * queryObj.setParameterList("DENY_CATEGORIES",
+						 * WebAppConst.PENDING_CATEGORIES);
+						 */
+					}
+
+					if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
+							|| menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) && (objScoreStartRange != null)
+							&& (objScoreEndRange != null)) {
+						queryObj.setParameter("SUBJECT_CODE", subjectCode);
+						queryObj.setParameter("OBJ_SCORE_START_RANGE", objScoreStartRange);
+						queryObj.setParameter("OBJ_SCORE_END_RANGE", objScoreEndRange);
+					}
+
+					if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+						queryObj.setParameter("INSPECT_FLAG", WebAppConst.F);
+						/*
+						 * if (WebAppConst.SPEAKING_TYPE
+						 * .equals(questionInfo.getQuestionType()) ||
+						 * WebAppConst.WRITING_TYPE .equals(questionInfo
+						 * .getQuestionType())) {
+						 */
+						queryObj.setParameter("QUALITY_FLAG", WebAppConst.QUALITY_MARK_FLAG_FALSE);
+						/* } */
+
+					}
+
+					if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
+						if (samplingFlag == WebAppConst.TRUE) {
+							queryObj.setParameterList("SAMPLING_FLAG_LIST", WebAppConst.SCORE_SAMPLING_FLAG_LIST);
+						} else {
+							queryObj.setParameterList("SAMPLING_FLAG_LIST",
+									ArrayUtils.subarray(WebAppConst.SCORE_SAMPLING_FLAG_LIST, 0, 1));
+						}
+						/*
+						 * if (WebAppConst.SPEAKING_TYPE
+						 * .equals(questionInfo.getQuestionType()) ||
+						 * WebAppConst.WRITING_TYPE .equals(questionInfo
+						 * .getQuestionType())) {
+						 */
+						queryObj.setParameter("QUALITY_FLAG", WebAppConst.QUALITY_MARK_FLAG_FALSE);
+						/* } */
+
+					}
+
+					if (!StringUtils.isBlank(answerFormNum)) {
+						queryObj.setParameter("ANSWER_FORM_NUM", answerFormNum);
+					}
+
+					setHistoryParameters(queryObj);
+
+					setCurrentParameters(queryObj);
+
+					queryObj.setInteger("QUESTION_SEQ", questionInfo.getQuestionSeq());
+					queryObj.setCharacter("UNLOCK", WebAppConst.UNLOCK);
+					queryObj.setCharacter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+						queryObj.setInteger("RECORD_COUNT_LIMIT", scoreInputInfo.getResultCount());
+					}
+
+					if ((scoreHistoryInfo == null || !scoreHistoryInfo.isHistoryBlock())
+							&& (scoreCurrentInfo == null || !scoreCurrentInfo.isCurrentBlock())) {
+						if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
+							queryObj.setParameterList("SPECIAL_SCORING_AND_BATCH_STATES",
+									WebAppConst.SPECIAL_SCORING_AND_BATCH_STATES);
+						} else if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
+							queryObj.setParameterList("SPECIAL_SCORING_STATES", WebAppConst.SPECIAL_SCORING_STATES);
+						}
+
+					}
+					if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+						queryObj.setParameterList("DUMMY_SCORING_STATES", WebAppConst.DUMMY_SCORING_STATES);
+					}
+
+					return queryObj.list();
+
+				}
+
+				public void setCurrentParameters(SQLQuery queryObj) {
+
+					if (scoreCurrentInfo != null && scoreCurrentInfo.isCurrentBlock()) {
+
+						if (!StringUtils.isBlank(punchText)) {
+							if (punchTextCondition == null || punchTextCondition.equals("0")) {
+								queryObj.setParameter("PUNCH_TEXT", punchText);
+							} else if (punchTextCondition.equals("1")) {
+								queryObj.setParameter("PUNCH_TEXT", punchText + "%");
+							} else if (punchTextCondition.equals("2")) {
+								queryObj.setParameter("PUNCH_TEXT", "%" + punchText);
+							} else if (punchTextCondition.equals("3")) {
+								queryObj.setParameter("PUNCH_TEXT", "%" + punchText + "%");
+							}
+						}
+
+						if (!currentScorerIdList.isEmpty()) {
+							queryObj.setParameterList("CURRENT_SCORER_ID_LIST", currentScorerIdList);
+						}
+
+						if (scoreCurrentInfo.isCurrentQualityCheckFlag()) {
+							/*
+							 * if (WebAppConst.SPEAKING_TYPE
+							 * .equals(questionInfo .getQuestionType()) ||
+							 * WebAppConst.WRITING_TYPE .equals(questionInfo
+							 * .getQuestionType())) {
+							 */
+							queryObj.setParameterList("QUALITY_CHECK_FLAG",
+									ArrayUtils.subarray(WebAppConst.QUALITY_MARK_FLAG_LIST, 0, 1));
+							/* } */
+
+						} /*
+							 * else { if (WebAppConst.SPEAKING_TYPE
+							 * .equals(questionInfo .getQuestionType()) ||
+							 * WebAppConst.WRITING_TYPE .equals(questionInfo
+							 * .getQuestionType())) { queryObj.setParameterList(
+							 * "QUALITY_CHECK_FLAG",
+							 * WebAppConst.QUALITY_MARK_FLAG_LIST); }
+							 * 
+							 * }
+							 */
+
+						if (currentCategoryType != null && currentCategoryType == 3) {
+
+							if (!currentGradeSeqList.isEmpty()) {
+								queryObj.setParameterList("CURRENT_GRADE_SEQ_LIST", currentGradeSeqList);
+							}
+
+							if (ArrayUtils.contains(scoreCurrentInfo.getCurrentGradeNum(), -1)) {
+								queryObj.setShort("NO_GRADE_SCORING_STATE", WebAppConst.NO_GRADE_SCORING_STATE);
+							}
+						} else if (currentCategoryType != null && currentCategoryType == 4
+								&& !currentPendingCategorySeqList.isEmpty()) {
+
+							queryObj.setParameterList("CURRENT_PENDING_CATEGORY_SEQ_LIST",
+									scoreCurrentInfo.getCurrentPendingCategorySeqList());
+						} else if (currentCategoryType != null && currentCategoryType == 5
+								&& !currentDenyCategorySeqList.isEmpty()) {
+
+							queryObj.setParameterList("CURRENT_DENY_CATEGORY_SEQ_LIST", currentDenyCategorySeqList);
+						}
+
+						if (!StringUtils.isBlank(currentIncludeCheckPoints)
+								&& !StringUtils.isBlank(currentExcludeCheckPoints)) {
+							queryObj.setInteger("CURRENT_INCLUDE_BIT_VALUE",
+									scoreCurrentInfo.getCurrentIncludeBitValue());
+							queryObj.setInteger("CURRENT_EXCLUDE_BIT_VALUE",
+									scoreCurrentInfo.getCurrentExcludeBitValue());
+						} else {
+							if (!StringUtils.isBlank(currentIncludeCheckPoints)) {
+								queryObj.setInteger("CURRENT_INCLUDE_BIT_VALUE",
+										scoreCurrentInfo.getCurrentIncludeBitValue());
+							} else if (!StringUtils.isBlank(currentExcludeCheckPoints)) {
+								queryObj.setInteger("CURRENT_EXCLUDE_BIT_VALUE",
+										scoreCurrentInfo.getCurrentExcludeBitValue());
+							}
+						}
+
+						if (currentStateList != null && currentStateList.length > 0) {
+							queryObj.setParameterList("CURRENT_STATE_LIST", scoreCurrentInfo.getCurrentStateList());
+						}
+
+						if (currentUpdateStartDate != null) {
+							queryObj.setParameter("CURRENT_UPDATE_START_DATE", currentUpdateStartDate);
+						}
+
+						if (currentUpdateEndDate != null) {
+							queryObj.setParameter("CURRENT_UPDATE_END_DATE", currentUpdateEndDate);
+						}
+					} else if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
+						queryObj.setParameterList("CURRENT_STATE_LIST", WebAppConst.SCORE_SAMPLING_CURRENT_STATES);
+					} else if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+						queryObj.setParameterList("CURRENT_STATE_LIST", WebAppConst.STATE_TRANSITION_CURRENT_STATES);
+					} else if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
+						queryObj.setParameterList("CURRENT_STATE_LIST", WebAppConst.FORCED_SCORING_CURRENT_STATES);
+					}
+
+					if (searchByScorerRoleId == true) {
+						if (currentScorerRoles != null) {
+							queryObj.setParameterList("CURRENT_SCORER_ROLES", Arrays.asList(currentScorerRoles));
+						}
+					}
+
+				}
+
+				public void setHistoryParameters(SQLQuery queryObj) {
+
+					if (scoreHistoryInfo != null && scoreHistoryInfo.isHistoryBlock()) {
+
+						if (!historyScorerIdList.isEmpty()) {
+							queryObj.setParameterList("HISTORY_SCORER_ID_LIST", historyScorerIdList);
+						}
+						if (scoreHistoryInfo.isHistoryQualityCheckFlag()) {
+							/*
+							 * if (WebAppConst.SPEAKING_TYPE
+							 * .equals(questionInfo .getQuestionType()) ||
+							 * WebAppConst.WRITING_TYPE .equals(questionInfo
+							 * .getQuestionType())) {
+							 */
+							queryObj.setParameterList("QUALITY_CHECK_FLAG",
+									ArrayUtils.subarray(WebAppConst.QUALITY_MARK_FLAG_LIST, 0, 1));
+							/* } */
+
+						} /*
+							 * else { if (WebAppConst.SPEAKING_TYPE
+							 * .equals(questionInfo .getQuestionType()) ||
+							 * WebAppConst.WRITING_TYPE .equals(questionInfo
+							 * .getQuestionType())) { queryObj.setParameterList(
+							 * "QUALITY_CHECK_FLAG",
+							 * WebAppConst.QUALITY_MARK_FLAG_LIST); } }
+							 */
+
+						if (historyCategoryType != null && historyCategoryType == 3) {
+
+							if (!historyGradeSeqList.isEmpty()) {
+								queryObj.setParameterList("HISTORY_GRADE_SEQ_LIST", historyGradeSeqList);
+							}
+
+							if (ArrayUtils.contains(scoreHistoryInfo.getHistoryGradeNum(), -1)) {
+								queryObj.setShort("NO_GRADE_SCORING_STATE", WebAppConst.NO_GRADE_SCORING_STATE);
+							}
+						} else if (historyCategoryType != null && historyCategoryType == 4
+								&& !historyPendingCategorySeqList.isEmpty()) {
+
+							queryObj.setParameterList("HISTORY_PENDING_CATEGORY_SEQ_LIST",
+									historyPendingCategorySeqList);
+						} else if (historyCategoryType != null && historyCategoryType == 5
+								&& !historyDenyCategorySeqList.isEmpty()) {
+
+							queryObj.setParameterList("HISTORY_DENY_CATEGORY_SEQ_LIST", historyDenyCategorySeqList);
+						}
+
+						if (!StringUtils.isBlank(historyIncludeCheckPoints)
+								&& !StringUtils.isBlank(historyExcludeCheckPoints)) {
+							queryObj.setInteger("HISTORY_INCLUDE_BIT_VALUE",
+									scoreHistoryInfo.getHistoryIncludeBitValue());
+							queryObj.setInteger("HISTORY_EXCLUDE_BIT_VALUE",
+									scoreHistoryInfo.getHistoryExcludeBitValue());
+						} else {
+							if (!StringUtils.isBlank(historyIncludeCheckPoints)) {
+								queryObj.setInteger("HISTORY_INCLUDE_BIT_VALUE",
+										scoreHistoryInfo.getHistoryIncludeBitValue());
+							} else if (!StringUtils.isBlank(historyExcludeCheckPoints)) {
+								queryObj.setInteger("HISTORY_EXCLUDE_BIT_VALUE",
+										scoreHistoryInfo.getHistoryExcludeBitValue());
+							}
+						}
+
+						if (historyEventList != null && historyEventList.length > 0) {
+							queryObj.setParameterList("HISTORY_EVENT_LIST", historyEventList);
+						}
+
+						if (historyUpdateStartDate != null) {
+							queryObj.setParameter("HISTORY_UPDATE_START_DATE", historyUpdateStartDate);
+						}
+
+						if (historyUpdateEndDate != null) {
+							queryObj.setParameter("HISTORY_UPDATE_END_DATE", historyUpdateEndDate);
+						}
+
+						if (searchByScorerRoleId == true) {
+							if (historyScorerRoles != null) {
+								queryObj.setParameterList("HISTORY_SCORER_ROLES", Arrays.asList(historyScorerRoles));
+							}
+						}
+
+					}
+
+				}
+			});
 			/*
 			 * System.out.println(">>>>>>>>>>>>>> searchAnswerRecords end: " +
 			 * new Date().getTime());
@@ -3193,9 +3033,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * ((forceAndStateTransitionFlag == null) || (forceAndStateTransitionFlag ==
 	 * WebAppConst.TRUE)) { query.append(
 	 * "SELECT t.answer_seq AS answerSeq, t.answer_form_num AS answerFormNum, "
-	 * );
-	 * query.append("t.image_file_name AS imageFileName, t.grade_seq AS gradeSeq, "
-	 * ); query.append(
+	 * ); query.
+	 * append("t.image_file_name AS imageFileName, t.grade_seq AS gradeSeq, " );
+	 * query.append(
 	 * "t.bit_value AS bitValue, t.latest_scorer_id AS latestScorerId, "); if
 	 * (!(menuId .equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
 	 * .equals(WebAppConst.FORCED_MENU_ID))) { query.append(
@@ -3214,8 +3054,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "t.question_seq AS questionSeq, t.latest_screen_scorer_id AS latestScreenScorerId, "
 	 * ); } if (menuId.equals(WebAppConst.FORCED_MENU_ID) &&
 	 * (forceAndStateTransitionFlag != null && forceAndStateTransitionFlag ==
-	 * WebAppConst.TRUE)) {
-	 * query.append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory "
+	 * WebAppConst.TRUE)) { query.
+	 * append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory "
 	 * ); query.append("WHERE scoreHistory.answer_seq = t.answer_seq ");
 	 * query.append("AND scoreHistory.question_seq = :QUESTION_SEQ ");
 	 * query.append(
@@ -3262,8 +3102,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "AND (tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
 	 * query.
 	 * append("OR tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE) "
-	 * ); } else { if (!historyGradeSeqList.isEmpty()) {
-	 * query.append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST "
+	 * ); } else { if (!historyGradeSeqList.isEmpty()) { query.
+	 * append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST "
 	 * ); }
 	 * 
 	 * if (ArrayUtils.contains( scoreHistoryInfo .getHistoryGradeNum(), -1)) {
@@ -3341,16 +3181,16 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * query.append
 	 * ("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "); }
 	 * 
-	 * if (currentUpdateStartDate != null) {
-	 * query.append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE "
-	 * ); }
+	 * if (currentUpdateStartDate != null) { query.
+	 * append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE " );
+	 * }
 	 * 
 	 * if (currentUpdateEndDate != null) {
 	 * query.append("AND tranDescScore.update_date <= :CURRENT_UPDATE_END_DATE "
 	 * ); } } else if (menuId .equals(WebAppConst.SCORE_SAMP_MENU_ID) || menuId
 	 * .equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-	 * .equals(WebAppConst.FORCED_MENU_ID)) {
-	 * query.append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "
+	 * .equals(WebAppConst.FORCED_MENU_ID)) { query.
+	 * append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "
 	 * ); }
 	 * 
 	 * if ((scoreHistoryInfo == null || !scoreHistoryInfo .isHistoryBlock()) &&
@@ -3633,8 +3473,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "tranDescScore.question_seq AS questionSeq, tranDescScore.latest_screen_scorer_id AS latestScreenScorerId, "
 	 * ); } if (menuId.equals(WebAppConst.FORCED_MENU_ID) &&
 	 * (forceAndStateTransitionFlag != null && forceAndStateTransitionFlag ==
-	 * WebAppConst.TRUE)) {
-	 * query.append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory "
+	 * WebAppConst.TRUE)) { query.
+	 * append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory "
 	 * );
 	 * query.append("WHERE scoreHistory.answer_seq = tranDescScore.answer_seq "
 	 * ); query.append("AND scoreHistory.question_seq = :QUESTION_SEQ ");
@@ -3682,8 +3522,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "AND (tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
 	 * query.
 	 * append("OR tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE) "
-	 * ); } else { if (!historyGradeSeqList.isEmpty()) {
-	 * query.append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST "
+	 * ); } else { if (!historyGradeSeqList.isEmpty()) { query.
+	 * append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST "
 	 * ); }
 	 * 
 	 * if (ArrayUtils.contains( scoreHistoryInfo .getHistoryGradeNum(), -1)) {
@@ -3761,16 +3601,16 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * query.append
 	 * ("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "); }
 	 * 
-	 * if (currentUpdateStartDate != null) {
-	 * query.append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE "
-	 * ); }
+	 * if (currentUpdateStartDate != null) { query.
+	 * append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE " );
+	 * }
 	 * 
 	 * if (currentUpdateEndDate != null) {
 	 * query.append("AND tranDescScore.update_date <= :CURRENT_UPDATE_END_DATE "
 	 * ); } } else if (menuId .equals(WebAppConst.SCORE_SAMP_MENU_ID) || menuId
 	 * .equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-	 * .equals(WebAppConst.FORCED_MENU_ID)) {
-	 * query.append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "
+	 * .equals(WebAppConst.FORCED_MENU_ID)) { query.
+	 * append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "
 	 * ); }
 	 * 
 	 * if ((scoreHistoryInfo == null || !scoreHistoryInfo .isHistoryBlock()) &&
@@ -4024,9 +3864,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * ((forceAndStateTransitionFlag == null) || (forceAndStateTransitionFlag ==
 	 * WebAppConst.TRUE)) { query.append(
 	 * "SELECT t.answer_seq AS answerSeq, t.answer_form_num AS answerFormNum, "
-	 * );
-	 * query.append("t.image_file_name AS imageFileName, t.grade_seq AS gradeSeq, "
-	 * ); query.append(
+	 * ); query.
+	 * append("t.image_file_name AS imageFileName, t.grade_seq AS gradeSeq, " );
+	 * query.append(
 	 * "t.bit_value AS bitValue, t.latest_scorer_id AS latestScorerId, "); if
 	 * (!(menuId .equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
 	 * .equals(WebAppConst.FORCED_MENU_ID))) { query.append(
@@ -4045,8 +3885,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "t.question_seq AS questionSeq, t.latest_screen_scorer_id AS latestScreenScorerId, "
 	 * ); } if (menuId.equals(WebAppConst.FORCED_MENU_ID) &&
 	 * (forceAndStateTransitionFlag != null && forceAndStateTransitionFlag ==
-	 * WebAppConst.TRUE)) {
-	 * query.append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory "
+	 * WebAppConst.TRUE)) { query.
+	 * append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory "
 	 * ); query.append("WHERE scoreHistory.answer_seq = t.answer_seq ");
 	 * query.append("AND scoreHistory.question_seq = :QUESTION_SEQ ");
 	 * query.append(
@@ -4093,8 +3933,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * "AND (tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
 	 * query.
 	 * append("OR tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE) "
-	 * ); } else { if (!historyGradeSeqList.isEmpty()) {
-	 * query.append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST "
+	 * ); } else { if (!historyGradeSeqList.isEmpty()) { query.
+	 * append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST "
 	 * ); }
 	 * 
 	 * if (ArrayUtils.contains( scoreHistoryInfo .getHistoryGradeNum(), -1)) {
@@ -4172,16 +4012,16 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 	 * query.append
 	 * ("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "); }
 	 * 
-	 * if (currentUpdateStartDate != null) {
-	 * query.append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE "
-	 * ); }
+	 * if (currentUpdateStartDate != null) { query.
+	 * append("AND tranDescScore.update_date >= :CURRENT_UPDATE_START_DATE " );
+	 * }
 	 * 
 	 * if (currentUpdateEndDate != null) {
 	 * query.append("AND tranDescScore.update_date <= :CURRENT_UPDATE_END_DATE "
 	 * ); } } else if (menuId .equals(WebAppConst.SCORE_SAMP_MENU_ID) || menuId
 	 * .equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-	 * .equals(WebAppConst.FORCED_MENU_ID)) {
-	 * query.append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "
+	 * .equals(WebAppConst.FORCED_MENU_ID)) { query.
+	 * append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST "
 	 * ); }
 	 * 
 	 * if ((scoreHistoryInfo == null || !scoreHistoryInfo .isHistoryBlock()) &&
@@ -4375,41 +4215,33 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 	@SuppressWarnings({ "unchecked" })
 	@Override
-	public List<Double> getFirstTimeSecondTimeCheckPoints(final int answerSeq,
-			final Short[] latestScoringState, final QuestionInfo questionInfo,
-			final Short currentScoringState) {
+	public List<Double> getFirstTimeSecondTimeCheckPoints(final int answerSeq, final Short[] latestScoringState,
+			final QuestionInfo questionInfo, final Short currentScoringState) {
 
 		try {
 			@SuppressWarnings("rawtypes")
-			List<Double> bitValueList = getHibernateTemplate(
-					questionInfo.getConnectionString()).execute(
-					new HibernateCallback<List>() {
+			List<Double> bitValueList = getHibernateTemplate(questionInfo.getConnectionString())
+					.execute(new HibernateCallback<List>() {
 
 						@SuppressWarnings("rawtypes")
-						public List doInHibernate(Session session)
-								throws HibernateException {
+						public List doInHibernate(Session session) throws HibernateException {
 							StringBuilder query = new StringBuilder();
 							query.append("SELECT  bit_value ");
 							query.append("FROM tran_desc_score_history  ");
 							query.append("where answer_seq = :ANSWER_SEQ ");
 							query.append("AND scoring_state IN :SCORING_STATE order by history_seq desc ");
-							if ((ArrayUtils.contains(
-									WebAppConst.DENY_SCORING_STATES,
-									currentScoringState) || questionInfo
-									.getMenuId().equals(
-											WebAppConst.DENY_MENU_ID))
-									&& (questionInfo.getQuestionType() == WebAppConst.SPEAKING_TYPE || questionInfo
-											.getQuestionType() == WebAppConst.WRITING_TYPE)) {
+							if ((ArrayUtils.contains(WebAppConst.DENY_SCORING_STATES, currentScoringState)
+									|| questionInfo.getMenuId().equals(WebAppConst.DENY_MENU_ID))
+									&& (questionInfo.getQuestionType() == WebAppConst.SPEAKING_TYPE
+											|| questionInfo.getQuestionType() == WebAppConst.WRITING_TYPE)) {
 								query.append("limit 3 ");
 							} else {
 								query.append("limit 2 ");
 							}
 
-							SQLQuery queryObj = session.createSQLQuery(query
-									.toString());
+							SQLQuery queryObj = session.createSQLQuery(query.toString());
 							queryObj.setParameter("ANSWER_SEQ", answerSeq);
-							queryObj.setParameterList("SCORING_STATE",
-									latestScoringState);
+							queryObj.setParameterList("SCORING_STATE", latestScoringState);
 							return queryObj.list();
 						}
 					});
@@ -4422,8 +4254,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TranDescScoreHistory> findHistoryRecord(String scorerId,
-			int answerSeq, List<Short> scoringStateList, String connectionString) {
+	public List<TranDescScoreHistory> findHistoryRecord(String scorerId, int answerSeq, List<Short> scoringStateList,
+			String connectionString) {
 		StringBuilder query = new StringBuilder();
 
 		query.append("FROM TranDescScoreHistory as tranDescScoreHistory ");
@@ -4434,16 +4266,13 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("AND DATE_FORMAT(tranDescScoreHistory.createDate, '%Y-%m-%d') = ");
 		query.append("DATE_FORMAT(:CREATE_DATE, '%Y-%m-%d') ");
 
-		String[] paramNames = { "SCORER_ID", "ANSWER_SEQUENCE",
-				"SCORING_STATE_LIST", "VALID_FLAG", "CREATE_DATE" };
-		Object[] values = { scorerId, answerSeq, scoringStateList,
-				WebAppConst.VALID_FLAG, new Date() };
+		String[] paramNames = { "SCORER_ID", "ANSWER_SEQUENCE", "SCORING_STATE_LIST", "VALID_FLAG", "CREATE_DATE" };
+		Object[] values = { scorerId, answerSeq, scoringStateList, WebAppConst.VALID_FLAG, new Date() };
 
 		try {
 			HibernateTemplate hibernateTemplate = getHibernateTemplate(connectionString);
 
-			return hibernateTemplate.findByNamedParam(query.toString(),
-					paramNames, values);
+			return hibernateTemplate.findByNamedParam(query.toString(), paramNames, values);
 		} catch (RuntimeException re) {
 			throw re;
 		}
@@ -4452,10 +4281,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public List getCommentsByAnswerSequences(List<Integer> answerSeqList,
-			QuestionInfo questionInfo) {
+	public List getCommentsByAnswerSequences(List<Integer> answerSeqList, QuestionInfo questionInfo) {
 		StringBuilder query = new StringBuilder();
-		query.append("SELECT tranDescScoreHistory.tranDescScore.answerSeq, CONCAT(tranDescScoreHistory.latestScreenScorerId, ': ', ");
+		query.append(
+				"SELECT tranDescScoreHistory.tranDescScore.answerSeq, CONCAT(tranDescScoreHistory.latestScreenScorerId, ': ', ");
 		query.append("tranDescScoreHistory.scorerComment) ");
 		query.append("FROM TranDescScoreHistory as tranDescScoreHistory ");
 		query.append("WHERE tranDescScoreHistory.tranDescScore.answerSeq IN :ANSWER_SEQUENCES ");
@@ -4465,14 +4294,12 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("AND tranDescScoreHistory.scorerComment is not null ");
 		query.append("ORDER BY tranDescScoreHistory.updateDate DESC ");
 
-		String[] paramNames = { "QUESTION_SEQUENCE", "ANSWER_SEQUENCES",
-				"BATCH_EVENT_ID" };
-		Object[] values = { questionInfo.getQuestionSeq(), answerSeqList,
-				WebAppConst.BATCH_EVENT_ID };
+		String[] paramNames = { "QUESTION_SEQUENCE", "ANSWER_SEQUENCES", "BATCH_EVENT_ID" };
+		Object[] values = { questionInfo.getQuestionSeq(), answerSeqList, WebAppConst.BATCH_EVENT_ID };
 
 		try {
-			return getHibernateTemplate(questionInfo.getConnectionString())
-					.findByNamedParam(query.toString(), paramNames, values);
+			return getHibernateTemplate(questionInfo.getConnectionString()).findByNamedParam(query.toString(),
+					paramNames, values);
 		} catch (RuntimeException re) {
 			throw re;
 		}
@@ -4480,78 +4307,60 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List searchAnswerRecords(final QuestionInfo questionInfo,
-			final ScoreInputInfo scoreInputInfo,
-			final Boolean forceAndStateTransitionFlag,
-			final Integer startRecord, final Integer endRecord) {
+	public List searchAnswerRecords(final QuestionInfo questionInfo, final ScoreInputInfo scoreInputInfo,
+			final Boolean forceAndStateTransitionFlag, final Integer startRecord, final Integer endRecord) {
 
 		Map<String, String> configMap = SaitenUtil.getConfigMap();
-		final boolean searchByScorerRoleId = Boolean.valueOf(configMap
-				.get("search.by.scorer_role_id"));
+		final boolean searchByScorerRoleId = Boolean.valueOf(configMap.get("search.by.scorer_role_id"));
 
-		final ScoreHistoryInfo scoreHistoryInfo = scoreInputInfo
-				.getScoreHistoryInfo();
+		final ScoreHistoryInfo scoreHistoryInfo = scoreInputInfo.getScoreHistoryInfo();
 
 		final String menuId = questionInfo.getMenuId();
 		final boolean samplingFlag = scoreInputInfo.isSamplingFlag();
 		final String answerFormNum = scoreInputInfo.getAnswerFormNum();
 		final String subjectCode = scoreInputInfo.getSubjectCode();
-		final Integer objScoreStartRange = scoreInputInfo
-				.getObjScoreStartRange();
+		final Integer objScoreStartRange = scoreInputInfo.getObjScoreStartRange();
 		final Integer objScoreEndRange = scoreInputInfo.getObjScoreEndRange();
 
-		final List<String> historyScorerIdList = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryScorerIdList() : null;
-		final Integer historyCategoryType = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryCategoryType() : null;
-		final List historyGradeSeqList = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryGradeSeqList() : null;
-		final List historyPendingCategorySeqList = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryPendingCategorySeqList() : null;
-		final List historyDenyCategorySeqList = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryDenyCategorySeqList() : null;
-		final String historyIncludeCheckPoints = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryIncludeCheckPoints() : null;
-		final String historyExcludeCheckPoints = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryExcludeCheckPoints() : null;
-		final Short[] historyEventList = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryEventList() : null;
-		final Date historyUpdateStartDate = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryUpdateStartDate() : null;
-		final Date historyUpdateEndDate = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryUpdateEndDate() : null;
-		final Integer[] historyScorerRoles = scoreHistoryInfo != null ? scoreHistoryInfo
-				.getHistoryScorerRole() : null;
+		final List<String> historyScorerIdList = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryScorerIdList()
+				: null;
+		final Integer historyCategoryType = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryCategoryType() : null;
+		final List historyGradeSeqList = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryGradeSeqList() : null;
+		final List historyPendingCategorySeqList = scoreHistoryInfo != null
+				? scoreHistoryInfo.getHistoryPendingCategorySeqList() : null;
+		final List historyDenyCategorySeqList = scoreHistoryInfo != null
+				? scoreHistoryInfo.getHistoryDenyCategorySeqList() : null;
+		final String historyIncludeCheckPoints = scoreHistoryInfo != null
+				? scoreHistoryInfo.getHistoryIncludeCheckPoints() : null;
+		final String historyExcludeCheckPoints = scoreHistoryInfo != null
+				? scoreHistoryInfo.getHistoryExcludeCheckPoints() : null;
+		final Short[] historyEventList = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryEventList() : null;
+		final Date historyUpdateStartDate = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryUpdateStartDate()
+				: null;
+		final Date historyUpdateEndDate = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryUpdateEndDate() : null;
+		final Integer[] historyScorerRoles = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryScorerRole() : null;
 
-		final ScoreCurrentInfo scoreCurrentInfo = scoreInputInfo
-				.getScoreCurrentInfo();
+		final ScoreCurrentInfo scoreCurrentInfo = scoreInputInfo.getScoreCurrentInfo();
 
-		final String punchText = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getPunchText() : null;
-		final String punchTextCondition = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getPunchTextData() : null;
-		final List<String> currentScorerIdList = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentScorerIdList() : null;
-		final Integer currentCategoryType = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentCategoryType() : null;
-		final List currentGradeSeqList = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentGradeSeqList() : null;
-		final List currentPendingCategorySeqList = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentPendingCategorySeqList() : null;
-		final List currentDenyCategorySeqList = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentDenyCategorySeqList() : null;
-		final String currentIncludeCheckPoints = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentIncludeCheckPoints() : null;
-		final String currentExcludeCheckPoints = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentExcludeCheckPoints() : null;
-		final Short[] currentStateList = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentStateList() : null;
-		final Date currentUpdateStartDate = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentUpdateStartDate() : null;
-		final Date currentUpdateEndDate = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentUpdateEndDate() : null;
-		final Integer[] currentScorerRoles = scoreCurrentInfo != null ? scoreCurrentInfo
-				.getCurrentScorerRole() : null;
+		final String punchText = scoreCurrentInfo != null ? scoreCurrentInfo.getPunchText() : null;
+		final String punchTextCondition = scoreCurrentInfo != null ? scoreCurrentInfo.getPunchTextData() : null;
+		final List<String> currentScorerIdList = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentScorerIdList()
+				: null;
+		final Integer currentCategoryType = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentCategoryType() : null;
+		final List currentGradeSeqList = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentGradeSeqList() : null;
+		final List currentPendingCategorySeqList = scoreCurrentInfo != null
+				? scoreCurrentInfo.getCurrentPendingCategorySeqList() : null;
+		final List currentDenyCategorySeqList = scoreCurrentInfo != null
+				? scoreCurrentInfo.getCurrentDenyCategorySeqList() : null;
+		final String currentIncludeCheckPoints = scoreCurrentInfo != null
+				? scoreCurrentInfo.getCurrentIncludeCheckPoints() : null;
+		final String currentExcludeCheckPoints = scoreCurrentInfo != null
+				? scoreCurrentInfo.getCurrentExcludeCheckPoints() : null;
+		final Short[] currentStateList = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentStateList() : null;
+		final Date currentUpdateStartDate = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentUpdateStartDate()
+				: null;
+		final Date currentUpdateEndDate = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentUpdateEndDate() : null;
+		final Integer[] currentScorerRoles = scoreCurrentInfo != null ? scoreCurrentInfo.getCurrentScorerRole() : null;
 
 		/*
 		 * System.out.println(">>>>>>>>>>>> recordCount start: "+ new
@@ -4573,12 +4382,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		 * Date().getTime());
 		 */
 		try {
-			List answerRecordsList = getHibernateTemplate(
-					questionInfo.getConnectionString()).execute(
-					new HibernateCallback<List>() {
+			List answerRecordsList = getHibernateTemplate(questionInfo.getConnectionString())
+					.execute(new HibernateCallback<List>() {
 
-						public List doInHibernate(Session session)
-								throws HibernateException {
+						public List doInHibernate(Session session) throws HibernateException {
 							StringBuilder query = new StringBuilder();
 							if ((forceAndStateTransitionFlag == null)
 									|| (forceAndStateTransitionFlag == WebAppConst.TRUE)) {
@@ -4589,20 +4396,23 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								query.append("t.punch_text AS punchText, ");
 								query.append("t.pending_category_seq AS pendingCategorySeq, t.latest_scoring_state, ");
 								query.append("t.deny_category_seq AS denyCategorySeq, ");
-								if (((forceAndStateTransitionFlag != null) && (forceAndStateTransitionFlag == WebAppConst.TRUE))
-										|| (menuId
-												.equals(WebAppConst.REFERENCE_SAMP_MENU_ID) && (forceAndStateTransitionFlag == null))) {
-									query.append("t.question_seq AS questionSeq, t.latest_screen_scorer_id AS latestScreenScorerId, ");
+								if (((forceAndStateTransitionFlag != null)
+										&& (forceAndStateTransitionFlag == WebAppConst.TRUE))
+										|| (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
+												&& (forceAndStateTransitionFlag == null))) {
+									query.append(
+											"t.question_seq AS questionSeq, t.latest_screen_scorer_id AS latestScreenScorerId, ");
 								}
 
 								// here is count means no of comments.
-								if (menuId.equals(WebAppConst.FORCED_MENU_ID)
-										&& (forceAndStateTransitionFlag != null && forceAndStateTransitionFlag == WebAppConst.TRUE)) {
+								if (menuId.equals(WebAppConst.FORCED_MENU_ID) && (forceAndStateTransitionFlag != null
+										&& forceAndStateTransitionFlag == WebAppConst.TRUE)) {
 									query.append("(SELECT count(*) FROM tran_desc_score_history AS scoreHistory ");
 									query.append("WHERE scoreHistory.answer_seq = score.answerSeq ");
 									query.append("AND scoreHistory.question_seq = :QUESTION_SEQ ");
 									query.append("AND scoreHistory.event_id != :BATCH_EVENT_ID ");
-									query.append("AND scoreHistory.scorer_comment != '' AND scoreHistory.scorer_comment is not null ) AS commentCount, ");
+									query.append(
+											"AND scoreHistory.scorer_comment != '' AND scoreHistory.scorer_comment is not null ) AS commentCount, ");
 								}
 								query.append("t.mark_value AS markValue, ");
 								query.append("t.update_date AS updateDate, ");
@@ -4624,20 +4434,18 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								query.append(", tranLookAfterwards.look_aft_seq AS lookAftSeq ");
 							}
 							query.append("FROM tran_desc_score AS tranDescScore ");
-							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
-									&& (objScoreStartRange != null)
+							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) && (objScoreStartRange != null)
 									&& (objScoreEndRange != null)) {
 								query.append("INNER JOIN ");
 								query.append("tran_obj_score_percentage AS tranObjScorePercentage ");
-								query.append("ON tranDescScore.answer_form_num = tranObjScorePercentage.answer_form_num ");
+								query.append(
+										"ON tranDescScore.answer_form_num = tranObjScorePercentage.answer_form_num ");
 							}
 							query.append("INNER JOIN ");
 							query.append("tran_desc_score_history AS tranDescScoreHistory ");
 							query.append("ON tranDescScore.answer_seq = tranDescScoreHistory.answer_seq ");
 							if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
-								if (scoreCurrentInfo != null
-										&& scoreCurrentInfo
-												.isLookAfterwardsFlag()) {
+								if (scoreCurrentInfo != null && scoreCurrentInfo.isLookAfterwardsFlag()) {
 									query.append("INNER JOIN tran_look_afterwards AS tranLookAfterwards ");
 								} else {
 									query.append("LEFT JOIN tran_look_afterwards AS tranLookAfterwards ");
@@ -4663,10 +4471,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							query.append("AND tranDescScore.lock_flag = :UNLOCK ");
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								if ((objScoreStartRange != null)
-										&& (objScoreEndRange != null)) {
+								if ((objScoreStartRange != null) && (objScoreEndRange != null)) {
 									query.append("AND tranObjScorePercentage.subject_code = :SUBJECT_CODE ");
-									query.append("AND tranObjScorePercentage.result_percentage between :OBJ_SCORE_START_RANGE and :OBJ_SCORE_END_RANGE ");
+									query.append(
+											"AND tranObjScorePercentage.result_percentage between :OBJ_SCORE_START_RANGE and :OBJ_SCORE_END_RANGE ");
 								}
 								query.append("AND tranDescScore.inspect_flag = :INSPECT_FLAG ");
 								/*
@@ -4695,17 +4503,16 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								query.append("AND tranDescScore.answer_form_num = :ANSWER_FORM_NUM ");
 							}
 
-							if (scoreCurrentInfo != null
-									&& scoreCurrentInfo.isCurrentBlock()) {
+							if (scoreCurrentInfo != null && scoreCurrentInfo.isCurrentBlock()) {
 
 								if (!StringUtils.isBlank(punchText)) {
 									query.append("AND tranDescScore.punch_text like :PUNCH_TEXT escape '"
-											+ WebAppConst.ESCAPE_CHARACTER
-											+ "'");
+											+ WebAppConst.ESCAPE_CHARACTER + "'");
 								}
 
 								if (!currentScorerIdList.isEmpty()) {
-									query.append("AND tranDescScore.latest_screen_scorer_id IN :CURRENT_SCORER_ID_LIST ");
+									query.append(
+											"AND tranDescScore.latest_screen_scorer_id IN :CURRENT_SCORER_ID_LIST ");
 								}
 
 								// This is for Quality Check Flag
@@ -4715,79 +4522,119 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								 * WebAppConst.WRITING_TYPE .equals(questionInfo
 								 * .getQuestionType())) {
 								 */
-								if (scoreCurrentInfo
-										.isCurrentQualityCheckFlag()) {
+								if (scoreCurrentInfo.isCurrentQualityCheckFlag()) {
 									query.append("AND tranDescScore.quality_check_flag IN :QUALITY_CHECK_FLAG ");
 								}
 								/* } */
-								if (currentCategoryType != null
-										&& currentCategoryType == 2) {
-									query.append("AND tranDescScore.grade_seq IS null AND tranDescScore.pending_category_seq IS null ");
-								} else if (currentCategoryType != null
-										&& currentCategoryType == 3) {
+								if (currentCategoryType != null && currentCategoryType == 2) {
+									query.append(
+											"AND tranDescScore.grade_seq IS null AND tranDescScore.pending_category_seq IS null ");
+								} else if (currentCategoryType != null && currentCategoryType == 3) {
 
 									if (!currentGradeSeqList.isEmpty()
-											&& ArrayUtils.contains(
-													scoreCurrentInfo
-															.getCurrentGradeNum(),
-													-1)) {
+											&& ArrayUtils.contains(scoreCurrentInfo.getCurrentGradeNum(), -1)) {
 										query.append("AND (tranDescScore.grade_seq IN :CURRENT_GRADE_SEQ_LIST ");
-										query.append("OR tranDescScore.latest_scoring_state = :NO_GRADE_SCORING_STATE) ");
+										query.append(
+												"OR tranDescScore.latest_scoring_state = :NO_GRADE_SCORING_STATE) ");
 									} else {
 										if (!currentGradeSeqList.isEmpty()) {
 											query.append("AND tranDescScore.grade_seq IN :CURRENT_GRADE_SEQ_LIST ");
 										}
 
-										if (ArrayUtils.contains(
-												scoreCurrentInfo
-														.getCurrentGradeNum(),
-												-1)) {
-											query.append("AND tranDescScore.latest_scoring_state = :NO_GRADE_SCORING_STATE ");
+										if (ArrayUtils.contains(scoreCurrentInfo.getCurrentGradeNum(), -1)) {
+											query.append(
+													"AND tranDescScore.latest_scoring_state = :NO_GRADE_SCORING_STATE ");
 										}
 									}
-								} else if (currentCategoryType != null
-										&& currentCategoryType == 4
-										&& !currentPendingCategorySeqList
-												.isEmpty()) {
-									query.append("AND tranDescScore.pending_category_seq IN :CURRENT_PENDING_CATEGORY_SEQ_LIST ");
-								} else if (currentCategoryType != null
-										&& currentCategoryType == 5
-										&& !currentDenyCategorySeqList
-												.isEmpty()) {
-									query.append("AND tranDescScore.deny_category_seq IN :CURRENT_DENY_CATEGORY_SEQ_LIST ");
+								} else if (currentCategoryType != null && currentCategoryType == 4
+										&& !currentPendingCategorySeqList.isEmpty()) {
+									query.append(
+											"AND tranDescScore.pending_category_seq IN :CURRENT_PENDING_CATEGORY_SEQ_LIST ");
+								} else if (currentCategoryType != null && currentCategoryType == 5
+										&& !currentDenyCategorySeqList.isEmpty()) {
+									query.append(
+											"AND tranDescScore.deny_category_seq IN :CURRENT_DENY_CATEGORY_SEQ_LIST ");
 								}
 
-								if (!StringUtils
-										.isBlank(currentIncludeCheckPoints)
-										&& !StringUtils
-												.isBlank(currentExcludeCheckPoints)) {
+								if (!StringUtils.isBlank(currentIncludeCheckPoints)
+										&& !StringUtils.isBlank(currentExcludeCheckPoints)) {
 
-									if (scoreInputInfo
-											.getScoreCurrentInfo()
-											.getCurrentSkpConditions()
+									if (scoreInputInfo.getScoreCurrentInfo().getCurrentSkpConditions()
 											.equals(WebAppConst.SKP_AND_CONDITION)) {
-										query.append("AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
-										query.append("AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
 
-									} else if (scoreInputInfo
-											.getScoreCurrentInfo()
-											.getCurrentSkpConditions()
+										if (scoreCurrentInfo.getCurrentSkpIncludeConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											query.append(
+													"AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) = :CURRENT_INCLUDE_BIT_VALUE ");
+										} else if (scoreCurrentInfo.getCurrentSkpIncludeConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											query.append(
+													"AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
+										}
+
+										if (scoreCurrentInfo.getCurrentSkpExcludeConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											query.append(
+													"AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) != :CURRENT_EXCLUDE_BIT_VALUE ");
+										} else if (scoreCurrentInfo.getCurrentSkpExcludeConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											query.append(
+													"AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+										}
+
+									} else if (scoreInputInfo.getScoreCurrentInfo().getCurrentSkpConditions()
 											.equals(WebAppConst.SKP_OR_CONDITION)) {
-										query.append("AND ((tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 OR (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0)");
+										// query.append("AND
+										// ((tranDescScore.bit_value &
+										// :CURRENT_INCLUDE_BIT_VALUE) > 0 OR
+										// (tranDescScore.bit_value &
+										// :CURRENT_EXCLUDE_BIT_VALUE) = 0)");
+										query.append("AND ( ");
+										if (scoreCurrentInfo.getCurrentSkpIncludeConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											query.append(
+													"(tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) = :CURRENT_INCLUDE_BIT_VALUE ");
+										} else if (scoreCurrentInfo.getCurrentSkpIncludeConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											query.append("(tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
+										}
+										query.append("OR ");
+										if (scoreCurrentInfo.getCurrentSkpExcludeConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											query.append(
+													"(tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) != :CURRENT_EXCLUDE_BIT_VALUE ");
+										} else if (scoreCurrentInfo.getCurrentSkpExcludeConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											query.append("(tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+										}
+										query.append(") ");
 									}
 
 								} else {
-									if (!StringUtils
-											.isBlank(currentIncludeCheckPoints)) {
-										query.append("AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
-									} else if (!StringUtils
-											.isBlank(currentExcludeCheckPoints)) {
-										query.append("AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+									if (!StringUtils.isBlank(currentIncludeCheckPoints)) {
+										if (scoreCurrentInfo.getCurrentSkpIncludeConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											query.append(
+													"AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) = :CURRENT_INCLUDE_BIT_VALUE ");
+										} else if (scoreCurrentInfo.getCurrentSkpIncludeConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											query.append(
+													"AND (tranDescScore.bit_value & :CURRENT_INCLUDE_BIT_VALUE) > 0 ");
+										}
+									} else if (!StringUtils.isBlank(currentExcludeCheckPoints)) {
+										if (scoreCurrentInfo.getCurrentSkpExcludeConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											query.append(
+													"AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) != :CURRENT_EXCLUDE_BIT_VALUE ");
+										} else if (scoreCurrentInfo.getCurrentSkpExcludeConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											query.append(
+													"AND (tranDescScore.bit_value & :CURRENT_EXCLUDE_BIT_VALUE) = 0 ");
+										}
 									}
 								}
 
-								if (currentStateList != null
-										&& currentStateList.length > 0) {
+								if (currentStateList != null && currentStateList.length > 0) {
 									query.append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST ");
 								}
 
@@ -4798,40 +4645,32 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								if (currentUpdateEndDate != null) {
 									query.append("AND tranDescScore.update_date <= :CURRENT_UPDATE_END_DATE ");
 								}
-							} else if (menuId
-									.equals(WebAppConst.SCORE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.STATE_TRAN_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.FORCED_MENU_ID)) {
+							} else if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
+									|| menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
+									|| menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 								query.append("AND tranDescScore.latest_scoring_state IN :CURRENT_STATE_LIST ");
 							}
 
-							if ((scoreHistoryInfo == null || !scoreHistoryInfo
-									.isHistoryBlock())
-									&& (scoreCurrentInfo == null || !scoreCurrentInfo
-											.isCurrentBlock())) {
-								if (menuId
-										.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
-									query.append("AND tranDescScore.latest_scoring_state NOT IN :SPECIAL_SCORING_AND_BATCH_STATES ");
-								} else if (menuId
-										.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
-									query.append("AND tranDescScore.latest_scoring_state NOT IN :SPECIAL_SCORING_STATES ");
+							if ((scoreHistoryInfo == null || !scoreHistoryInfo.isHistoryBlock())
+									&& (scoreCurrentInfo == null || !scoreCurrentInfo.isCurrentBlock())) {
+								if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
+									query.append(
+											"AND tranDescScore.latest_scoring_state NOT IN :SPECIAL_SCORING_AND_BATCH_STATES ");
+								} else if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
+									query.append(
+											"AND tranDescScore.latest_scoring_state NOT IN :SPECIAL_SCORING_STATES ");
 								}
 
 							}
-							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
+							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
+									|| menuId.equals(WebAppConst.FORCED_MENU_ID))) {
 								query.append("AND tranDescScoreHistory.scoring_state NOT IN :DUMMY_SCORING_STATES ");
 								query.append("AND tranDescScore.latest_scoring_state NOT IN :DUMMY_SCORING_STATES ");
 							}
 
-							if (menuId
-									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.SCORE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+							if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
+									|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
+									|| menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
 								query.append("AND tranDescScore.answer_paper_type NOT IN ( :ANSWER_PAPER_TYPES ) ");
 							}
 
@@ -4842,9 +4681,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							}
 
 							if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
-								if (scoreCurrentInfo != null
-										&& scoreCurrentInfo
-												.isLookAfterwardsFlag()) {
+								if (scoreCurrentInfo != null && scoreCurrentInfo.isLookAfterwardsFlag()) {
 									query.append("AND tranLookAfterwards.look_aft_flag = :VALID_FLAG ");
 								}
 							}
@@ -4853,11 +4690,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							query.append("AND tranDescScoreHistory.question_seq  = :QUESTION_SEQ ");
 							query.append("AND tranDescScoreHistory.valid_flag = :VALID_FLAG ");
 
-							if (scoreHistoryInfo != null
-									&& scoreHistoryInfo.isHistoryBlock()) {
+							if (scoreHistoryInfo != null && scoreHistoryInfo.isHistoryBlock()) {
 
 								if (!historyScorerIdList.isEmpty()) {
-									query.append("AND tranDescScoreHistory.latest_screen_scorer_id IN :HISTORY_SCORER_ID_LIST ");
+									query.append(
+											"AND tranDescScoreHistory.latest_screen_scorer_id IN :HISTORY_SCORER_ID_LIST ");
 								}
 
 								// This is for Quality Check Flag
@@ -4867,78 +4704,119 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								 * WebAppConst.WRITING_TYPE .equals(questionInfo
 								 * .getQuestionType())) {
 								 */
-								if (scoreHistoryInfo
-										.isHistoryQualityCheckFlag()) {
+								if (scoreHistoryInfo.isHistoryQualityCheckFlag()) {
 									query.append("AND tranDescScoreHistory.quality_check_flag IN :QUALITY_CHECK_FLAG ");
 								}
 								/* } */
-								if (historyCategoryType != null
-										&& historyCategoryType == 2) {
-									query.append("AND tranDescScoreHistory.grade_seq IS null AND tranDescScoreHistory.pending_category_seq IS null ");
-								} else if (historyCategoryType != null
-										&& historyCategoryType == 3) {
+								if (historyCategoryType != null && historyCategoryType == 2) {
+									query.append(
+											"AND tranDescScoreHistory.grade_seq IS null AND tranDescScoreHistory.pending_category_seq IS null ");
+								} else if (historyCategoryType != null && historyCategoryType == 3) {
 
 									if (!historyGradeSeqList.isEmpty()
-											&& ArrayUtils.contains(
-													scoreHistoryInfo
-															.getHistoryGradeNum(),
-													-1)) {
+											&& ArrayUtils.contains(scoreHistoryInfo.getHistoryGradeNum(), -1)) {
 										query.append("AND (tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
-										query.append("OR tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE) ");
+										query.append(
+												"OR tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE) ");
 									} else {
 										if (!historyGradeSeqList.isEmpty()) {
-											query.append("AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
+											query.append(
+													"AND tranDescScoreHistory.grade_seq IN :HISTORY_GRADE_SEQ_LIST ");
 										}
 
-										if (ArrayUtils.contains(
-												scoreHistoryInfo
-														.getHistoryGradeNum(),
-												-1)) {
-											query.append("AND tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE ");
+										if (ArrayUtils.contains(scoreHistoryInfo.getHistoryGradeNum(), -1)) {
+											query.append(
+													"AND tranDescScoreHistory.scoring_state = :NO_GRADE_SCORING_STATE ");
 										}
 									}
-								} else if (historyCategoryType != null
-										&& historyCategoryType == 4
-										&& !historyPendingCategorySeqList
-												.isEmpty()) {
-									query.append("AND tranDescScoreHistory.pending_category_seq IN :HISTORY_PENDING_CATEGORY_SEQ_LIST ");
-								} else if (historyCategoryType != null
-										&& historyCategoryType == 5
-										&& !historyDenyCategorySeqList
-												.isEmpty()) {
-									query.append("AND tranDescScoreHistory.deny_category_seq IN :HISTORY_DENY_CATEGORY_SEQ_LIST ");
+								} else if (historyCategoryType != null && historyCategoryType == 4
+										&& !historyPendingCategorySeqList.isEmpty()) {
+									query.append(
+											"AND tranDescScoreHistory.pending_category_seq IN :HISTORY_PENDING_CATEGORY_SEQ_LIST ");
+								} else if (historyCategoryType != null && historyCategoryType == 5
+										&& !historyDenyCategorySeqList.isEmpty()) {
+									query.append(
+											"AND tranDescScoreHistory.deny_category_seq IN :HISTORY_DENY_CATEGORY_SEQ_LIST ");
 								}
 
-								if (!StringUtils
-										.isBlank(historyIncludeCheckPoints)
-										&& !StringUtils
-												.isBlank(historyExcludeCheckPoints)) {
-									if (scoreInputInfo
-											.getScoreHistoryInfo()
-											.getPastSkpConditions()
+								if (!StringUtils.isBlank(historyIncludeCheckPoints)
+										&& !StringUtils.isBlank(historyExcludeCheckPoints)) {
+									if (scoreInputInfo.getScoreHistoryInfo().getPastSkpConditions()
 											.equals(WebAppConst.SKP_AND_CONDITION)) {
-										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
-										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+										if (scoreHistoryInfo.getPastSkpIncludeConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											query.append(
+													"AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) = :HISTORY_INCLUDE_BIT_VALUE ");
+										} else if (scoreHistoryInfo.getPastSkpIncludeConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											query.append(
+													"AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
+										}
+										if (scoreHistoryInfo.getPastSkpExcludeConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											query.append(
+													"AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) != :HISTORY_EXCLUDE_BIT_VALUE ");
+										} else if (scoreHistoryInfo.getPastSkpExcludeConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											query.append(
+													"AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+										}
 
-									} else if (scoreInputInfo
-											.getScoreHistoryInfo()
-											.getPastSkpConditions()
+									} else if (scoreInputInfo.getScoreHistoryInfo().getPastSkpConditions()
 											.equals(WebAppConst.SKP_OR_CONDITION)) {
-										query.append("AND ((tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 OR (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0)");
+										// query.append("AND
+										// ((tranDescScoreHistory.bit_value &
+										// :HISTORY_INCLUDE_BIT_VALUE) > 0 OR
+										// (tranDescScoreHistory.bit_value &
+										// :HISTORY_EXCLUDE_BIT_VALUE) = 0)");
+										query.append("AND ( ");
+										if (scoreHistoryInfo.getPastSkpIncludeConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											query.append(
+													"(tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) = :HISTORY_INCLUDE_BIT_VALUE ");
+										} else if (scoreHistoryInfo.getPastSkpIncludeConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											query.append(
+													"(tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
+										}
+										query.append("OR ");
+										if (scoreHistoryInfo.getPastSkpExcludeConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											query.append(
+													"(tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) != :HISTORY_EXCLUDE_BIT_VALUE ");
+										} else if (scoreHistoryInfo.getPastSkpExcludeConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											query.append(
+													"(tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+										}
+										query.append(") ");
 									}
 
 								} else {
-									if (!StringUtils
-											.isBlank(historyIncludeCheckPoints)) {
-										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
-									} else if (!StringUtils
-											.isBlank(historyExcludeCheckPoints)) {
-										query.append("AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+									if (!StringUtils.isBlank(historyIncludeCheckPoints)) {
+										if (scoreHistoryInfo.getPastSkpIncludeConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											query.append(
+													"AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) = :HISTORY_INCLUDE_BIT_VALUE ");
+										} else if (scoreHistoryInfo.getPastSkpIncludeConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											query.append(
+													"AND (tranDescScoreHistory.bit_value & :HISTORY_INCLUDE_BIT_VALUE) > 0 ");
+										}
+									} else if (!StringUtils.isBlank(historyExcludeCheckPoints)) {
+										if (scoreHistoryInfo.getPastSkpExcludeConditions()
+												.equals(WebAppConst.SKP_AND_CONDITION)) {
+											query.append(
+													"AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) != :HISTORY_EXCLUDE_BIT_VALUE ");
+										} else if (scoreHistoryInfo.getPastSkpExcludeConditions()
+												.equals(WebAppConst.SKP_OR_CONDITION)) {
+											query.append(
+													"AND (tranDescScoreHistory.bit_value & :HISTORY_EXCLUDE_BIT_VALUE) = 0 ");
+										}
 									}
 								}
 
-								if (historyEventList != null
-										&& historyEventList.length > 0) {
+								if (historyEventList != null && historyEventList.length > 0) {
 									query.append("AND tranDescScoreHistory.event_id IN :HISTORY_EVENT_LIST ");
 								}
 
@@ -4951,14 +4829,16 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								}
 							}
 
-							if (menuId
-									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.SCORE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								query.append("AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
-								// query.append("AND ( SELECT count(*) from tran_desc_score_history th where deny_category in ( :DENY_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
+							if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
+									|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
+									|| menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+								query.append(
+										"AND ( SELECT count(*) from tran_desc_score_history th where pending_category in ( :PENDING_CATEGORIES ) AND tranDescScore.answer_seq = th.answer_seq )<=0 ");
+								// query.append("AND ( SELECT count(*) from
+								// tran_desc_score_history th where
+								// deny_category in ( :DENY_CATEGORIES ) AND
+								// tranDescScore.answer_seq = th.answer_seq )<=0
+								// ");
 							}
 
 							query.append("GROUP BY tranDescScore.answer_seq ");
@@ -4968,15 +4848,14 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								query.append("LIMIT ");
 								if (endRecord != null) {
 									if (startRecord > 0) {
-										query.append(startRecord + " , "
-												+ endRecord);
+										query.append(startRecord + " , " + endRecord);
 									} else {
 										query.append(endRecord + " ");
 									}
 								}
 							}
-							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
+							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
+									|| menuId.equals(WebAppConst.FORCED_MENU_ID))) {
 								query.append("LIMIT :RECORD_COUNT_LIMIT ");
 								query.append(") score ");
 								query.append("ORDER BY updateDate DESC ");
@@ -4989,19 +4868,13 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							}
 							query.append("WHERE t.answer_seq = score.answerSeq ");
 
-							SQLQuery queryObj = session.createSQLQuery(query
-									.toString());
+							SQLQuery queryObj = session.createSQLQuery(query.toString());
 
-							if (menuId
-									.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.SCORE_SAMP_MENU_ID)
-									|| menuId
-											.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								queryObj.setParameterList("ANSWER_PAPER_TYPES",
-										WebAppConst.ANSWER_PAPER_TYPES);
-								queryObj.setParameterList("PENDING_CATEGORIES",
-										WebAppConst.PENDING_CATEGORIES);
+							if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
+									|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
+									|| menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+								queryObj.setParameterList("ANSWER_PAPER_TYPES", WebAppConst.ANSWER_PAPER_TYPES);
+								queryObj.setParameterList("PENDING_CATEGORIES", WebAppConst.PENDING_CATEGORIES);
 								/*
 								 * queryObj.setParameterList("DENY_CATEGORIES",
 								 * WebAppConst.PENDING_CATEGORIES);
@@ -5009,43 +4882,30 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 							}
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								if ((objScoreStartRange != null)
-										&& (objScoreEndRange != null)) {
-									queryObj.setParameter("SUBJECT_CODE",
-											subjectCode);
-									queryObj.setParameter(
-											"OBJ_SCORE_START_RANGE",
-											objScoreStartRange);
-									queryObj.setParameter(
-											"OBJ_SCORE_END_RANGE",
-											objScoreEndRange);
+								if ((objScoreStartRange != null) && (objScoreEndRange != null)) {
+									queryObj.setParameter("SUBJECT_CODE", subjectCode);
+									queryObj.setParameter("OBJ_SCORE_START_RANGE", objScoreStartRange);
+									queryObj.setParameter("OBJ_SCORE_END_RANGE", objScoreEndRange);
 								}
-								queryObj.setParameter("INSPECT_FLAG",
-										WebAppConst.F);
+								queryObj.setParameter("INSPECT_FLAG", WebAppConst.F);
 								/*
 								 * if (WebAppConst.SPEAKING_TYPE
 								 * .equals(questionInfo.getQuestionType()) ||
 								 * WebAppConst.WRITING_TYPE .equals(questionInfo
 								 * .getQuestionType())) {
 								 */
-								queryObj.setParameter("QUALITY_FLAG",
-										WebAppConst.QUALITY_MARK_FLAG_FALSE);
+								queryObj.setParameter("QUALITY_FLAG", WebAppConst.QUALITY_MARK_FLAG_FALSE);
 								/* } */
 
 							}
 
 							if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
 								if (samplingFlag == WebAppConst.TRUE) {
-									queryObj.setParameterList(
-											"SAMPLING_FLAG_LIST",
+									queryObj.setParameterList("SAMPLING_FLAG_LIST",
 											WebAppConst.SCORE_SAMPLING_FLAG_LIST);
 								} else {
-									queryObj.setParameterList(
-											"SAMPLING_FLAG_LIST",
-											ArrayUtils
-													.subarray(
-															WebAppConst.SCORE_SAMPLING_FLAG_LIST,
-															0, 1));
+									queryObj.setParameterList("SAMPLING_FLAG_LIST",
+											ArrayUtils.subarray(WebAppConst.SCORE_SAMPLING_FLAG_LIST, 0, 1));
 								}
 								/*
 								 * if (WebAppConst.SPEAKING_TYPE
@@ -5053,59 +4913,45 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 								 * WebAppConst.WRITING_TYPE .equals(questionInfo
 								 * .getQuestionType())) {
 								 */
-								queryObj.setParameter("QUALITY_FLAG",
-										WebAppConst.QUALITY_MARK_FLAG_FALSE);
+								queryObj.setParameter("QUALITY_FLAG", WebAppConst.QUALITY_MARK_FLAG_FALSE);
 								/* } */
 							}
 
 							if (!StringUtils.isBlank(answerFormNum)) {
-								queryObj.setParameter("ANSWER_FORM_NUM",
-										answerFormNum);
+								queryObj.setParameter("ANSWER_FORM_NUM", answerFormNum);
 							}
 
-							if (menuId.equals(WebAppConst.FORCED_MENU_ID)
-									&& (forceAndStateTransitionFlag != null && forceAndStateTransitionFlag == WebAppConst.TRUE)) {
-								queryObj.setParameter("BATCH_EVENT_ID",
-										WebAppConst.BATCH_EVENT_ID);
+							if (menuId.equals(WebAppConst.FORCED_MENU_ID) && (forceAndStateTransitionFlag != null
+									&& forceAndStateTransitionFlag == WebAppConst.TRUE)) {
+								queryObj.setParameter("BATCH_EVENT_ID", WebAppConst.BATCH_EVENT_ID);
 							}
 
 							setHistoryParameters(queryObj);
 
 							setCurrentParameters(queryObj);
 
-							queryObj.setInteger("QUESTION_SEQ",
-									questionInfo.getQuestionSeq());
+							queryObj.setInteger("QUESTION_SEQ", questionInfo.getQuestionSeq());
 							queryObj.setCharacter("UNLOCK", WebAppConst.UNLOCK);
-							queryObj.setCharacter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
-								queryObj.setInteger("RECORD_COUNT_LIMIT",
-										scoreInputInfo.getResultCount());
+							queryObj.setCharacter("VALID_FLAG", WebAppConst.VALID_FLAG);
+							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
+									|| menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+								queryObj.setInteger("RECORD_COUNT_LIMIT", scoreInputInfo.getResultCount());
 							}
 
-							if ((scoreHistoryInfo == null || !scoreHistoryInfo
-									.isHistoryBlock())
-									&& (scoreCurrentInfo == null || !scoreCurrentInfo
-											.isCurrentBlock())) {
-								if (menuId
-										.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
-									queryObj.setParameterList(
-											"SPECIAL_SCORING_AND_BATCH_STATES",
+							if ((scoreHistoryInfo == null || !scoreHistoryInfo.isHistoryBlock())
+									&& (scoreCurrentInfo == null || !scoreCurrentInfo.isCurrentBlock())) {
+								if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
+									queryObj.setParameterList("SPECIAL_SCORING_AND_BATCH_STATES",
 											WebAppConst.SPECIAL_SCORING_AND_BATCH_STATES);
-								} else if (menuId
-										.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
-									queryObj.setParameterList(
-											"SPECIAL_SCORING_STATES",
+								} else if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
+									queryObj.setParameterList("SPECIAL_SCORING_STATES",
 											WebAppConst.SPECIAL_SCORING_STATES);
 								}
 
 							}
-							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId
-									.equals(WebAppConst.FORCED_MENU_ID))) {
-								queryObj.setParameterList(
-										"DUMMY_SCORING_STATES",
-										WebAppConst.DUMMY_SCORING_STATES);
+							if (!(menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
+									|| menuId.equals(WebAppConst.FORCED_MENU_ID))) {
+								queryObj.setParameterList("DUMMY_SCORING_STATES", WebAppConst.DUMMY_SCORING_STATES);
 							}
 
 							// This code is replace with sql query: limit
@@ -5127,34 +4973,25 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 						public void setCurrentParameters(SQLQuery queryObj) {
 
-							if (scoreCurrentInfo != null
-									&& scoreCurrentInfo.isCurrentBlock()) {
+							if (scoreCurrentInfo != null && scoreCurrentInfo.isCurrentBlock()) {
 
 								if (!StringUtils.isBlank(punchText)) {
-									if (punchTextCondition == null
-											|| punchTextCondition.equals("0")) {
-										queryObj.setParameter("PUNCH_TEXT",
-												punchText);
+									if (punchTextCondition == null || punchTextCondition.equals("0")) {
+										queryObj.setParameter("PUNCH_TEXT", punchText);
 									} else if (punchTextCondition.equals("1")) {
-										queryObj.setParameter("PUNCH_TEXT",
-												punchText + "%");
+										queryObj.setParameter("PUNCH_TEXT", punchText + "%");
 									} else if (punchTextCondition.equals("2")) {
-										queryObj.setParameter("PUNCH_TEXT", "%"
-												+ punchText);
+										queryObj.setParameter("PUNCH_TEXT", "%" + punchText);
 									} else if (punchTextCondition.equals("3")) {
-										queryObj.setParameter("PUNCH_TEXT", "%"
-												+ punchText + "%");
+										queryObj.setParameter("PUNCH_TEXT", "%" + punchText + "%");
 									}
 								}
 
 								if (!currentScorerIdList.isEmpty()) {
-									queryObj.setParameterList(
-											"CURRENT_SCORER_ID_LIST",
-											currentScorerIdList);
+									queryObj.setParameterList("CURRENT_SCORER_ID_LIST", currentScorerIdList);
 								}
 
-								if (scoreCurrentInfo
-										.isCurrentQualityCheckFlag()) {
+								if (scoreCurrentInfo.isCurrentQualityCheckFlag()) {
 									/*
 									 * if (WebAppConst.SPEAKING_TYPE
 									 * .equals(questionInfo .getQuestionType())
@@ -5162,128 +4999,84 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									 * .equals(questionInfo .getQuestionType()))
 									 * {
 									 */
-									queryObj.setParameterList(
-											"QUALITY_CHECK_FLAG",
-											ArrayUtils
-													.subarray(
-															WebAppConst.QUALITY_MARK_FLAG_LIST,
-															0, 1));
+									queryObj.setParameterList("QUALITY_CHECK_FLAG",
+											ArrayUtils.subarray(WebAppConst.QUALITY_MARK_FLAG_LIST, 0, 1));
 									/* } */
 								} /*
-								 * else { if (WebAppConst.SPEAKING_TYPE
-								 * .equals(questionInfo .getQuestionType()) ||
-								 * WebAppConst.WRITING_TYPE .equals(questionInfo
-								 * .getQuestionType())) {
-								 * queryObj.setParameterList(
-								 * "QUALITY_CHECK_FLAG",
-								 * WebAppConst.QUALITY_MARK_FLAG_LIST); }
-								 * 
-								 * }
-								 */
+									 * else { if (WebAppConst.SPEAKING_TYPE
+									 * .equals(questionInfo .getQuestionType())
+									 * || WebAppConst.WRITING_TYPE
+									 * .equals(questionInfo .getQuestionType()))
+									 * { queryObj.setParameterList(
+									 * "QUALITY_CHECK_FLAG",
+									 * WebAppConst.QUALITY_MARK_FLAG_LIST); }
+									 * 
+									 * }
+									 */
 
-								if (currentCategoryType != null
-										&& currentCategoryType == 3) {
+								if (currentCategoryType != null && currentCategoryType == 3) {
 
 									if (!currentGradeSeqList.isEmpty()) {
-										queryObj.setParameterList(
-												"CURRENT_GRADE_SEQ_LIST",
-												currentGradeSeqList);
+										queryObj.setParameterList("CURRENT_GRADE_SEQ_LIST", currentGradeSeqList);
 									}
 
-									if (ArrayUtils.contains(scoreCurrentInfo
-											.getCurrentGradeNum(), -1)) {
-										queryObj.setShort(
-												"NO_GRADE_SCORING_STATE",
-												WebAppConst.NO_GRADE_SCORING_STATE);
+									if (ArrayUtils.contains(scoreCurrentInfo.getCurrentGradeNum(), -1)) {
+										queryObj.setShort("NO_GRADE_SCORING_STATE", WebAppConst.NO_GRADE_SCORING_STATE);
 									}
-								} else if (currentCategoryType != null
-										&& currentCategoryType == 4
-										&& !currentPendingCategorySeqList
-												.isEmpty()) {
+								} else if (currentCategoryType != null && currentCategoryType == 4
+										&& !currentPendingCategorySeqList.isEmpty()) {
 
-									queryObj.setParameterList(
-											"CURRENT_PENDING_CATEGORY_SEQ_LIST",
-											scoreCurrentInfo
-													.getCurrentPendingCategorySeqList());
-								} else if (currentCategoryType != null
-										&& currentCategoryType == 5
-										&& !currentDenyCategorySeqList
-												.isEmpty()) {
+									queryObj.setParameterList("CURRENT_PENDING_CATEGORY_SEQ_LIST",
+											scoreCurrentInfo.getCurrentPendingCategorySeqList());
+								} else if (currentCategoryType != null && currentCategoryType == 5
+										&& !currentDenyCategorySeqList.isEmpty()) {
 
-									queryObj.setParameterList(
-											"CURRENT_DENY_CATEGORY_SEQ_LIST",
-											scoreCurrentInfo
-													.getCurrentDenyCategorySeqList());
+									queryObj.setParameterList("CURRENT_DENY_CATEGORY_SEQ_LIST",
+											scoreCurrentInfo.getCurrentDenyCategorySeqList());
 								}
 
-								if (!StringUtils
-										.isBlank(currentIncludeCheckPoints)
-										&& !StringUtils
-												.isBlank(currentExcludeCheckPoints)) {
-									queryObj.setInteger(
-											"CURRENT_INCLUDE_BIT_VALUE",
-											scoreCurrentInfo
-													.getCurrentIncludeBitValue());
-									queryObj.setInteger(
-											"CURRENT_EXCLUDE_BIT_VALUE",
-											scoreCurrentInfo
-													.getCurrentExcludeBitValue());
+								if (!StringUtils.isBlank(currentIncludeCheckPoints)
+										&& !StringUtils.isBlank(currentExcludeCheckPoints)) {
+									queryObj.setInteger("CURRENT_INCLUDE_BIT_VALUE",
+											scoreCurrentInfo.getCurrentIncludeBitValue());
+									queryObj.setInteger("CURRENT_EXCLUDE_BIT_VALUE",
+											scoreCurrentInfo.getCurrentExcludeBitValue());
 								} else {
-									if (!StringUtils
-											.isBlank(currentIncludeCheckPoints)) {
-										queryObj.setInteger(
-												"CURRENT_INCLUDE_BIT_VALUE",
-												scoreCurrentInfo
-														.getCurrentIncludeBitValue());
-									} else if (!StringUtils
-											.isBlank(currentExcludeCheckPoints)) {
-										queryObj.setInteger(
-												"CURRENT_EXCLUDE_BIT_VALUE",
-												scoreCurrentInfo
-														.getCurrentExcludeBitValue());
+									if (!StringUtils.isBlank(currentIncludeCheckPoints)) {
+										queryObj.setInteger("CURRENT_INCLUDE_BIT_VALUE",
+												scoreCurrentInfo.getCurrentIncludeBitValue());
+									} else if (!StringUtils.isBlank(currentExcludeCheckPoints)) {
+										queryObj.setInteger("CURRENT_EXCLUDE_BIT_VALUE",
+												scoreCurrentInfo.getCurrentExcludeBitValue());
 									}
 								}
 
-								if (currentStateList != null
-										&& currentStateList.length > 0) {
-									queryObj.setParameterList(
-											"CURRENT_STATE_LIST",
-											scoreCurrentInfo
-													.getCurrentStateList());
+								if (currentStateList != null && currentStateList.length > 0) {
+									queryObj.setParameterList("CURRENT_STATE_LIST",
+											scoreCurrentInfo.getCurrentStateList());
 								}
 
 								if (currentUpdateStartDate != null) {
-									queryObj.setParameter(
-											"CURRENT_UPDATE_START_DATE",
-											currentUpdateStartDate);
+									queryObj.setParameter("CURRENT_UPDATE_START_DATE", currentUpdateStartDate);
 								}
 
 								if (currentUpdateEndDate != null) {
-									queryObj.setParameter(
-											"CURRENT_UPDATE_END_DATE",
-											currentUpdateEndDate);
+									queryObj.setParameter("CURRENT_UPDATE_END_DATE", currentUpdateEndDate);
 								}
-							} else if (menuId
-									.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
-								queryObj.setParameterList(
-										"CURRENT_STATE_LIST",
+							} else if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
+								queryObj.setParameterList("CURRENT_STATE_LIST",
 										WebAppConst.SCORE_SAMPLING_CURRENT_STATES);
-							} else if (menuId
-									.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								queryObj.setParameterList(
-										"CURRENT_STATE_LIST",
+							} else if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+								queryObj.setParameterList("CURRENT_STATE_LIST",
 										WebAppConst.STATE_TRANSITION_CURRENT_STATES);
-							} else if (menuId
-									.equals(WebAppConst.FORCED_MENU_ID)) {
-								queryObj.setParameterList(
-										"CURRENT_STATE_LIST",
+							} else if (menuId.equals(WebAppConst.FORCED_MENU_ID)) {
+								queryObj.setParameterList("CURRENT_STATE_LIST",
 										WebAppConst.FORCED_SCORING_CURRENT_STATES);
 							}
 
 							if (searchByScorerRoleId == true) {
 								if (currentScorerRoles != null) {
-									queryObj.setParameterList(
-											"CURRENT_SCORER_ROLES",
+									queryObj.setParameterList("CURRENT_SCORER_ROLES",
 											Arrays.asList(currentScorerRoles));
 								}
 							}
@@ -5292,17 +5085,13 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 						public void setHistoryParameters(SQLQuery queryObj) {
 
-							if (scoreHistoryInfo != null
-									&& scoreHistoryInfo.isHistoryBlock()) {
+							if (scoreHistoryInfo != null && scoreHistoryInfo.isHistoryBlock()) {
 
 								if (!historyScorerIdList.isEmpty()) {
-									queryObj.setParameterList(
-											"HISTORY_SCORER_ID_LIST",
-											historyScorerIdList);
+									queryObj.setParameterList("HISTORY_SCORER_ID_LIST", historyScorerIdList);
 								}
 
-								if (scoreHistoryInfo
-										.isHistoryQualityCheckFlag()) {
+								if (scoreHistoryInfo.isHistoryQualityCheckFlag()) {
 									/*
 									 * if (WebAppConst.SPEAKING_TYPE
 									 * .equals(questionInfo .getQuestionType())
@@ -5310,109 +5099,73 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 									 * .equals(questionInfo .getQuestionType()))
 									 * {
 									 */
-									queryObj.setParameterList(
-											"QUALITY_CHECK_FLAG",
-											ArrayUtils
-													.subarray(
-															WebAppConst.QUALITY_MARK_FLAG_LIST,
-															0, 1));
+									queryObj.setParameterList("QUALITY_CHECK_FLAG",
+											ArrayUtils.subarray(WebAppConst.QUALITY_MARK_FLAG_LIST, 0, 1));
 									/* } */
 								} /*
-								 * else { if (WebAppConst.SPEAKING_TYPE
-								 * .equals(questionInfo .getQuestionType()) ||
-								 * WebAppConst.WRITING_TYPE .equals(questionInfo
-								 * .getQuestionType())) {
-								 * queryObj.setParameterList(
-								 * "QUALITY_CHECK_FLAG",
-								 * WebAppConst.QUALITY_MARK_FLAG_LIST); }
-								 * 
-								 * }
-								 */
+									 * else { if (WebAppConst.SPEAKING_TYPE
+									 * .equals(questionInfo .getQuestionType())
+									 * || WebAppConst.WRITING_TYPE
+									 * .equals(questionInfo .getQuestionType()))
+									 * { queryObj.setParameterList(
+									 * "QUALITY_CHECK_FLAG",
+									 * WebAppConst.QUALITY_MARK_FLAG_LIST); }
+									 * 
+									 * }
+									 */
 
-								if (historyCategoryType != null
-										&& historyCategoryType == 3) {
+								if (historyCategoryType != null && historyCategoryType == 3) {
 
 									if (!historyGradeSeqList.isEmpty()) {
-										queryObj.setParameterList(
-												"HISTORY_GRADE_SEQ_LIST",
-												historyGradeSeqList);
+										queryObj.setParameterList("HISTORY_GRADE_SEQ_LIST", historyGradeSeqList);
 									}
 
-									if (ArrayUtils.contains(scoreHistoryInfo
-											.getHistoryGradeNum(), -1)) {
-										queryObj.setShort(
-												"NO_GRADE_SCORING_STATE",
-												WebAppConst.NO_GRADE_SCORING_STATE);
+									if (ArrayUtils.contains(scoreHistoryInfo.getHistoryGradeNum(), -1)) {
+										queryObj.setShort("NO_GRADE_SCORING_STATE", WebAppConst.NO_GRADE_SCORING_STATE);
 									}
-								} else if (historyCategoryType != null
-										&& historyCategoryType == 4
-										&& !historyPendingCategorySeqList
-												.isEmpty()) {
+								} else if (historyCategoryType != null && historyCategoryType == 4
+										&& !historyPendingCategorySeqList.isEmpty()) {
 
-									queryObj.setParameterList(
-											"HISTORY_PENDING_CATEGORY_SEQ_LIST",
+									queryObj.setParameterList("HISTORY_PENDING_CATEGORY_SEQ_LIST",
 											historyPendingCategorySeqList);
-								} else if (historyCategoryType != null
-										&& historyCategoryType == 5
-										&& !historyDenyCategorySeqList
-												.isEmpty()) {
+								} else if (historyCategoryType != null && historyCategoryType == 5
+										&& !historyDenyCategorySeqList.isEmpty()) {
 
-									queryObj.setParameterList(
-											"HISTORY_DENY_CATEGORY_SEQ_LIST",
+									queryObj.setParameterList("HISTORY_DENY_CATEGORY_SEQ_LIST",
 											historyDenyCategorySeqList);
 								}
 
-								if (!StringUtils
-										.isBlank(historyIncludeCheckPoints)
-										&& !StringUtils
-												.isBlank(historyExcludeCheckPoints)) {
-									queryObj.setInteger(
-											"HISTORY_INCLUDE_BIT_VALUE",
-											scoreHistoryInfo
-													.getHistoryIncludeBitValue());
-									queryObj.setInteger(
-											"HISTORY_EXCLUDE_BIT_VALUE",
-											scoreHistoryInfo
-													.getHistoryExcludeBitValue());
+								if (!StringUtils.isBlank(historyIncludeCheckPoints)
+										&& !StringUtils.isBlank(historyExcludeCheckPoints)) {
+									queryObj.setInteger("HISTORY_INCLUDE_BIT_VALUE",
+											scoreHistoryInfo.getHistoryIncludeBitValue());
+									queryObj.setInteger("HISTORY_EXCLUDE_BIT_VALUE",
+											scoreHistoryInfo.getHistoryExcludeBitValue());
 								} else {
-									if (!StringUtils
-											.isBlank(historyIncludeCheckPoints)) {
-										queryObj.setInteger(
-												"HISTORY_INCLUDE_BIT_VALUE",
-												scoreHistoryInfo
-														.getHistoryIncludeBitValue());
-									} else if (!StringUtils
-											.isBlank(historyExcludeCheckPoints)) {
-										queryObj.setInteger(
-												"HISTORY_EXCLUDE_BIT_VALUE",
-												scoreHistoryInfo
-														.getHistoryExcludeBitValue());
+									if (!StringUtils.isBlank(historyIncludeCheckPoints)) {
+										queryObj.setInteger("HISTORY_INCLUDE_BIT_VALUE",
+												scoreHistoryInfo.getHistoryIncludeBitValue());
+									} else if (!StringUtils.isBlank(historyExcludeCheckPoints)) {
+										queryObj.setInteger("HISTORY_EXCLUDE_BIT_VALUE",
+												scoreHistoryInfo.getHistoryExcludeBitValue());
 									}
 								}
 
-								if (historyEventList != null
-										&& historyEventList.length > 0) {
-									queryObj.setParameterList(
-											"HISTORY_EVENT_LIST",
-											historyEventList);
+								if (historyEventList != null && historyEventList.length > 0) {
+									queryObj.setParameterList("HISTORY_EVENT_LIST", historyEventList);
 								}
 
 								if (historyUpdateStartDate != null) {
-									queryObj.setParameter(
-											"HISTORY_UPDATE_START_DATE",
-											historyUpdateStartDate);
+									queryObj.setParameter("HISTORY_UPDATE_START_DATE", historyUpdateStartDate);
 								}
 
 								if (historyUpdateEndDate != null) {
-									queryObj.setParameter(
-											"HISTORY_UPDATE_END_DATE",
-											historyUpdateEndDate);
+									queryObj.setParameter("HISTORY_UPDATE_END_DATE", historyUpdateEndDate);
 								}
 
 								if (searchByScorerRoleId == true) {
 									if (historyScorerRoles != null) {
-										queryObj.setParameterList(
-												"HISTORY_SCORER_ROLES",
+										queryObj.setParameterList("HISTORY_SCORER_ROLES",
 												Arrays.asList(historyScorerRoles));
 									}
 								}
@@ -5433,11 +5186,12 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List findProcessDetails(Integer answerSequence,
-			String connectionString) {
+	public List findProcessDetails(Integer answerSequence, String connectionString) {
 		StringBuilder query = new StringBuilder();
-		query.append("SELECT tranDescScoreHistory.scoringState, tranDescScoreHistory.latestScreenScorerId, tranDescScoreHistory.gradeNum, ");
-		query.append("tranDescScoreHistory.pendingCategory, tranDescScoreHistory.updateDate, tranDescScoreHistory.questionSeq, tranDescScoreHistory.gradeSeq ");
+		query.append(
+				"SELECT tranDescScoreHistory.scoringState, tranDescScoreHistory.latestScreenScorerId, tranDescScoreHistory.gradeNum, ");
+		query.append(
+				"tranDescScoreHistory.pendingCategory, tranDescScoreHistory.updateDate, tranDescScoreHistory.questionSeq, tranDescScoreHistory.gradeSeq ");
 		query.append("FROM TranDescScoreHistory as tranDescScoreHistory ");
 		query.append("WHERE tranDescScoreHistory.tranDescScore.answerSeq = :ANSWER_SEQUENCE ");
 		query.append("AND tranDescScoreHistory.validFlag = :VALID_FLAG ");
@@ -5446,16 +5200,15 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		Object[] values = { answerSequence, WebAppConst.VALID_FLAG };
 
 		try {
-			return getHibernateTemplate(connectionString).findByNamedParam(
-					query.toString(), paramNames, values);
+			return getHibernateTemplate(connectionString).findByNamedParam(query.toString(), paramNames, values);
 		} catch (RuntimeException re) {
 			throw re;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Object[]> getDailyDiscrepancyAnalysisData(
-			String connectionString, final String fromDate, final String toDate) {
+	public List<Object[]> getDailyDiscrepancyAnalysisData(String connectionString, final String fromDate,
+			final String toDate) {
 
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
@@ -5463,7 +5216,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("result.question_seq, ");
 		query.append("count(*) as score_count, ");
 		query.append("sum(case when result.stateList like '%171' then 1 else 0 end) as discrepancy_count, ");
-		query.append("Round(sum(case when result.stateList like '%171' then 1 else 0 end)*100/count(*)) as percentage ");
+		query.append(
+				"Round(sum(case when result.stateList like '%171' then 1 else 0 end)*100/count(*)) as percentage ");
 		query.append("FROM ");
 		query.append("(SELECT ");
 		query.append("scorer_id, ");
@@ -5477,32 +5231,28 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("AND scorer_id not like :BATCH_SCORER_ID ");
 		query.append("AND valid_flag = :VALID_FLAG ");
 		query.append("group by scorer_id,answer_seq) as result ");
-		query.append("GROUP BY result.scorer_id,result.question_seq Having discrepancy_count > 0 order by question_seq,scorer_id ");
+		query.append(
+				"GROUP BY result.scorer_id,result.question_seq Having discrepancy_count > 0 order by question_seq,scorer_id ");
 
 		try {
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<List<Object[]>>() {
-						public List<Object[]> doInHibernate(Session session)
-								throws HibernateException {
-							SQLQuery queryObj = session.createSQLQuery(query
-									.toString());
-							queryObj.setParameter("FROM_DATE", fromDate);
-							queryObj.setParameter("TO_DATE", toDate);
-							queryObj.setParameter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							queryObj.setParameter("BATCH_SCORER_ID",
-									WebAppConst.BATCH_SCORER_ID);
-							return queryObj.list();
-						}
-					});
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<List<Object[]>>() {
+				public List<Object[]> doInHibernate(Session session) throws HibernateException {
+					SQLQuery queryObj = session.createSQLQuery(query.toString());
+					queryObj.setParameter("FROM_DATE", fromDate);
+					queryObj.setParameter("TO_DATE", toDate);
+					queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					queryObj.setParameter("BATCH_SCORER_ID", WebAppConst.BATCH_SCORER_ID);
+					return queryObj.list();
+				}
+			});
 		} catch (RuntimeException re) {
 			throw re;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<RatingInfo> getSummaryDiscrepancyAnalysisData(
-			String connectionString, final String fromDate, final String toDate) {
+	public List<RatingInfo> getSummaryDiscrepancyAnalysisData(String connectionString, final String fromDate,
+			final String toDate) {
 
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
@@ -5515,7 +5265,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("and tdh.valid_flag = :VALID_FLAG ");
 		query.append("and tds.valid_flag = :VALID_FLAG ");
 		query.append("and tds.image_file_name like ");
-		query.append("case when result.question_type = :QUES_TYPE_SPEAKING then :MP3_FORMAT else :TXT_FORMAT end) as totalRating, ");
+		query.append(
+				"case when result.question_type = :QUES_TYPE_SPEAKING then :MP3_FORMAT else :TXT_FORMAT end) as totalRating, ");
 		query.append("count(*) as totalDiscrepancyCount, ");
 		query.append("sum(result.matchCount) as matchCount, ");
 		query.append("(count(*)-sum(result.matchCount)) as discrepancyCount ");
@@ -5523,7 +5274,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("(select ");
 		query.append("tdh1.answer_seq, tdh1.question_seq, ");
 		query.append("(case when ");
-		query.append("(select image_file_name from tran_desc_score as tds where tds.answer_seq=tdh1.answer_seq) like :MP3_FORMAT ");
+		query.append(
+				"(select image_file_name from tran_desc_score as tds where tds.answer_seq=tdh1.answer_seq) like :MP3_FORMAT ");
 		query.append("then :QUES_TYPE_SPEAKING else :QUES_TYPE_WRITING end) as question_type, ");
 		query.append("tdh1.scorer_id, ");
 		query.append("tdh1.scoring_state,tdh2.stateList,tdh1.bit_value,tdh2.latest500BitValue, ");
@@ -5545,112 +5297,151 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("group by result.question_type,result.scorer_id");
 
 		try {
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<List<RatingInfo>>() {
-						public List<RatingInfo> doInHibernate(Session session)
-								throws HibernateException {
-							SQLQuery queryObj = session.createSQLQuery(query
-									.toString());
-							queryObj.setParameter("FROM_DATE", fromDate);
-							queryObj.setParameter("TO_DATE", toDate);
-							queryObj.setParameter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							queryObj.setParameter("QUES_TYPE_SPEAKING",
-									WebAppConst.QUES_TYPE_SPEAKING);
-							queryObj.setParameter("QUES_TYPE_WRITING",
-									WebAppConst.QUES_TYPE_WRITING);
-							queryObj.setParameter("MP3_FORMAT",
-									WebAppConst.MP3_FORMAT);
-							queryObj.setParameter("TXT_FORMAT",
-									WebAppConst.TXT_FORMAT);
-							queryObj.setParameter("BATCH_SCORER_ID",
-									WebAppConst.BATCH_SCORER_ID);
-							queryObj.setParameterList("STATE_LIST",
-									WebAppConst.SUMMARY_DISCR_REPORT_STATES);
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<List<RatingInfo>>() {
+				public List<RatingInfo> doInHibernate(Session session) throws HibernateException {
+					SQLQuery queryObj = session.createSQLQuery(query.toString());
+					queryObj.setParameter("FROM_DATE", fromDate);
+					queryObj.setParameter("TO_DATE", toDate);
+					queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					queryObj.setParameter("QUES_TYPE_SPEAKING", WebAppConst.QUES_TYPE_SPEAKING);
+					queryObj.setParameter("QUES_TYPE_WRITING", WebAppConst.QUES_TYPE_WRITING);
+					queryObj.setParameter("MP3_FORMAT", WebAppConst.MP3_FORMAT);
+					queryObj.setParameter("TXT_FORMAT", WebAppConst.TXT_FORMAT);
+					queryObj.setParameter("BATCH_SCORER_ID", WebAppConst.BATCH_SCORER_ID);
+					queryObj.setParameterList("STATE_LIST", WebAppConst.SUMMARY_DISCR_REPORT_STATES);
 
-							queryObj.addScalar("scorerId");
-							queryObj.addScalar("questionType");
-							queryObj.addScalar("totalRating",
-									IntegerType.INSTANCE);
-							queryObj.addScalar("totalDiscrepancyCount",
-									IntegerType.INSTANCE);
-							queryObj.addScalar("matchCount",
-									IntegerType.INSTANCE);
-							queryObj.addScalar("discrepancyCount",
-									IntegerType.INSTANCE);
-							queryObj.setResultTransformer(Transformers
-									.aliasToBean(RatingInfo.class));
-							return queryObj.list();
-						}
-					});
+					queryObj.addScalar("scorerId");
+					queryObj.addScalar("questionType");
+					queryObj.addScalar("totalRating", IntegerType.INSTANCE);
+					queryObj.addScalar("totalDiscrepancyCount", IntegerType.INSTANCE);
+					queryObj.addScalar("matchCount", IntegerType.INSTANCE);
+					queryObj.addScalar("discrepancyCount", IntegerType.INSTANCE);
+					queryObj.setResultTransformer(Transformers.aliasToBean(RatingInfo.class));
+					return queryObj.list();
+				}
+			});
 		} catch (RuntimeException re) {
 			throw re;
 		}
 	}
 
-	public DailyScoreInfo getDailyScoreInfo(String connectionString,
-			final String fromDate, final String toDate) {
+	public DailyScoreInfo getDailyScoreInfo(String connectionString, final String fromDate, final String toDate) {
 
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
-		query.append("sum(case when result.stateList like :FIRST_RTG_SECOND_WAIT and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) firstRtgSecondWaitSpkCnt, ");
-		query.append("sum(case when result.stateList like :FIRST_RTG_SECOND_WAIT and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) firstRtgSecondWaitWrtCnt, ");
-		query.append("sum(case when result.stateList like :FIRST_RTG_PENDING and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) firstRtgPendingSpkCnt, ");
-		query.append("sum(case when result.stateList like :FIRST_RTG_PENDING and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) firstRtgPendingWrtCnt, ");
-		query.append("sum(case when result.stateList like :SECOND_RTG_COMPLETE and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) secondRtgCompleteSpkCnt, ");
-		query.append("sum(case when result.stateList like :SECOND_RTG_COMPLETE and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) secondRtgCompleteWrtCnt, ");
-		query.append("sum(case when result.stateList like :SECOND_RTG_PENDING and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) secondRtgPendingSpkCnt, ");
-		query.append("sum(case when result.stateList like :SECOND_RTG_PENDING and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) secondRtgPendingWrtCnt, ");
-		query.append("sum(case when result.stateList like :SECOND_RTG_MISMATCH and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) secondRtgMismatchSpkCnt, ");
-		query.append("sum(case when result.stateList like :SECOND_RTG_MISMATCH and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) secondRtgMismatchWrtCnt, ");
-		query.append("sum(case when result.stateList like :MISMATCH_RTG_PENDING and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) mismatchRtgPendingSpkCnt, ");
-		query.append("sum(case when result.stateList like :MISMATCH_RTG_PENDING and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) mismatchRtgPendingWrtCnt, ");
-		query.append("sum(case when result.stateList like :MISMATCH_RTG_COMPLETE and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) mismatchRtgCompleteSpkCnt, ");
-		query.append("sum(case when result.stateList like :MISMATCH_RTG_COMPLETE and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) mismatchRtgCompleteWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending01SecondWaitSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending01SecondWaitWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending01PendingSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending01PendingWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending01CompleteSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending01CompleteWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending01MismatchSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending01MismatchWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending02SecondWaitSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending02SecondWaitWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending02PendingSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending02PendingWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending02CompleteSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending02CompleteWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending02MismatchSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending02MismatchWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending03SecondWaitSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending03SecondWaitWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending03PendingSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending03PendingWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending03CompleteSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending03CompleteWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending03MismatchSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending03MismatchWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending04SecondWaitSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending04SecondWaitWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending04PendingSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending04PendingWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending04CompleteSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending04CompleteWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending04MismatchSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending04MismatchWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending05SecondWaitSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending05SecondWaitWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending05PendingSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending05PendingWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending05CompleteSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending05CompleteWrtCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending05MismatchSpkCnt, ");
-		query.append("sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending05MismatchWrtCnt ");
+		query.append(
+				"sum(case when result.stateList like :FIRST_RTG_SECOND_WAIT and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) firstRtgSecondWaitSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :FIRST_RTG_SECOND_WAIT and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) firstRtgSecondWaitWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :FIRST_RTG_PENDING and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) firstRtgPendingSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :FIRST_RTG_PENDING and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) firstRtgPendingWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :SECOND_RTG_COMPLETE and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) secondRtgCompleteSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :SECOND_RTG_COMPLETE and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) secondRtgCompleteWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :SECOND_RTG_PENDING and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) secondRtgPendingSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :SECOND_RTG_PENDING and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) secondRtgPendingWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :SECOND_RTG_MISMATCH and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) secondRtgMismatchSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :SECOND_RTG_MISMATCH and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) secondRtgMismatchWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :MISMATCH_RTG_PENDING and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) mismatchRtgPendingSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :MISMATCH_RTG_PENDING and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) mismatchRtgPendingWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :MISMATCH_RTG_COMPLETE and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) mismatchRtgCompleteSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :MISMATCH_RTG_COMPLETE and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) mismatchRtgCompleteWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending01SecondWaitSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending01SecondWaitWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending01PendingSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending01PendingWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending01CompleteSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending01CompleteWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending01MismatchSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_01 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending01MismatchWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending02SecondWaitSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending02SecondWaitWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending02PendingSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending02PendingWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending02CompleteSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending02CompleteWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending02MismatchSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_02 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending02MismatchWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending03SecondWaitSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending03SecondWaitWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending03PendingSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending03PendingWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending03CompleteSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending03CompleteWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending03MismatchSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_03 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending03MismatchWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending04SecondWaitSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending04SecondWaitWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending04PendingSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending04PendingWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending04CompleteSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending04CompleteWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending04MismatchSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_04 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending04MismatchWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending05SecondWaitSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_SECOND_WAIT and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending05SecondWaitWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending05PendingSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_PENDING and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending05PendingWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending05CompleteSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_COMPLETE and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending05CompleteWrtCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_SPEAKING then 1 else 0 end) pending05MismatchSpkCnt, ");
+		query.append(
+				"sum(case when result.stateList like :PENDING_RTG_MISMATCH and (select GROUP_CONCAT(pending_category) as pendingCategoryList from tran_desc_score_history where answer_seq=result.answer_seq) like :PENDING_05 and result.question_type=:QUES_TYPE_WRITING then 1 else 0 end) pending05MismatchWrtCnt ");
 		query.append("FROM ");
 		query.append("(select answer_seq, ");
 		query.append("(case when ");
-		query.append("(select image_file_name from tran_desc_score as tds where tds.answer_seq=tdsh.answer_seq) like :MP3_FORMAT ");
+		query.append(
+				"(select image_file_name from tran_desc_score as tds where tds.answer_seq=tdsh.answer_seq) like :MP3_FORMAT ");
 		query.append("then :QUES_TYPE_SPEAKING else :QUES_TYPE_WRITING end) as question_type, ");
 		query.append("GROUP_CONCAT(scoring_state) as stateList ");
 		query.append("FROM tran_desc_score_history as tdsh ");
@@ -5659,68 +5450,44 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("GROUP BY answer_seq) as result");
 
 		try {
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<DailyScoreInfo>() {
-						public DailyScoreInfo doInHibernate(Session session)
-								throws HibernateException {
-							SQLQuery queryObj = session.createSQLQuery(query
-									.toString());
-							queryObj.setParameter("FROM_DATE", fromDate);
-							queryObj.setParameter("TO_DATE", toDate);
-							queryObj.setParameter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							queryObj.setParameter("QUES_TYPE_SPEAKING",
-									WebAppConst.QUES_TYPE_SPEAKING);
-							queryObj.setParameter("QUES_TYPE_WRITING",
-									WebAppConst.QUES_TYPE_WRITING);
-							queryObj.setParameter("MP3_FORMAT",
-									WebAppConst.MP3_FORMAT);
-							queryObj.setParameter("FIRST_RTG_SECOND_WAIT",
-									WebAppConst.FIRST_RTG_SECOND_WAIT);
-							queryObj.setParameter("FIRST_RTG_PENDING",
-									WebAppConst.FIRST_RTG_PENDING);
-							queryObj.setParameter("SECOND_RTG_COMPLETE",
-									WebAppConst.SECOND_RTG_COMPLETE);
-							queryObj.setParameter("SECOND_RTG_PENDING",
-									WebAppConst.SECOND_RTG_PENDING);
-							queryObj.setParameter("SECOND_RTG_MISMATCH",
-									WebAppConst.SECOND_RTG_MISMATCH);
-							queryObj.setParameter("MISMATCH_RTG_PENDING",
-									WebAppConst.MISMATCH_RTG_PENDING);
-							queryObj.setParameter("MISMATCH_RTG_COMPLETE",
-									WebAppConst.MISMATCH_RTG_COMPLETE);
-							queryObj.setParameter("PENDING_RTG_SECOND_WAIT",
-									WebAppConst.PENDING_RTG_SECOND_WAIT);
-							queryObj.setParameter("PENDING_RTG_PENDING",
-									WebAppConst.PENDING_RTG_PENDING);
-							queryObj.setParameter("PENDING_RTG_COMPLETE",
-									WebAppConst.PENDING_RTG_COMPLETE);
-							queryObj.setParameter("PENDING_RTG_MISMATCH",
-									WebAppConst.PENDING_RTG_MISMATCH);
-							queryObj.setParameter("PENDING_01",
-									WebAppConst.PEND_CATE_01);
-							queryObj.setParameter("PENDING_02",
-									WebAppConst.PEND_CATE_02);
-							queryObj.setParameter("PENDING_03",
-									WebAppConst.PEND_CATE_03);
-							queryObj.setParameter("PENDING_04",
-									WebAppConst.PEND_CATE_04);
-							queryObj.setParameter("PENDING_05",
-									WebAppConst.PEND_CATE_05);
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<DailyScoreInfo>() {
+				public DailyScoreInfo doInHibernate(Session session) throws HibernateException {
+					SQLQuery queryObj = session.createSQLQuery(query.toString());
+					queryObj.setParameter("FROM_DATE", fromDate);
+					queryObj.setParameter("TO_DATE", toDate);
+					queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					queryObj.setParameter("QUES_TYPE_SPEAKING", WebAppConst.QUES_TYPE_SPEAKING);
+					queryObj.setParameter("QUES_TYPE_WRITING", WebAppConst.QUES_TYPE_WRITING);
+					queryObj.setParameter("MP3_FORMAT", WebAppConst.MP3_FORMAT);
+					queryObj.setParameter("FIRST_RTG_SECOND_WAIT", WebAppConst.FIRST_RTG_SECOND_WAIT);
+					queryObj.setParameter("FIRST_RTG_PENDING", WebAppConst.FIRST_RTG_PENDING);
+					queryObj.setParameter("SECOND_RTG_COMPLETE", WebAppConst.SECOND_RTG_COMPLETE);
+					queryObj.setParameter("SECOND_RTG_PENDING", WebAppConst.SECOND_RTG_PENDING);
+					queryObj.setParameter("SECOND_RTG_MISMATCH", WebAppConst.SECOND_RTG_MISMATCH);
+					queryObj.setParameter("MISMATCH_RTG_PENDING", WebAppConst.MISMATCH_RTG_PENDING);
+					queryObj.setParameter("MISMATCH_RTG_COMPLETE", WebAppConst.MISMATCH_RTG_COMPLETE);
+					queryObj.setParameter("PENDING_RTG_SECOND_WAIT", WebAppConst.PENDING_RTG_SECOND_WAIT);
+					queryObj.setParameter("PENDING_RTG_PENDING", WebAppConst.PENDING_RTG_PENDING);
+					queryObj.setParameter("PENDING_RTG_COMPLETE", WebAppConst.PENDING_RTG_COMPLETE);
+					queryObj.setParameter("PENDING_RTG_MISMATCH", WebAppConst.PENDING_RTG_MISMATCH);
+					queryObj.setParameter("PENDING_01", WebAppConst.PEND_CATE_01);
+					queryObj.setParameter("PENDING_02", WebAppConst.PEND_CATE_02);
+					queryObj.setParameter("PENDING_03", WebAppConst.PEND_CATE_03);
+					queryObj.setParameter("PENDING_04", WebAppConst.PEND_CATE_04);
+					queryObj.setParameter("PENDING_05", WebAppConst.PEND_CATE_05);
 
-							setResultTransformerProperties(queryObj);
+					setResultTransformerProperties(queryObj);
 
-							return (DailyScoreInfo) queryObj.uniqueResult();
-						}
-					});
+					return (DailyScoreInfo) queryObj.uniqueResult();
+				}
+			});
 		} catch (RuntimeException re) {
 			throw re;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Integer> getDailyScoreQuesSeqInfo(String connectionString,
-			final String fromDate, final String toDate) {
+	public List<Integer> getDailyScoreQuesSeqInfo(String connectionString, final String fromDate, final String toDate) {
 
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
@@ -5744,50 +5511,35 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("OR stateList like :PENDING_RTG_COMPLETE ");
 		query.append("OR stateList like :PENDING_RTG_MISMATCH) as result GROUP BY result.question_seq");
 		try {
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<List<Integer>>() {
-						public List<Integer> doInHibernate(Session session)
-								throws HibernateException {
-							SQLQuery queryObj = session.createSQLQuery(query
-									.toString());
-							queryObj.setParameter("FROM_DATE", fromDate);
-							queryObj.setParameter("TO_DATE", toDate);
-							queryObj.setParameter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							queryObj.setParameter("FIRST_RTG_SECOND_WAIT",
-									WebAppConst.FIRST_RTG_SECOND_WAIT);
-							queryObj.setParameter("FIRST_RTG_PENDING",
-									WebAppConst.FIRST_RTG_PENDING);
-							queryObj.setParameter("SECOND_RTG_COMPLETE",
-									WebAppConst.SECOND_RTG_COMPLETE);
-							queryObj.setParameter("SECOND_RTG_PENDING",
-									WebAppConst.SECOND_RTG_PENDING);
-							queryObj.setParameter("SECOND_RTG_MISMATCH",
-									WebAppConst.SECOND_RTG_MISMATCH);
-							queryObj.setParameter("MISMATCH_RTG_PENDING",
-									WebAppConst.MISMATCH_RTG_PENDING);
-							queryObj.setParameter("MISMATCH_RTG_COMPLETE",
-									WebAppConst.MISMATCH_RTG_COMPLETE);
-							queryObj.setParameter("PENDING_RTG_SECOND_WAIT",
-									WebAppConst.PENDING_RTG_SECOND_WAIT);
-							queryObj.setParameter("PENDING_RTG_PENDING",
-									WebAppConst.PENDING_RTG_PENDING);
-							queryObj.setParameter("PENDING_RTG_COMPLETE",
-									WebAppConst.PENDING_RTG_COMPLETE);
-							queryObj.setParameter("PENDING_RTG_MISMATCH",
-									WebAppConst.PENDING_RTG_MISMATCH);
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<List<Integer>>() {
+				public List<Integer> doInHibernate(Session session) throws HibernateException {
+					SQLQuery queryObj = session.createSQLQuery(query.toString());
+					queryObj.setParameter("FROM_DATE", fromDate);
+					queryObj.setParameter("TO_DATE", toDate);
+					queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					queryObj.setParameter("FIRST_RTG_SECOND_WAIT", WebAppConst.FIRST_RTG_SECOND_WAIT);
+					queryObj.setParameter("FIRST_RTG_PENDING", WebAppConst.FIRST_RTG_PENDING);
+					queryObj.setParameter("SECOND_RTG_COMPLETE", WebAppConst.SECOND_RTG_COMPLETE);
+					queryObj.setParameter("SECOND_RTG_PENDING", WebAppConst.SECOND_RTG_PENDING);
+					queryObj.setParameter("SECOND_RTG_MISMATCH", WebAppConst.SECOND_RTG_MISMATCH);
+					queryObj.setParameter("MISMATCH_RTG_PENDING", WebAppConst.MISMATCH_RTG_PENDING);
+					queryObj.setParameter("MISMATCH_RTG_COMPLETE", WebAppConst.MISMATCH_RTG_COMPLETE);
+					queryObj.setParameter("PENDING_RTG_SECOND_WAIT", WebAppConst.PENDING_RTG_SECOND_WAIT);
+					queryObj.setParameter("PENDING_RTG_PENDING", WebAppConst.PENDING_RTG_PENDING);
+					queryObj.setParameter("PENDING_RTG_COMPLETE", WebAppConst.PENDING_RTG_COMPLETE);
+					queryObj.setParameter("PENDING_RTG_MISMATCH", WebAppConst.PENDING_RTG_MISMATCH);
 
-							return queryObj.list();
-						}
-					});
+					return queryObj.list();
+				}
+			});
 		} catch (RuntimeException re) {
 			throw re;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Object[]> getStateWiseScoringData(String connectionString,
-			final String stateList, final String fromDate, final String toDate) {
+	public List<Object[]> getStateWiseScoringData(String connectionString, final String stateList,
+			final String fromDate, final String toDate) {
 
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
@@ -5797,7 +5549,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("FROM ");
 		query.append("(select question_seq, ");
 		query.append("(case when ");
-		query.append("(select image_file_name from tran_desc_score as tds where tds.answer_seq=tdsh.answer_seq) like :MP3_FORMAT ");
+		query.append(
+				"(select image_file_name from tran_desc_score as tds where tds.answer_seq=tdsh.answer_seq) like :MP3_FORMAT ");
 		query.append("then :QUES_TYPE_SPEAKING else :QUES_TYPE_WRITING end) as question_type, ");
 		query.append("GROUP_CONCAT(scoring_state) as stateList ");
 		query.append("FROM tran_desc_score_history tdsh ");
@@ -5805,36 +5558,27 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("AND valid_flag = :VALID_FLAG ");
 		query.append("GROUP BY answer_seq HAVING stateList like :STATE_LIST) as result GROUP BY result.question_seq");
 		try {
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<List<Object[]>>() {
-						public List<Object[]> doInHibernate(Session session)
-								throws HibernateException {
-							SQLQuery queryObj = session.createSQLQuery(query
-									.toString());
-							queryObj.setParameter("FROM_DATE", fromDate);
-							queryObj.setParameter("TO_DATE", toDate);
-							queryObj.setParameter("STATE_LIST", stateList);
-							queryObj.setParameter("QUES_TYPE_SPEAKING",
-									WebAppConst.QUES_TYPE_SPEAKING);
-							queryObj.setParameter("QUES_TYPE_WRITING",
-									WebAppConst.QUES_TYPE_WRITING);
-							queryObj.setParameter("MP3_FORMAT",
-									WebAppConst.MP3_FORMAT);
-							queryObj.setParameter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							return queryObj.list();
-						}
-					});
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<List<Object[]>>() {
+				public List<Object[]> doInHibernate(Session session) throws HibernateException {
+					SQLQuery queryObj = session.createSQLQuery(query.toString());
+					queryObj.setParameter("FROM_DATE", fromDate);
+					queryObj.setParameter("TO_DATE", toDate);
+					queryObj.setParameter("STATE_LIST", stateList);
+					queryObj.setParameter("QUES_TYPE_SPEAKING", WebAppConst.QUES_TYPE_SPEAKING);
+					queryObj.setParameter("QUES_TYPE_WRITING", WebAppConst.QUES_TYPE_WRITING);
+					queryObj.setParameter("MP3_FORMAT", WebAppConst.MP3_FORMAT);
+					queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					return queryObj.list();
+				}
+			});
 		} catch (RuntimeException re) {
 			throw re;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Object[]> getPendCategoryAndStateWiseScoringData(
-			String connectionString, final String stateList,
-			final String pendingCategory, final String fromDate,
-			final String toDate) {
+	public List<Object[]> getPendCategoryAndStateWiseScoringData(String connectionString, final String stateList,
+			final String pendingCategory, final String fromDate, final String toDate) {
 
 		final StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
@@ -5844,7 +5588,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("FROM ");
 		query.append("(select question_seq, ");
 		query.append("(case when ");
-		query.append("(select image_file_name from tran_desc_score as tds where tds.answer_seq=tdsh.answer_seq) like :MP3_FORMAT ");
+		query.append(
+				"(select image_file_name from tran_desc_score as tds where tds.answer_seq=tdsh.answer_seq) like :MP3_FORMAT ");
 		query.append("then :QUES_TYPE_SPEAKING else :QUES_TYPE_WRITING end) as question_type, ");
 		query.append("GROUP_CONCAT(scoring_state) as stateList ");
 		query.append("FROM tran_desc_score_history tdsh ");
@@ -5856,28 +5601,20 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("where answer_seq=tdsh.answer_seq) like :PENDING_CATEGORY) as result ");
 		query.append("GROUP BY result.question_seq");
 		try {
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<List<Object[]>>() {
-						public List<Object[]> doInHibernate(Session session)
-								throws HibernateException {
-							SQLQuery queryObj = session.createSQLQuery(query
-									.toString());
-							queryObj.setParameter("FROM_DATE", fromDate);
-							queryObj.setParameter("TO_DATE", toDate);
-							queryObj.setParameter("STATE_LIST", stateList);
-							queryObj.setParameter("PENDING_CATEGORY",
-									pendingCategory);
-							queryObj.setParameter("QUES_TYPE_SPEAKING",
-									WebAppConst.QUES_TYPE_SPEAKING);
-							queryObj.setParameter("QUES_TYPE_WRITING",
-									WebAppConst.QUES_TYPE_WRITING);
-							queryObj.setParameter("MP3_FORMAT",
-									WebAppConst.MP3_FORMAT);
-							queryObj.setParameter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							return queryObj.list();
-						}
-					});
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<List<Object[]>>() {
+				public List<Object[]> doInHibernate(Session session) throws HibernateException {
+					SQLQuery queryObj = session.createSQLQuery(query.toString());
+					queryObj.setParameter("FROM_DATE", fromDate);
+					queryObj.setParameter("TO_DATE", toDate);
+					queryObj.setParameter("STATE_LIST", stateList);
+					queryObj.setParameter("PENDING_CATEGORY", pendingCategory);
+					queryObj.setParameter("QUES_TYPE_SPEAKING", WebAppConst.QUES_TYPE_SPEAKING);
+					queryObj.setParameter("QUES_TYPE_WRITING", WebAppConst.QUES_TYPE_WRITING);
+					queryObj.setParameter("MP3_FORMAT", WebAppConst.MP3_FORMAT);
+					queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					return queryObj.list();
+				}
+			});
 		} catch (RuntimeException re) {
 			throw re;
 		}
@@ -5892,23 +5629,16 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("WHERE pending_category like :PENDING_CATEGORY ");
 		query.append("AND valid_flag = :VALID_FLAG ");
 		try {
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<Object[]>() {
-						public Object[] doInHibernate(Session session)
-								throws HibernateException {
-							Query queryObj = session.createSQLQuery(query
-									.toString());
-							queryObj.setParameter("MP3_FORMAT",
-									WebAppConst.MP3_FORMAT);
-							queryObj.setParameter("TXT_FORMAT",
-									WebAppConst.TXT_FORMAT);
-							queryObj.setParameter("PENDING_CATEGORY",
-									WebAppConst.PEND_CATE_04);
-							queryObj.setParameter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							return (Object[]) queryObj.uniqueResult();
-						}
-					});
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<Object[]>() {
+				public Object[] doInHibernate(Session session) throws HibernateException {
+					Query queryObj = session.createSQLQuery(query.toString());
+					queryObj.setParameter("MP3_FORMAT", WebAppConst.MP3_FORMAT);
+					queryObj.setParameter("TXT_FORMAT", WebAppConst.TXT_FORMAT);
+					queryObj.setParameter("PENDING_CATEGORY", WebAppConst.PEND_CATE_04);
+					queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					return (Object[]) queryObj.uniqueResult();
+				}
+			});
 		} catch (RuntimeException re) {
 			throw re;
 		}
@@ -5969,13 +5699,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		queryObj.addScalar("pending05CompleteWrtCnt", IntegerType.INSTANCE);
 		queryObj.addScalar("pending05MismatchSpkCnt", IntegerType.INSTANCE);
 		queryObj.addScalar("pending05MismatchWrtCnt", IntegerType.INSTANCE);
-		queryObj.setResultTransformer(Transformers
-				.aliasToBean(DailyScoreInfo.class));
+		queryObj.setResultTransformer(Transformers.aliasToBean(DailyScoreInfo.class));
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Object[]> fetchInspectionGroupSeqAndCount(
-			final int questionSeq, final String scorerId,
+	public List<Object[]> fetchInspectionGroupSeqAndCount(final int questionSeq, final String scorerId,
 			String connectionString) {
 
 		final StringBuilder query = new StringBuilder();
@@ -5991,87 +5719,65 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 		query.append("having count(*) > 0 ");
 
 		try {
-			return getHibernateTemplate(connectionString).execute(
-					new HibernateCallback<List<Object[]>>() {
-						public List<Object[]> doInHibernate(Session session)
-								throws HibernateException {
-							SQLQuery queryObj = session.createSQLQuery(query
-									.toString());
-							queryObj.setParameter("QUESTION_SEQ", questionSeq);
-							queryObj.setParameter("VALID_FLAG",
-									WebAppConst.VALID_FLAG);
-							queryObj.setParameter("INSPECTION_STATE",
-									WebAppConst.INSPECTION_STATE);
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<List<Object[]>>() {
+				public List<Object[]> doInHibernate(Session session) throws HibernateException {
+					SQLQuery queryObj = session.createSQLQuery(query.toString());
+					queryObj.setParameter("QUESTION_SEQ", questionSeq);
+					queryObj.setParameter("VALID_FLAG", WebAppConst.VALID_FLAG);
+					queryObj.setParameter("INSPECTION_STATE", WebAppConst.INSPECTION_STATE);
 
-							return queryObj.list();
-						}
-					});
+					return queryObj.list();
+				}
+			});
 		} catch (RuntimeException re) {
 			throw re;
 		}
 	}
 
-	public static String getPropertyFromPropertyFile(String propertyFileName,
-			String key) {
+	public static String getPropertyFromPropertyFile(String propertyFileName, String key) {
 		return ResourceBundle.getBundle(propertyFileName).getString(key);
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List registerAnswer(RegisterScoreInfo registerScoreInfo,
-			String connectionString) {
+	public List registerAnswer(RegisterScoreInfo registerScoreInfo, String connectionString) {
 		HibernateTemplate hibernateTemplate = null;
 		try {
 			hibernateTemplate = getHibernateTemplate(connectionString);
 
-			return hibernateTemplate.findByNamedQuery("registerTranAnswer",
-					registerScoreInfo.getAnswerSeq(),
-					registerScoreInfo.getScorerId(),
-					registerScoreInfo.getLatestScreenScorerId(),
-					registerScoreInfo.getSecondLatestScreenScorerId(),
-					registerScoreInfo.getLatestScoringState(),
-					registerScoreInfo.getBitValue(),
-					registerScoreInfo.getGradeSeq(),
-					registerScoreInfo.getGradeNum(),
-					registerScoreInfo.getUpdateDate(),
-					registerScoreInfo.getQualityCheckFlag(),
-					registerScoreInfo.getRoleId(),
-					registerScoreInfo.getEventId(),
-					registerScoreInfo.getScorerComment(),
-					registerScoreInfo.getBookMarkFlag(),
-					registerScoreInfo.getHistorySeq(),
-					registerScoreInfo.isSecondAndThirdLatestScorerIdFlag(),
-					registerScoreInfo.getPendingCategorySeq(),
-					registerScoreInfo.getPendingCategory(),
-					registerScoreInfo.getDenyCategorySeq(),
-					registerScoreInfo.getDenyCategory(),
-					registerScoreInfo.getMenuId(),
-					registerScoreInfo.getHistoryRecordCount(),
-					registerScoreInfo.getLastUpdateDate(),
+			return hibernateTemplate.findByNamedQuery("registerTranAnswer", registerScoreInfo.getAnswerSeq(),
+					registerScoreInfo.getScorerId(), registerScoreInfo.getLatestScreenScorerId(),
+					registerScoreInfo.getSecondLatestScreenScorerId(), registerScoreInfo.getLatestScoringState(),
+					registerScoreInfo.getBitValue(), registerScoreInfo.getGradeSeq(), registerScoreInfo.getGradeNum(),
+					registerScoreInfo.getUpdateDate(), registerScoreInfo.getQualityCheckFlag(),
+					registerScoreInfo.getRoleId(), registerScoreInfo.getEventId(), registerScoreInfo.getScorerComment(),
+					registerScoreInfo.getBookMarkFlag(), registerScoreInfo.getHistorySeq(),
+					registerScoreInfo.isSecondAndThirdLatestScorerIdFlag(), registerScoreInfo.getPendingCategorySeq(),
+					registerScoreInfo.getPendingCategory(), registerScoreInfo.getDenyCategorySeq(),
+					registerScoreInfo.getDenyCategory(), registerScoreInfo.getMenuId(),
+					registerScoreInfo.getHistoryRecordCount(), registerScoreInfo.getLastUpdateDate(),
 					registerScoreInfo.getIsScoreOrPending());
 
 		} catch (RuntimeException re) {
 			throw re;
 		}
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<String> getDateAndTimeWiseQuestionCount(
-			String connectionString, final DailyReportsInfo dailyReportsInfo) {
+	public List<String> getDateAndTimeWiseQuestionCount(String connectionString,
+			final DailyReportsInfo dailyReportsInfo) {
 
 		try {
 			final StringBuilder queryString = new StringBuilder();
 			queryString.append("SELECT ");
-			queryString
-					.append("th.question_seq, th.scoring_state,count(th.history_seq) ");
+			queryString.append("th.question_seq, th.scoring_state,count(th.history_seq) ");
 			queryString.append("FROM ");
 			queryString.append("tran_desc_score_history th, ");
 			queryString.append("(SELECT max(history_seq) mhis_seq ");
 			queryString.append("FROM tran_desc_score_history t  where ");
-			queryString
-					.append("t.create_date BETWEEN :FROM_DATE AND :TO_DATE group by answer_seq) ");
-			queryString
-					.append("as thmax where th.history_seq = thmax.mhis_seq ");
+			queryString.append("t.create_date BETWEEN :FROM_DATE AND :TO_DATE group by answer_seq) ");
+			queryString.append("as thmax where th.history_seq = thmax.mhis_seq ");
 			queryString.append("group by  ");
 			queryString.append("th.scoring_state,th.question_seq");
 
@@ -6080,31 +5786,20 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport
 				hibernateTemplate = getHibernateTemplate(connectionString);
 			}
 
-			return hibernateTemplate
-					.execute(new HibernateCallback<List<String>>() {
-						public List<String> doInHibernate(Session session)
-								throws HibernateException {
-							Query queryObj = session.createSQLQuery(queryString
-									.toString());
-							queryObj.setParameter("FROM_DATE",
-									dailyReportsInfo.fromDate
-											+ WebAppConst.SINGLE_SPACE
-											+ dailyReportsInfo.startHours
-											+ WebAppConst.COLON
-											+ dailyReportsInfo.startMinutes
-											+ WebAppConst.COLON
-											+ dailyReportsInfo.startSeconds);
-							queryObj.setParameter("TO_DATE",
-									dailyReportsInfo.toDate
-											+ WebAppConst.SINGLE_SPACE
-											+ dailyReportsInfo.endHours
-											+ WebAppConst.COLON
-											+ dailyReportsInfo.endMinutes
-											+ WebAppConst.COLON
-											+ dailyReportsInfo.endSeconds);
-							return queryObj.list();
-						}
-					});
+			return hibernateTemplate.execute(new HibernateCallback<List<String>>() {
+				public List<String> doInHibernate(Session session) throws HibernateException {
+					Query queryObj = session.createSQLQuery(queryString.toString());
+					queryObj.setParameter("FROM_DATE",
+							dailyReportsInfo.fromDate + WebAppConst.SINGLE_SPACE + dailyReportsInfo.startHours
+									+ WebAppConst.COLON + dailyReportsInfo.startMinutes + WebAppConst.COLON
+									+ dailyReportsInfo.startSeconds);
+					queryObj.setParameter("TO_DATE",
+							dailyReportsInfo.toDate + WebAppConst.SINGLE_SPACE + dailyReportsInfo.endHours
+									+ WebAppConst.COLON + dailyReportsInfo.endMinutes + WebAppConst.COLON
+									+ dailyReportsInfo.endSeconds);
+					return queryObj.list();
+				}
+			});
 
 		} catch (RuntimeException re) {
 			throw re;

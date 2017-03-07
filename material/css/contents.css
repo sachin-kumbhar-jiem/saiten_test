@@ -26,6 +26,9 @@ CSS CONTENT -errorMessage
 ====================================== */
 .errorMessage {color: #F00;margin-top: 5px;margin-bottom: 5px;}
 
+.infoMessage {color: #0000FF;margin-top: 5px;margin-bottom: 5px;}
+.infoMsgColor {color: #0000FF;}
+
 /*======================================
 CSS CONTENT -button css
 ====================================== */

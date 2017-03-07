@@ -115,7 +115,7 @@
 		 		<br>
 		 		
 		 		<s:if test="kenshuSamplingSearchRecordInfoList.size() == 0">
-		 			<span class="errorMessage"><s:text name="error.message.no.records" /></span>
+		 			<span class="infoMessage"><s:text name="error.message.no.records" /></span>
 		 		</s:if><s:else>
 		 			<table class="displayTable" style="width: 90%;">
 				<thead>

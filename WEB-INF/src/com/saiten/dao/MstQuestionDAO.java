@@ -43,9 +43,13 @@ public interface MstQuestionDAO {
 	@SuppressWarnings("rawtypes")
 	public List findQuestionList();
 
-	public List<MstQuestion> findQuestionListBySubjectCodeList(
-			List<String> subjectCodeList);
+	public List<MstQuestion> findQuestionListBySubjectCodeList(List<String> subjectCodeList);
 
 	public List<Integer> getQuestionSeqByEvalType(Integer evalType);
+
+	@SuppressWarnings("rawtypes")
+	public List fetchPdfDocInfo(int questionSeq);
+
+	public int updateManualInfo(int questionSequence, String manualFileName, boolean isManual1, String scorerId);
 
 }

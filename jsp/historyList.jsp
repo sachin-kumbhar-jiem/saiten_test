@@ -115,6 +115,7 @@
 			<c:set var="isQualityRecord" value="${historyInfoResult.isQualityRecord}"></c:set>
 			<c:set var="connectionString" value="${historyInfoResult.connectionString}"></c:set>
 			<c:set var="questionSequence" value="${historyInfoResult.questionSequence}"></c:set>
+			<c:set var="answerSequence" value="${historyInfoResult.answerSeq}"></c:set>
 			<c:choose>
 			    <c:when test="${(menuId eq firstScoringMenuId || menuId eq secondScoringMenuId) }"> <!-- && (sessionScope.questionInfo.questionType eq speakingType || sessionScope.questionInfo.questionType eq writingType) -->
 						<c:if test="${isQualityRecord == 0}">	
@@ -123,6 +124,7 @@
 								<c:param name="rowNum" value="${historyInfoResult_rowNum}"></c:param>
 								<c:param name="connectionString" value="${connectionString}"></c:param>
 								<c:param name="questionSequence" value="${questionSequence}"></c:param>
+								<c:param name="answerSequence" value="${answerSequence}"></c:param>
 							</c:url>
 						</c:if>
 						<c:if test="${isQualityRecord == 1}">
@@ -131,6 +133,7 @@
 								<c:param name="rowNum" value="${historyInfoResult_rowNum}"></c:param>
 								<c:param name="connectionString" value="${connectionString}"></c:param>
 								<c:param name="questionSequence" value="${questionSequence}"></c:param>
+								<c:param name="answerSequence" value="${answerSequence}"></c:param>
 							</c:url>
 						</c:if>
 				</c:when><c:otherwise>
@@ -139,6 +142,7 @@
 								<c:param name="rowNum" value="${historyInfoResult_rowNum}"></c:param>
 								<c:param name="connectionString" value="${connectionString}"></c:param>
 								<c:param name="questionSequence" value="${questionSequence}"></c:param>
+								<c:param name="answerSequence" value="${answerSequence}"></c:param>
 							</c:url>
 				</c:otherwise>		
 			</c:choose>	
@@ -302,12 +306,12 @@
 					</display:column>
 				</c:when><c:otherwise>
 					<display:column titleKey="label.header.comment" class="displayColumnComment">
-						<a href="<c:out value="${historyScore}"/>"><pre style="margin-left: 5px;margin-right: 5px;"><c:out value="${comment}"/></pre></a>
+						<div style="margin-left: 5px;margin-right: 5px;"><a href="<c:out value="${historyScore}"/>"><c:out value="${comment}"/></a></div>
 					</display:column>
 				</c:otherwise>
 			</c:choose>
 			<display:setProperty value="false" name="basic.empty.showtable"  />
-            <display:setProperty name="basic.msg.empty_list" ><s:text name="display.search.display.tag.basic.msg.empty_list"></s:text> </display:setProperty> 
+            <display:setProperty name="basic.msg.empty_list" ><span class="infoMsgColor"><s:text name="display.search.display.tag.basic.msg.empty_list"></s:text></span></display:setProperty> 
             <display:setProperty name="paging.banner.one_item_found" ><s:text name="display.search.display.tag.paging.banner.one_items_found" /></display:setProperty>
             <display:setProperty name="paging.banner.all_items_found" ><s:text name="display.search.display.tag.paging.banner.all_items_found" /></display:setProperty>
             <display:setProperty name="paging.banner.some_items_found" ><s:text name="display.search.display.tag.paging.banner.some_items_found" /></display:setProperty>  

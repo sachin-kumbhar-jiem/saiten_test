@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 18, 2015 10:30:28 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.saiten.model.AnswerDetailObj" table="answer_detail_obj">
+        <id name="answerDetailSeq" type="java.lang.Integer">
+            <column name="answer_detail_seq" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="answerInfo" class="com.saiten.model.AnswerInfo" fetch="select">
+            <column name="answer_seq" />
+        </many-to-one>
+        <property name="answerFormNum" type="string">
+            <column name="answer_form_num" length="7" />
+        </property>
+        <property name="questionSeq" type="java.lang.Integer">
+            <column name="question_seq" />
+        </property>
+        <property name="scoringState" type="java.lang.Short">
+            <column name="scoring_state" />
+        </property>
+        <property name="markValue" type="string">
+            <column name="mark_value" length="17" />
+        </property>
+        <property name="gradeSeq" type="java.lang.Integer">
+            <column name="grade_seq" />
+        </property>
+        <property name="testsetnumSeq" type="java.lang.Integer">
+            <column name="testsetnum_seq" />
+        </property>
+        <property name="updateDate" type="timestamp">
+            <column name="update_date" length="0" />
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="create_date" length="0" />
+        </property>
+        <property name="gradeNum" type="java.lang.Integer">
+            <column name="grade_num" />
+        </property>
+        <property name="bitValue" type="java.lang.Double">
+			<column name="bit_value" />
+		</property>
+    </class>
+</hibernate-mapping>

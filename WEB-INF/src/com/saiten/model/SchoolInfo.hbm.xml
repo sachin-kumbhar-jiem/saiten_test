@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.saiten.model.SchoolInfo" table="school_info">
+        <id name="schoolSeq" type="java.lang.Integer">
+            <column name="school_seq" />
+            <generator class="native" />
+        </id>
+        <property name="fileSeq" type="java.lang.Integer">
+            <column name="file_seq"/>
+        </property>
+        <property name="schoolCode" type="java.lang.String">
+            <column name="school_code" length="9" />
+        </property>
+        <property name="summaryFlag" type="java.lang.String">
+            <column name="summary_flag" length="1" />
+        </property>
+        <property name="boxNum" type="java.lang.String">
+            <column name="box_num" length="4" />
+        </property>
+        <property name="position" type="java.lang.Short">
+            <column name="position" />
+        </property>
+        <property name="updateTime" type="java.util.Date">
+            <column name="update_time" length="19" />
+        </property>
+        <property name="createDate" type="java.util.Date">
+            <column name="create_date" length="19" />
+        </property>
+        <set name="schoolDetails" cascade="all">
+            <key>
+                <column name="school_seq" />
+            </key>
+            <one-to-many class="com.saiten.model.SchoolDetail" />
+        </set>
+    </class>
+</hibernate-mapping>

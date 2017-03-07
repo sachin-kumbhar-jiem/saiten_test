@@ -241,6 +241,7 @@ public class DailyStatusSearchServiceImpl implements DailyStatusSearchService {
 
 	}
 
+	@SuppressWarnings("unused")
 	private Integer getEvalSeqByQuestionType(Integer questionType) {
 		Integer evalSeq = null;
 		switch (questionType) {

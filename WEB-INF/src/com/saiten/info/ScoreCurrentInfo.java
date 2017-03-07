@@ -49,6 +49,8 @@ public class ScoreCurrentInfo {
 	private boolean lookAfterwardsFlag;
 	private Integer[] currentScorerRole;
 	private String currentSkpConditions;
+	private String currentSkpIncludeConditions;
+	private String currentSkpExcludeConditions;
 
 	public Integer getCurrentUpdateDateEndYear() {
 		return currentUpdateDateEndYear;
@@ -74,8 +76,7 @@ public class ScoreCurrentInfo {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void setCurrentPendingCategorySeqList(
-			List currentPendingCategorySeqList) {
+	public void setCurrentPendingCategorySeqList(List currentPendingCategorySeqList) {
 		this.currentPendingCategorySeqList = currentPendingCategorySeqList;
 	}
 
@@ -269,8 +270,7 @@ public class ScoreCurrentInfo {
 		return currentUpdateDateStartMonth;
 	}
 
-	public void setCurrentUpdateDateStartMonth(
-			Integer currentUpdateDateStartMonth) {
+	public void setCurrentUpdateDateStartMonth(Integer currentUpdateDateStartMonth) {
 		this.currentUpdateDateStartMonth = currentUpdateDateStartMonth;
 	}
 
@@ -286,8 +286,7 @@ public class ScoreCurrentInfo {
 		return currentUpdateDateStartHours;
 	}
 
-	public void setCurrentUpdateDateStartHours(
-			Integer currentUpdateDateStartHours) {
+	public void setCurrentUpdateDateStartHours(Integer currentUpdateDateStartHours) {
 		this.currentUpdateDateStartHours = currentUpdateDateStartHours;
 	}
 
@@ -358,7 +357,6 @@ public class ScoreCurrentInfo {
 	public void setCurrentScorerRole(Integer[] currentScorerRole) {
 		this.currentScorerRole = currentScorerRole;
 	}
-	
 
 	public String getCurrentDenyCategory() {
 		return currentDenyCategory;
@@ -367,10 +365,12 @@ public class ScoreCurrentInfo {
 	public void setCurrentDenyCategory(String currentDenyCategory) {
 		this.currentDenyCategory = currentDenyCategory;
 	}
+
 	@SuppressWarnings("rawtypes")
 	public List getCurrentDenyCategorySeqList() {
 		return currentDenyCategorySeqList;
 	}
+
 	@SuppressWarnings("rawtypes")
 	public void setCurrentDenyCategorySeqList(List currentDenyCategorySeqList) {
 		this.currentDenyCategorySeqList = currentDenyCategorySeqList;
@@ -379,31 +379,22 @@ public class ScoreCurrentInfo {
 	@Override
 	public String toString() {
 		StringBuilder data = new StringBuilder();
-		data.append("{ CurrentScorerId1: " + currentScorerId1
-				+ ", CurrentScorerId2: " + currentScorerId2
-				+ ", CurrentScorerId3: " + currentScorerId3
-				+ ", CurrentScorerId4: " + currentScorerId4
+		data.append("{ CurrentScorerId1: " + currentScorerId1 + ", CurrentScorerId2: " + currentScorerId2
+				+ ", CurrentScorerId3: " + currentScorerId3 + ", CurrentScorerId4: " + currentScorerId4
 				+ ", CurrentScorerId5: " + currentScorerId5);
-		data.append("\n CurrentScorerRole: "
-				+ Arrays.toString(currentScorerRole));
+		data.append("\n CurrentScorerRole: " + Arrays.toString(currentScorerRole));
 		data.append("\n Punch Text: " + punchText);
-		data.append("\n Quality Mark: " + currentQualityCheckFlag
-				+ ", LookAfterwardsFlag: " + lookAfterwardsFlag);
+		data.append("\n Quality Mark: " + currentQualityCheckFlag + ", LookAfterwardsFlag: " + lookAfterwardsFlag);
 		data.append("\n CurrentCategoryType: " + currentCategoryType);
 		data.append("\n CurrentGradeNum: " + Arrays.toString(currentGradeNum));
 		data.append("\n CurrentPendingCategory: " + currentPendingCategory);
-		data.append("\n CurrentIncludeCheckPoints: "
-				+ currentIncludeCheckPoints);
-		data.append("\n CurrentExcludeCheckPoints: "
-				+ currentExcludeCheckPoints);
+		data.append("\n CurrentIncludeCheckPoints: " + currentIncludeCheckPoints);
+		data.append("\n CurrentExcludeCheckPoints: " + currentExcludeCheckPoints);
 		data.append("\n CurrentStateList: " + Arrays.toString(currentStateList));
-		data.append("\n CurrentUpdateStartDate: " + currentUpdateDateStartYear
-				+ "-" + currentUpdateDateStartMonth + "-"
-				+ currentUpdateDateStartDay + " " + currentUpdateDateStartHours
-				+ ":" + currentUpdateDateStartMin + ", CurrentUpdateEndDate: "
-				+ currentUpdateDateEndYear + "-" + currentUpdateDateEndMonth
-				+ "-" + currentUpdateDateEndDay + " "
-				+ currentUpdateDateEndHours + ":" + currentUpdateDateEndMin);
+		data.append("\n CurrentUpdateStartDate: " + currentUpdateDateStartYear + "-" + currentUpdateDateStartMonth + "-"
+				+ currentUpdateDateStartDay + " " + currentUpdateDateStartHours + ":" + currentUpdateDateStartMin
+				+ ", CurrentUpdateEndDate: " + currentUpdateDateEndYear + "-" + currentUpdateDateEndMonth + "-"
+				+ currentUpdateDateEndDay + " " + currentUpdateDateEndHours + ":" + currentUpdateDateEndMin);
 		data.append("}");
 		return data.toString();
 	}
@@ -415,4 +406,35 @@ public class ScoreCurrentInfo {
 	public String getCurrentSkpConditions() {
 		return currentSkpConditions;
 	}
+
+	/**
+	 * @return the currentSkpIncludeConditions
+	 */
+	public String getCurrentSkpIncludeConditions() {
+		return currentSkpIncludeConditions;
+	}
+
+	/**
+	 * @param currentSkpIncludeConditions
+	 *            the currentSkpIncludeConditions to set
+	 */
+	public void setCurrentSkpIncludeConditions(String currentSkpIncludeConditions) {
+		this.currentSkpIncludeConditions = currentSkpIncludeConditions;
+	}
+
+	/**
+	 * @return the currentSkpExcludeConditions
+	 */
+	public String getCurrentSkpExcludeConditions() {
+		return currentSkpExcludeConditions;
+	}
+
+	/**
+	 * @param currentSkpExcludeConditions
+	 *            the currentSkpExcludeConditions to set
+	 */
+	public void setCurrentSkpExcludeConditions(String currentSkpExcludeConditions) {
+		this.currentSkpExcludeConditions = currentSkpExcludeConditions;
+	}
+
 }

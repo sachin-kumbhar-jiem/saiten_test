@@ -364,7 +364,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
  
 </bean>
 
-<!-- Hibernate transaction db2 session factory -->
+<!-- Hibernate replica transaction db2 session factory -->
 <bean id="saitenReplicaTranDb2SessionFactory" 
     class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
  
@@ -544,4 +544,85 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
     </property>	
  
 </bean>
+
+<!-- Hibernate tempdb session factory -->
+<bean id="saitenTempDb1SessionFactory" 
+    class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+ 
+    <property name="dataSource">
+      <ref bean="saitenTempDb1DataSource"/>
+    </property>
+ 
+    <property name="hibernateProperties">
+       <props>
+         <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+         <prop key="hibernate.show_sql">true</prop>
+         <prop key="hibernate.format_sql">true</prop>
+         <prop key="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</prop>
+		 <prop key="hibernate.connection.autoReconnect">true</prop>
+    	 <prop key="hibernate.connection.autoReconnectForPools">true</prop>
+         <prop key="hibernate.connection.is-connection-validation-required">true</prop>
+         <prop key="hibernate.cache.use_query_cache">false</prop>
+         <prop key="hibernate.cache.use_second_level_cache">false</prop>
+		 <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+         <prop key="hibernate.jdbc.batch_size">20</prop>
+       </props>
+    </property>
+ 
+    <property name="mappingResources">
+		<list>
+				<value>com/saiten/model/AnswerDetail.hbm.xml</value>
+				<value>com/saiten/model/AnswerDetailFeedback.hbm.xml</value>
+				<value>com/saiten/model/AnswerDetailObj.hbm.xml</value>
+				<value>com/saiten/model/AnswerInfo.hbm.xml</value>
+				<value>com/saiten/model/LzhInfo.hbm.xml</value>
+				<value>com/saiten/model/FileInfo.hbm.xml</value>
+				<value>com/saiten/model/ClassInfo.hbm.xml</value>
+				<value>com/saiten/model/SchoolInfo.hbm.xml</value>
+				<value>com/saiten/model/SchoolDetail.hbm.xml</value>
+			</list>
+    </property>	
+ 
+</bean>
+
+<!-- Hibernate tempdb session factory -->
+<bean id="saitenTempDb2SessionFactory" 
+    class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+ 
+    <property name="dataSource">
+      <ref bean="saitenTempDb2DataSource"/>
+    </property>
+ 
+    <property name="hibernateProperties">
+       <props>
+         <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+         <prop key="hibernate.show_sql">true</prop>
+         <prop key="hibernate.format_sql">true</prop>
+         <prop key="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</prop>
+		 <prop key="hibernate.connection.autoReconnect">true</prop>
+    	 <prop key="hibernate.connection.autoReconnectForPools">true</prop>
+         <prop key="hibernate.connection.is-connection-validation-required">true</prop>
+         <prop key="hibernate.cache.use_query_cache">false</prop>
+         <prop key="hibernate.cache.use_second_level_cache">false</prop>
+		 <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+         <prop key="hibernate.jdbc.batch_size">20</prop>
+       </props>
+    </property>
+ 
+    <property name="mappingResources">
+		<list>
+				<value>com/saiten/model/AnswerDetail.hbm.xml</value>
+				<value>com/saiten/model/AnswerDetailFeedback.hbm.xml</value>
+				<value>com/saiten/model/AnswerDetailObj.hbm.xml</value>
+				<value>com/saiten/model/AnswerInfo.hbm.xml</value>
+				<value>com/saiten/model/LzhInfo.hbm.xml</value>
+				<value>com/saiten/model/FileInfo.hbm.xml</value>
+				<value>com/saiten/model/ClassInfo.hbm.xml</value>
+				<value>com/saiten/model/SchoolInfo.hbm.xml</value>
+				<value>com/saiten/model/SchoolDetail.hbm.xml</value>
+			</list>
+    </property>	
+ 
+</bean>
+
 </beans>

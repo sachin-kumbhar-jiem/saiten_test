@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.saiten.model.SchoolDetail" table="school_detail">
+        <id name="schoolDetailSeq" type="java.lang.Integer">
+            <column name="school_detail_seq" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="schoolInfo" class="com.saiten.model.SchoolInfo" fetch="select">
+            <column name="school_seq" />
+        </many-to-one>
+        <property name="subjectCode" type="java.lang.String">
+            <column name="subject_code" length="2" />
+        </property>
+        <property name="docType" type="java.lang.String">
+            <column name="doc_type" length="1" />
+        </property>
+        <property name="docCount" type="java.lang.String">
+            <column name="doc_count" length="3" />
+        </property>
+        <property name="updateDate" type="java.util.Date">
+            <column name="update_date" length="19" />
+        </property>
+        <property name="createDate" type="java.util.Date">
+            <column name="create_date" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

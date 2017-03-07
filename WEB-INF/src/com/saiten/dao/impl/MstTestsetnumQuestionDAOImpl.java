@@ -6,13 +6,13 @@ import com.saiten.dao.MstTestsetnumQuestionDAO;
 import com.saiten.dao.support.SaitenHibernateDAOSupport;
 import com.saiten.model.MstTestsetnumQuestion;
 
-public class MstTestsetnumQuestionDAOImpl extends SaitenHibernateDAOSupport
-		implements MstTestsetnumQuestionDAO {
+public class MstTestsetnumQuestionDAOImpl extends SaitenHibernateDAOSupport implements MstTestsetnumQuestionDAO {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<MstTestsetnumQuestion> findAll() {
 		StringBuilder query = new StringBuilder();
-		
+
 		query.append("from MstTestsetnumQuestion as mstTestsetnumQuestion");
 		try {
 			return getHibernateTemplate().find(query.toString());

@@ -341,6 +341,10 @@ function toggleStateSearch() {
 	
 	form.currSkpAndCondition.disabled=isDisable;
 	form.currSkpORCondition.disabled=isDisable;
+	form.currSkpIncludeAndCondition.disabled=isDisable;
+	form.currSkpIncludeORCondition.disabled=isDisable;
+	form.currSkpExcludeAndCondition.disabled=isDisable;
+	form.currSkpExcludeORCondition.disabled=isDisable;
 
 	for(i=0; i < form.currentStateList.length; i++) {
 		form.currentStateList[i].disabled = isDisable;
@@ -497,6 +501,10 @@ function toggleProcessSearch() {
 	
 	form.pastSkpAndCondition.disabled=isDisable;
 	form.pastSkpORCondition.disabled=isDisable;
+	form.pastSkpIncludeAndCondition.disabled=isDisable;
+	form.pastSkpIncludeORCondition.disabled=isDisable;	
+	form.pastSkpExcludeAndCondition.disabled=isDisable;
+	form.pastSkpExcludeORCondition.disabled=isDisable;	
 	
 	if (!isDisable) {
 		defaultValidationPast();

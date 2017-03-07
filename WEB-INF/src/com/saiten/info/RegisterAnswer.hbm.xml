@@ -3,16 +3,17 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Dec 3, 2012 11:32:07 AM by Hibernate Tools 3.2.1.GA -->
 <hibernate-mapping>
-    <sql-query name="registerTranAnswer" callable="true">
+	<sql-query name="registerTranAnswer" callable="true">
 
-    	{ CALL register_tran_answer(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)} 
+		{ CALL
+		register_tran_answer(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}
 
-    </sql-query>
-    
-    <sql-query name="registerQcAnswer" callable="true">
+	</sql-query>
 
-    	{ CALL register_qc_answer(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)} 
+	<sql-query name="registerQcAnswer" callable="true">
 
-    </sql-query>
-    
+		{ CALL register_qc_answer(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}
+
+	</sql-query>
+
 </hibernate-mapping>

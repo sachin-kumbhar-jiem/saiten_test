@@ -290,6 +290,17 @@
 			<!-- <td>&nbsp;</td>
 			<td>&nbsp;</td> -->
 		</tr>
+		<tr>
+			 <td class="right_side_height_button">
+			 	<s:if test="userMenuIdList.contains(@com.saiten.util.WebAppConst@MANUAL_UPLOAD_MENU_ID)">
+					<a href="uploadManual.action?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@MANUAL_UPLOAD_MENU_ID"/>" id="uploadManual" class="btn btn-primary btn-xl">
+						<s:text name="label.manualupload"></s:text>			
+					</a>
+				</s:if><s:else>
+					<p class="btn btn-disabled"><s:text name="label.manualupload"></s:text></p>
+				</s:else>
+			</td>
+		</tr>
 		
 		</table>
 		</div>		

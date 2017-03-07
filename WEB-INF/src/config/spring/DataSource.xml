@@ -160,4 +160,28 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
     <property name="maxIdleTime" value="14400" />
  </bean>
  
+ <bean id="saitenTempDb1DataSource" 
+         class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	<property name="driverClass" value="${saiten.tempdb1.driverClassName}" />
+	<property name="jdbcUrl" value="${saiten.tempdb1.url}?useUnicode=true&amp;characterEncoding=UTF-8&amp;noAccessToProcedureBodies=true" />
+	<property name="user" value="${saiten.tempdb1.username}" />
+	<property name="password" value="${saiten.tempdb1.password}" />
+	<property name="acquireIncrement" value="1" />
+    <property name="minPoolSize" value="2" />
+    <property name="maxPoolSize" value="2" />
+    <property name="maxIdleTime" value="14400" />
+ </bean>
+ 
+ <bean id="saitenTempDb2DataSource" 
+         class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	<property name="driverClass" value="${saiten.tempdb2.driverClassName}" />
+	<property name="jdbcUrl" value="${saiten.tempdb2.url}?useUnicode=true&amp;characterEncoding=UTF-8&amp;noAccessToProcedureBodies=true" />
+	<property name="user" value="${saiten.tempdb2.username}" />
+	<property name="password" value="${saiten.tempdb2.password}" />
+	<property name="acquireIncrement" value="1" />
+    <property name="minPoolSize" value="2" />
+    <property name="maxPoolSize" value="2" />
+    <property name="maxIdleTime" value="14400" />
+ </bean>
+ 
 </beans>

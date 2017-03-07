@@ -70,7 +70,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 
         function openHelpDocWindow()
         {
-        	var pdfWindow = window.open("<s:i18n name='application'><s:text name='saiten.manualfile.url' /></s:i18n>/<s:property value='#session.questionInfo.manualDocument' />","<s:text name="scoring.title" />","status = 1, height = 500, width = 500, location=no, scrollbars=no");
+        	var pdfWindow = window.open("showPdfDoc.action?docType=<s:property value='@com.saiten.util.WebAppConst@HELP_DOC' />","<s:text name="scoring.title" />","status = 1, height = 500, width = 500, location=no, scrollbars=no");
         	
         	//var pdfWindow = window.open("material/documents/manual/<s:property value="#session.questionInfo.manualDocument" />","<s:text name="scoring.title" />","status = 1, height = 500, width = 500, location=no, scrollbars=no");
             /* var pdfWindow = window.open("./material/documents/manual/<s:property value="#session.questionInfo.manualDocument" />","<s:text name="scoring.title" />","status = 1, height = 500, width = 500, location=no, scrollbars=no");
@@ -80,7 +80,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
         }
         function openManualDocWindow()
         {
-        	var pdfWindow = window.open("<s:i18n name='application'><s:text name='saiten.questionfile.url'/></s:i18n>/<s:property value='#session.questionInfo.questionFileName' />","<s:text name="scoring.title" />","status = 1, height = 500, width = 500, location=no, scrollbars=no");
+        	var pdfWindow = window.open("showPdfDoc.action?docType=<s:property value='@com.saiten.util.WebAppConst@MANUAL_DOC' />","<s:text name="scoring.title" />","status = 1, height = 500, width = 500, location=no, scrollbars=no");
            /*  var pdfWindow = window.open("./material/documents/manual/<s:property value="#session.questionInfo.manualDocument" />","<s:text name="scoring.title" />","status = 1, height = 500, width = 500, location=no, scrollbars=no");
             pdfWindow.document.write('<html><head><title><s:text name="label.scoring.manualdocument.title" /></title></head>');
             pdfWindow.document.write('</html>');
@@ -278,6 +278,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 					<span class="score_img">
 						<%-- <img id="answerImage" name="answerImage" src='<s:i18n name="application"><s:text name="saiten.answerimage.url" /></s:i18n>/<s:property value="%{#session.questionInfo.questionNum}" />/<s:property value="%{#session.tranDescScoreInfo.imageFileName}" />' alt="<s:text name="btn.scoring.alt.scaling" />"> --%>
 						<img id="answerImage" name="answerImage" src='<s:i18n name="application"><s:text name="saiten.answerimage.url" /></s:i18n>/<s:property value="%{#session.questionInfo.questionSeq}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.subjectCode}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.questionNum}" />/<s:property value="%{#session.tranDescScoreInfo.imageFileName}" />' alt="<s:text name="btn.scoring.alt.scaling" />">
+						<%-- <img id="answerImage" name="answerImage" src='#' alt="<s:text name="btn.scoring.alt.scaling" />"> --%>
 					</span> 
 				</p>
 				<s:if  test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID) || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID && #session.tranDescScoreInfo.lookAfterwardsCount>0)">
@@ -398,9 +399,9 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
   						</div>
   						
 						<audio controls id="myTune">
-						 <source height="50" width="150" src='<s:i18n name="application"><s:text name="saiten.answerimage.url" /></s:i18n>/<s:property value="%{#session.questionInfo.questionSeq}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.subjectCode}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.questionNum}" />/<s:property value="%{#session.tranDescScoreInfo.imageFileName}" />' alt="<s:text name="btn.scoring.alt.scaling" />" type="audio/mpeg" />
+			 			 <source height="50" width="150" src='<s:i18n name="application"><s:text name="saiten.answerimage.url" /></s:i18n>/<s:property value="%{#session.questionInfo.questionSeq}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.subjectCode}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.questionNum}" />/<s:property value="%{#session.tranDescScoreInfo.imageFileName}" />' alt="<s:text name="btn.scoring.alt.scaling" />" type="audio/mpeg" />
 	        				<%--  <source height="50" width="150" src='<s:i18n name="application"><s:text name="saiten.answerimage.url" /></s:i18n>/<s:property value="%{#session.questionInfo.questionNum}" />/<s:property value="%{#session.tranDescScoreInfo.imageFileName}" />' alt="<s:text name="btn.scoring.alt.scaling" />" type="audio/mpeg" /> --%>
-	        			</audio>
+	        	       </audio>
 	        		</span> 
 				</p>
 								<s:if  test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID) || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID && #session.tranDescScoreInfo.lookAfterwardsCount>0)">
@@ -1167,6 +1168,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		</td>	   
 		</tr>
 		</table>
+		<s:token />
 		</form>
 		</div>
 		</div>

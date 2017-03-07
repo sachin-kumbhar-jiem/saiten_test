@@ -2,7 +2,6 @@ package com.saiten.action;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -37,8 +36,7 @@ import com.saiten.util.WebAppConst;
  * @version 1.0
  * @created 13-Dec-2012 11:53:29 AM
  */
-public class DailyStatusSearchAction extends ActionSupport implements
-		SessionAware, ServletRequestAware {
+public class DailyStatusSearchAction extends ActionSupport implements SessionAware, ServletRequestAware {
 
 	private static Logger log = Logger.getLogger(DailyStatusSearchAction.class);
 	/**
@@ -71,24 +69,20 @@ public class DailyStatusSearchAction extends ActionSupport implements
 	@SuppressWarnings("rawtypes")
 	public String onLoad() {
 		int chkSession = 0;
-		dailyStatusSearchInfo = (DailyStatusSearchInfo) session
-				.get("dailyStatusSearchInfo");
+		dailyStatusSearchInfo = (DailyStatusSearchInfo) session.get("dailyStatusSearchInfo");
 		if (session.get("dailyStatusSearchInfo") == null) {
 			chkSession++;
 		}
 		// session.put("dailyStatusSearchInfo", null);
-		scoreSearchInfo = (ScoreSearchInfo) ContextLoader
-				.getCurrentWebApplicationContext().getBean("scoreSearchInfo");
+		scoreSearchInfo = (ScoreSearchInfo) ContextLoader.getCurrentWebApplicationContext().getBean("scoreSearchInfo");
 
 		try {
 			// Build subjectCode - subjectName map
-			Map<String, String> subjectNameList = scoreSearchService
-					.findSubjectNameList();
+			Map<String, String> subjectNameList = scoreSearchService.findSubjectNameList();
 			scoreSearchInfo.setSubjectNameList(subjectNameList);
 
 			// Build questionType:scoreType - questionType description map.
-			List questionTypeList = dailyStatusSearchService
-					.findQuestionTypeList();
+			List questionTypeList = dailyStatusSearchService.findQuestionTypeList();
 			Map<Integer, String> questionTypeMap = new LinkedHashMap<Integer, String>();
 			Map<Integer, Character> questionTypeAndEvalMap = new LinkedHashMap<Integer, Character>();
 			if (!questionTypeList.isEmpty()) {
@@ -97,8 +91,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 					Integer evalSeq = (Integer) objs[0];
 					Character questionType = (Character) objs[1];
 					Character scoreType = (Character) objs[2];
-					String description = getQuestionTypeDescriptionByQuestionTypeAndScoreType(
-							questionType, scoreType);
+					String description = getQuestionTypeDescriptionByQuestionTypeAndScoreType(questionType, scoreType);
 					questionTypeMap.put(evalSeq, description);
 					questionTypeAndEvalMap.put(evalSeq, questionType);
 				}
@@ -117,50 +110,41 @@ public class DailyStatusSearchAction extends ActionSupport implements
 			String scorerRollForSearch = getText(WebAppConst.ROLL_ID_FOR_DAILY_STATUS_SEARCH_SCREEN);
 
 			if (scorerRollForSearch != null && !scorerRollForSearch.equals("")) {
-				rollMap = dailyStatusSearchService
-						.getScorerRollMapByID(scorerRollForSearch);
+				rollMap = dailyStatusSearchService.getScorerRollMapByID(scorerRollForSearch);
 			}
 
-			String defaultSelectedScorerRollForSearch = getText(WebAppConst.ROLL_ID_FOR_DAILY_STATUS_SEARCH_SCREEN_DEFAULT_SELECTED);
+			String defaultSelectedScorerRollForSearch = getText(
+					WebAppConst.ROLL_ID_FOR_DAILY_STATUS_SEARCH_SCREEN_DEFAULT_SELECTED);
 
-			if (defaultSelectedScorerRollForSearch != null
-					&& !defaultSelectedScorerRollForSearch.equals("")
+			if (defaultSelectedScorerRollForSearch != null && !defaultSelectedScorerRollForSearch.equals("")
 					&& chkSession > 0) {
 
-				String[] defaultSelectedScorerRollForSearchArray = defaultSelectedScorerRollForSearch
-						.split(",");
+				String[] defaultSelectedScorerRollForSearchArray = defaultSelectedScorerRollForSearch.split(",");
 				Byte[] defaultSelectedByteArray = new Byte[defaultSelectedScorerRollForSearchArray.length];
 				for (int i = 0; i < defaultSelectedScorerRollForSearchArray.length; i++) {
-					defaultSelectedByteArray[i] = Byte
-							.parseByte(defaultSelectedScorerRollForSearchArray[i]);
+					defaultSelectedByteArray[i] = Byte.parseByte(defaultSelectedScorerRollForSearchArray[i]);
 				}
 				defaultSelectedRoll = defaultSelectedByteArray;
 			} else {
-				defaultSelectedScorerRollForSearch = dailyStatusSearchInfo
-						.getSelectedRoll() != null ? dailyStatusSearchInfo
-						.getSelectedRoll() : "";
+				defaultSelectedScorerRollForSearch = dailyStatusSearchInfo.getSelectedRoll() != null
+						? dailyStatusSearchInfo.getSelectedRoll() : "";
 			}
 
 			// build subject list for logged in scorer.
-			MstScorerInfo scorerInfo = ((MstScorerInfo) session
-					.get("scorerInfo"));
+			MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
 			int roleId = scorerInfo.getRoleId();
 			if (roleId != WebAppConst.ADMIN_ROLE_ID) {
-				String scorerId = ((MstScorerInfo) session.get("scorerInfo"))
-						.getScorerId();
-				loggedInScorerSubjectList = scoreSearchService
-						.buildLoggedInScorerSubjectList(scorerId);
+				String scorerId = ((MstScorerInfo) session.get("scorerInfo")).getScorerId();
+				loggedInScorerSubjectList = scoreSearchService.buildLoggedInScorerSubjectList(scorerId);
 			}
 			QuestionInfo questionInfo = new QuestionInfo();
 			questionInfo.setMenuId(selectedMenuId);
 			session.put("questionInfo", questionInfo);
-			log.info(scorerInfo.getScorerId() + "-" + selectedMenuId + "-"
-					+ "Loaded Daily Status Search Screen.");
+			log.info(scorerInfo.getScorerId() + "-" + selectedMenuId + "-" + "Loaded Daily Status Search Screen.");
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.DAILY_STATUS_SEARCH_ONLOAD_ERROR, e);
+			throw new SaitenRuntimeException(ErrorCode.DAILY_STATUS_SEARCH_ONLOAD_ERROR, e);
 		}
 
 		return SUCCESS;
@@ -200,18 +184,14 @@ public class DailyStatusSearchAction extends ActionSupport implements
 
 	public String dailyStatusSearchList() {
 		try {
-			MstScorerInfo mstScorerInfo = (MstScorerInfo) session
-					.get("scorerInfo");
-			QuestionInfo questionInfo = (QuestionInfo) session
-					.get("questionInfo");
-			if (request.getParameter("back") != null
-					&& request.getParameter("back").equals("true")) {
-				dailyStatusSearchInfo = (DailyStatusSearchInfo) session
-						.get("dailyStatusSearchInfo");
+			MstScorerInfo mstScorerInfo = (MstScorerInfo) session.get("scorerInfo");
+			QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
+			if (request.getParameter("back") != null && request.getParameter("back").equals("true")) {
+				dailyStatusSearchInfo = (DailyStatusSearchInfo) session.get("dailyStatusSearchInfo");
 			}
 
-			String[] selectedRoll = dailyStatusSearchInfo.getSelectedRoll() != null ? dailyStatusSearchInfo
-					.getSelectedRoll().split(",") : new String[0];
+			String[] selectedRoll = dailyStatusSearchInfo.getSelectedRoll() != null
+					? dailyStatusSearchInfo.getSelectedRoll().split(",") : new String[0];
 			if (selectedRoll != null && selectedRoll.length > 0) {
 				List<String> selectedRollList = new ArrayList<String>();
 				for (int i = 0; i < selectedRoll.length; i++) {
@@ -220,100 +200,72 @@ public class DailyStatusSearchAction extends ActionSupport implements
 				dailyStatusSearchInfo.setSelectedRollList(selectedRollList);
 			}
 			session.put("dailyStatusSearchInfo", dailyStatusSearchInfo);
-			log.info(mstScorerInfo.getScorerId()
-					+ "-"
-					+ questionInfo.getMenuId()
-					+ "-"
+			log.info(mstScorerInfo.getScorerId() + "-" + questionInfo.getMenuId() + "-"
 					+ "Loading daily status search List screen. \n Search Criteria: -{ Search Type: "
-					+ dailyStatusSearchInfo.getDailyStatusSearchRadioButton()
-					+ ", Subject Code: "
-					+ dailyStatusSearchInfo.getSubjectCode()
-					+ ", Question No.: "
+					+ dailyStatusSearchInfo.getDailyStatusSearchRadioButton() + ", Subject Code: "
+					+ dailyStatusSearchInfo.getSubjectCode() + ", Question No.: "
 					+ dailyStatusSearchInfo.getQuestionNum() + "}");
 			@SuppressWarnings("unchecked")
 			Map<Integer, Character> questionTypeAndEvalMap = (Map<Integer, Character>) session
 					.get("questionTypeAndEvalMap");
-			Character questionType = questionTypeAndEvalMap
-					.get(dailyStatusSearchInfo.getEvalSeq());
+			Character questionType = questionTypeAndEvalMap.get(dailyStatusSearchInfo.getEvalSeq());
 
 			int roleId = mstScorerInfo.getRoleId();
-			dailyStatusSearchInfo.setLogedInScorerId(mstScorerInfo
-					.getScorerId());
-			if (dailyStatusSearchInfo.getDailyStatusSearchRadioButton().equals(
-					WebAppConst.QUESTIONWISE_SEARCH)) {
-				dailyStatusReportList = dailyStatusSearchService
-						.getSearchListByQuestion(dailyStatusSearchInfo, roleId);
+			dailyStatusSearchInfo.setLogedInScorerId(mstScorerInfo.getScorerId());
+			if (dailyStatusSearchInfo.getDailyStatusSearchRadioButton().equals(WebAppConst.QUESTIONWISE_SEARCH)) {
+				dailyStatusReportList = dailyStatusSearchService.getSearchListByQuestion(dailyStatusSearchInfo, roleId);
 			} else {
-				dailyStatusSearchScorerInfo = dailyStatusSearchService
-						.getSearchListByScorer(dailyStatusSearchInfo);
+				dailyStatusSearchScorerInfo = dailyStatusSearchService.getSearchListByScorer(dailyStatusSearchInfo);
 			}
 			session.put("questionType", questionType);
 			setSessionAttributeForDispalyTag();
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.DAILY_STATUS_SEARCH_REPORT_ERROR, e);
+			throw new SaitenRuntimeException(ErrorCode.DAILY_STATUS_SEARCH_REPORT_ERROR, e);
 		}
 		return SUCCESS;
 	}
 
 	private void setSessionAttributeForDispalyTag() {
-		session.put("dailyStatusReportPageSize", Integer
-				.parseInt(getText(WebAppConst.DAILY_STATUS_REPORT_PAGESIZE)));
+		session.put("dailyStatusReportPageSize", Integer.parseInt(getText(WebAppConst.DAILY_STATUS_REPORT_PAGESIZE)));
 	}
 
 	public String dailyStatusQusetionDetails() {
 		try {
-			MstScorerInfo mstScorerInfo = (MstScorerInfo) session
-					.get("scorerInfo");
-			QuestionInfo sessionQuestionInfo = (QuestionInfo) session
-					.get("questionInfo");
-			questionInfo = dailyStatusSearchService
-					.getQusetionInfoByQuestionSeq(questionSeq);
+			MstScorerInfo mstScorerInfo = (MstScorerInfo) session.get("scorerInfo");
+			QuestionInfo sessionQuestionInfo = (QuestionInfo) session.get("questionInfo");
+			questionInfo = dailyStatusSearchService.getQusetionInfoByQuestionSeq(questionSeq);
 			Character questionType = questionInfo.getQuestionType();
-			gradeWiseReportList = dailyStatusSearchService
-					.getGradeWiseAnswerDetails(questionSeq,
-							questionInfo.getConnectionString(), questionType);
-			pendingCategoryWiseReportList = dailyStatusSearchService
-					.getPendingCategoryWiseAnswerDetails(questionSeq,
-							questionInfo.getConnectionString());
+			gradeWiseReportList = dailyStatusSearchService.getGradeWiseAnswerDetails(questionSeq,
+					questionInfo.getConnectionString(), questionType);
+			pendingCategoryWiseReportList = dailyStatusSearchService.getPendingCategoryWiseAnswerDetails(questionSeq,
+					questionInfo.getConnectionString());
 			if (WebAppConst.SCORE_TYPE[3].equals(questionInfo.getScoreType())) {
-				markValueWiseReportList = dailyStatusSearchService
-						.getMarkValueWiseAnswerDetails(questionSeq,
-								questionInfo.getConnectionString(),
-								questionType);
+				markValueWiseReportList = dailyStatusSearchService.getMarkValueWiseAnswerDetails(questionSeq,
+						questionInfo.getConnectionString(), questionType);
 			}
-			log.info(mstScorerInfo.getScorerId()
-					+ "-"
-					+ sessionQuestionInfo.getMenuId()
-					+ "-"
+			log.info(mstScorerInfo.getScorerId() + "-" + sessionQuestionInfo.getMenuId() + "-"
 					+ "Loaded daily status detail report for selected question. \n Search Criteria: -{ Subject Code: "
-					+ questionInfo.getSubjectCode() + ", Question No.: "
-					+ questionInfo.getQuestionNum() + "}");
-			
-			
+					+ questionInfo.getSubjectCode() + ", Question No.: " + questionInfo.getQuestionNum() + "}");
+
 			// Adding menu id to questionInfo object.
-			questionInfo.setMenuId(sessionQuestionInfo.getMenuId()); 
+			questionInfo.setMenuId(sessionQuestionInfo.getMenuId());
 
 			session.put("questionInfo", questionInfo);
 			session.put("gradeWiseReportList", gradeWiseReportList);
 			session.put("markValueWiseReportList", markValueWiseReportList);
-			session.put("pendingCategoryWiseReportList",
-					pendingCategoryWiseReportList);
+			session.put("pendingCategoryWiseReportList", pendingCategoryWiseReportList);
 
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.DAILY_STATUS_QUESTION_WISE_REPORT_ACTION_EXCEPTION,
-					e);
+			throw new SaitenRuntimeException(ErrorCode.DAILY_STATUS_QUESTION_WISE_REPORT_ACTION_EXCEPTION, e);
 		}
 		return SUCCESS;
 	}
 
-	private String getQuestionTypeDescriptionByQuestionTypeAndScoreType(
-			Character questionType, Character scoreType) {
+	private String getQuestionTypeDescriptionByQuestionTypeAndScoreType(Character questionType, Character scoreType) {
 		String description = null;
 
 		switch (scoreType) {
@@ -371,13 +323,11 @@ public class DailyStatusSearchAction extends ActionSupport implements
 		List gradeWiseList = (List) session.get("gradeWiseReportList");
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 		List markValueWiseList = (List) session.get("markValueWiseReportList");
-		List pendingCategoryWiseList = (List) session
-				.get("pendingCategoryWiseReportList");
+		List pendingCategoryWiseList = (List) session.get("pendingCategoryWiseReportList");
 
 		try {
-			String reportString = dailyStatusSearchService.getProgressReports(
-					gradeWiseList, markValueWiseList, pendingCategoryWiseList,
-					questionInfo, reportType);
+			String reportString = dailyStatusSearchService.getProgressReports(gradeWiseList, markValueWiseList,
+					pendingCategoryWiseList, questionInfo, reportType);
 
 			if (!StringUtils.isBlank(reportString)) {
 
@@ -395,9 +345,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.DAILY_STATUS_QUESTION_WISE_REPORT_ACTION_EXCEPTION,
-					e);
+			throw new SaitenRuntimeException(ErrorCode.DAILY_STATUS_QUESTION_WISE_REPORT_ACTION_EXCEPTION, e);
 		}
 
 		return SUCCESS;
@@ -448,8 +396,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 	 * @param dailyStatusSearchInfo
 	 *            the dailyStatusSearchInfo to set
 	 */
-	public void setDailyStatusSearchInfo(
-			DailyStatusSearchInfo dailyStatusSearchInfo) {
+	public void setDailyStatusSearchInfo(DailyStatusSearchInfo dailyStatusSearchInfo) {
 		this.dailyStatusSearchInfo = dailyStatusSearchInfo;
 	}
 
@@ -486,8 +433,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 	 * @param dailyStatusSearchService
 	 *            the dailyStatusSearchService to set
 	 */
-	public void setDailyStatusSearchService(
-			DailyStatusSearchService dailyStatusSearchService) {
+	public void setDailyStatusSearchService(DailyStatusSearchService dailyStatusSearchService) {
 		this.dailyStatusSearchService = dailyStatusSearchService;
 	}
 
@@ -532,8 +478,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 	 * @param loggedInScorerSubjectList
 	 *            the loggedInScorerSubjectList to set
 	 */
-	public void setLoggedInScorerSubjectList(
-			List<String> loggedInScorerSubjectList) {
+	public void setLoggedInScorerSubjectList(List<String> loggedInScorerSubjectList) {
 		this.loggedInScorerSubjectList = loggedInScorerSubjectList;
 	}
 
@@ -548,8 +493,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 	 * @param dailyStatusReportList
 	 *            the dailyStatusReportList to set
 	 */
-	public void setDailyStatusReportList(
-			List<DailyStatusReportListInfo> dailyStatusReportList) {
+	public void setDailyStatusReportList(List<DailyStatusReportListInfo> dailyStatusReportList) {
 		this.dailyStatusReportList = dailyStatusReportList;
 	}
 
@@ -579,8 +523,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 	 * @param dailyStatusSearchScorerInfo
 	 *            the dailyStatusSearchScorerInfo to set
 	 */
-	public void setDailyStatusSearchScorerInfo(
-			List<DailyStatusSearchScorerInfo> dailyStatusSearchScorerInfo) {
+	public void setDailyStatusSearchScorerInfo(List<DailyStatusSearchScorerInfo> dailyStatusSearchScorerInfo) {
 		this.dailyStatusSearchScorerInfo = dailyStatusSearchScorerInfo;
 	}
 
@@ -596,8 +539,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 		return gradeWiseReportList;
 	}
 
-	public void setGradeWiseReportList(
-			List<DailyStatusReportListInfo> gradeWiseReportList) {
+	public void setGradeWiseReportList(List<DailyStatusReportListInfo> gradeWiseReportList) {
 		this.gradeWiseReportList = gradeWiseReportList;
 	}
 
@@ -605,8 +547,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 		return pendingCategoryWiseReportList;
 	}
 
-	public void setPendingCategoryWiseReportList(
-			List<DailyStatusReportListInfo> pendingCategoryWiseReportList) {
+	public void setPendingCategoryWiseReportList(List<DailyStatusReportListInfo> pendingCategoryWiseReportList) {
 		this.pendingCategoryWiseReportList = pendingCategoryWiseReportList;
 	}
 
@@ -637,8 +578,7 @@ public class DailyStatusSearchAction extends ActionSupport implements
 		return markValueWiseReportList;
 	}
 
-	public void setMarkValueWiseReportList(
-			List<DailyStatusReportListInfo> markValueWiseReportList) {
+	public void setMarkValueWiseReportList(List<DailyStatusReportListInfo> markValueWiseReportList) {
 		this.markValueWiseReportList = markValueWiseReportList;
 	}
 

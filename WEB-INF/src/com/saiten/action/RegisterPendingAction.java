@@ -27,8 +27,7 @@ import com.saiten.util.WebAppConst;
  * @version 1.0
  * @created 24-Dec-2012 12:22:57 PM
  */
-public class RegisterPendingAction extends ActionSupport implements
-		SessionAware {
+public class RegisterPendingAction extends ActionSupport implements SessionAware {
 
 	/**
 	 * 
@@ -37,6 +36,7 @@ public class RegisterPendingAction extends ActionSupport implements
 	private RegisterPendingService registerPendingService;
 	private RegisterPendingByProcedureService registerPendingByProcedureService;
 	private Map<String, Object> session;
+	@SuppressWarnings("unused")
 	private SaitenTransactionManager saitenTransactionManager;
 	private Integer pendingCategorySeq;
 	private boolean bookMarkFlag;
@@ -60,17 +60,14 @@ public class RegisterPendingAction extends ActionSupport implements
 		Boolean historyScreenFlag = (Boolean) session.get("historyScreenFlag");
 
 		try {
-			MstScorerInfo scorerInfo = (MstScorerInfo) session
-					.get("scorerInfo");
+			MstScorerInfo scorerInfo = (MstScorerInfo) session.get("scorerInfo");
 			String menuId = questionInfo.getMenuId();
-			TranDescScoreInfo tranDescScoreInfo = (TranDescScoreInfo) session
-					.get("tranDescScoreInfo");
+			TranDescScoreInfo tranDescScoreInfo = (TranDescScoreInfo) session.get("tranDescScoreInfo");
 			AnswerInfo answerInfo = tranDescScoreInfo.getAnswerInfo();
 
 			setAnswerInfoParams(answerInfo);
 
-			Short pendingCategory = SaitenUtil
-					.getPendingCategoryByPendingCategorySeq(pendingCategorySeq);
+			Short pendingCategory = SaitenUtil.getPendingCategoryByPendingCategorySeq(pendingCategorySeq);
 
 			/*
 			 * platformTransactionManager = saitenTransactionManager
@@ -84,22 +81,18 @@ public class RegisterPendingAction extends ActionSupport implements
 			if (session.get("isQcRecord") != null) {
 				isQcRecord = (Boolean) session.get("isQcRecord");
 			}
-			if ((qcAnswerSeqList != null && !qcAnswerSeqList.isEmpty()
-					&& (isQcRecord != null && isQcRecord) && (tranDescScoreInfo
-					.getAnswerInfo().getHistorySeq() == null))
+			if ((qcAnswerSeqList != null && !qcAnswerSeqList.isEmpty() && (isQcRecord != null && isQcRecord)
+					&& (tranDescScoreInfo.getAnswerInfo().getHistorySeq() == null))
 					|| (tranDescScoreInfo.getAnswerInfo().getQcSeq() != null)) {
 				// register qc answer using stored procedure.
 				// NOTE: for register without using stored procedure replace
 				// 'registerScoreByProcedureService' with 'registerScoreService'
 				// in below line.
-				lockFlag = registerPendingByProcedureService.registerQcPending(
-						questionInfo, scorerInfo, answerInfo,
-						pendingCategorySeq, pendingCategory, tranDescScoreInfo
-								.getAnswerInfo().getUpdateDate(),
+				lockFlag = registerPendingByProcedureService.registerQcPending(questionInfo, scorerInfo, answerInfo,
+						pendingCategorySeq, pendingCategory, tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
 						tranDescScoreInfo.getAnswerFormNumber());
 				if (tranDescScoreInfo.getAnswerInfo().getQcSeq() == null) {
-					qcAnswerSeqList.remove(Integer.valueOf(answerInfo
-							.getAnswerSeq()));
+					qcAnswerSeqList.remove(Integer.valueOf(answerInfo.getAnswerSeq()));
 					session.remove("isQcRecord");
 				}
 				session.put("qcAnswerSeqList", qcAnswerSeqList);
@@ -110,28 +103,18 @@ public class RegisterPendingAction extends ActionSupport implements
 				// procedure.
 				if (menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID)
 						|| menuId.equals(WebAppConst.SECOND_SCORING_MENU_ID)
-						|| menuId.equals(WebAppConst.CHECKING_MENU_ID)
-						|| menuId.equals(WebAppConst.DENY_MENU_ID)
-						|| menuId.equals(WebAppConst.PENDING_MENU_ID)
-						|| menuId.equals(WebAppConst.INSPECTION_MENU_ID)
-						|| menuId.equals(WebAppConst.MISMATCH_MENU_ID)
-						|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
+						|| menuId.equals(WebAppConst.CHECKING_MENU_ID) || menuId.equals(WebAppConst.DENY_MENU_ID)
+						|| menuId.equals(WebAppConst.PENDING_MENU_ID) || menuId.equals(WebAppConst.INSPECTION_MENU_ID)
+						|| menuId.equals(WebAppConst.MISMATCH_MENU_ID) || menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
 						|| menuId.equals(WebAppConst.OUT_BOUNDARY_MENU_ID)
-						|| menuId
-								.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)
-						|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
-						|| menuId.equals(WebAppConst.FORCED_MENU_ID)) {
-					lockFlag = registerPendingByProcedureService
-							.registerPending(questionInfo, scorerInfo,
-									answerInfo, pendingCategorySeq,
-									pendingCategory, tranDescScoreInfo
-											.getAnswerInfo().getUpdateDate(),
-									tranDescScoreInfo.getAnswerFormNumber());
+						|| menuId.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)
+						|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID)) {
+					lockFlag = registerPendingByProcedureService.registerPending(questionInfo, scorerInfo, answerInfo,
+							pendingCategorySeq, pendingCategory, tranDescScoreInfo.getAnswerInfo().getUpdateDate(),
+							tranDescScoreInfo.getAnswerFormNumber());
 				} else {
-					lockFlag = registerPendingService.registerPending(
-							questionInfo, scorerInfo, answerInfo,
-							pendingCategorySeq, pendingCategory,
-							tranDescScoreInfo.getAnswerInfo().getUpdateDate());
+					lockFlag = registerPendingService.registerPending(questionInfo, scorerInfo, answerInfo,
+							pendingCategorySeq, pendingCategory, tranDescScoreInfo.getAnswerInfo().getUpdateDate());
 				}
 
 			}
@@ -154,27 +137,22 @@ public class RegisterPendingAction extends ActionSupport implements
 			 * platformTransactionManager.rollback(transactionStatus);
 			 */
 
-			throw new SaitenRuntimeException(
-					ErrorCode.REGISTER_PENDING_ACTION_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.REGISTER_PENDING_ACTION_EXCEPTION, e);
 		}
 
-		return !lockFlag ? getRedirectAction(questionInfo.getMenuId(),
-				historyScreenFlag) : FAILURE;
+		return !lockFlag ? getRedirectAction(questionInfo.getMenuId(), historyScreenFlag) : FAILURE;
 	}
 
 	private String getRedirectAction(String menuId, Boolean historyScreenFlag) {
 
 		String redirectAction = null;
-		TranDescScoreInfo sessionTranDescScoreInfo = (TranDescScoreInfo) session
-				.get("tranDescScoreInfo");
-		if(historyScreenFlag != null && historyScreenFlag) {
+		TranDescScoreInfo sessionTranDescScoreInfo = (TranDescScoreInfo) session.get("tranDescScoreInfo");
+		if (historyScreenFlag != null && historyScreenFlag && !menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 			return RESET_SCORE_HISTORY;
 		}
-		if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)
-				&& (sessionTranDescScoreInfo == null)) {
+		if (menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID) && (sessionTranDescScoreInfo == null)) {
 			redirectAction = SCORE_SAMPLING;
-		} else if (menuId.equals(WebAppConst.FORCED_MENU_ID)
-				&& (sessionTranDescScoreInfo == null)) {
+		} else if (menuId.equals(WebAppConst.FORCED_MENU_ID) && (sessionTranDescScoreInfo == null)) {
 			redirectAction = BACK_TO_FORCED_SCORING_LIST;
 		} else {
 			redirectAction = SUCCESS;
@@ -186,25 +164,22 @@ public class RegisterPendingAction extends ActionSupport implements
 	 * @param answerInfo
 	 * @throws UnsupportedEncodingException
 	 */
-	private void setAnswerInfoParams(AnswerInfo answerInfo)
-			throws UnsupportedEncodingException {
-		answerInfo
-				.setBookMarkFlag(bookMarkFlag == WebAppConst.TRUE ? WebAppConst.BOOKMARK_FLAG_TRUE
-						: WebAppConst.BOOKMARK_FLAG_FALSE);
+	private void setAnswerInfoParams(AnswerInfo answerInfo) throws UnsupportedEncodingException {
+		answerInfo.setBookMarkFlag(
+				bookMarkFlag == WebAppConst.TRUE ? WebAppConst.BOOKMARK_FLAG_TRUE : WebAppConst.BOOKMARK_FLAG_FALSE);
 
 		// Get query string
 		String queryString = ServletActionContext.getRequest().getQueryString();
 
 		// Fetch and decode scorerComment
-		String scorerComment = URLDecoder.decode(queryString
-				.substring(queryString.indexOf(QUERY_STRING_SCORER_COMMENT)
-						+ QUERY_STRING_SCORER_COMMENT.length()),
+		String scorerComment = URLDecoder.decode(
+				queryString.substring(
+						queryString.indexOf(QUERY_STRING_SCORER_COMMENT) + QUERY_STRING_SCORER_COMMENT.length()),
 				ServletActionContext.getRequest().getCharacterEncoding());
 
 		answerInfo.setScorerComment(scorerComment);
-		answerInfo
-				.setQualityCheckFlag(qualityCheckFlag == WebAppConst.TRUE ? WebAppConst.QUALITY_MARK_FLAG_TRUE
-						: WebAppConst.QUALITY_MARK_FLAG_FALSE);
+		answerInfo.setQualityCheckFlag(qualityCheckFlag == WebAppConst.TRUE ? WebAppConst.QUALITY_MARK_FLAG_TRUE
+				: WebAppConst.QUALITY_MARK_FLAG_FALSE);
 	}
 
 	/**
@@ -220,10 +195,8 @@ public class RegisterPendingAction extends ActionSupport implements
 	 * @param tranDescScoreInfo
 	 */
 	private void updateSessionInfo(TranDescScoreInfo tranDescScoreInfo) {
-		QuestionInfo sessionQuestionInfo = (QuestionInfo) session
-				.get("questionInfo");
-		TranDescScoreInfo tranDescScoreInfoCopy = (TranDescScoreInfo) session
-				.get("tranDescScoreInfoCopy");
+		QuestionInfo sessionQuestionInfo = (QuestionInfo) session.get("questionInfo");
+		TranDescScoreInfo tranDescScoreInfoCopy = (TranDescScoreInfo) session.get("tranDescScoreInfoCopy");
 
 		if ((tranDescScoreInfo.getAnswerInfo().getHistorySeq() != null)
 				|| (tranDescScoreInfo.getAnswerInfo().getQcSeq() != null)) {
@@ -234,13 +207,11 @@ public class RegisterPendingAction extends ActionSupport implements
 			session.remove("tranDescScoreInfo");
 
 			if (!lockFlag) {
-				sessionQuestionInfo.setHistoryRecordCount(sessionQuestionInfo
-						.getHistoryRecordCount() + 1);
+				sessionQuestionInfo.setHistoryRecordCount(sessionQuestionInfo.getHistoryRecordCount() + 1);
 			}
 		}
 
-		sessionQuestionInfo.setPrevRecordCount(sessionQuestionInfo
-				.getHistoryRecordCount());
+		sessionQuestionInfo.setPrevRecordCount(sessionQuestionInfo.getHistoryRecordCount());
 		sessionQuestionInfo.setNextRecordCount(WebAppConst.MINUS_ONE);
 
 		session.put("questionInfo", sessionQuestionInfo);
@@ -301,8 +272,7 @@ public class RegisterPendingAction extends ActionSupport implements
 	 * 
 	 * @param saitenTransactionManager
 	 */
-	public void setSaitenTransactionManager(
-			SaitenTransactionManager saitenTransactionManager) {
+	public void setSaitenTransactionManager(SaitenTransactionManager saitenTransactionManager) {
 		this.saitenTransactionManager = saitenTransactionManager;
 	}
 
@@ -310,8 +280,7 @@ public class RegisterPendingAction extends ActionSupport implements
 	 * 
 	 * @param registerPendingService
 	 */
-	public void setRegisterPendingService(
-			RegisterPendingService registerPendingService) {
+	public void setRegisterPendingService(RegisterPendingService registerPendingService) {
 		this.registerPendingService = registerPendingService;
 	}
 

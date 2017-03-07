@@ -23,6 +23,7 @@
 				// Avoid scrolling
 				$("body").addClass("body-overflow-auto-question-selection");
 			});
+						
 		</script>	
 	</tiles:putAttribute>
 	<tiles:putAttribute name="body-title">
@@ -77,12 +78,14 @@
 						<s:if test="!(#session.gradeMap.isEmpty())">
 							<s:set id="defaultselectedGrade" name="defaultselectedGrade" value="%{#session.gradeMap.keySet().toArray()[0]}"/>	
 						</s:if>
-						<s:select id="gradeNum" name="gradeNum" list="#session.gradeMap" cssClass="selectList" value="%{#defaultselectedGrade}" size="11" />
+						
+						<s:select id="gradeNum" name="selectedGradeNum" list="#session.gradeMap" cssClass="selectList" value="%{#defaultselectedGrade}" size="18" cssStyle=" width:300px; overflow-x:auto;"/>
+																		
 					</td>
 					</tr>
 					
 					<tr>
-						<td  class="button">
+						<td  class="button" style="padding-top: 50px;text-align: left;">
 						<%-- <s:property value="#denyCategory"/> --%>
 						
 						<s:hidden id="denyCategory" name="denyCategory" value="%{denyCategory}"></s:hidden>

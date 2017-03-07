@@ -22,20 +22,18 @@ public interface ScoreService {
 	 * @param connectionString
 	 * @return TranDescScoreInfo
 	 */
-	public TranDescScoreInfo findAnswer(int quetionSeq, String menuId,
-			String scorerId, String connectionString, Integer gradeNum,
-			Short pendingCategory, Short denyCategory, String answerFormNum,
-			Integer historyRecordCount, int roleId, Short selectedMarkValue,
-			QuestionInfo questionInfo);
+	public TranDescScoreInfo findAnswer(int quetionSeq, String menuId, String scorerId, String connectionString,
+			Integer gradeNum, Short pendingCategory, Short denyCategory, String answerFormNum,
+			Integer historyRecordCount, int roleId, Short selectedMarkValue, QuestionInfo questionInfo,
+			Double bitValue);
 
 	/**
 	 * @param historySeq
 	 * @param connectionString
 	 * @return TranDescScoreInfo
 	 */
-	public TranDescScoreInfo findHistoryAnswer(Integer qcSeq,
-			Integer historySeq, String connectionString, String scorerId,
-			boolean bookmarkScreenFlag, QuestionInfo questionInfo);
+	public TranDescScoreInfo findHistoryAnswer(Integer qcSeq, Integer historySeq, String connectionString,
+			String scorerId, boolean bookmarkScreenFlag, QuestionInfo questionInfo);
 
 	/**
 	 * @param questionInfo
@@ -44,8 +42,7 @@ public interface ScoreService {
 	 * @param prevOrNext
 	 * @return TranDescScoreInfo
 	 */
-	public TranDescScoreInfo findPrevOrNextHistoryAnswer(
-			QuestionInfo questionInfo, MstScorerInfo scorerInfo,
+	public TranDescScoreInfo findPrevOrNextHistoryAnswer(QuestionInfo questionInfo, MstScorerInfo scorerInfo,
 			Date updateDate, boolean prevOrNext, boolean bookmarkScreenFlag);
 
 	/**
@@ -53,8 +50,7 @@ public interface ScoreService {
 	 * @param scorerId
 	 * @param connectionString
 	 */
-	public void lockAnswer(int answerSeq, String scorerId,
-			String connectionString, Date updateDate);
+	public void lockAnswer(int answerSeq, String scorerId, String connectionString, Date updateDate);
 
 	/**
 	 * @param gradeSeq
@@ -68,16 +64,15 @@ public interface ScoreService {
 	 * @param lockBy
 	 * @param connectionString
 	 */
-	public void unlockAnswer(int questionSeq, String lockBy,
-			String connectionString, Integer answerSeq);
+	public void unlockAnswer(int questionSeq, String lockBy, String connectionString, Integer answerSeq);
 
 	/**
 	 * @param answerFormNumber
 	 * @param questionInfo
 	 * @return
 	 */
-	public List<Double> getFirstTimeSecondTimeCheckPoints(int answerSeq,
-			QuestionInfo questionInfo, Short currentScoringState);
+	public List<Double> getFirstTimeSecondTimeCheckPoints(int answerSeq, QuestionInfo questionInfo,
+			Short currentScoringState);
 
 	/**
 	 * @param answerSeq
@@ -85,8 +80,7 @@ public interface ScoreService {
 	 * @param infoUpdateDate
 	 * @return
 	 */
-	public boolean isAnswerAlreadyScored(int answerSeq,
-			String connectionString, Date infoUpdateDate);
+	public boolean isAnswerAlreadyScored(int answerSeq, String connectionString, Date infoUpdateDate);
 
 	/**
 	 * @param questionSeq
@@ -95,17 +89,16 @@ public interface ScoreService {
 	 * @param selectedMarkValue
 	 * @return
 	 */
-	public List<Integer> findQcAnsSeqList(int questionSeq, String scorerId,
-			Short selectedMarkValue, String connectionString);
+	public List<Integer> findQcAnsSeqList(int questionSeq, String scorerId, Short selectedMarkValue,
+			String connectionString);
 
 	/**
 	 * @param qcAnswerSeqList
 	 * @param connectionString
 	 * @return
 	 */
-	public TranDescScoreInfo findQualityCheckAnswers(int qcAnswerSeq,
-			String menuId, String scorerId, String connectionString,
-			QuestionInfo questionInfo);
+	public TranDescScoreInfo findQualityCheckAnswers(int qcAnswerSeq, String menuId, String scorerId,
+			String connectionString, QuestionInfo questionInfo);
 
 	/**
 	 * 

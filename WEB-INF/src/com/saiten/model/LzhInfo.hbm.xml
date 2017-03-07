@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 10, 2015 11:18:34 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.saiten.model.LzhInfo" table="lzh_info">
+		<id name="sequence" type="java.lang.Integer">
+			<column name="sequence" />
+			<generator class="increment" />
+		</id>
+		<property name="lzhName" type="string">
+			<column name="lzh_name" length="30" />
+		</property>
+		<property name="boxNum" type="string">
+			<column name="box_num" length="4" />
+		</property>
+		<property name="tempDbInstanceName" type="string">
+			<column name="temp_db_instance_name" length="15" />
+		</property>
+		<property name="deleteFlag" type="java.lang.Character">
+			<column name="delete_flag" length="1" />
+		</property>
+		<property name="updateDate" type="timestamp">
+			<column name="update_date" length="0" />
+		</property>
+		<property name="createDate" type="timestamp">
+			<column name="create_date" length="0" />
+		</property>
+	</class>
+</hibernate-mapping>

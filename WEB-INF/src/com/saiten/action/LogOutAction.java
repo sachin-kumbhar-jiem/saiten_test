@@ -21,6 +21,7 @@ import com.saiten.service.ScorerLoggingService;
 import com.saiten.util.AESEncryptionDecryptionUtil;
 import com.saiten.util.ErrorCode;
 import com.saiten.util.SaitenMasterUtil;
+import com.saiten.util.SaitenUtil;
 import com.saiten.util.UnlockAnswerUtil;
 import com.saiten.util.WebAppConst;
 
@@ -56,34 +57,24 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 		if (session instanceof SessionMap) {
 			try {
 
-				ApplicationContext ctx = ContextLoader
-						.getCurrentWebApplicationContext();
+				ApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
 
-				MstScorerInfo mstScorerInfo = (MstScorerInfo) session
-						.get("scorerInfo");
+				MstScorerInfo mstScorerInfo = (MstScorerInfo) session.get("scorerInfo");
 
-				TranScorerSessionInfo tranScorerSessionInfo = ((SaitenMasterUtil) ctx
-						.getBean("saitenMasterUtil"))
+				TranScorerSessionInfo tranScorerSessionInfo = ((SaitenMasterUtil) ctx.getBean("saitenMasterUtil"))
 						.getUserSessionInfoById(mstScorerInfo.getScorerId());
 
-				QuestionInfo questionInfo = (QuestionInfo) session
-						.get("questionInfo");
+				QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 
-				if (questionInfo != null
-						&& !questionInfo.getMenuId().equals(
-								WebAppConst.REFERENCE_SAMP_MENU_ID)) {
+				if (questionInfo != null && !questionInfo.getMenuId().equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
 					int questionSeq = questionInfo.getQuestionSeq();
-					String connectionString = questionInfo
-							.getConnectionString();
-					String lockBy = ((MstScorerInfo) session.get("scorerInfo"))
-							.getScorerId();
+					String connectionString = questionInfo.getConnectionString();
+					String lockBy = ((MstScorerInfo) session.get("scorerInfo")).getScorerId();
 
-					if (!StringUtils.isBlank(lockBy)
-							&& !StringUtils.isBlank(connectionString)) {
+					if (!StringUtils.isBlank(lockBy) && !StringUtils.isBlank(connectionString)) {
 						// unlock answer
 						Integer answerSeq = null;
-						UnlockAnswerUtil.unlockAnswer(questionSeq, lockBy,
-								connectionString, answerSeq);
+						UnlockAnswerUtil.unlockAnswer(questionSeq, lockBy, connectionString, answerSeq);
 						/*
 						 * MstQuestion mstQuestion = null;
 						 * tranScorerSessionInfo.setMstQuestion(mstQuestion);
@@ -116,15 +107,12 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 				tranScorerSessionInfo.setUpdateDate(new Date());
 				// Clear questionSeq, AnswerFormNum, SubjectCoed from
 				// tran_scorer_session_info.
-				((SaitenMasterUtil) ctx.getBean("saitenMasterUtil"))
-						.updateUserSessionInfo(tranScorerSessionInfo);
+				((SaitenMasterUtil) ctx.getBean("saitenMasterUtil")).updateUserSessionInfo(tranScorerSessionInfo);
 
 				// update user logging information.
-				ScorerAccessLogInfo scorerAccessLogInfo = (ScorerAccessLogInfo) session
-						.get("scorerAccessLogInfo");
+				ScorerAccessLogInfo scorerAccessLogInfo = (ScorerAccessLogInfo) session.get("scorerAccessLogInfo");
 				scorerAccessLogInfo.setLogoutTime(new Date());
-				scorerAccessLogInfo
-						.setStatus(WebAppConst.SCORER_LOGGING_STATUS[1]);
+				scorerAccessLogInfo.setStatus(WebAppConst.SCORER_LOGGING_STATUS[1]);
 				scorerLoggingService.saveOrUpdate(scorerAccessLogInfo);
 				String scorerId = mstScorerInfo.getScorerId();
 				String password = mstScorerInfo.getPassword();
@@ -134,32 +122,31 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 					 * saitenLMSUrl = saitenApplicationProperties
 					 * .getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL);
 					 */
-					Integer lmsInstanceId = (Integer) session
-							.get("lmsInstanceId");
-					saitenLMSUrl = scorerLoggingService
-							.getUrlById(lmsInstanceId);
-					if (backToLms) {					
-						scorerId = AESEncryptionDecryptionUtil
-								.encrypt(scorerId);
+					Map<String, String> configMap = SaitenUtil.getConfigMap();
+					if (Boolean.valueOf(configMap.get("isMultipleLmsInstances"))) {
+						Integer lmsInstanceId = (Integer) session.get("lmsInstanceId");
+						saitenLMSUrl = scorerLoggingService.getUrlById(lmsInstanceId);
+					} else {
+						saitenLMSUrl = saitenApplicationProperties.getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL);
+					}
 
-						saitenLMSUrl += "?login=" + scorerId + "&password="
-								+ password;
-						log.info(scorerId
-								+ "-"
-								+ "BackToLms. User Logout. Redirecting to Lms. LMS URL: "
+					if (backToLms) {
+						scorerId = AESEncryptionDecryptionUtil.encrypt(scorerId);
+
+						saitenLMSUrl += "?login=" + scorerId + "&password=" + password;
+						log.info(scorerId + "-" + "BackToLms. User Logout. Redirecting to Lms. LMS URL: "
 								+ saitenLMSUrl);
 						Thread.sleep(2000);
 					} else {
-						/*saitenLMSUrl = saitenApplicationProperties
-								.getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL);*/
-						log.info(scorerId + "-"
-								+ "User Logout. Redirecting to Lms. LMS URL: "
-								+ saitenLMSUrl);
+						/*
+						 * saitenLMSUrl = saitenApplicationProperties
+						 * .getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL);
+						 */
+						log.info(scorerId + "-" + "User Logout. Redirecting to Lms. LMS URL: " + saitenLMSUrl);
 					}
 					RESULT = SUCCESS;
 				} else {
-					log.info(scorerId + "-"
-							+ "User Logout. Loading saiten login page.");
+					log.info(scorerId + "-" + "User Logout. Loading saiten login page.");
 					RESULT = INPUT;
 				}
 
@@ -172,8 +159,7 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 			} catch (SaitenRuntimeException we) {
 				throw we;
 			} catch (Exception e) {
-				throw new SaitenRuntimeException(
-						ErrorCode.LOGOUT_ACTION_EXCEPTION, e);
+				throw new SaitenRuntimeException(ErrorCode.LOGOUT_ACTION_EXCEPTION, e);
 			}
 		}
 		return RESULT;
@@ -195,8 +181,7 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 		this.saitenLMSUrl = saitenLMSUrl;
 	}
 
-	public void setSaitenApplicationProperties(
-			Properties saitenApplicationProperties) {
+	public void setSaitenApplicationProperties(Properties saitenApplicationProperties) {
 		this.saitenApplicationProperties = saitenApplicationProperties;
 	}
 
@@ -212,8 +197,7 @@ public class LogOutAction extends ActionSupport implements SessionAware {
 	 * @param scorerLoggingService
 	 *            the scorerLoggingService to set
 	 */
-	public void setScorerLoggingService(
-			ScorerLoggingService scorerLoggingService) {
+	public void setScorerLoggingService(ScorerLoggingService scorerLoggingService) {
 		this.scorerLoggingService = scorerLoggingService;
 	}
 

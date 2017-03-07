@@ -1,7 +1,6 @@
 package com.saiten.util;
 
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Date;
 
 import javax.servlet.http.HttpSessionEvent;
@@ -19,7 +18,6 @@ import com.saiten.info.QuestionInfo;
 import com.saiten.info.ScorerAccessLogInfo;
 import com.saiten.manager.SaitenTransactionManager;
 import com.saiten.model.TranScorerSessionInfo;
-import com.saiten.service.QuestionSelectionService;
 import com.saiten.service.ScoreService;
 
 /**
@@ -49,18 +47,14 @@ public class UnlockAnswerUtil implements HttpSessionListener {
 	 * .http.HttpSessionEvent)
 	 */
 	public void sessionDestroyed(HttpSessionEvent event) {
-		QuestionInfo questionInfo = (QuestionInfo) event.getSession()
-				.getAttribute("questionInfo");
-		MstScorerInfo mstScorerInfo = (MstScorerInfo) event.getSession()
-				.getAttribute("scorerInfo");
-		TranScorerSessionInfo sessionTranScorerSessionInfo = (TranScorerSessionInfo) event
-				.getSession().getAttribute("tranScorerSessionInfo");
-		ApplicationContext ctx = ContextLoader
-				.getCurrentWebApplicationContext();
+		QuestionInfo questionInfo = (QuestionInfo) event.getSession().getAttribute("questionInfo");
+		MstScorerInfo mstScorerInfo = (MstScorerInfo) event.getSession().getAttribute("scorerInfo");
+		TranScorerSessionInfo sessionTranScorerSessionInfo = (TranScorerSessionInfo) event.getSession()
+				.getAttribute("tranScorerSessionInfo");
+		ApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
 		TranScorerSessionInfo tranScorerSessionInfo = null;
 		if (mstScorerInfo != null) {
-			tranScorerSessionInfo = ((SaitenMasterUtil) ctx
-					.getBean("saitenMasterUtil"))
+			tranScorerSessionInfo = ((SaitenMasterUtil) ctx.getBean("saitenMasterUtil"))
 					.getUserSessionInfoById(mstScorerInfo.getScorerId());
 			;
 		}
@@ -68,43 +62,31 @@ public class UnlockAnswerUtil implements HttpSessionListener {
 		// If entry made in tran_scorer_session_info by current session, then
 		// clears entry while session timeout.
 
-		if ((tranScorerSessionInfo != null)
-				&& (sessionTranScorerSessionInfo != null)) {
+		if ((tranScorerSessionInfo != null) && (sessionTranScorerSessionInfo != null)) {
 			Date dbUpdateDate = null;
 			Date sessionUpdateDate = null;
 			try {
-				dbUpdateDate = SaitenUtil
-						.getSaitenFormatDate(tranScorerSessionInfo
-								.getUpdateDate());
-				sessionUpdateDate = SaitenUtil
-						.getSaitenFormatDate(sessionTranScorerSessionInfo
-								.getUpdateDate());
+				dbUpdateDate = SaitenUtil.getSaitenFormatDate(tranScorerSessionInfo.getUpdateDate());
+				sessionUpdateDate = SaitenUtil.getSaitenFormatDate(sessionTranScorerSessionInfo.getUpdateDate());
 
 				if (dbUpdateDate.equals(sessionUpdateDate)) {
 					if (questionInfo != null) {
 
 						int questionSeq = questionInfo.getQuestionSeq();
-						String connectionString = questionInfo
-								.getConnectionString();
+						String connectionString = questionInfo.getConnectionString();
 						String menuId = questionInfo.getMenuId();
-						String lockBy = ((MstScorerInfo) event.getSession()
-								.getAttribute("scorerInfo")).getScorerId();
+						String lockBy = ((MstScorerInfo) event.getSession().getAttribute("scorerInfo")).getScorerId();
 
-						if (!StringUtils.isBlank(lockBy)
-								&& !StringUtils.isBlank(connectionString)
-								&& !menuId
-										.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
+						if (!StringUtils.isBlank(lockBy) && !StringUtils.isBlank(connectionString)
+								&& !menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) {
 							// Unlock answer when session is invalidated
 							Integer answerSeq = null;
-							unlockAnswer(questionSeq, lockBy, connectionString,
-									answerSeq);
+							unlockAnswer(questionSeq, lockBy, connectionString, answerSeq);
 							tranScorerSessionInfo.setQuestionSeq(null);
 						}
 
-						if (menuId
-								.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)
-								|| menuId
-										.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID)) {
+						if (menuId.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)
+								|| menuId.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID)) {
 							/*
 							 * String answerFormNumber = (String)
 							 * event.getSession()
@@ -127,18 +109,16 @@ public class UnlockAnswerUtil implements HttpSessionListener {
 			tranScorerSessionInfo.setUpdateDate(new Date());
 			// Clear questionSeq, AnswerFormNum, SubjectCoed from
 			// tran_scorer_session_info.
-			((SaitenMasterUtil) ctx.getBean("saitenMasterUtil"))
-					.updateUserSessionInfo(tranScorerSessionInfo);
+			((SaitenMasterUtil) ctx.getBean("saitenMasterUtil")).updateUserSessionInfo(tranScorerSessionInfo);
 		}
 
 		// update user logging information.
-		ScorerAccessLogInfo scorerAccessLogInfo = (ScorerAccessLogInfo) event
-				.getSession().getAttribute("scorerAccessLogInfo");
+		ScorerAccessLogInfo scorerAccessLogInfo = (ScorerAccessLogInfo) event.getSession()
+				.getAttribute("scorerAccessLogInfo");
 		if (scorerAccessLogInfo != null) {
 			scorerAccessLogInfo.setLogoutTime(new Date());
 			scorerAccessLogInfo.setStatus(WebAppConst.SCORER_LOGGING_STATUS[2]);
-			((SaitenMasterUtil) ctx.getBean("saitenMasterUtil"))
-					.updateUserLoggingInformation(scorerAccessLogInfo);
+			((SaitenMasterUtil) ctx.getBean("saitenMasterUtil")).updateUserLoggingInformation(scorerAccessLogInfo);
 		}
 	}
 
@@ -148,29 +128,22 @@ public class UnlockAnswerUtil implements HttpSessionListener {
 	 * @param connectionString
 	 * @return String
 	 */
-	public static String unlockAnswer(int questionSeq, String lockBy,
-			String connectionString, Integer answerSeq) {
+	public static String unlockAnswer(int questionSeq, String lockBy, String connectionString, Integer answerSeq) {
 		PlatformTransactionManager platformTransactionManager = null;
 		TransactionStatus transactionStatus = null;
 		boolean rollbackFlag = true;
 		try {
-			ApplicationContext ctx = ContextLoader
-					.getCurrentWebApplicationContext();
+			ApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
 
-			saitenTransactionManager = (SaitenTransactionManager) ctx
-					.getBean("saitenTransactionManager");
-			
-			platformTransactionManager = saitenTransactionManager
-					.getTransactionManger(connectionString);
-			transactionStatus = saitenTransactionManager
-					.beginTransaction(platformTransactionManager);
+			saitenTransactionManager = (SaitenTransactionManager) ctx.getBean("saitenTransactionManager");
+
+			platformTransactionManager = saitenTransactionManager.getTransactionManger(connectionString);
+			transactionStatus = saitenTransactionManager.beginTransaction(platformTransactionManager);
 
 			// Get current WebApp Context
 
-			ScoreService scoreService = (ScoreService) ctx
-					.getBean("scoreService");
-			scoreService.unlockAnswer(questionSeq, lockBy, connectionString,
-					answerSeq);
+			ScoreService scoreService = (ScoreService) ctx.getBean("scoreService");
+			scoreService.unlockAnswer(questionSeq, lockBy, connectionString, answerSeq);
 			try {
 				platformTransactionManager.commit(transactionStatus);
 			} catch (Exception e) {
@@ -186,8 +159,7 @@ public class UnlockAnswerUtil implements HttpSessionListener {
 			if ((platformTransactionManager != null) && (rollbackFlag == true))
 				platformTransactionManager.rollback(transactionStatus);
 
-			throw new SaitenRuntimeException(ErrorCode.UNLOCK_ANSWER_EXCEPTION,
-					e);
+			throw new SaitenRuntimeException(ErrorCode.UNLOCK_ANSWER_EXCEPTION, e);
 		}
 		return "success";
 	}

@@ -28,8 +28,7 @@ import com.saiten.util.WebAppConst;
  */
 public class SaitenInitializeListener extends AbstractInitializeListener {
 
-	private static Logger log = Logger
-			.getLogger(SaitenInitializeListener.class);
+	private static Logger log = Logger.getLogger(SaitenInitializeListener.class);
 
 	/**
 	 * 
@@ -51,8 +50,7 @@ public class SaitenInitializeListener extends AbstractInitializeListener {
 			// Build saitenConfigObject containing master data
 			buildSaitenConfigObject();
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.SAITEN_INITIALIZE_LISTENER_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.SAITEN_INITIALIZE_LISTENER_EXCEPTION, e);
 		}
 	}
 
@@ -60,21 +58,15 @@ public class SaitenInitializeListener extends AbstractInitializeListener {
 
 		Map<String, String> configMap = new LinkedHashMap<String, String>();
 		// Get current WebApp Context
-		ApplicationContext ctx = ContextLoader
-				.getCurrentWebApplicationContext();
+		ApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
 
 		// Read application.properties file.
-		Properties applicationProperties = (Properties) ctx
-				.getBean("saitenApplicationProperties");
+		Properties applicationProperties = (Properties) ctx.getBean("saitenApplicationProperties");
 		Properties configProperties = null;
-		if (Boolean.valueOf((String) applicationProperties
-				.get(WebAppConst.SAITEN_RELEASE))) {
-			configProperties = (Properties) ctx
-					.getBean("saitenConfigProperties");
-		} else if (Boolean.valueOf((String) applicationProperties
-				.get(WebAppConst.SHINEIGO_RELEASE))) {
-			configProperties = (Properties) ctx
-					.getBean("shinEigoConfigProperties");
+		if (Boolean.valueOf((String) applicationProperties.get(WebAppConst.SAITEN_RELEASE))) {
+			configProperties = (Properties) ctx.getBean("saitenConfigProperties");
+		} else if (Boolean.valueOf((String) applicationProperties.get(WebAppConst.SHINEIGO_RELEASE))) {
+			configProperties = (Properties) ctx.getBean("shinEigoConfigProperties");
 		}
 
 		// Get all keys from config.properties file.
@@ -96,12 +88,10 @@ public class SaitenInitializeListener extends AbstractInitializeListener {
 	private void buildDatabaseManagerMaps() {
 
 		// Get current WebApp Context
-		ApplicationContext ctx = ContextLoader
-				.getCurrentWebApplicationContext();
+		ApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
 
 		// Read database.properties file
-		Properties saitenDbProperties = (Properties) ctx
-				.getBean("saitenDbProperties");
+		Properties saitenDbProperties = (Properties) ctx.getBean("saitenDbProperties");
 
 		// HibernateTemplate & PlatformTransactionManager map's
 		LinkedHashMap<String, HibernateTemplate> hibernateTemplateMap = new LinkedHashMap<String, HibernateTemplate>();
@@ -114,105 +104,123 @@ public class SaitenInitializeListener extends AbstractInitializeListener {
 		String hibernateTemplateBeanId = null;
 		String transactionManagerBeanId = null;
 
-		String keyReplica = null;
+		// String keyReplica = null;
+
 		String hibernateTemplateBeanIdReplica = null;
 		String transactionManagerBeanIdReplica = null;
 
-		Properties applicationProperties = (Properties) ctx
-				.getBean("saitenApplicationProperties");
-		int databaseCount = 0;
+		/*
+		 * Properties applicationProperties = (Properties) ctx
+		 * .getBean("saitenApplicationProperties"); int databaseCount = 0;
+		 * 
+		 * if (Boolean.valueOf((String) applicationProperties
+		 * .get(WebAppConst.REPLICATION_ON))) { databaseCount =
+		 * saitenDbProperties.size() / 8; } else { databaseCount =
+		 * (saitenDbProperties.size() / 4) - 1; }
+		 * 
+		 * for (int i = 0; i <= databaseCount; i++) {
+		 * 
+		 * if (i == 0) { // Master DB key = "saiten.masterdb.url";
+		 * hibernateTemplateBeanId = "saitenMasterDbSessionFactory";
+		 * transactionManagerBeanId = "saitenMasterDbTransactionManager"; } else
+		 * if (i == 1) { // Common DB key = "saiten.commondb.url";
+		 * hibernateTemplateBeanId = "saitenCommonDbSessionFactory";
+		 * transactionManagerBeanId = "saitenCommonDbTransactionManager"; } else
+		 * { // Transaction DB int j = i - 1; key = "saiten.transactiondb" + j +
+		 * ".url"; hibernateTemplateBeanId = "saitenTranDb" + j +
+		 * "SessionFactory"; transactionManagerBeanId = "saitenTranDb" + j +
+		 * "TransactionManager";
+		 * 
+		 * if (Boolean.valueOf((String) applicationProperties
+		 * .get(WebAppConst.REPLICATION_ON))) { keyReplica =
+		 * "saiten.replica.transactiondb" + j + ".url";
+		 * hibernateTemplateBeanIdReplica = "saitenReplicaTranDb" + j +
+		 * "SessionFactory"; transactionManagerBeanIdReplica =
+		 * "saitenReplicaTranDb" + j + "TransactionManager"; } }
+		 */
 
-		if (Boolean.valueOf((String) applicationProperties
-				.get(WebAppConst.REPLICATION_ON))) {
-			databaseCount = saitenDbProperties.size() / 8;
-		} else {
-			databaseCount = (saitenDbProperties.size() / 4) - 1;
-		}
+		// Comment by Suwarna, code added for db properties keyset handling
+		///////////// Start///////////////
 
-		for (int i = 0; i <= databaseCount; i++) {
+		// for db replica,check flag in application property file
 
-			if (i == 0) {
-				// Master DB
-				key = "saiten.masterdb.url";
-				hibernateTemplateBeanId = "saitenMasterDbSessionFactory";
-				transactionManagerBeanId = "saitenMasterDbTransactionManager";
-			} else if (i == 1) {
-				// Common DB
-				key = "saiten.commondb.url";
-				hibernateTemplateBeanId = "saitenCommonDbSessionFactory";
-				transactionManagerBeanId = "saitenCommonDbTransactionManager";
-			} else {
-				// Transaction DB
-				int j = i - 1;
-				key = "saiten.transactiondb" + j + ".url";
-				hibernateTemplateBeanId = "saitenTranDb" + j + "SessionFactory";
-				transactionManagerBeanId = "saitenTranDb" + j
-						+ "TransactionManager";
+		boolean isReplicaOn, keyReplica = false;
 
-				if (Boolean.valueOf((String) applicationProperties
-						.get(WebAppConst.REPLICATION_ON))) {
-					keyReplica = "saiten.replica.transactiondb" + j + ".url";
-					hibernateTemplateBeanIdReplica = "saitenReplicaTranDb" + j
-							+ "SessionFactory";
-					transactionManagerBeanIdReplica = "saitenReplicaTranDb" + j
-							+ "TransactionManager";
+		Properties applicationProperties = (Properties) ctx.getBean("saitenApplicationProperties");
+
+		isReplicaOn = Boolean.valueOf((String) applicationProperties.get(WebAppConst.REPLICATION_ON));
+
+		for (Object obj : saitenDbProperties.keySet()) {
+			if (obj != null && obj.toString().contains("url")) {
+				key = obj.toString();
+				if (key.contains("masterdb")) {
+					hibernateTemplateBeanId = "saitenMasterDbSessionFactory";
+					transactionManagerBeanId = "saitenMasterDbTransactionManager";
+				} else if (key.contains("commondb")) {
+					hibernateTemplateBeanId = "saitenCommonDbSessionFactory";
+					transactionManagerBeanId = "saitenCommonDbTransactionManager";
+				} else if (key.contains("tempdb")) {
+					String tempdbNum = key.replaceAll("[^0-9]", "");
+					hibernateTemplateBeanId = "saitenTempDb" + tempdbNum + "SessionFactory";
+					transactionManagerBeanId = "saitenTempDb" + tempdbNum + "TransactionManager";
+				} else if (isReplicaOn && key.contains("replica")) {
+					String tempdbNum = key.replaceAll("[^0-9]", "");
+					hibernateTemplateBeanIdReplica = "saitenReplicaTranDb" + tempdbNum + "SessionFactory";
+					transactionManagerBeanIdReplica = "saitenReplicaTranDb" + tempdbNum + "TransactionManager";
+					keyReplica = true;
+				} else if (key.contains("tran") && (!key.contains("replica"))) {
+					String tranNum = key.replaceAll("[^0-9]", "");
+					hibernateTemplateBeanId = "saitenTranDb" + tranNum + "SessionFactory";
+					transactionManagerBeanId = "saitenTranDb" + tranNum + "TransactionManager";
 				}
-			}
 
-			HibernateTemplate hibernateTemplate = new HibernateTemplate(
-					(SessionFactory) ctx.getBean(hibernateTemplateBeanId));
+				/////////////////// End//////////////
+				if (!keyReplica) {
+					HibernateTemplate hibernateTemplate = new HibernateTemplate(
+							(SessionFactory) ctx.getBean(hibernateTemplateBeanId));
 
-			PlatformTransactionManager platformTransactionManager = (PlatformTransactionManager) ctx
-					.getBean(transactionManagerBeanId);
+					PlatformTransactionManager platformTransactionManager = (PlatformTransactionManager) ctx
+							.getBean(transactionManagerBeanId);
 
-			// Map<ConnectionString, HibernateTemplate>()
-			hibernateTemplateMap.put(saitenDbProperties.getProperty(key),
-					hibernateTemplate);
-			// Map<ConnectionString, PlatformTransactionManager>()
-			platformTransactionManagerMap.put(
-					saitenDbProperties.getProperty(key),
-					platformTransactionManager);
+					// Map<ConnectionString, HibernateTemplate>()
 
-			if (keyReplica != null) {
-				HibernateTemplate hibernateTemplateReplica = new HibernateTemplate(
-						(SessionFactory) ctx
-								.getBean(hibernateTemplateBeanIdReplica));
+					hibernateTemplateMap.put(saitenDbProperties.getProperty(key), hibernateTemplate);
+					// Map<ConnectionString, PlatformTransactionManager>()
+					platformTransactionManagerMap.put(saitenDbProperties.getProperty(key), platformTransactionManager);
+				} else if (keyReplica) {
+					HibernateTemplate hibernateTemplateReplica = new HibernateTemplate(
+							(SessionFactory) ctx.getBean(hibernateTemplateBeanIdReplica));
 
-				PlatformTransactionManager platformTransactionManagerReplica = (PlatformTransactionManager) ctx
-						.getBean(transactionManagerBeanIdReplica);
+					PlatformTransactionManager platformTransactionManagerReplica = (PlatformTransactionManager) ctx
+							.getBean(transactionManagerBeanIdReplica);
 
-				hibernateTemplateReplicaMap.put(
-						saitenDbProperties.getProperty(key),
-						hibernateTemplateReplica);
+					hibernateTemplateReplicaMap.put(saitenDbProperties.getProperty(key), hibernateTemplateReplica);
 
-				platformTransactionManagerReplicaMap.put(
-						saitenDbProperties.getProperty(key),
-						platformTransactionManagerReplica);
-			}
+					platformTransactionManagerReplicaMap.put(saitenDbProperties.getProperty(key),
+							platformTransactionManagerReplica);
+					keyReplica = false;
+				}
 
-		}
+			} // if ends
+		} // for ends
 
 		// Get ServletContext
 		ServletContext context = getContext();
 
 		// Put data in ServletContext
 		context.setAttribute("hibernateTemplateMap", hibernateTemplateMap);
-		context.setAttribute("platformTransactionManagerMap",
-				platformTransactionManagerMap);
-		context.setAttribute("hibernateTemplateReplicaMap",
-				hibernateTemplateReplicaMap);
-		context.setAttribute("platformTransactionManagerReplicaMap",
-				platformTransactionManagerReplicaMap);
+		context.setAttribute("platformTransactionManagerMap", platformTransactionManagerMap);
+		context.setAttribute("hibernateTemplateReplicaMap", hibernateTemplateReplicaMap);
+		context.setAttribute("platformTransactionManagerReplicaMap", platformTransactionManagerReplicaMap);
+
 	}
 
 	private void buildSaitenConfigObject() {
-		ApplicationContext ctx = ContextLoader
-				.getCurrentWebApplicationContext();
+		ApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
 
 		CreateSaitenConfigLogic createSaitenConfigLogic = (CreateSaitenConfigLogic) ctx
 				.getBean("createSaitenConfigLogic");
-		SaitenConfig saitenConfigObject = createSaitenConfigLogic
-				.buildSaitenConfigObject();
+		SaitenConfig saitenConfigObject = createSaitenConfigLogic.buildSaitenConfigObject();
 
 		getContext().setAttribute("saitenConfigObject", saitenConfigObject);
 	}

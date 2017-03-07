@@ -25,14 +25,11 @@ public interface TranDescScoreDAO {
 	 * @return List
 	 */
 	@SuppressWarnings("rawtypes")
-	public List findAnswer(List<Integer> quetionSeq, String menuId,
-			String scorerId,
-			LinkedHashMap<String, Short> menuIdAndScoringStateMap,
-			String connectionString, Integer gradeNum, Short pendingCategory,
-			Short denyCategory, String answerFormNum,
-			Integer historyRecordCount, Integer randomNumberRange,
-			boolean passByRandomFlag, String selectedMarkValue, int roleId,
-			boolean qualityFromPendingMenu, Integer inspectGroupSeq);
+	public List findAnswer(List<Integer> quetionSeq, String menuId, String scorerId,
+			LinkedHashMap<String, Short> menuIdAndScoringStateMap, String connectionString, Integer gradeNum,
+			Short pendingCategory, Short denyCategory, String answerFormNum, Integer historyRecordCount,
+			Integer randomNumberRange, boolean passByRandomFlag, String selectedMarkValue, int roleId,
+			boolean qualityFromPendingMenu, Integer inspectGroupSeq, Double bitValue);
 
 	/**
 	 * @param answerSeq
@@ -46,24 +43,21 @@ public interface TranDescScoreDAO {
 	 * @param scorerId
 	 * @param connectionString
 	 */
-	public void lockAnswer(int answerSeq, String scorerId,
-			String connectionString, Date updateDate);
+	public void lockAnswer(int answerSeq, String scorerId, String connectionString, Date updateDate);
 
 	/**
 	 * @param questionSeq
 	 * @param lockBy
 	 * @param connectionString
 	 */
-	public void unlockAnswer(int questionSeq, String lockBy,
-			String connectionString, Integer answerSeq);
+	public void unlockAnswer(int questionSeq, String lockBy, String connectionString, Integer answerSeq);
 
 	/**
 	 * @param answerSeq
 	 * @param selectAllFlag
 	 * @param questionInfo
 	 */
-	public int updateInspectFlag(List<Integer> answerSeq,
-			QuestionInfo questionInfo, boolean selectAllFlag,
+	public int updateInspectFlag(List<Integer> answerSeq, QuestionInfo questionInfo, boolean selectAllFlag,
 			ScoreInputInfo scoreInputInfo, Integer maxInspectGroupSeq);
 
 	/**
@@ -77,10 +71,8 @@ public interface TranDescScoreDAO {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public List findAnswer(List<Integer> quetionSeq, String menuId,
-			String scorerId,
-			LinkedHashMap<String, Short> menuIdAndScoringStateMap,
-			String connectionString, String answerFormNum,
+	public List findAnswer(List<Integer> quetionSeq, String menuId, String scorerId,
+			LinkedHashMap<String, Short> menuIdAndScoringStateMap, String connectionString, String answerFormNum,
 			Integer historyRecordCount, int roleId);
 
 	/**
@@ -95,8 +87,8 @@ public interface TranDescScoreDAO {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public List findQcAnsSeqList(List<Integer> quetionSeq, String scorerId,
-			String connectionString, Short selectedMarkValue);
+	public List findQcAnsSeqList(List<Integer> quetionSeq, String scorerId, String connectionString,
+			Short selectedMarkValue);
 
 	/**
 	 * @param qcAnswerSeq
@@ -104,26 +96,23 @@ public interface TranDescScoreDAO {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public List findQualityCheckAnswers(Integer qcAnswerSeq,
-			String connectionString);
+	public List findQualityCheckAnswers(Integer qcAnswerSeq, String connectionString);
 
 	/**
 	 * @param dailyStatusSearchInfo
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public List getDailyuStatusSearchList(
-			DailyStatusSearchInfo dailyStatusSearchInfo,
-			String connectionString, String questionSeq);
+	public List getDailyuStatusSearchList(DailyStatusSearchInfo dailyStatusSearchInfo, String connectionString,
+			String questionSeq);
 
 	/**
 	 * @param dailyStatusSearchInfo
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public List getDailyuStatusSearchListByScorer(
-			DailyStatusSearchInfo dailyStatusSearchInfo,
-			String connectionString, String scorerIds, String questionSeq);
+	public List getDailyuStatusSearchListByScorer(DailyStatusSearchInfo dailyStatusSearchInfo, String connectionString,
+			String scorerIds, String questionSeq);
 
 	/**
 	 * @param questionSeq
@@ -131,8 +120,7 @@ public interface TranDescScoreDAO {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public List getGradeWiseAnswerDetails(String questionSeq,
-			String connectionString, Character questionType);
+	public List getGradeWiseAnswerDetails(String questionSeq, String connectionString, Character questionType);
 
 	/**
 	 * @param questionSeq
@@ -140,8 +128,7 @@ public interface TranDescScoreDAO {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public List getPendingCategoryWiseAnswerDetails(String questionSeq,
-			String connectionString);
+	public List getPendingCategoryWiseAnswerDetails(String questionSeq, String connectionString);
 
 	/**
 	 * 
@@ -165,8 +152,7 @@ public interface TranDescScoreDAO {
 	 * @return List
 	 */
 	@SuppressWarnings("rawtypes")
-	public List findKenshuRecords(Integer questionSeq, String connectionString,
-			int recordCount);
+	public List findKenshuRecords(Integer questionSeq, String connectionString, int recordCount);
 
 	/**
 	 * 
@@ -174,15 +160,14 @@ public interface TranDescScoreDAO {
 	 * @return Integer
 	 */
 	@SuppressWarnings("rawtypes")
-	public List isAnswerAlreadyChecked(Integer answerSeq, Date date,
-			String connectionString);
+	public List isAnswerAlreadyChecked(Integer answerSeq, Date date, String connectionString);
 
 	/**
 	 * 
 	 * @param answerSeq
 	 */
-	public int updateKunshuFlagByAnswerseq(Integer answerSeq, Date date,
-			String connectionString);
+	public int updateKunshuFlagByAnswerseq(Integer answerSeq, Date date, String connectionString);
+
 	/**
 	 * 
 	 * @param questionSeq
@@ -192,25 +177,23 @@ public interface TranDescScoreDAO {
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
-	public List getKenshuRecordsByGrade(int questionSeq,
-			String connectionString, int recordCount, int gradeNum);
-	
+	public List getKenshuRecordsByGrade(int questionSeq, String connectionString, int recordCount, int gradeNum);
+
 	@SuppressWarnings("rawtypes")
 	public List getQuesStatewiseStudCountForAllQues(String connectionString);
-	
+
 	@SuppressWarnings("rawtypes")
-	public List getConfirmAndInspectionWaitCount(String dataString,String connectionString);
-	
+	public List getConfirmAndInspectionWaitCount(String dataString, String connectionString);
+
 	@SuppressWarnings("rawtypes")
-	public List getQuesWiseStudCntForSpecQues(String connectionString,List<String> queSeqsInfoList);
-	
+	public List getQuesWiseStudCntForSpecQues(String connectionString, List<String> queSeqsInfoList);
+
 	@SuppressWarnings("rawtypes")
-	public List getMarkValueWiseAnswerDetails(String questionSeq,
-			String connectionString, Character questionType);
+	public List getMarkValueWiseAnswerDetails(String questionSeq, String connectionString, Character questionType);
 
 	@SuppressWarnings("rawtypes")
 	public List questionSeqGradeCountWhereGradeIsAvailable(String connectionString);
-	
+
 	@SuppressWarnings("rawtypes")
 	public List questionSeqWiseCountWherePendingCategorySet(String connectionString);
 

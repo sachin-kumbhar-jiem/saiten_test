@@ -174,7 +174,7 @@
 			
 			<display:column style="width:5%;" property="checkPoints"  class="displayColumnType" titleKey="label.header.checkpoints" />
 			<display:setProperty value="false" name="basic.empty.showtable"  />
-            <display:setProperty name="basic.msg.empty_list" ><s:text name="display.search.display.tag.basic.msg.empty_list"></s:text> </display:setProperty> 
+            <display:setProperty name="basic.msg.empty_list" ><span class="infoMsgColor"><s:text name="display.search.display.tag.basic.msg.empty_list"></s:text></span></display:setProperty> 
             <display:setProperty name="paging.banner.one_item_found" ><s:text name="display.search.display.tag.paging.banner.one_items_found" /></display:setProperty>
             <display:setProperty name="paging.banner.all_items_found" ><s:text name="display.search.display.tag.paging.banner.all_items_found" /></display:setProperty>
             <display:setProperty name="paging.banner.some_items_found" ><s:text name="display.search.display.tag.paging.banner.some_items_found" /></display:setProperty>  
@@ -393,7 +393,7 @@
 			</c:otherwise>
 			</c:choose>
 			<display:setProperty value="false" name="basic.empty.showtable"  />
-            <display:setProperty name="basic.msg.empty_list" ><s:text name="display.search.display.tag.basic.msg.empty_list"></s:text> </display:setProperty> 
+            <display:setProperty name="basic.msg.empty_list" ><span class="infoMsgColor"><s:text name="display.search.display.tag.basic.msg.empty_list"></s:text></span></display:setProperty> 
             <display:setProperty name="paging.banner.one_item_found" ><s:text name="display.search.display.tag.paging.banner.one_items_found" /></display:setProperty>
             <display:setProperty name="paging.banner.all_items_found" ><s:text name="display.search.display.tag.paging.banner.all_items_found" /></display:setProperty>
             <display:setProperty name="paging.banner.some_items_found" ><s:text name="display.search.display.tag.paging.banner.some_items_found" /></display:setProperty>  

@@ -7,9 +7,11 @@
 		disableLinksAndButtons();
 		if($('#approveOrDeny').val() == "deny") {
 			var denyCategorySeq = $("input[name='denyCategory']:checked").val();
-			location.href = 'registerScore.action?denyCategorySeq='+denyCategorySeq;
+			 var token = $("input[name=token]").val();
+			location.href = 'registerScore.action?denyCategorySeq='+denyCategorySeq+"&struts.token.name=token&token="+token;
 		}else {
-			location.href='registerScore.action';
+			 var token = $("input[name=token]").val();
+			location.href='registerScore.action?struts.token.name=token&token='+token;
 		}
 	});
 	

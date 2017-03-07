@@ -53,17 +53,14 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 	public QuestionInfo fetchDbInstanceInfo(List<Integer> questionSeq) {
 		try {
 			// Fetch dbInstanceInfoList
-			List dbInstanceInfoList = getMstQuestionDAO().fetchDbInstanceInfo(
-					questionSeq);
+			List dbInstanceInfoList = getMstQuestionDAO().fetchDbInstanceInfo(questionSeq);
 
 			// Build questionInfo object with dbInstanceInfo
 			return buildDbInstanceInfo(dbInstanceInfoList);
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_HIBERNATE_EXCEPTION, he);
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
 		}
 	}
 
@@ -73,22 +70,17 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 	 * @return List<QuestionInfo>
 	 */
 	@SuppressWarnings("rawtypes")
-	public Map<Integer, QuestionInfo> fetchDbInstanceInfo(
-			List<Integer> questionSeqList, String specialScoringMenuId) {
+	public Map<Integer, QuestionInfo> fetchDbInstanceInfo(List<Integer> questionSeqList, String specialScoringMenuId) {
 		try {
 			// Fetch dbInstanceInfoList
-			List dbInstanceInfoList = getMstQuestionDAO().fetchDbInstanceInfo(
-					questionSeqList);
+			List dbInstanceInfoList = getMstQuestionDAO().fetchDbInstanceInfo(questionSeqList);
 
 			// Build questionInfo object with dbInstanceInfo
-			return buildDbInstanceInfoList(dbInstanceInfoList,
-					specialScoringMenuId);
+			return buildDbInstanceInfoList(dbInstanceInfoList, specialScoringMenuId);
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_HIBERNATE_EXCEPTION, he);
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
 		}
 	}
 
@@ -97,8 +89,7 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 	 * @return QuestionInfo
 	 */
 	@SuppressWarnings("rawtypes")
-	private Map<Integer, QuestionInfo> buildDbInstanceInfoList(
-			List dbInstanceInfoList, String specialScoringMenuId) {
+	private Map<Integer, QuestionInfo> buildDbInstanceInfoList(List dbInstanceInfoList, String specialScoringMenuId) {
 
 		Map<Integer, QuestionInfo> questionInfoMap = null;
 		if (!dbInstanceInfoList.isEmpty()) {
@@ -111,8 +102,7 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 
 				questionInfo.setConnectionString((String) dbInstanceInfoObj[0]);
 				questionInfo.setAnswerScoreTable((String) dbInstanceInfoObj[1]);
-				questionInfo
-						.setAnswerScoreHistoryTable((String) dbInstanceInfoObj[2]);
+				questionInfo.setAnswerScoreHistoryTable((String) dbInstanceInfoObj[2]);
 				questionInfo.setManualDocument((String) dbInstanceInfoObj[3]);
 				questionInfo.setQuestionFileName((String) dbInstanceInfoObj[4]);
 				questionInfo.setSubjectCode((String) dbInstanceInfoObj[5]);
@@ -124,8 +114,7 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 				questionInfo.setScoreType((Character) dbInstanceInfoObj[11]);
 				questionInfo.setMenuId(specialScoringMenuId);
 
-				questionInfoMap
-						.put(questionInfo.getQuestionSeq(), questionInfo);
+				questionInfoMap.put(questionInfo.getQuestionSeq(), questionInfo);
 			}
 		}
 		return questionInfoMap;
@@ -145,8 +134,7 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 			questionInfo = new QuestionInfo();
 			questionInfo.setConnectionString((String) dbInstanceInfoObj[0]);
 			questionInfo.setAnswerScoreTable((String) dbInstanceInfoObj[1]);
-			questionInfo
-					.setAnswerScoreHistoryTable((String) dbInstanceInfoObj[2]);
+			questionInfo.setAnswerScoreHistoryTable((String) dbInstanceInfoObj[2]);
 			questionInfo.setManualDocument((String) dbInstanceInfoObj[3]);
 			questionInfo.setQuestionFileName((String) dbInstanceInfoObj[4]);
 			questionInfo.setSubjectCode((String) dbInstanceInfoObj[5]);
@@ -162,14 +150,13 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.saiten.service.QuestionSelectionService#findQuestionsByMenuIdAndScorerId
-	 * (java.lang.String, java.lang.String, java.lang.String)
+	 * @see com.saiten.service.QuestionSelectionService#
+	 * findQuestionsByMenuIdAndScorerId (java.lang.String, java.lang.String,
+	 * java.lang.String)
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Map<String, String> findQuestionsByMenuIdAndScorerId(String menuId,
-			String scorerId, int roleId) {
+	public Map<String, String> findQuestionsByMenuIdAndScorerId(String menuId, String scorerId, int roleId) {
 		@SuppressWarnings("unused")
 		List questionList = null;
 		Map<String, String> questionMap = null;
@@ -189,11 +176,9 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 			// Build questionMap
 			questionMap = buildQuestionMap(menuId, scorerId, roleId);
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_HIBERNATE_EXCEPTION, he);
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
 		}
 
 		return questionMap;
@@ -203,8 +188,7 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 	 * @param questionList
 	 * @return Map<String, String>
 	 */
-	private Map<String, String> buildQuestionMap(String menuId,
-			String scorerId, int roleId) {
+	private Map<String, String> buildQuestionMap(String menuId, String scorerId, int roleId) {
 		Map<String, String> questionMap = new LinkedHashMap<String, String>();
 
 		/*
@@ -219,28 +203,20 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 		 * .getSession().get("scorerWiseQuestionsSpecificMap");
 		 */
 		List<Character> questionTypeList = new ArrayList<Character>();
-		if (menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID)
-				|| menuId.equals(WebAppConst.INSPECTION_MENU_ID)
-				|| menuId.equals(WebAppConst.DENY_MENU_ID)
-				|| menuId.equals(WebAppConst.PENDING_MENU_ID)
-				|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
-				|| menuId.equals(WebAppConst.OUT_BOUNDARY_MENU_ID)) {
+		if (menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID) || menuId.equals(WebAppConst.INSPECTION_MENU_ID)
+				|| menuId.equals(WebAppConst.DENY_MENU_ID) || menuId.equals(WebAppConst.PENDING_MENU_ID)
+				|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID) || menuId.equals(WebAppConst.OUT_BOUNDARY_MENU_ID)
+				|| menuId.equals(WebAppConst.MANUAL_UPLOAD_MENU_ID)) {
 			questionTypeList = Arrays.asList(WebAppConst.QUESTION_TYPE);
-		} else if (menuId.equals(WebAppConst.SECOND_SCORING_MENU_ID)
-				|| menuId.equals(WebAppConst.MISMATCH_MENU_ID)) {
-			questionTypeList.add(Arrays.asList(WebAppConst.QUESTION_TYPE)
-					.get(0));
-			questionTypeList.add(Arrays.asList(WebAppConst.QUESTION_TYPE)
-					.get(2));
-			questionTypeList.add(Arrays.asList(WebAppConst.QUESTION_TYPE)
-					.get(3));
+		} else if (menuId.equals(WebAppConst.SECOND_SCORING_MENU_ID) || menuId.equals(WebAppConst.MISMATCH_MENU_ID)) {
+			questionTypeList.add(Arrays.asList(WebAppConst.QUESTION_TYPE).get(0));
+			questionTypeList.add(Arrays.asList(WebAppConst.QUESTION_TYPE).get(2));
+			questionTypeList.add(Arrays.asList(WebAppConst.QUESTION_TYPE).get(3));
 
 		} else if (menuId.equals(WebAppConst.CHECKING_MENU_ID)) {
 			// only for long type questions
-			questionTypeList.add(Arrays.asList(WebAppConst.QUESTION_TYPE)
-					.get(1));
-		} else if (menuId
-				.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)) {
+			questionTypeList.add(Arrays.asList(WebAppConst.QUESTION_TYPE).get(1));
+		} else if (menuId.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID)) {
 			// for speaking And writing type questions - Note: removed this
 			// condition for saitama release.
 			/*
@@ -253,8 +229,7 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 		}
 
 		LinkedHashMap<Integer, MstQuestion> mstQuestionMap = new LinkedHashMap<Integer, MstQuestion>();
-		if (roleId == WebAppConst.SCORER_ROLE_ID
-				|| roleId == WebAppConst.SV_ROLE_ID
+		if (roleId == WebAppConst.SCORER_ROLE_ID || roleId == WebAppConst.SV_ROLE_ID
 				|| roleId == WebAppConst.WG_ROLE_ID) {
 			// Fetch questions for role scorer, SV and WG
 
@@ -275,20 +250,17 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 		} else if (roleId == WebAppConst.ADMIN_ROLE_ID) {
 			// Fetch questions for role admin
 
-			mstQuestionMap = SaitenUtil.getSaitenConfigObject()
-					.getMstQuestionMap();
+			mstQuestionMap = SaitenUtil.getSaitenConfigObject().getMstQuestionMap();
 
 		}
 
 		Map<String, String> configMap = SaitenUtil.getConfigMap();
 
 		for (MstQuestion mstQuestion : mstQuestionMap.values()) {
-			if (questionTypeList.contains(mstQuestion.getMstEvaluation()
-					.getMstQuestionType().getQuestionType())) {
+			if (questionTypeList.contains(mstQuestion.getMstEvaluation().getMstQuestionType().getQuestionType())) {
 
 				StringBuilder tempSubjectShortName = new StringBuilder();
-				tempSubjectShortName.append(mstQuestion.getMstSubject()
-						.getSubjectShortName());
+				tempSubjectShortName.append(mstQuestion.getMstSubject().getSubjectShortName());
 				tempSubjectShortName.append("-");
 				tempSubjectShortName.append(mstQuestion.getQuestionNum());
 				if (Boolean.valueOf(configMap.get("attribute1"))) {
@@ -305,8 +277,7 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 				 * mstQuestion.getQuestionNum() + "-" + "(" +
 				 * mstQuestion.getAttribute1() + ")";
 				 */
-				String questionSeq = Integer.valueOf(
-						mstQuestion.getQuestionSeq()).toString();
+				String questionSeq = Integer.valueOf(mstQuestion.getQuestionSeq()).toString();
 
 				// subjectShortName = subjectShortName - questionNum
 				// questionMapKey = questionSeq : subjectShortName
@@ -325,64 +296,55 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 					 * if (scorerWiseQuestionsSpecificMap.get(scorerQuestionKey)
 					 * .getIsSaitensha() == WebAppConst.ENABLE) {
 					 */
-					questionMap
-							.put(questionMapKey.toString(), subjectShortName);
+					questionMap.put(questionMapKey.toString(), subjectShortName);
 					/* } */
-				} else if (roleId == WebAppConst.SV_ROLE_ID
-						|| roleId == WebAppConst.WG_ROLE_ID) {
+				} else if (roleId == WebAppConst.SV_ROLE_ID || roleId == WebAppConst.WG_ROLE_ID) {
 					if ((menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID)
-							|| menuId.equals(WebAppConst.INSPECTION_MENU_ID)
-							|| menuId.equals(WebAppConst.DENY_MENU_ID)
+							|| menuId.equals(WebAppConst.INSPECTION_MENU_ID) || menuId.equals(WebAppConst.DENY_MENU_ID)
 							|| menuId.equals(WebAppConst.PENDING_MENU_ID)
-							|| menuId
-									.equals(WebAppConst.SECOND_SCORING_MENU_ID) || menuId
-								.equals(WebAppConst.CHECKING_MENU_ID))
+							|| menuId.equals(WebAppConst.SECOND_SCORING_MENU_ID)
+							|| menuId.equals(WebAppConst.CHECKING_MENU_ID))
 					/*
 					 * && ((scorerWiseQuestionsSpecificMap.get(
 					 * scorerQuestionKey).getIsSaitensha() ==
 					 * WebAppConst.ENABLE))
 					 */) {
-						questionMap.put(questionMapKey.toString(),
-								subjectShortName);
+						questionMap.put(questionMapKey.toString(), subjectShortName);
 					} else if ((menuId.equals(WebAppConst.MISMATCH_MENU_ID)
-							|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID) || menuId
-								.equals(WebAppConst.OUT_BOUNDARY_MENU_ID))
+							|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
+							|| menuId.equals(WebAppConst.OUT_BOUNDARY_MENU_ID))
 					/*
 					 * && ((scorerWiseQuestionsSpecificMap.get(
 					 * scorerQuestionKey).getIsKantokusha() ==
 					 * WebAppConst.ENABLE))
 					 */) {
-						questionMap.put(questionMapKey.toString(),
-								subjectShortName);
-					} else if ((menuId
-							.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID) /*
-																					 * &&
-																					 * (
-																					 * (
-																					 * scorerWiseQuestionsSpecificMap
-																					 * .
-																					 * get
-																					 * (
-																					 * scorerQuestionKey
-																					 * )
-																					 * .
-																					 * getIsSaitensha
-																					 * (
-																					 * )
-																					 * ==
-																					 * WebAppConst
-																					 * .
-																					 * ENABLE
-																					 * )
-																					 * )
-																					 */)) {
-						questionMap.put(questionMapKey.toString(),
-								subjectShortName);
+						questionMap.put(questionMapKey.toString(), subjectShortName);
+					} else if ((menuId.equals(WebAppConst.FIRST_SCORING_QUALITY_CHECK_MENU_ID) /*
+																								 * &&
+																								 * (
+																								 * (
+																								 * scorerWiseQuestionsSpecificMap
+																								 * .
+																								 * get
+																								 * (
+																								 * scorerQuestionKey
+																								 * )
+																								 * .
+																								 * getIsSaitensha
+																								 * (
+																								 * )
+																								 * ==
+																								 * WebAppConst
+																								 * .
+																								 * ENABLE
+																								 * )
+																								 * )
+																								 */)) {
+						questionMap.put(questionMapKey.toString(), subjectShortName);
 
 					}
 				} else {
-					questionMap
-							.put(questionMapKey.toString(), subjectShortName);
+					questionMap.put(questionMapKey.toString(), subjectShortName);
 				}
 
 			}
@@ -399,42 +361,34 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 	 * .lang.String, int, java.lang.String, java.util.List)
 	 */
 	@Override
-	public int findHistoryRecordCount(String scorerId,
-			List<Integer> questionSeq, String connectionString,
+	public int findHistoryRecordCount(String scorerId, List<Integer> questionSeq, String connectionString,
 			List<Short> scoringStateList) {
 		try {
 
 			// Get historyRecordCount for current date
 			boolean bookmarkScreenFlag = false;
-			return tranDescScoreHistoryDAO.findHistoryRecordCount(scorerId,
-					questionSeq, connectionString, scoringStateList,
-					bookmarkScreenFlag);
+			return tranDescScoreHistoryDAO.findHistoryRecordCount(scorerId, questionSeq, connectionString,
+					scoringStateList, bookmarkScreenFlag);
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_HIBERNATE_EXCEPTION, he);
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
 		}
 	}
 
 	@Override
-	public int findQcHistoryRecordCount(String scorerId,
-			List<Integer> questionSeq, String connectionString,
+	public int findQcHistoryRecordCount(String scorerId, List<Integer> questionSeq, String connectionString,
 			List<Short> scoringStateList) {
 		try {
 
 			// Get historyRecordCount for current date
 			boolean bookmarkScreenFlag = false;
-			return tranQualitycheckScoreDAO.findQcHistoryRecordCount(scorerId,
-					questionSeq, connectionString, scoringStateList,
-					bookmarkScreenFlag);
+			return tranQualitycheckScoreDAO.findQcHistoryRecordCount(scorerId, questionSeq, connectionString,
+					scoringStateList, bookmarkScreenFlag);
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_HIBERNATE_EXCEPTION, he);
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
 		}
 	}
 
@@ -448,8 +402,7 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 		List<CheckPointInfo> checkPointList = null;
 
 		try {
-			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = SaitenUtil
-					.getSaitenConfigObject().getMstQuestionMap();
+			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = SaitenUtil.getSaitenConfigObject().getMstQuestionMap();
 
 			// Get Set<MstCheckPoint> from saitenConfigObject
 			Set<MstCheckPoint> mstCheckPoints = new LinkedHashSet<MstCheckPoint>();
@@ -467,28 +420,21 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 
 					checkPointInfo.setCheckPoint(mstCheckPoint.getCheckPoint());
 
-					MstCheckPointGroup mstCheckPointGroup = mstCheckPoint
-							.getMstCheckPointGroup();
+					MstCheckPointGroup mstCheckPointGroup = mstCheckPoint.getMstCheckPointGroup();
 					if (mstCheckPointGroup != null) {
-						checkPointInfo.setCheckPointGroupSeq(mstCheckPointGroup
-								.getCheckPointGroupSeq());
-						checkPointInfo.setGroupType(mstCheckPointGroup
-								.getGroupType());
-						checkPointInfo.setGroupId(mstCheckPointGroup
-								.getGroupId());
-						checkPointInfo.setBgColor(mstCheckPointGroup
-								.getBgColor());
+						checkPointInfo.setCheckPointGroupSeq(mstCheckPointGroup.getCheckPointGroupSeq());
+						checkPointInfo.setGroupType(mstCheckPointGroup.getGroupType());
+						checkPointInfo.setGroupId(mstCheckPointGroup.getGroupId());
+						checkPointInfo.setBgColor(mstCheckPointGroup.getBgColor());
 					}
 
-					checkPointInfo.setCheckPointDescription(mstCheckPoint
-							.getCheckPointDescription());
+					checkPointInfo.setCheckPointDescription(mstCheckPoint.getCheckPointDescription());
 
 					checkPointList.add(checkPointInfo);
 				}
 			}
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
 		}
 
 		return checkPointList;
@@ -505,12 +451,10 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 		Map<Integer, String> pendingCategoryGroupMap = null;
 
 		try {
-			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = SaitenUtil
-					.getSaitenConfigObject().getMstQuestionMap();
+			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = SaitenUtil.getSaitenConfigObject().getMstQuestionMap();
 
 			// Get Set<MstPendingCategory> from saitenConfigObject
-			Set<MstPendingCategory> mstPendingCategorySet = mstQuestionMap.get(
-					questionSeq).getMstPendingCategories();
+			Set<MstPendingCategory> mstPendingCategorySet = mstQuestionMap.get(questionSeq).getMstPendingCategories();
 
 			if (!mstPendingCategorySet.isEmpty()) {
 				// Build pendingCategoryGroupMap for selected question
@@ -520,20 +464,16 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 
 					StringBuilder pendingCategoryDescription = new StringBuilder();
 
-					pendingCategoryDescription.append(mstPendingCategory
-							.getPendingCategory());
+					pendingCategoryDescription.append(mstPendingCategory.getPendingCategory());
 					pendingCategoryDescription.append(WebAppConst.DOT);
-					pendingCategoryDescription.append(mstPendingCategory
-							.getPendingDescription());
+					pendingCategoryDescription.append(mstPendingCategory.getPendingDescription());
 
-					pendingCategoryGroupMap.put(
-							mstPendingCategory.getPendingCategorySeq(),
+					pendingCategoryGroupMap.put(mstPendingCategory.getPendingCategorySeq(),
 							pendingCategoryDescription.toString());
 				}
 			}
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
 		}
 
 		return pendingCategoryGroupMap;
@@ -542,45 +482,39 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 	@Override
 	public Map<Integer, String> findDenyCategories(int questionSeq) {
 		Map<Integer, String> denyCategoryGroupMap = null;
-		
+
 		try {
-			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = SaitenUtil
-					.getSaitenConfigObject().getMstQuestionMap();
-			
+			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = SaitenUtil.getSaitenConfigObject().getMstQuestionMap();
+
 			// Get Set<MstDenyCategory> from saitenConfigObject
-			Set<MstDenyCategory> mstDenyCategorySet = mstQuestionMap.get(
-					questionSeq).getMstDenyCategories();
-			
-			if(!mstDenyCategorySet.isEmpty()) {
-				//Build denyCategoryGroupMap for selected question
-				
+			Set<MstDenyCategory> mstDenyCategorySet = mstQuestionMap.get(questionSeq).getMstDenyCategories();
+
+			if (!mstDenyCategorySet.isEmpty()) {
+				// Build denyCategoryGroupMap for selected question
+
 				denyCategoryGroupMap = new LinkedHashMap<Integer, String>();
-				
-				for (MstDenyCategory mstDenyCategory:mstDenyCategorySet) {
-					
+
+				for (MstDenyCategory mstDenyCategory : mstDenyCategorySet) {
+
 					StringBuilder denyCategoryDescription = new StringBuilder();
-					
+
 					denyCategoryDescription.append(mstDenyCategory.getDenyCategory());
 					denyCategoryDescription.append(WebAppConst.DOT);
-					denyCategoryDescription.append(mstDenyCategory
-							.getDenyDescription());
-					
-					denyCategoryGroupMap.put(mstDenyCategory
-							.getDenyCategorySeq(), denyCategoryDescription
-							.toString());
+					denyCategoryDescription.append(mstDenyCategory.getDenyDescription());
+
+					denyCategoryGroupMap.put(mstDenyCategory.getDenyCategorySeq(), denyCategoryDescription.toString());
 				}
 			}
-		}catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
+		} catch (Exception e) {
+			throw new SaitenRuntimeException(ErrorCode.QUESTION_SELECTION_SERVICE_EXCEPTION, e);
 		}
 		return denyCategoryGroupMap;
 	}
+
 	/**
 	 * @param mstScorerQuestionDAO
 	 */
-	public void setMstScorerQuestionDAO(
-			MstScorerQuestionDAO mstScorerQuestionDAO) {
+	public void setMstScorerQuestionDAO(MstScorerQuestionDAO mstScorerQuestionDAO) {
 		this.mstScorerQuestionDAO = mstScorerQuestionDAO;
 	}
 
@@ -598,8 +532,7 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 	/**
 	 * @param tranDescScoreHistoryDAO
 	 */
-	public void setTranDescScoreHistoryDAO(
-			TranDescScoreHistoryDAO tranDescScoreHistoryDAO) {
+	public void setTranDescScoreHistoryDAO(TranDescScoreHistoryDAO tranDescScoreHistoryDAO) {
 		this.tranDescScoreHistoryDAO = tranDescScoreHistoryDAO;
 	}
 
@@ -614,8 +547,7 @@ public class QuestionSelectionServiceImpl implements QuestionSelectionService {
 	 * @param tranQualitycheckScoreDAO
 	 *            the tranQualitycheckScoreDAO to set
 	 */
-	public void setTranQualitycheckScoreDAO(
-			TranQualitycheckScoreDAO tranQualitycheckScoreDAO) {
+	public void setTranQualitycheckScoreDAO(TranQualitycheckScoreDAO tranQualitycheckScoreDAO) {
 		this.tranQualitycheckScoreDAO = tranQualitycheckScoreDAO;
 	}
 }

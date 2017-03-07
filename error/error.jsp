@@ -55,7 +55,7 @@ function enableLinksAndButtons(){
 				<h1 align="left"></h1>
 				<div style="vertical-align: middle; margin-top: 17%;">
 				<s:if test="#request.sessionTimeout == true">
-					<span class="errorMessage">
+					<span class="infoMessage">
 						<s:text name="label.login.through.lms"></s:text>
 					</span>
 				</s:if><s:else>

@@ -1,6 +1,5 @@
 package com.saiten.util;
 
-
 /**
  * @author sachin
  * @version 1.0
@@ -108,6 +107,8 @@ public interface WebAppConst {
 
 	public static final String DAILY_SCORING_REPORT_MENU_ID = "DAILY_SCORING_REPORT_MENU_ID";
 
+	public static final String MANUAL_UPLOAD_MENU_ID = "MANUAL_UPLOAD_MENU_ID";
+
 	public static final int SCORER_ROLE_ID = 1;
 
 	public static final int SV_ROLE_ID = 2;
@@ -194,37 +195,30 @@ public interface WebAppConst {
 
 	public static final Short[] DENY_STATES = { 145, 345, 155, 355 };
 
-	public static final Short[] ANSWER_PAPER_LINK_ENABLE_STATES = { 192, 193,
-			392, 393, 182, 183, 382, 383, 252, 254, 256, 258, 452, 454, 456,
-			458 };
+	public static final Short[] ANSWER_PAPER_LINK_ENABLE_STATES = { 192, 193, 392, 393, 182, 183, 382, 383, 252, 254,
+			256, 258, 452, 454, 456, 458 };
 
-	public static final Short[] SPECIAL_SCORING_STATES = { 251, 252, 253, 254,
-			255, 256, 257, 258, 452, 454, 456, 458 };
+	public static final Short[] SPECIAL_SCORING_STATES = { 251, 252, 253, 254, 255, 256, 257, 258, 452, 454, 456, 458 };
 
-	public static final Short[] SPECIAL_SCORING_AND_BATCH_STATES = { 31, 51,
-			52, 53, 59, 61, 101 };
+	public static final Short[] SPECIAL_SCORING_AND_BATCH_STATES = { 31, 51, 52, 53, 59, 61, 101 };
 
-	public static final Short[] DUMMY_SCORING_STATES = { 322, 323, 332, 333,
-			344, 345, 354, 355, 362, 363, 392, 393, 372, 373, 312, 313, 382,
-			383, 421, 422, 441, 442, 452, 454, 456, 458 };
+	public static final Short[] DUMMY_SCORING_STATES = { 322, 323, 332, 333, 344, 345, 354, 355, 362, 363, 392, 393,
+			372, 373, 312, 313, 382, 383, 421, 422, 441, 442, 452, 454, 456, 458 };
 
 	public static final Short NO_GRADE_SCORING_STATE = 211;
 
-	public static final Short[] SCORE_SAMPLING_CURRENT_STATES = { 131, 141,
-			151, 500, 501, 161 };
+	public static final Short[] SCORE_SAMPLING_CURRENT_STATES = { 131, 141, 151, 500, 501, 161 };
 
-	public static final Short[] STATE_TRANSITION_CURRENT_STATES = { 141,
-			500, 501 };
+	public static final Short[] STATE_TRANSITION_CURRENT_STATES = { 141, 500, 501 };
 
-	public static final Short[] FORCED_SCORING_CURRENT_STATES = { 21, 121, 131,
-			141, 151, 161, 171, 181, 191, 211, 251, 253, 255, 257, 500, 501 };
+	public static final Short[] FORCED_SCORING_CURRENT_STATES = { 21, 121, 131, 141, 151, 161, 171, 181, 191, 211, 251,
+			253, 255, 257, 500, 501 };
 
 	public static final Character[] SCORE_SAMPLING_FLAG_LIST = { 'F', 'T' };
 
 	public static final String FORCED_SCORING_NOT_SCORED_STATES = "21,121,161,171,181,251,253,255,257";
 
-	public static final Short[] NOT_SCORED_STATES_ARRAY = { 21, 121, 161, 171,
-			181, 251, 253, 255, 257 };
+	public static final Short[] NOT_SCORED_STATES_ARRAY = { 21, 121, 161, 171, 181, 251, 253, 255, 257 };
 
 	public static final String RANDOM_NUMBER = "label.randomNumber";
 
@@ -340,24 +334,20 @@ public interface WebAppConst {
 
 	public static final String IS_SAITEN_LOGIN_FUNCTINALITY_ENABLED = "isEnabledSaitenLoginFunctinality";
 
-	public static final Short[] MISMATCH_PREVIOUS_SCORING_STATES = { 122, 132,
-			162, 212 };
+	public static final Short[] MISMATCH_PREVIOUS_SCORING_STATES = { 122, 132, 162, 212 };
 
-	public static final Short[] FIRST_AND_SECOND_TIME_SCORING_STATES = { 122,
-			132 };
+	public static final Short[] FIRST_AND_SECOND_TIME_SCORING_STATES = { 122, 132 };
 
-	public static final String[] SCORER_LOGGING_STATUS = { "LOGGED_IN",
-			"SCREEN_LOGOUT", "TIMEOUT_LOGOUT", "DUPLICATE_LOGOUT" };
+	public static final String[] SCORER_LOGGING_STATUS = { "LOGGED_IN", "SCREEN_LOGOUT", "TIMEOUT_LOGOUT",
+			"DUPLICATE_LOGOUT" };
 
 	public static final String ERROR_NO_MARKVALUES_AVAILABLE = "error.no.markvalue.available";
 
 	public static final String OTHERS = "markvalue.noselection.or.othersselection";
 
-	public static final Short[] MV_SELECTION_STATES = { 121, 131, 161, 171,
-			181, 211, 251, 253, 255, 257 };
+	public static final Short[] MV_SELECTION_STATES = { 121, 131, 161, 171, 181, 211, 251, 253, 255, 257 };
 
-	public static final Short[] DENY_PREVIOUS_SCORING_STATES = { 122, 132, 162,
-			172, 241, 144, 154, 192, 212, 221 };
+	public static final Short[] DENY_PREVIOUS_SCORING_STATES = { 122, 132, 162, 172, 241, 144, 154, 192, 212, 221 };
 
 	public static final int TWO = 2;
 
@@ -421,8 +411,7 @@ public interface WebAppConst {
 
 	public static final String BATCH_SCORER_ID = "BAT001";
 
-	public static final Short[] SUMMARY_DISCR_REPORT_STATES = { 122, 132, 162,
-			212 };
+	public static final Short[] SUMMARY_DISCR_REPORT_STATES = { 122, 132, 162, 212 };
 
 	public static final String FIRST_RTG_SECOND_WAIT = "%122,131%";
 
@@ -579,22 +568,56 @@ public interface WebAppConst {
 	public static final String SKP_OR_CONDITION = "skpORCondition";
 
 	public static final String TXT_FILE_EXTENSION = ".txt";
-	
-	public static final String GRADE_WISE_DETAILS_REPORT="gradeWiseReport";
-	
-	public static final String MARK_VALUE_WISE_DETAILS_REPORT="markValueWiseReport";
-	
-	public static final String PENDING_CATEGORY_WISE_DETAILS_REPORT="pendingCategoryWiseReport";
-	
+
+	public static final String GRADE_WISE_DETAILS_REPORT = "gradeWiseReport";
+
+	public static final String MARK_VALUE_WISE_DETAILS_REPORT = "markValueWiseReport";
+
+	public static final String PENDING_CATEGORY_WISE_DETAILS_REPORT = "pendingCategoryWiseReport";
+
 	public static final Character TAB_CHARACTER = '\t';
-	
+
 	public static final String STUD_COUNT_FOR_ALL_QUES_FOR_WG_ONLY = "studCountForAllQuesForWgOnly";
-	
+
 	public static final String REPLICATION_ON = "replication.on";
-	
-    public static final String GRADEWISE_COUNT_WHERE_GRADE_IS_AVAILABLE = "gradeWiseCountGradeIsAvailable";
+
+	public static final String GRADEWISE_COUNT_WHERE_GRADE_IS_AVAILABLE = "gradeWiseCountGradeIsAvailable";
 
 	public static final String QUES_SEQ_WISE_COUNT_WHERE_PENDING_CATEGORY_IS_SET = "pendingCategoryIsSet";
-	
+
 	public static final String QUESTION_WISE_COUNT_FOR_HISTORY_RECORDS = "historyRecordsCount";
+
+	public static final String HELP_DOC = "helpdoc";
+
+	public static final String MANUAL_DOC = "manualdoc";
+
+	public static final String SAITEN_MANUALFILE_URL = "saiten.manualfile.url";
+
+	public static final String SAITEN_QUESTIONFILE_URL = "saiten.questionfile.url";
+
+	public static final String SAITEN_MANUAL1_UPLOAD_LOCATION = "saiten.manual1.upload.location";
+
+	public static final String SAITEN_MANUAL2_UPLOAD_LOCATION = "saiten.manual2.upload.location";
+
+	public static final String MANUAL1 = "label.scoring.helpdocument";
+
+	public static final String MANUAL2 = "label.scoring.manualdocument";
+
+	public static final String SAITEN_RESOURCE_SERVER = "saiten.resource.server";
+
+	public static final String SAITEN_RESOURCE_SERVER_USERNAME = "saiten.resource.server.username";
+
+	public static final String SAITEN_RESOURCE_SERVER_PASSWORD = "saiten.resource.server.password";
+
+	public static final String SAITEN_RESOURCE_SERVER_PORT = "saiten.resource.server.port";
+
+	public static final String GRADE_TEXT = "Grade";
+
+	public static final String GRADE_WISE_OBJECTIVE_RECORDS = "objectiveReport";
+
+	public static final String TEMP_DB = "tempdb";
+
+	public static final String DATE_yyyyMMdd_HHmm = "yyyyMMdd_HHmm";
+
+	public static final String DOUBLE_QUOTES = "\"";
 }

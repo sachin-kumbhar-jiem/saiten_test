@@ -61,5 +61,13 @@
    	<bean id="saitenReplicaTranDb5TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
       	<property name="sessionFactory" ref="saitenReplicaTranDb5SessionFactory" /> 
    	</bean>
+   	
+   	<bean id="saitenTempDb1TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+   	 	 <property name="sessionFactory" ref="saitenTempDb1SessionFactory" />
+  	</bean>	
+   
+  	<bean id="saitenTempDb2TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+      	<property name="sessionFactory" ref="saitenTempDb2SessionFactory" />
+   	</bean>
  
 </beans>

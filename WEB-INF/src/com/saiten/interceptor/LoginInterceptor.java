@@ -18,6 +18,7 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.saiten.info.MstScorerInfo;
 import com.saiten.info.ScorerAccessLogInfo;
 import com.saiten.util.SaitenMasterUtil;
+import com.saiten.util.SaitenUtil;
 import com.saiten.util.WebAppConst;
 
 public class LoginInterceptor extends AbstractInterceptor {
@@ -53,43 +54,40 @@ public class LoginInterceptor extends AbstractInterceptor {
 			String scorerIdObj = null;
 			if (mstScorerInfoObj != null) {
 				scorerIdObj = ((MstScorerInfo) mstScorerInfoObj).getScorerId();
-			}/*
-			 * else{ scorerIdObj = request.getParameter("scorerId");; }
-			 */
+			} /*
+				 * else{ scorerIdObj = request.getParameter("scorerId");; }
+				 */
 			// The user has not logged in yet - check login attempting
 			String loginAttempt = request.getParameter(LOGIN_ATTEMPT);
 
 			if (scorerIdObj == null) {
 				log.info(scorerIdObj + " execution start.");
 				if (!StringUtils.isBlank(loginAttempt)) {
-					log.info(scorerIdObj
-							+ " execution end. User going to login... ");
+					log.info(scorerIdObj + " execution end. User going to login... ");
 					return invocation.invoke();
 				} else {
-					request.setAttribute("sessionTimeout", true);
-					log.info(scorerIdObj
-							+ " execution end. Redirecting to login screen. ");
-					return ActionSupport.ERROR;
+					log.info(scorerIdObj + " execution end. Redirecting to login screen. ");
+					Map<String, String> configMap = SaitenUtil.getConfigMap();
+					if (Boolean.valueOf(configMap.get("isMultipleLmsInstances"))) {
+						request.setAttribute("sessionTimeout", true);
+						return ActionSupport.ERROR;
+					} else {
+						return ActionSupport.LOGIN;
+					}
 				}
 
 			} else {
 				log.info(scorerIdObj + " execution start.");
-				ScorerAccessLogInfo scorerAccessLogInfo = (ScorerAccessLogInfo) session
-						.get("scorerAccessLogInfo");
+				ScorerAccessLogInfo scorerAccessLogInfo = (ScorerAccessLogInfo) session.get("scorerAccessLogInfo");
 				String userStatus = new String();
 				if (scorerAccessLogInfo != null) {
-					ApplicationContext ctx = ContextLoader
-							.getCurrentWebApplicationContext();
+					ApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
 					Integer id = scorerAccessLogInfo.getId();
-					userStatus = ((SaitenMasterUtil) ctx
-							.getBean("saitenMasterUtil"))
-							.findUserStatusById(id);
+					userStatus = ((SaitenMasterUtil) ctx.getBean("saitenMasterUtil")).findUserStatusById(id);
 				}
 
-				if ((!userStatus.equals(WebAppConst.SCORER_LOGGING_STATUS[0]))
-						&& (StringUtils.isBlank(loginAttempt))) {
-					request.setAttribute("lmsInstanceId",
-							session.get("lmsInstanceId"));
+				if ((!userStatus.equals(WebAppConst.SCORER_LOGGING_STATUS[0])) && (StringUtils.isBlank(loginAttempt))) {
+					request.setAttribute("lmsInstanceId", session.get("lmsInstanceId"));
 					request.setAttribute("duplicateLogout", true);
 					session.clear();
 					// invalidate session
@@ -103,8 +101,7 @@ public class LoginInterceptor extends AbstractInterceptor {
 		} catch (Exception e) {
 			if (mstScorerInfoObj != null) {
 				MstScorerInfo mstScorerInfo = (MstScorerInfo) mstScorerInfoObj;
-				log.error("[ ScorerId: " + mstScorerInfo.getScorerId() + "] ",
-						e);
+				log.error("[ ScorerId: " + mstScorerInfo.getScorerId() + "] ", e);
 			} else {
 				log.error("[ ScorerId: " + null + "] ", e);
 			}

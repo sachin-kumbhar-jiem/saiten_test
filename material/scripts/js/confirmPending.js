@@ -10,8 +10,8 @@
 		var bookMark =  $("#bookMark").is(":checked") ? true : false;
 		var qualityMark = $("#qualityMark").is(":checked") ? true : false;
 		var scorerComment =  $('#scorerComment').val();
-			
-		location.href = 'registerPending.action?pendingCategorySeq='+pendingCategorySeq+"&bookMarkFlag="+bookMark+"&qualityCheckFlag="+qualityMark+"&scorerComment="+encodeURIComponent(scorerComment);
+		 var token = $("input[name=token]").val();
+		location.href = 'registerPending.action?pendingCategorySeq='+pendingCategorySeq+"&bookMarkFlag="+bookMark+"&qualityCheckFlag="+qualityMark+"&struts.token.name=token&token="+token+"&scorerComment="+encodeURIComponent(scorerComment);
 	});
 	$("#close").click(function(){
 		enableLinksAndButtons();

@@ -131,6 +131,7 @@
 			<result name="success" type="redirectAction">
 				<param name="actionName">scoreAction</param>
 				<param name="gradeNum">${gradeNum}</param>
+				<param name="bitValue">${bitValue}</param>
 				<param name="pendingCategory">${pendingCategory}</param>
 			</result>
 		</action>
@@ -146,6 +147,9 @@
 		</action>
 		
 		<action name="registerScore" class="registerScore" method="doRegister">
+			<interceptor-ref name="token"></interceptor-ref>
+			<interceptor-ref name="logFilterStack" />
+			<result name="invalid.token">/error/invalid_token.jsp</result>
 			<result name="success" type="redirectAction">scoreAction</result>
 			<result name="scoreSampling" type="redirectAction">scoreSampling</result>
 			<result name="specialSampling" type="redirectAction">specialSampling</result>
@@ -161,6 +165,9 @@
 		</action>
 		
 		<action name="registerPending" class="registerPending" method="doRegister">
+			<interceptor-ref name="token"></interceptor-ref>
+			 <interceptor-ref name="logFilterStack" />
+			 <result name="invalid.token">/error/invalid_token.jsp</result>
 			<result name="resetScoreHistory" type="redirectAction">
 				<param name="actionName">resetScoreHistory</param>
 				<param name="backToScoringFlag">true</param>
@@ -595,7 +602,27 @@
            </result>
            <result name="input">/jsp/dailyStatusQuestionWiseReport.jsp</result>
 		</action>
+
+		<action name="showPdfDoc" class="displayPdfDocAction" method="onLoad">
+			<result name="success" type="redirect">${url}</result>
+		</action>
 		
+		<action name="uploadManual" class="questionSelectionAction" method="onLoad">
+			<result name="success">/jsp/manualUpload.jsp</result>
+		</action>
+		
+		<action name="upload" class="uploadManualAction">
+		   <interceptor-ref name="fileUpload">
+				<param name="maximumSize">20971520</param>
+				<param name="allowedTypes">
+					application/pdf
+				</param>
+		   </interceptor-ref>
+		   <interceptor-ref name="logFilterStack"></interceptor-ref>
+	       <result name="success">/jsp/confirmManualUpload.jsp</result>
+	       <result name="error">/error/manualUploadError.jsp</result>
+	       <result name="input">/jsp/manualUpload.jsp</result> 
+  	  	</action>
 	</package>
 	
 </struts>

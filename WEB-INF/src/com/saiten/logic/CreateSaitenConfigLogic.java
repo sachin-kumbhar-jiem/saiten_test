@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -21,7 +22,6 @@ import com.saiten.dao.MstPendingCategoryDAO;
 import com.saiten.dao.MstScorerDAO;
 import com.saiten.dao.MstScoringStateListDAO;
 import com.saiten.manager.SaitenTransactionManager;
-import com.saiten.model.MstDenyCategory;
 import com.saiten.model.MstGrade;
 import com.saiten.model.MstGradeResult;
 import com.saiten.model.MstGradeResultId;
@@ -59,6 +59,7 @@ public class CreateSaitenConfigLogic {
 
 	private MstDenyCategoryDAO mstDenyCategoryDAO;
 
+	@SuppressWarnings("rawtypes")
 	public SaitenConfig buildSaitenConfigObject() {
 
 		try {
@@ -112,8 +113,7 @@ public class CreateSaitenConfigLogic {
 
 			// Build gradeSequenceWiseMstGradeMap
 			LinkedHashMap<GradeNumKey, MstGrade> gradeSequenceWiseMstGradeMap = buildGradeSequenceWiseMstGradeMap();
-			saitenConfig
-					.setGradeSequenceWiseMstGradeMap(gradeSequenceWiseMstGradeMap);
+			saitenConfig.setGradeSequenceWiseMstGradeMap(gradeSequenceWiseMstGradeMap);
 
 			// Build pendingCategoryMap
 			LinkedHashMap<Integer, Short> pendingCategoryMap = buildPendingCategoryMap();
@@ -136,9 +136,12 @@ public class CreateSaitenConfigLogic {
 
 			LinkedHashMap<Integer, LinkedHashMap<Integer, Short>> mstMarkValueMap = buildMstMarkValueMap();
 			saitenConfig.setMstMarkValueMap(mstMarkValueMap);
-			
+
 			LinkedHashMap<Integer, Short> denyCategoryMap = buildDenyCategoryMap();
 			saitenConfig.setDenyCategoryMap(denyCategoryMap);
+
+			LinkedHashMap<Integer, Map> mstGradeDetailsMap = buildMstGradeDetailsMap();
+			saitenConfig.setMstGradeDetailsMap(mstGradeDetailsMap);
 
 		} catch (Exception e) {
 			log.error(e.getCause());
@@ -152,10 +155,8 @@ public class CreateSaitenConfigLogic {
 		PlatformTransactionManager platformTransactionManager = null;
 		TransactionStatus transactionStatus = null;
 		try {
-			platformTransactionManager = getSaitenTransactionManager()
-					.getTransactionManger();
-			transactionStatus = getSaitenTransactionManager().beginTransaction(
-					platformTransactionManager);
+			platformTransactionManager = getSaitenTransactionManager().getTransactionManger();
+			transactionStatus = getSaitenTransactionManager().beginTransaction(platformTransactionManager);
 
 			List<MstGrade> mstGradeList = getMstGradeDAO().findAll();
 
@@ -164,29 +165,23 @@ public class CreateSaitenConfigLogic {
 
 				for (MstGrade mstGrade : mstGradeList) {
 
-					MstGradeResultId mstGradeResultIdObj = mstGrade
-							.getMstGradeResult().getId();
+					MstGradeResultId mstGradeResultIdObj = mstGrade.getMstGradeResult().getId();
 
 					// Build mstGradeResultId object
-					MstGradeResultId mstGradeResultId = new MstGradeResultId(
-							mstGradeResultIdObj.getQuestionSeq(),
+					MstGradeResultId mstGradeResultId = new MstGradeResultId(mstGradeResultIdObj.getQuestionSeq(),
 							mstGradeResultIdObj.getGradeNum());
 
-					MstGradeResult mstGradeResultObj = mstGrade
-							.getMstGradeResult();
+					MstGradeResult mstGradeResultObj = mstGrade.getMstGradeResult();
 
 					// Build mstGradeResult object
-					MstGradeResult mstGradeResult = createMstGradeResult(
-							mstGradeResultId, mstGradeResultObj);
+					MstGradeResult mstGradeResult = createMstGradeResult(mstGradeResultId, mstGradeResultObj);
 
 					// Build mstGradeObj object
-					MstGrade mstGradeObj = createMstGrade(mstGrade,
-							mstGradeResult);
+					MstGrade mstGradeObj = createMstGrade(mstGrade, mstGradeResult);
 
 					// Build mstGradeMap key (gradeResultKey)
 					GradeResultKey gradeResultKey = new GradeResultKey();
-					gradeResultKey.setQuestionSeq(mstGradeResultIdObj
-							.getQuestionSeq());
+					gradeResultKey.setQuestionSeq(mstGradeResultIdObj.getQuestionSeq());
 					gradeResultKey.setBitValue(mstGradeObj.getBitValue());
 
 					mstGradeMap.put(gradeResultKey, mstGradeObj);
@@ -209,20 +204,15 @@ public class CreateSaitenConfigLogic {
 	 * @param mstGradeResultObj
 	 * @return MstGradeResult
 	 */
-	private MstGradeResult createMstGradeResult(
-			MstGradeResultId mstGradeResultId, MstGradeResult mstGradeResultObj) {
+	private MstGradeResult createMstGradeResult(MstGradeResultId mstGradeResultId, MstGradeResult mstGradeResultObj) {
 		MstGradeResult mstGradeResult = null;
 
 		// Build mstGradeResult object if delete_flag is false
 		if (mstGradeResultObj.getDeleteFlag() == WebAppConst.DELETE_FLAG) {
-			mstGradeResult = new MstGradeResult(mstGradeResultId,
-					mstGradeResultObj.getGradeDescription(),
-					mstGradeResultObj.getResult(),
-					mstGradeResultObj.getDeleteFlag(),
-					mstGradeResultObj.getUpdatePersonId(),
-					mstGradeResultObj.getUpdateDate(),
-					mstGradeResultObj.getCreateDate(),
-					mstGradeResultObj.getMstGrades());
+			mstGradeResult = new MstGradeResult(mstGradeResultId, mstGradeResultObj.getGradeDescription(),
+					mstGradeResultObj.getResult(), mstGradeResultObj.getDeleteFlag(),
+					mstGradeResultObj.getUpdatePersonId(), mstGradeResultObj.getUpdateDate(),
+					mstGradeResultObj.getCreateDate(), mstGradeResultObj.getMstGrades());
 		}
 
 		return mstGradeResult;
@@ -233,18 +223,15 @@ public class CreateSaitenConfigLogic {
 	 * @param mstGradeResult
 	 * @return MstGrade
 	 */
-	private MstGrade createMstGrade(MstGrade mstGrade,
-			MstGradeResult mstGradeResult) {
+	private MstGrade createMstGrade(MstGrade mstGrade, MstGradeResult mstGradeResult) {
 		MstQuestion mstQuestion = mstGrade.getMstQuestion();
 
 		// Get mstQuestion object if delete_flag is false
-		mstQuestion = mstQuestion.getDeleteFlag() == WebAppConst.DELETE_FLAG ? mstQuestion
-				: null;
+		mstQuestion = mstQuestion.getDeleteFlag() == WebAppConst.DELETE_FLAG ? mstQuestion : null;
 
-		MstGrade mstGradeObj = new MstGrade(mstGrade.getGradeSeq(),
-				mstGradeResult, mstQuestion, mstGrade.getBitValue(),
-				mstGrade.getDeleteFlag(), mstGrade.getUpdatePersonId(),
-				mstGrade.getUpdateDate(), mstGrade.getCreateDate());
+		MstGrade mstGradeObj = new MstGrade(mstGrade.getGradeSeq(), mstGradeResult, mstQuestion, mstGrade.getBitValue(),
+				mstGrade.getDeleteFlag(), mstGrade.getUpdatePersonId(), mstGrade.getUpdateDate(),
+				mstGrade.getCreateDate());
 
 		return mstGradeObj;
 	}
@@ -259,12 +246,10 @@ public class CreateSaitenConfigLogic {
 			menuIdAndScoringStateMap = new LinkedHashMap<String, Short>();
 
 			// MenuId and ScoringState e.g. FIRST_SCORING_MENU_ID:121
-			String[] menuIdAndScoringStateArray = menuIdAndScoringStateData
-					.split(",");
+			String[] menuIdAndScoringStateArray = menuIdAndScoringStateData.split(",");
 
 			for (String menuIdAndScoringState : menuIdAndScoringStateArray) {
-				String[] menuIdAndScoringStateValues = menuIdAndScoringState
-						.split(":");
+				String[] menuIdAndScoringStateValues = menuIdAndScoringState.split(":");
 				menuIdAndScoringStateMap.put(menuIdAndScoringStateValues[0],
 						Short.valueOf(menuIdAndScoringStateValues[1]));
 			}
@@ -282,25 +267,20 @@ public class CreateSaitenConfigLogic {
 
 		try {
 
-			List<String> scoringStatesList = Arrays
-					.asList(getSaitenGlobalProperties().getProperty(
-							WebAppConst.HISTORY_SCORINGSTATE_MAP_DATA).split(
-							WebAppConst.COMMA));
+			List<String> scoringStatesList = Arrays.asList(getSaitenGlobalProperties()
+					.getProperty(WebAppConst.HISTORY_SCORINGSTATE_MAP_DATA).split(WebAppConst.COMMA));
 			ScoringStateKey scoringStateKey = null;
 			if (scoringStatesList != null && scoringStatesList.size() > 0) {
 				for (String scoringStatesKeyValue : scoringStatesList) {
 					String[] scoringStatesKeyValueArray = scoringStatesKeyValue
 							.split(String.valueOf(WebAppConst.HYPHEN));
 
-					String[] scoringStateKeyArray = scoringStatesKeyValueArray[0]
-							.split(WebAppConst.COLON);
+					String[] scoringStateKeyArray = scoringStatesKeyValueArray[0].split(WebAppConst.COLON);
 					scoringStateKey = new ScoringStateKey();
 					scoringStateKey.setMenuId(scoringStateKeyArray[0]);
-					scoringStateKey.setNoDbUpdate(scoringStateKeyArray[1]
-							.charAt(0));
+					scoringStateKey.setNoDbUpdate(scoringStateKeyArray[1].charAt(0));
 
-					String[] scoringStateArray = scoringStatesKeyValueArray[1]
-							.split(WebAppConst.COLON);
+					String[] scoringStateArray = scoringStatesKeyValueArray[1].split(WebAppConst.COLON);
 					statesList = new ArrayList<Short>();
 					for (String scoringState : scoringStateArray) {
 						statesList.add(Short.parseShort(scoringState));
@@ -322,8 +302,7 @@ public class CreateSaitenConfigLogic {
 		List scoringStateList = null;
 		try {
 			// Fetch scoringStateList
-			scoringStateList = getMstScoringStateListDAO()
-					.findScoringStateList();
+			scoringStateList = getMstScoringStateListDAO().findScoringStateList();
 
 			if (scoringStateList != null) {
 				scoringStateMap = new LinkedHashMap<Short, String>();
@@ -331,8 +310,7 @@ public class CreateSaitenConfigLogic {
 					Object[] scoringStateInfoObject = (Object[]) object;
 
 					// key - scoringState, value - stateName
-					scoringStateMap.put((Short) scoringStateInfoObject[0],
-							(String) scoringStateInfoObject[1]);
+					scoringStateMap.put((Short) scoringStateInfoObject[0], (String) scoringStateInfoObject[1]);
 				}
 			}
 		} catch (Exception e) {
@@ -348,10 +326,8 @@ public class CreateSaitenConfigLogic {
 		PlatformTransactionManager platformTransactionManager = null;
 		TransactionStatus transactionStatus = null;
 		try {
-			platformTransactionManager = getSaitenTransactionManager()
-					.getTransactionManger();
-			transactionStatus = getSaitenTransactionManager().beginTransaction(
-					platformTransactionManager);
+			platformTransactionManager = getSaitenTransactionManager().getTransactionManger();
+			transactionStatus = getSaitenTransactionManager().beginTransaction(platformTransactionManager);
 
 			mstGradeList = getMstGradeDAO().findAll();
 			if (mstGradeList != null) {
@@ -360,34 +336,24 @@ public class CreateSaitenConfigLogic {
 				for (MstGrade mstGrade : mstGradeList) {
 					gradeNumKey = new GradeNumKey();
 					gradeNumKey.setGradeSeq(mstGrade.getGradeSeq());
-					gradeNumKey.setQuestionSeq(mstGrade.getMstQuestion()
-							.getQuestionSeq());
+					gradeNumKey.setQuestionSeq(mstGrade.getMstQuestion().getQuestionSeq());
 
-					MstGradeResultId mstGradeResultIdObj = mstGrade
-							.getMstGradeResult().getId();
-					MstGradeResultId mstGradeResultId = new MstGradeResultId(
-							mstGradeResultIdObj.getQuestionSeq(),
+					MstGradeResultId mstGradeResultIdObj = mstGrade.getMstGradeResult().getId();
+					MstGradeResultId mstGradeResultId = new MstGradeResultId(mstGradeResultIdObj.getQuestionSeq(),
 							mstGradeResultIdObj.getGradeNum());
 
-					MstGradeResult mstGradeResultObj = mstGrade
-							.getMstGradeResult();
+					MstGradeResult mstGradeResultObj = mstGrade.getMstGradeResult();
 					MstGradeResult mstGradeResult = null;
 					if (mstGradeResultObj.getDeleteFlag() == WebAppConst.DELETE_FLAG) {
-						mstGradeResult = new MstGradeResult(mstGradeResultId,
-								mstGradeResultObj.getGradeDescription(),
-								mstGradeResultObj.getResult(),
-								mstGradeResultObj.getDeleteFlag(),
-								mstGradeResultObj.getUpdatePersonId(),
-								mstGradeResultObj.getUpdateDate(),
-								mstGradeResultObj.getCreateDate(),
-								mstGradeResultObj.getMstGrades());
+						mstGradeResult = new MstGradeResult(mstGradeResultId, mstGradeResultObj.getGradeDescription(),
+								mstGradeResultObj.getResult(), mstGradeResultObj.getDeleteFlag(),
+								mstGradeResultObj.getUpdatePersonId(), mstGradeResultObj.getUpdateDate(),
+								mstGradeResultObj.getCreateDate(), mstGradeResultObj.getMstGrades());
 					}
 
-					MstGrade mstGradeObj = new MstGrade(mstGrade.getGradeSeq(),
-							mstGradeResult, mstGrade.getMstQuestion(),
-							mstGrade.getBitValue(), mstGrade.getDeleteFlag(),
-							mstGrade.getUpdatePersonId(),
-							mstGrade.getUpdateDate(), mstGrade.getCreateDate());
+					MstGrade mstGradeObj = new MstGrade(mstGrade.getGradeSeq(), mstGradeResult,
+							mstGrade.getMstQuestion(), mstGrade.getBitValue(), mstGrade.getDeleteFlag(),
+							mstGrade.getUpdatePersonId(), mstGrade.getUpdateDate(), mstGrade.getCreateDate());
 
 					gradeSequenceWiseMstGradeMap.put(gradeNumKey, mstGradeObj);
 				}
@@ -408,8 +374,7 @@ public class CreateSaitenConfigLogic {
 		List pendingCategoryList = null;
 		try {
 			// Fetch pendingCategoryList
-			pendingCategoryList = getMstPendingCategoryDAO()
-					.findPendingCategoryList();
+			pendingCategoryList = getMstPendingCategoryDAO().findPendingCategoryList();
 
 			if (pendingCategoryList != null) {
 				pendingCategoryMap = new LinkedHashMap<Integer, Short>();
@@ -417,8 +382,7 @@ public class CreateSaitenConfigLogic {
 					Object[] pendingCategoryInfoObject = (Object[]) object;
 
 					// key - pendingCategorySeq, value - pendingCategory
-					pendingCategoryMap.put(
-							(Integer) pendingCategoryInfoObject[0],
+					pendingCategoryMap.put((Integer) pendingCategoryInfoObject[0],
 							(Short) pendingCategoryInfoObject[1]);
 				}
 			}
@@ -440,14 +404,11 @@ public class CreateSaitenConfigLogic {
 			scoringEventMap = new LinkedHashMap<String, Short>();
 
 			// MenuId and ScoringEvent e.g. FIRST_SCORING_MENU_ID:120
-			String[] menuIdAndScoringEventArray = menuIdAndScoringEventData
-					.split(",");
+			String[] menuIdAndScoringEventArray = menuIdAndScoringEventData.split(",");
 
 			for (String menuIdAndScoringEvent : menuIdAndScoringEventArray) {
-				String[] menuIdAndScoringEventValues = menuIdAndScoringEvent
-						.split(":");
-				scoringEventMap.put(menuIdAndScoringEventValues[0],
-						Short.valueOf(menuIdAndScoringEventValues[1]));
+				String[] menuIdAndScoringEventValues = menuIdAndScoringEvent.split(":");
+				scoringEventMap.put(menuIdAndScoringEventValues[0], Short.valueOf(menuIdAndScoringEventValues[1]));
 			}
 		} catch (Exception e) {
 			log.error("============ Building ScoringEventMap Error ============");
@@ -467,13 +428,10 @@ public class CreateSaitenConfigLogic {
 			checkPointsShortCutsMap = new LinkedHashMap<Long, String>();
 
 			// CheckPoints and ShortCutKey e.g. 24:q
-			String[] checkPointsAndShortCutKeysArray = checkPointsAndShortCutKeysData
-					.split(",");
+			String[] checkPointsAndShortCutKeysArray = checkPointsAndShortCutKeysData.split(",");
 			for (String checkPointsAndShortCutKeys : checkPointsAndShortCutKeysArray) {
-				String[] checkPointsAndShortCutKeysValues = checkPointsAndShortCutKeys
-						.split(":");
-				checkPointsShortCutsMap.put(
-						Long.valueOf(checkPointsAndShortCutKeysValues[0]),
+				String[] checkPointsAndShortCutKeysValues = checkPointsAndShortCutKeys.split(":");
+				checkPointsShortCutsMap.put(Long.valueOf(checkPointsAndShortCutKeysValues[0]),
 						checkPointsAndShortCutKeysValues[1]);
 			}
 
@@ -490,8 +448,7 @@ public class CreateSaitenConfigLogic {
 
 		try {
 			// Fetch data from global.properties bean
-			String screenIdList = getSaitenGlobalProperties().getProperty(
-					WebAppConst.SAITEN_SCREEN_ID_DATA);
+			String screenIdList = getSaitenGlobalProperties().getProperty(WebAppConst.SAITEN_SCREEN_ID_DATA);
 			screenIdMap = new LinkedHashMap<String, String>();
 
 			// MenuId and ScoringEvent e.g. FIRST_SCORING_MENU_ID:120
@@ -521,8 +478,7 @@ public class CreateSaitenConfigLogic {
 
 				for (Object object : mstScorerRoleList) {
 					Object[] mstScorerRoleObjects = (Object[]) object;
-					mstScorerRoleMap.put((Byte) mstScorerRoleObjects[0],
-							(String) mstScorerRoleObjects[1]);
+					mstScorerRoleMap.put((Byte) mstScorerRoleObjects[0], (String) mstScorerRoleObjects[1]);
 				}
 			}
 		} catch (Exception e) {
@@ -543,20 +499,13 @@ public class CreateSaitenConfigLogic {
 				for (Object object : mstMarkValuesList) {
 					Object[] markValueInfoObject = (Object[]) object;
 					Integer questionSeq = (Integer) markValueInfoObject[0];
-					if (questionWiseMarkValuesMap.isEmpty()
-							|| !questionWiseMarkValuesMap
-									.containsKey(questionSeq)) {
+					if (questionWiseMarkValuesMap.isEmpty() || !questionWiseMarkValuesMap.containsKey(questionSeq)) {
 						mstMarkValueMap = new LinkedHashMap<Integer, Short>();
-						mstMarkValueMap.put((Integer) markValueInfoObject[1],
-								(Short) markValueInfoObject[2]);
-						questionWiseMarkValuesMap.put(
-								(Integer) markValueInfoObject[0],
-								mstMarkValueMap);
+						mstMarkValueMap.put((Integer) markValueInfoObject[1], (Short) markValueInfoObject[2]);
+						questionWiseMarkValuesMap.put((Integer) markValueInfoObject[0], mstMarkValueMap);
 
-					} else if (questionWiseMarkValuesMap
-							.containsKey(questionSeq)) {
-						mstMarkValueMap.put((Integer) markValueInfoObject[1],
-								(Short) markValueInfoObject[2]);
+					} else if (questionWiseMarkValuesMap.containsKey(questionSeq)) {
+						mstMarkValueMap.put((Integer) markValueInfoObject[1], (Short) markValueInfoObject[2]);
 					}
 				}
 			}
@@ -573,8 +522,7 @@ public class CreateSaitenConfigLogic {
 		List denyCategoryList = null;
 		try {
 			// Fetch pendingCategoryList
-			denyCategoryList = getMstDenyCategoryDAO()
-					.findDenyCategoryList();
+			denyCategoryList = getMstDenyCategoryDAO().findDenyCategoryList();
 
 			if (denyCategoryList != null) {
 				denyCategoryMap = new LinkedHashMap<Integer, Short>();
@@ -582,9 +530,7 @@ public class CreateSaitenConfigLogic {
 					Object[] denyCategoryInfoObject = (Object[]) object;
 
 					// key - pendingCategorySeq, value - pendingCategory
-					denyCategoryMap.put(
-							(Integer) denyCategoryInfoObject[0],
-							(Short) denyCategoryInfoObject[1]);
+					denyCategoryMap.put((Integer) denyCategoryInfoObject[0], (Short) denyCategoryInfoObject[1]);
 				}
 			}
 		} catch (Exception e) {
@@ -592,6 +538,45 @@ public class CreateSaitenConfigLogic {
 			log.error(e.getCause());
 		}
 		return denyCategoryMap;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private LinkedHashMap<Integer, Map> buildMstGradeDetailsMap() {
+
+		Map gradeNumAndBitValueMap = null;
+		LinkedHashMap<Integer, Map> mstGradeDetailsMap = null;
+		List gradeDetailsList = new ArrayList();
+		List<Double> bitValueList = null;
+		try {
+			gradeDetailsList = getMstGradeDAO().getMstGradeDetails();
+
+			if (gradeDetailsList != null) {
+				mstGradeDetailsMap = new LinkedHashMap<Integer, Map>();
+				for (Object object : gradeDetailsList) {
+					Object[] gradeInfoObject = (Object[]) object;
+
+					if (!mstGradeDetailsMap.containsKey((Integer) gradeInfoObject[0])) {
+						gradeNumAndBitValueMap = new LinkedHashMap<Integer, List<Double>>();
+						mstGradeDetailsMap.put((Integer) gradeInfoObject[0], gradeNumAndBitValueMap);
+					}
+
+					gradeNumAndBitValueMap = mstGradeDetailsMap.get((Integer) gradeInfoObject[0]);
+					if (!gradeNumAndBitValueMap.containsKey((Integer) gradeInfoObject[1])) {
+						bitValueList = new ArrayList<Double>();
+						gradeNumAndBitValueMap.put((Integer) gradeInfoObject[1], bitValueList);
+					}
+
+					bitValueList = (List<Double>) gradeNumAndBitValueMap.get((Integer) gradeInfoObject[1]);
+					if (!bitValueList.contains((Double) gradeInfoObject[2])) {
+						bitValueList.add((Double) gradeInfoObject[2]);
+					}
+				}
+			}
+		} catch (Exception e) {
+			log.error("============ Building in MstGradeDetailsMap Error ============");
+			log.error(e.getCause());
+		}
+		return mstGradeDetailsMap;
 	}
 
 	/**
@@ -606,8 +591,7 @@ public class CreateSaitenConfigLogic {
 	 * 
 	 * @param saitenTransactionManager
 	 */
-	public void setSaitenTransactionManager(
-			SaitenTransactionManager saitenTransactionManager) {
+	public void setSaitenTransactionManager(SaitenTransactionManager saitenTransactionManager) {
 		this.saitenTransactionManager = saitenTransactionManager;
 	}
 
@@ -635,8 +619,7 @@ public class CreateSaitenConfigLogic {
 	 * 
 	 * @param mstScoringStateListDAO
 	 */
-	public void setMstScoringStateListDAO(
-			MstScoringStateListDAO mstScoringStateListDAO) {
+	public void setMstScoringStateListDAO(MstScoringStateListDAO mstScoringStateListDAO) {
 		this.mstScoringStateListDAO = mstScoringStateListDAO;
 	}
 
@@ -644,8 +627,7 @@ public class CreateSaitenConfigLogic {
 	 * 
 	 * @param mstPendingCategoryDAO
 	 */
-	public void setMstPendingCategoryDAO(
-			MstPendingCategoryDAO mstPendingCategoryDAO) {
+	public void setMstPendingCategoryDAO(MstPendingCategoryDAO mstPendingCategoryDAO) {
 		this.mstPendingCategoryDAO = mstPendingCategoryDAO;
 	}
 

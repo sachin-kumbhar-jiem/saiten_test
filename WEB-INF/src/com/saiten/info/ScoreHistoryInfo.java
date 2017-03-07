@@ -47,6 +47,8 @@ public class ScoreHistoryInfo {
 	private boolean historyQualityCheckFlag;
 	private Integer[] historyScorerRole;
 	private String pastSkpConditions;
+	private String pastSkpIncludeConditions;
+	private String pastSkpExcludeConditions;
 
 	public Integer getHistoryUpdateDateEndYear() {
 		return historyUpdateDateEndYear;
@@ -288,8 +290,7 @@ public class ScoreHistoryInfo {
 	/**
 	 * @param historyUpdateDateStartMonth
 	 */
-	public void setHistoryUpdateDateStartMonth(
-			Integer historyUpdateDateStartMonth) {
+	public void setHistoryUpdateDateStartMonth(Integer historyUpdateDateStartMonth) {
 		this.historyUpdateDateStartMonth = historyUpdateDateStartMonth;
 	}
 
@@ -311,8 +312,7 @@ public class ScoreHistoryInfo {
 	/**
 	 * @param historyUpdateDateStartHours
 	 */
-	public void setHistoryUpdateDateStartHours(
-			Integer historyUpdateDateStartHours) {
+	public void setHistoryUpdateDateStartHours(Integer historyUpdateDateStartHours) {
 		this.historyUpdateDateStartHours = historyUpdateDateStartHours;
 	}
 
@@ -336,8 +336,7 @@ public class ScoreHistoryInfo {
 	 * @param historyPendingCategorySeqList
 	 */
 	@SuppressWarnings("rawtypes")
-	public void setHistoryPendingCategorySeqList(
-			List historyPendingCategorySeqList) {
+	public void setHistoryPendingCategorySeqList(List historyPendingCategorySeqList) {
 		this.historyPendingCategorySeqList = historyPendingCategorySeqList;
 	}
 
@@ -408,7 +407,7 @@ public class ScoreHistoryInfo {
 	public List getHistoryDenyCategorySeqList() {
 		return historyDenyCategorySeqList;
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public void setHistoryDenyCategorySeqList(List historyDenyCategorySeqList) {
 		this.historyDenyCategorySeqList = historyDenyCategorySeqList;
@@ -425,29 +424,21 @@ public class ScoreHistoryInfo {
 	@Override
 	public String toString() {
 		StringBuilder data = new StringBuilder();
-		data.append("{ HistoryScorerId1: " + historyScorerId1
-				+ ", HistoryScorerId2: " + historyScorerId2
-				+ ", HistoryScorerId3: " + historyScorerId3
-				+ ", HistoryScorerId4: " + historyScorerId4
+		data.append("{ HistoryScorerId1: " + historyScorerId1 + ", HistoryScorerId2: " + historyScorerId2
+				+ ", HistoryScorerId3: " + historyScorerId3 + ", HistoryScorerId4: " + historyScorerId4
 				+ ", HistoryScorerId5: " + historyScorerId5);
-		data.append("\n HistoryScorerRole: "
-				+ Arrays.toString(historyScorerRole));
+		data.append("\n HistoryScorerRole: " + Arrays.toString(historyScorerRole));
 		data.append("\n Quality Mark: " + historyQualityCheckFlag);
 		data.append("\n HistoryCategoryType: " + historyCategoryType);
 		data.append("\n HistoryGradeNum: " + Arrays.toString(historyGradeNum));
 		data.append("\n HistoryPendingCategory: " + historyPendingCategory);
-		data.append("\n HistoryIncludeCheckPoints: "
-				+ historyIncludeCheckPoints);
-		data.append("\n HistoryExcludeCheckPoints: "
-				+ historyExcludeCheckPoints);
+		data.append("\n HistoryIncludeCheckPoints: " + historyIncludeCheckPoints);
+		data.append("\n HistoryExcludeCheckPoints: " + historyExcludeCheckPoints);
 		data.append("\n HistoryEventList: " + Arrays.toString(historyEventList));
-		data.append("\n HistoryUpdateStartDate: " + historyUpdateDateStartYear
-				+ "-" + historyUpdateDateStartMonth + "-"
-				+ historyUpdateDateStartDay + " " + historyUpdateDateStartHours
-				+ ":" + historyUpdateDateStartMin + ", HistoryUpdateEndDate: "
-				+ historyUpdateDateEndYear + "-" + historyUpdateDateEndMonth
-				+ "-" + historyUpdateDateEndDay + " "
-				+ historyUpdateDateEndHours + ":" + historyUpdateDateEndMin);
+		data.append("\n HistoryUpdateStartDate: " + historyUpdateDateStartYear + "-" + historyUpdateDateStartMonth + "-"
+				+ historyUpdateDateStartDay + " " + historyUpdateDateStartHours + ":" + historyUpdateDateStartMin
+				+ ", HistoryUpdateEndDate: " + historyUpdateDateEndYear + "-" + historyUpdateDateEndMonth + "-"
+				+ historyUpdateDateEndDay + " " + historyUpdateDateEndHours + ":" + historyUpdateDateEndMin);
 		data.append("}");
 		return data.toString();
 	}
@@ -459,4 +450,35 @@ public class ScoreHistoryInfo {
 	public String getPastSkpConditions() {
 		return pastSkpConditions;
 	}
+
+	/**
+	 * @return the pastSkpIncludeConditions
+	 */
+	public String getPastSkpIncludeConditions() {
+		return pastSkpIncludeConditions;
+	}
+
+	/**
+	 * @param pastSkpIncludeConditions
+	 *            the pastSkpIncludeConditions to set
+	 */
+	public void setPastSkpIncludeConditions(String pastSkpIncludeConditions) {
+		this.pastSkpIncludeConditions = pastSkpIncludeConditions;
+	}
+
+	/**
+	 * @return the pastSkpExcludeConditions
+	 */
+	public String getPastSkpExcludeConditions() {
+		return pastSkpExcludeConditions;
+	}
+
+	/**
+	 * @param pastSkpExcludeConditions
+	 *            the pastSkpExcludeConditions to set
+	 */
+	public void setPastSkpExcludeConditions(String pastSkpExcludeConditions) {
+		this.pastSkpExcludeConditions = pastSkpExcludeConditions;
+	}
+
 }

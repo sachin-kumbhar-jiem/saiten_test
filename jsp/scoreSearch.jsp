@@ -493,15 +493,25 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 														<s:textfield id="historyIncludeCheckPoints" name="scoreInputInfo.scoreHistoryInfo.historyIncludeCheckPoints" size="30" value="%{#session.scoreInputInfo.scoreHistoryInfo.historyIncludeCheckPoints}" />
 													</td>
 													<td class="inner">
-													    <input type="radio" id="pastSkpAndCondition" name="scoreInputInfo.scoreHistoryInfo.pastSkpConditions" value="skpAndCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.and.condition"></s:text>
+														<input type="radio" id="pastSkpIncludeAndCondition" name="scoreInputInfo.scoreHistoryInfo.pastSkpIncludeConditions" value="skpAndCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.and.condition"></s:text>
+														<s:if test="#session.scoreInputInfo.scoreHistoryInfo.pastSkpIncludeConditions == @com.saiten.util.WebAppConst@SKP_OR_CONDITION">
+													 	    <input type="radio" id="pastSkpIncludeORCondition" name="scoreInputInfo.scoreHistoryInfo.pastSkpIncludeConditions" value="skpORCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.or.condition"></s:text>
+													 	</s:if><s:else>
+													 	    <input type="radio" id="pastSkpIncludeORCondition" name="scoreInputInfo.scoreHistoryInfo.pastSkpIncludeConditions" value="skpORCondition"/>&nbsp;<s:text name="label.search.screen.skp.or.condition"></s:text>
+													 	</s:else>
 													</td>
+												</tr>
+												<tr>
+													<td class="inner"></td>
+													<td class="inner"></td>
 													<td class="inner">
+													    <input type="radio" id="pastSkpAndCondition" name="scoreInputInfo.scoreHistoryInfo.pastSkpConditions" value="skpAndCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.and.condition"></s:text>
 													 	<s:if test="#session.scoreInputInfo.scoreHistoryInfo.pastSkpConditions == @com.saiten.util.WebAppConst@SKP_OR_CONDITION">
 													 	    <input type="radio" id="pastSkpORCondition" name="scoreInputInfo.scoreHistoryInfo.pastSkpConditions" value="skpORCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.or.condition"></s:text>
 													 	</s:if><s:else>
 													 	    <input type="radio" id="pastSkpORCondition" name="scoreInputInfo.scoreHistoryInfo.pastSkpConditions" value="skpORCondition"/>&nbsp;<s:text name="label.search.screen.skp.or.condition"></s:text>
 													 	</s:else>
-													</td>
+													</td>													
 												</tr>    
 												<tr>
 													<td class="inner">
@@ -512,6 +522,14 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 													</td>
 													<td class="inner">
 														<s:textfield id="historyExcludeCheckPoints" name="scoreInputInfo.scoreHistoryInfo.historyExcludeCheckPoints" size="30"  value="%{#session.scoreInputInfo.scoreHistoryInfo.historyExcludeCheckPoints}" />
+													</td>
+													<td class="inner">
+														<input type="radio" id="pastSkpExcludeAndCondition" name="scoreInputInfo.scoreHistoryInfo.pastSkpExcludeConditions" value="skpAndCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.and.condition"></s:text>
+														<s:if test="#session.scoreInputInfo.scoreHistoryInfo.pastSkpExcludeConditions == @com.saiten.util.WebAppConst@SKP_OR_CONDITION">
+													 	    <input type="radio" id="pastSkpExcludeORCondition" name="scoreInputInfo.scoreHistoryInfo.pastSkpExcludeConditions" value="skpORCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.or.condition"></s:text>
+													 	</s:if><s:else>
+													 	    <input type="radio" id="pastSkpExcludeORCondition" name="scoreInputInfo.scoreHistoryInfo.pastSkpExcludeConditions" value="skpORCondition"/>&nbsp;<s:text name="label.search.screen.skp.or.condition"></s:text>
+													 	</s:else>
 													</td>
 												</tr>
 												<tr>
@@ -957,9 +975,19 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 														<s:textfield id="currentIncludeCheckPoints" name="scoreInputInfo.scoreCurrentInfo.currentIncludeCheckPoints" size="30" value="%{#session.scoreInputInfo.scoreCurrentInfo.currentIncludeCheckPoints}" />
 													</td>
 													<td class="inner">
-													       <input type="radio" id="currSkpAndCondition" name="scoreInputInfo.scoreCurrentInfo.currentSkpConditions" value="skpAndCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.and.condition"></s:text>
+													    <input type="radio" id="currSkpIncludeAndCondition" name="scoreInputInfo.scoreCurrentInfo.currentSkpIncludeConditions" value="skpAndCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.and.condition"></s:text>
+													    <s:if test="#session.scoreInputInfo.scoreCurrentInfo.currentSkpIncludeConditions == @com.saiten.util.WebAppConst@SKP_OR_CONDITION">
+													    	<input type="radio" id="currSkpIncludeORCondition" name="scoreInputInfo.scoreCurrentInfo.currentSkpIncludeConditions" value="skpORCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.or.condition"></s:text>
+													    </s:if><s:else>
+													        <input type="radio" id="currSkpIncludeORCondition" name="scoreInputInfo.scoreCurrentInfo.currentSkpIncludeConditions" value="skpORCondition" />&nbsp;<s:text name="label.search.screen.skp.or.condition"></s:text>
+													    </s:else>														
 													</td>
+												</tr>
+												<tr>
+													<td class="inner"></td>
+													<td class="inner"></td>
 													<td class="inner">
+													    <input type="radio" id="currSkpAndCondition" name="scoreInputInfo.scoreCurrentInfo.currentSkpConditions" value="skpAndCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.and.condition"></s:text>
 													    <s:if test="#session.scoreInputInfo.scoreCurrentInfo.currentSkpConditions == @com.saiten.util.WebAppConst@SKP_OR_CONDITION">
 													    	<input type="radio" id="currSkpORCondition" name="scoreInputInfo.scoreCurrentInfo.currentSkpConditions" value="skpORCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.or.condition"></s:text>
 													    </s:if><s:else>
@@ -976,6 +1004,14 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 													</td>
 													<td class="inner">
 														<s:textfield id="currentExcludeCheckPoints" name="scoreInputInfo.scoreCurrentInfo.currentExcludeCheckPoints" size="30" value="%{#session.scoreInputInfo.scoreCurrentInfo.currentExcludeCheckPoints}" />
+													</td>
+													<td class="inner">
+													    <input type="radio" id="currSkpExcludeAndCondition" name="scoreInputInfo.scoreCurrentInfo.currentSkpExcludeConditions" value="skpAndCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.and.condition"></s:text>
+													    <s:if test="#session.scoreInputInfo.scoreCurrentInfo.currentSkpExcludeConditions == @com.saiten.util.WebAppConst@SKP_OR_CONDITION">
+													    	<input type="radio" id="currSkpExcludeORCondition" name="scoreInputInfo.scoreCurrentInfo.currentSkpExcludeConditions" value="skpORCondition" checked="checked"/>&nbsp;<s:text name="label.search.screen.skp.or.condition"></s:text>
+													    </s:if><s:else>
+													        <input type="radio" id="currSkpExcludeORCondition" name="scoreInputInfo.scoreCurrentInfo.currentSkpExcludeConditions" value="skpORCondition" />&nbsp;<s:text name="label.search.screen.skp.or.condition"></s:text>
+													    </s:else>														
 													</td>
 												</tr>
 												<tr>

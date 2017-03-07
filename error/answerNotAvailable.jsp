@@ -148,12 +148,12 @@ function enableLinksAndButtons(){
 			<div style="margin-top: 40%; width: 934px">
 				
 				<s:if test="#parameters['decline'][0] == @java.lang.String@valueOf(@com.saiten.util.WebAppConst@TRUE)">
-					<span class="errorMessage"><s:text name="label.answernotavailable.specialansweralreadyscored" /></span>
+					<span class="infoMessage"><s:text name="label.answernotavailable.specialansweralreadyscored" /></span>
 					<br><br>
 					<a href="specialScoreSearch.action?selectedMenuId=SPECIAL_SAMP_INSPECTION_MENU_ID" id="back" name="back" class="btn btn-primary btn-xl"><!-- <img class="rollover" src="./material/img/button/sampling_bn-back.gif" alt="%{getText('label.backtosearch')}" /> --><s:text name="label.backtosearch"></s:text></a>
 				</s:if>
 				<s:elseif test="#parameters['lockFlag'][0] == @java.lang.String@valueOf(@com.saiten.util.WebAppConst@TRUE)">
-					<span class="errorMessage"><s:text name="label.answernotavailable.answeralreadyscored" /></span>
+					<span class="infoMessage"><s:text name="label.answernotavailable.answeralreadyscored" /></span>
 					<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID">
 						<br><br>
 						<a href="scoreSearch.action?selectedMenuId=SCORE_SAMP_MENU_ID" id="back" name="back" class="btn btn-primary btn-xl"><!-- <img class="rollover" src="./material/img/button/sampling_bn-back.gif" alt="%{getText('label.backtosearch')}" /> --><s:text name="label.backtosearch"></s:text></a>
@@ -178,16 +178,16 @@ function enableLinksAndButtons(){
 					</s:else>
 				</s:elseif><s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@STATE_TRAN_MENU_ID && totalRecordsCount !=null">
 							<s:if test="updatedCount != totalRecordsCount">
-								<span class="errorMessage"><s:property value="updatedCount"/><s:text name="label.forwardslash"/><s:property value="totalRecordsCount"/><s:text name="label.statetransition.recordsUpdatedAndSomeRecordsInProgress" /></span>
+								<span class="infoMessage"><s:property value="updatedCount"/><s:text name="label.forwardslash"/><s:property value="totalRecordsCount"/><s:text name="label.statetransition.recordsUpdatedAndSomeRecordsInProgress" /></span>
 							</s:if><s:else>
-						<span class="errorMessage"><s:property value="updatedCount"/><s:text name="label.forwardslash"/><s:property value="totalRecordsCount"/><s:text name="label.statetransition.recordsUpdated" /></span><br>
-						<span class="errorMessage">
+						<span class="infoMessage"><s:property value="updatedCount"/><s:text name="label.forwardslash"/><s:property value="totalRecordsCount"/><s:text name="label.statetransition.recordsUpdated" /></span><br>
+						<span class="infoMessage">
 							<s:set var="locale" value="getText('label.locale')"/>
 							<s:if test="#locale == 'ja'">
-								<s:text name="label.statetransition.inspectgroupseqmsg1" /><s:property value="#session.inspectGroupSeq"/><s:text name="label.statetransition.inspectgroupseqmsg2" />
+								<span class="infoMsgColor"><s:text name="label.statetransition.inspectgroupseqmsg1" /></span><s:property value="#session.inspectGroupSeq"/><span class="infoMsgColor"><s:text name="label.statetransition.inspectgroupseqmsg2" /></span>
 							</s:if>
 							<s:else>
-								<s:text name="label.statetransition.inspectgroupseqmsg" /><s:property value="@com.saiten.util.WebAppConst@SINGLE_SPACE"/><s:property value="#session.inspectGroupSeq"/>
+								<span class="infoMsgColor"><s:text name="label.statetransition.inspectgroupseqmsg" /></span><s:property value="@com.saiten.util.WebAppConst@SINGLE_SPACE"/><s:property value="#session.inspectGroupSeq"/>
 							</s:else>
 						</span>
 						</s:else>
@@ -197,7 +197,7 @@ function enableLinksAndButtons(){
 							<a href="scoreSearch.action?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@STATE_TRAN_MENU_ID"/>" id="back" name="back" class="btn btn-primary btn-xl"><!-- <img class="rollover" src="./material/img/button/sampling_bn-back.gif" alt="%{getText('label.backtosearch')}" /> --><s:text name="label.backtosearch"></s:text></a>
 					</s:elseif>
 				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID">
-						<span class="errorMessage"><s:text name="error.message.kenshu" /></span>
+						<span class="infoMessage"><s:text name="error.message.kenshu" /></span>
 						<br><br>
 						<s:if  test="#session.questionInfo.prevRecordCount > @com.saiten.util.WebAppConst@ZERO">
 							<a href="showKenshuAnswerDetails.action?prevOrNextFlag=<s:property value="%{@com.saiten.util.WebAppConst@TRUE}" />" id="prev" name="prev" class="btn btn-primary btn-scoring-sm" style="width:99px; height:39px;"><!-- <img class="rollover" src="./material/img/button/back.gif" alt="%{getText('label.cancel')}" /> --><s:text name="label.previous"></s:text></a>
@@ -218,7 +218,7 @@ function enableLinksAndButtons(){
 						<a href="showKenshuSampling.action?selectedMenuId=<s:property value="@com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID"/>&sessionClearFlag=<s:property value="@com.saiten.util.WebAppConst@FALSE"/>" id="back" name="back" class="btn btn-primary btn-xl"><s:text name="label.backtosearch"></s:text></a>
 					</s:elseif>
 				<s:else> 
-					<span class="errorMessage"><s:text name="label.answernotavailable.norecordfound" /></span>
+					<span class="infoMessage"><s:text name="label.answernotavailable.norecordfound" /></span>
 					<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID">
 						<br><br>
 						<a href="scoreSearch.action?selectedMenuId=REFERENCE_SAMP_MENU_ID" id="back" name="back" class="btn btn-primary btn-xl"><!-- <img class="rollover" src="./material/img/button/sampling_bn-back.gif" alt="%{getText('label.backtosearch')}" /> --><s:text name="label.backtosearch"></s:text></a>

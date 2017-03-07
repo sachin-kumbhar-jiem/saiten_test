@@ -151,6 +151,18 @@ public interface ErrorCode {
 
 	public static final String UNLOCK_ANSWER_EXCEPTION = "S001921";
 
+	public static final String PDF_DOC_HIBERNATE_EXCEPTION = "S000382";
+
+	public static final String PDF_DOC_SERVICE_EXCEPTION = "S000383";
+
+	public static final String PDF_DOC_ACTION_EXCEPTION = "S000381";
+
+	public static final String MANUAL_UPLOAD_HIBERNATE_EXCEPTION = "S000392";
+
+	public static final String MANUAL_UPLOAD_SERVICE_EXCEPTION = "S000393";
+
+	public static final String MANUAL_UPLOAD_ACTION_EXCEPTION = "S000391";
+
 	public static final String EXCEPTION = "E100000";
 
 }

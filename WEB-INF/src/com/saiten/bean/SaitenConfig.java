@@ -44,22 +44,24 @@ public class SaitenConfig {
 	private LinkedHashMap<ScorerQuestionKey, ScorerWiseQuestionsSpecificFlags> scorerWiseQuestionsSpecificMap;
 
 	private LinkedHashMap<Byte, String> mstScorerRoleMap;
-	
+
 	private LinkedHashMap<Integer, MstTestsetnumQuestion> mstTestsetnumQuestionMap;
 
 	@SuppressWarnings("rawtypes")
 	private LinkedHashMap<String, HashMap> mstScorerQuestionsAndFlagsMap;
 
 	private LinkedHashMap<Integer, LinkedHashMap<Integer, Short>> mstMarkValueMap;
-	
+
 	private LinkedHashMap<Integer, Short> denyCategoryMap;
+
+	@SuppressWarnings("rawtypes")
+	private LinkedHashMap<Integer, Map> mstGradeDetailsMap;
 
 	public Map<SpecialScoringKey, String> getSpecialScoringMap() {
 		return specialScoringMap;
 	}
 
-	public void setSpecialScoringMap(
-			Map<SpecialScoringKey, String> specialScoringMap) {
+	public void setSpecialScoringMap(Map<SpecialScoringKey, String> specialScoringMap) {
 		this.specialScoringMap = specialScoringMap;
 	}
 
@@ -91,8 +93,7 @@ public class SaitenConfig {
 	 * 
 	 * @param menuIdAndScoringStateMap
 	 */
-	public void setMenuIdAndScoringStateMap(
-			LinkedHashMap<String, Short> menuIdAndScoringStateMap) {
+	public void setMenuIdAndScoringStateMap(LinkedHashMap<String, Short> menuIdAndScoringStateMap) {
 		this.menuIdAndScoringStateMap = menuIdAndScoringStateMap;
 	}
 
@@ -104,8 +105,7 @@ public class SaitenConfig {
 	 * 
 	 * @param mstGradeMap
 	 */
-	public void setMstGradeMap(
-			LinkedHashMap<GradeResultKey, MstGrade> mstGradeMap) {
+	public void setMstGradeMap(LinkedHashMap<GradeResultKey, MstGrade> mstGradeMap) {
 		this.mstGradeMap = mstGradeMap;
 	}
 
@@ -117,8 +117,7 @@ public class SaitenConfig {
 	 * 
 	 * @param historyScoringStatesMap
 	 */
-	public void setHistoryScoringStatesMap(
-			LinkedHashMap<ScoringStateKey, List<Short>> historyScoringStatesMap) {
+	public void setHistoryScoringStatesMap(LinkedHashMap<ScoringStateKey, List<Short>> historyScoringStatesMap) {
 		this.historyScoringStatesMap = historyScoringStatesMap;
 	}
 
@@ -130,8 +129,7 @@ public class SaitenConfig {
 	 * 
 	 * @param mstQuestionMap
 	 */
-	public void setMstQuestionMap(
-			LinkedHashMap<Integer, MstQuestion> mstQuestionMap) {
+	public void setMstQuestionMap(LinkedHashMap<Integer, MstQuestion> mstQuestionMap) {
 		this.mstQuestionMap = mstQuestionMap;
 	}
 
@@ -155,8 +153,7 @@ public class SaitenConfig {
 	 * 
 	 * @param gradeSequenceWiseMstGradeMap
 	 */
-	public void setGradeSequenceWiseMstGradeMap(
-			LinkedHashMap<GradeNumKey, MstGrade> gradeSequenceWiseMstGradeMap) {
+	public void setGradeSequenceWiseMstGradeMap(LinkedHashMap<GradeNumKey, MstGrade> gradeSequenceWiseMstGradeMap) {
 		this.gradeSequenceWiseMstGradeMap = gradeSequenceWiseMstGradeMap;
 	}
 
@@ -168,8 +165,7 @@ public class SaitenConfig {
 	 * 
 	 * @param pendingCategoryMap
 	 */
-	public void setPendingCategoryMap(
-			LinkedHashMap<Integer, Short> pendingCategoryMap) {
+	public void setPendingCategoryMap(LinkedHashMap<Integer, Short> pendingCategoryMap) {
 		this.pendingCategoryMap = pendingCategoryMap;
 	}
 
@@ -184,8 +180,7 @@ public class SaitenConfig {
 	 * @param checkPointsShortCutsMap
 	 *            the checkPointsShortCutsMap to set
 	 */
-	public void setCheckPointsShortCutsMap(
-			LinkedHashMap<Long, String> checkPointsShortCutsMap) {
+	public void setCheckPointsShortCutsMap(LinkedHashMap<Long, String> checkPointsShortCutsMap) {
 		this.checkPointsShortCutsMap = checkPointsShortCutsMap;
 	}
 
@@ -257,8 +252,7 @@ public class SaitenConfig {
 	 * @param mstMarkValueMap
 	 *            the mstMarkValueMap to set
 	 */
-	public void setMstMarkValueMap(
-			LinkedHashMap<Integer, LinkedHashMap<Integer, Short>> mstMarkValueMap) {
+	public void setMstMarkValueMap(LinkedHashMap<Integer, LinkedHashMap<Integer, Short>> mstMarkValueMap) {
 		this.mstMarkValueMap = mstMarkValueMap;
 	}
 
@@ -266,8 +260,7 @@ public class SaitenConfig {
 		return mstTestsetnumQuestionMap;
 	}
 
-	public void setMstTestsetnumQuestionMap(
-			LinkedHashMap<Integer, MstTestsetnumQuestion> mstTestsetnumQuestionMap) {
+	public void setMstTestsetnumQuestionMap(LinkedHashMap<Integer, MstTestsetnumQuestion> mstTestsetnumQuestionMap) {
 		this.mstTestsetnumQuestionMap = mstTestsetnumQuestionMap;
 	}
 
@@ -277,6 +270,16 @@ public class SaitenConfig {
 
 	public void setDenyCategoryMap(LinkedHashMap<Integer, Short> denyCategoryMap) {
 		this.denyCategoryMap = denyCategoryMap;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void setMstGradeDetailsMap(LinkedHashMap<Integer, Map> mstGradeDetailsMap) {
+		this.mstGradeDetailsMap = mstGradeDetailsMap;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public LinkedHashMap<Integer, Map> getMstGradeDetailsMap() {
+		return mstGradeDetailsMap;
 	}
 
 }

@@ -151,7 +151,7 @@
             <display:column style="width:4%;" property="scoringCompleteByBatch" titleKey='dailyStatusSearch.report.title.scoring.comlete.by.batch'  /> --%>
              
             <display:setProperty value="false" name="basic.empty.showtable"  />
-            <display:setProperty name="basic.msg.empty_list" ><s:text name="display.search.display.tag.basic.msg.empty_list"></s:text> </display:setProperty> 
+            <display:setProperty name="basic.msg.empty_list" ><span class="infoMsgColor"><s:text name="display.search.display.tag.basic.msg.empty_list"></s:text></span></display:setProperty> 
             <display:setProperty name="paging.banner.one_item_found" ><s:text name="display.search.display.tag.paging.banner.one_items_found" /></display:setProperty>
             <display:setProperty name="paging.banner.all_items_found" ><s:text name="display.search.display.tag.paging.banner.all_items_found" /></display:setProperty>
             <display:setProperty name="paging.banner.some_items_found" ><s:text name="display.search.display.tag.paging.banner.some_items_found" /></display:setProperty>  
@@ -180,7 +180,7 @@
             <display:column style="width:9%;" property="scoringSamplingTotal" titleKey='dailyStatusSearch.report.scorerwise.title.scoring.sampling.total'  />     
             <display:column style="width:10%;" property="forcedScoring" titleKey='dailyStatusSearch.report.scorerwise.title.forced.scoring'  />
             <display:setProperty value="false" name="basic.empty.showtable"  />
-            <display:setProperty name="basic.msg.empty_list" ><s:text name="display.search.display.tag.basic.msg.empty_list"></s:text> </display:setProperty> 
+            <display:setProperty name="basic.msg.empty_list" ><span class="infoMsgColor"><s:text name="display.search.display.tag.basic.msg.empty_list"></s:text></span></display:setProperty> 
             <display:setProperty name="paging.banner.one_item_found" ><s:text name="display.search.display.tag.paging.banner.one_items_found" /></display:setProperty>
             <display:setProperty name="paging.banner.all_items_found" ><s:text name="display.search.display.tag.paging.banner.all_items_found" /></display:setProperty>
             <display:setProperty name="paging.banner.some_items_found" ><s:text name="display.search.display.tag.paging.banner.some_items_found" /></display:setProperty>  

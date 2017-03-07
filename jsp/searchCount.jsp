@@ -62,13 +62,13 @@
 						<s:text name="label.statetransition.searchcount"></s:text>
 			</h1>
 					<p>
-						<s:text name="label.statetransition.searchresult"></s:text>&nbsp;
+						<span class="infoMsgColor"><s:text name="label.statetransition.searchresult"></s:text></span>&nbsp;
 						<strong>
 							<span style="font-size:30px;">
 								<s:property value="recordCount"/>
 							</span>
 						</strong>
-						<s:text name="label.statetransition.casesfound"></s:text>
+						<span class="infoMsgColor"><s:text name="label.statetransition.casesfound"></s:text></span>
 					</p>
 		    </div>
 

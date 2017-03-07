@@ -54,16 +54,14 @@ public class ScoreServiceImpl implements ScoreService {
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public TranDescScoreInfo findAnswer(int questionSeq, String menuId,
-			String scorerId, String connectionString, Integer gradeNum,
-			Short pendingCategory, Short denyCategory, String answerFormNum,
-			Integer historyRecordCount, int roleId, Short selectedMarkValue,
-			QuestionInfo questionInfo) {
+	public TranDescScoreInfo findAnswer(int questionSeq, String menuId, String scorerId, String connectionString,
+			Integer gradeNum, Short pendingCategory, Short denyCategory, String answerFormNum,
+			Integer historyRecordCount, int roleId, Short selectedMarkValue, QuestionInfo questionInfo,
+			Double bitValue) {
 		try {
 			// Get menuIdAndScoringStateMap from saitenConfigObject
 			LinkedHashMap<String, Short> menuIdAndScoringStateMap = ((SaitenConfig) ServletActionContext
-					.getServletContext().getAttribute("saitenConfigObject"))
-					.getMenuIdAndScoringStateMap();
+					.getServletContext().getAttribute("saitenConfigObject")).getMenuIdAndScoringStateMap();
 
 			/*
 			 * List<Integer> gradeSeqList = new ArrayList<Integer>(); if
@@ -78,21 +76,17 @@ public class ScoreServiceImpl implements ScoreService {
 
 			// Fetch answer corresponding to selected question
 			if (!(menuId.equals(WebAppConst.SPECIAL_SCORING_BLIND_TYPE_MENU_ID)
-					|| menuId
-							.equals(WebAppConst.SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID)
-					|| menuId
-							.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID) || menuId
-						.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID))) {
+					|| menuId.equals(WebAppConst.SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID)
+					|| menuId.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID)
+					|| menuId.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID))) {
 				Map<String, String> configMap = SaitenUtil.getConfigMap();
-				boolean qualityFromPendingMenu = Boolean.valueOf(configMap
-						.get("qualityFromPendingMenu"));
+				boolean qualityFromPendingMenu = Boolean.valueOf(configMap.get("qualityFromPendingMenu"));
 				Integer randomNumberRange = null;
 				for (int count = 0; count <= 5; count++) {
 					boolean passByRandomFlag = false;
 					if (count < 5) {
 						randomNumberRange = Integer
-								.valueOf(saitenGlobalProperties
-										.getProperty(WebAppConst.RANDOM_NUMBER));
+								.valueOf(saitenGlobalProperties.getProperty(WebAppConst.RANDOM_NUMBER));
 						passByRandomFlag = true;
 					}
 
@@ -106,25 +100,19 @@ public class ScoreServiceImpl implements ScoreService {
 						}
 					}
 
-					tranDescScoreInfoList = tranDescScoreDAO.findAnswer(
-							questionSequenceList, menuId, scorerId,
-							menuIdAndScoringStateMap, connectionString,
-							gradeNum, pendingCategory, denyCategory,
-							answerFormNum, historyRecordCount,
-							randomNumberRange, passByRandomFlag,
-							selectedMarkValueObj, roleId,
-							qualityFromPendingMenu,
-							questionInfo.getInspectionGroupSeq());
+					tranDescScoreInfoList = tranDescScoreDAO.findAnswer(questionSequenceList, menuId, scorerId,
+							menuIdAndScoringStateMap, connectionString, gradeNum, pendingCategory, denyCategory,
+							answerFormNum, historyRecordCount, randomNumberRange, passByRandomFlag,
+							selectedMarkValueObj, roleId, qualityFromPendingMenu, questionInfo.getInspectionGroupSeq(),
+							bitValue);
 					if (!tranDescScoreInfoList.isEmpty()) {
 						break;
 					}
 				}
 
 			} else {
-				tranDescScoreInfoList = tranDescScoreDAO.findAnswer(
-						questionSequenceList, menuId, scorerId,
-						menuIdAndScoringStateMap, connectionString,
-						answerFormNum, historyRecordCount, roleId);
+				tranDescScoreInfoList = tranDescScoreDAO.findAnswer(questionSequenceList, menuId, scorerId,
+						menuIdAndScoringStateMap, connectionString, answerFormNum, historyRecordCount, roleId);
 			}
 			// Build tranDescScoreInfo object to display on scoring screen
 			boolean historyScreenFlag = WebAppConst.FALSE;
@@ -132,21 +120,18 @@ public class ScoreServiceImpl implements ScoreService {
 			boolean bookmarkScreenFlag = WebAppConst.FALSE;
 			Integer qcSeq = null;
 			if (!tranDescScoreInfoList.isEmpty()) {
-				return buildTranDescScoreInfo(tranDescScoreInfoList, scorerId,
-						historyScreenFlag, historySeq, menuId,
+				return buildTranDescScoreInfo(tranDescScoreInfoList, scorerId, historyScreenFlag, historySeq, menuId,
 						bookmarkScreenFlag, qcSeq, questionInfo);
 			} else {
 				TranDescScoreInfo tranDescScoreInfo = null;
 				return tranDescScoreInfo;
 			}
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION,
-					e);
+			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION, e);
 		}
 	}
 
@@ -160,30 +145,24 @@ public class ScoreServiceImpl implements ScoreService {
 	 * @throws URISyntaxException
 	 */
 	@SuppressWarnings("rawtypes")
-	private TranDescScoreInfo buildTranDescScoreInfo(
-			List tranDescScoreInfoList, String scorerId,
-			boolean historyScreenFlag, Integer historySeq, String menuId,
-			boolean bookmarkScreenFlag, Integer qcSeq, QuestionInfo questionInfo)
-			throws IOException, URISyntaxException {
+	private TranDescScoreInfo buildTranDescScoreInfo(List tranDescScoreInfoList, String scorerId,
+			boolean historyScreenFlag, Integer historySeq, String menuId, boolean bookmarkScreenFlag, Integer qcSeq,
+			QuestionInfo questionInfo) throws IOException, URISyntaxException {
 		TranDescScoreInfo tranDescScoreInfo = null;
 
 		if (!tranDescScoreInfoList.isEmpty()) {
-			Object[] tranDescScoreObjArray = (Object[]) tranDescScoreInfoList
-					.get(0);
+			Object[] tranDescScoreObjArray = (Object[]) tranDescScoreInfoList.get(0);
 
 			// Get current WebApp Context
-			ApplicationContext ctx = ContextLoader
-					.getCurrentWebApplicationContext();
+			ApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
 
 			AnswerInfo answerInfo = (AnswerInfo) ctx.getBean("answerInfo");
-			tranDescScoreInfo = (TranDescScoreInfo) ctx
-					.getBean("tranDescScoreInfo");
+			tranDescScoreInfo = (TranDescScoreInfo) ctx.getBean("tranDescScoreInfo");
 
 			tranDescScoreInfo.setAnswerInfo(answerInfo);
 
 			if (tranDescScoreObjArray[0] != null) {
-				answerInfo.setAnswerSeq(Integer
-						.valueOf(tranDescScoreObjArray[0].toString()));
+				answerInfo.setAnswerSeq(Integer.valueOf(tranDescScoreObjArray[0].toString()));
 			}
 
 			if (!bookmarkScreenFlag) {
@@ -192,15 +171,12 @@ public class ScoreServiceImpl implements ScoreService {
 				answerInfo.setLockBy(scorerId);
 			}
 
-			tranDescScoreInfo
-					.setAnswerFormNumber((String) tranDescScoreObjArray[1]);
+			tranDescScoreInfo.setAnswerFormNumber((String) tranDescScoreObjArray[1]);
 			if (questionInfo.getQuestionType() == WebAppConst.WRITING_TYPE) {
 				String imageFileName = (String) tranDescScoreObjArray[2];
-				tranDescScoreInfo.setImageFileName(SaitenUtil
-						.getAnswerDataText(imageFileName, questionInfo));
+				tranDescScoreInfo.setImageFileName(SaitenUtil.getAnswerDataText(imageFileName, questionInfo));
 			} else {
-				tranDescScoreInfo
-						.setImageFileName((String) tranDescScoreObjArray[2]);
+				tranDescScoreInfo.setImageFileName((String) tranDescScoreObjArray[2]);
 			}
 
 			// fetch markvalues for answer.
@@ -216,12 +192,10 @@ public class ScoreServiceImpl implements ScoreService {
 					tranDescScoreInfo.setMarkValueList(markValueList);
 				}
 				if ((String) tranDescScoreObjArray[8] != null) {
-					answerInfo
-							.setLatestScreenScorerId((String) tranDescScoreObjArray[8]);
+					answerInfo.setLatestScreenScorerId((String) tranDescScoreObjArray[8]);
 				}
 				if ((String) tranDescScoreObjArray[9] != null) {
-					answerInfo
-							.setSecondLatestScreenScorerId((String) tranDescScoreObjArray[9]);
+					answerInfo.setSecondLatestScreenScorerId((String) tranDescScoreObjArray[9]);
 				}
 			}
 
@@ -229,15 +203,12 @@ public class ScoreServiceImpl implements ScoreService {
 				answerInfo.setQcSeq(qcSeq);
 				answerInfo.setScorerComment((String) tranDescScoreObjArray[3]);
 
-				tranDescScoreInfo
-						.setGradeSeq((Integer) tranDescScoreObjArray[4]);
+				tranDescScoreInfo.setGradeSeq((Integer) tranDescScoreObjArray[4]);
 
 				answerInfo.setBitValue((Double) tranDescScoreObjArray[5]);
 				answerInfo.setUpdateDate((Date) tranDescScoreObjArray[6]);
-				answerInfo
-						.setPendingCategorySeq((Integer) tranDescScoreObjArray[7]);
-				tranDescScoreInfo
-						.setScoringState((Short) tranDescScoreObjArray[8]);
+				answerInfo.setPendingCategorySeq((Integer) tranDescScoreObjArray[7]);
+				tranDescScoreInfo.setScoringState((Short) tranDescScoreObjArray[8]);
 				answerInfo.setQuestionSeq((Integer) tranDescScoreObjArray[9]);
 
 			} else {
@@ -245,8 +216,7 @@ public class ScoreServiceImpl implements ScoreService {
 				if (historyScreenFlag) {
 					if (historySeq == null && qcSeq == null) {
 						Integer seq = (Integer) tranDescScoreObjArray[12];
-						BigInteger bigInt = new BigInteger(
-								tranDescScoreObjArray[13].toString());
+						BigInteger bigInt = new BigInteger(tranDescScoreObjArray[13].toString());
 						int isQc = bigInt.intValue();
 						if (isQc == 1) {
 							answerInfo.setQcSeq(seq);
@@ -256,39 +226,26 @@ public class ScoreServiceImpl implements ScoreService {
 					} else {
 						answerInfo.setHistorySeq(historySeq);
 					}
-					answerInfo
-							.setBookMarkFlag((Character) tranDescScoreObjArray[3]);
-					answerInfo
-							.setScorerComment((String) tranDescScoreObjArray[4]);
+					answerInfo.setBookMarkFlag((Character) tranDescScoreObjArray[3]);
+					answerInfo.setScorerComment((String) tranDescScoreObjArray[4]);
 
-					tranDescScoreInfo
-							.setGradeSeq((Integer) tranDescScoreObjArray[5]);
+					tranDescScoreInfo.setGradeSeq((Integer) tranDescScoreObjArray[5]);
 
 					answerInfo.setBitValue((Double) tranDescScoreObjArray[6]);
 					answerInfo.setUpdateDate((Date) tranDescScoreObjArray[7]);
-					answerInfo
-							.setPendingCategorySeq((Integer) tranDescScoreObjArray[8]);
-					tranDescScoreInfo
-							.setScoringState((Short) tranDescScoreObjArray[9]);
-					answerInfo
-							.setQuestionSeq((Integer) tranDescScoreObjArray[10]);
-					answerInfo
-							.setQualityCheckFlag((Character) tranDescScoreObjArray[11]);
+					answerInfo.setPendingCategorySeq((Integer) tranDescScoreObjArray[8]);
+					tranDescScoreInfo.setScoringState((Short) tranDescScoreObjArray[9]);
+					answerInfo.setQuestionSeq((Integer) tranDescScoreObjArray[10]);
+					answerInfo.setQualityCheckFlag((Character) tranDescScoreObjArray[11]);
 
-				} else if (!historyScreenFlag
-						&& (menuId.equals(WebAppConst.CHECKING_MENU_ID)
-								|| menuId
-										.equals(WebAppConst.INSPECTION_MENU_ID)
-								|| menuId.equals(WebAppConst.DENY_MENU_ID)
-								|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
-								|| menuId
-										.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID) || menuId
-									.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID))) {
-					tranDescScoreInfo
-							.setGradeSeq((Integer) tranDescScoreObjArray[3]);
+				} else if (!historyScreenFlag && (menuId.equals(WebAppConst.CHECKING_MENU_ID)
+						|| menuId.equals(WebAppConst.INSPECTION_MENU_ID) || menuId.equals(WebAppConst.DENY_MENU_ID)
+						|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
+						|| menuId.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)
+						|| menuId.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID))) {
+					tranDescScoreInfo.setGradeSeq((Integer) tranDescScoreObjArray[3]);
 					answerInfo.setBitValue((Double) tranDescScoreObjArray[4]);
-					answerInfo
-							.setQuestionSeq((Integer) tranDescScoreObjArray[5]);
+					answerInfo.setQuestionSeq((Integer) tranDescScoreObjArray[5]);
 					answerInfo.setUpdateDate((Date) tranDescScoreObjArray[6]);
 				}
 			}
@@ -297,49 +254,43 @@ public class ScoreServiceImpl implements ScoreService {
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	public List<Integer> findQcAnsSeqList(int questionSeq, String scorerId,
-			Short selectedMarkValue, String connectionString) {
+	public List<Integer> findQcAnsSeqList(int questionSeq, String scorerId, Short selectedMarkValue,
+			String connectionString) {
 		List<Integer> qcAnswerSeqList = new ArrayList<Integer>();
 		List<Integer> questionSequenceList = new ArrayList<Integer>();
 		questionSequenceList.add(questionSeq);
 
-		qcAnswerSeqList = tranDescScoreDAO.findQcAnsSeqList(
-				questionSequenceList, scorerId, connectionString,
+		qcAnswerSeqList = tranDescScoreDAO.findQcAnsSeqList(questionSequenceList, scorerId, connectionString,
 				selectedMarkValue);
 
 		return qcAnswerSeqList;
 
 	}
 
-	public TranDescScoreInfo findQualityCheckAnswers(int qcAnswerSeq,
-			String menuId, String scorerId, String connectionString,
-			QuestionInfo questionInfo) {
+	public TranDescScoreInfo findQualityCheckAnswers(int qcAnswerSeq, String menuId, String scorerId,
+			String connectionString, QuestionInfo questionInfo) {
 		try {
 			@SuppressWarnings("rawtypes")
 			List tranDescScoreInfoList = new ArrayList();
-			tranDescScoreInfoList = tranDescScoreDAO.findQualityCheckAnswers(
-					qcAnswerSeq, connectionString);
+			tranDescScoreInfoList = tranDescScoreDAO.findQualityCheckAnswers(qcAnswerSeq, connectionString);
 			// Build tranDescScoreInfo object to display on scoring screen
 			boolean historyScreenFlag = WebAppConst.FALSE;
 			Integer historySeq = null;
 			boolean bookmarkScreenFlag = WebAppConst.FALSE;
 			Integer qcSeq = null;
 			if (!tranDescScoreInfoList.isEmpty()) {
-				return buildTranDescScoreInfo(tranDescScoreInfoList, scorerId,
-						historyScreenFlag, historySeq, menuId,
+				return buildTranDescScoreInfo(tranDescScoreInfoList, scorerId, historyScreenFlag, historySeq, menuId,
 						bookmarkScreenFlag, qcSeq, questionInfo);
 			} else {
 				TranDescScoreInfo tranDescScoreInfo = null;
 				return tranDescScoreInfo;
 			}
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION,
-					e);
+			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION, e);
 		}
 	}
 
@@ -350,20 +301,16 @@ public class ScoreServiceImpl implements ScoreService {
 	 * int)
 	 */
 	public GradeInfo buildGradeInfo(Integer gradeSeq, int questionSeq) {
-		GradeInfo gradeInfo = (GradeInfo) SaitenUtil.getApplicationContext()
-				.getBean("gradeInfo");
+		GradeInfo gradeInfo = (GradeInfo) SaitenUtil.getApplicationContext().getBean("gradeInfo");
 		try {
-			Integer gradeNum = SaitenUtil.getGradeNumByGradeSequence(gradeSeq,
-					questionSeq);
+			Integer gradeNum = SaitenUtil.getGradeNumByGradeSequence(gradeSeq, questionSeq);
 			if (gradeNum != null) {
 				gradeInfo.setGradeNum(gradeNum.toString());
 			}
-			gradeInfo.setResult(SaitenUtil.getResultByGradeSequence(gradeSeq,
-					questionSeq));
+			gradeInfo.setResult(SaitenUtil.getResultByGradeSequence(gradeSeq, questionSeq));
 			return gradeInfo;
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.HISTORY_SCORE_SERVICE_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.HISTORY_SCORE_SERVICE_EXCEPTION, e);
 		}
 
 	}
@@ -376,9 +323,8 @@ public class ScoreServiceImpl implements ScoreService {
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public TranDescScoreInfo findHistoryAnswer(Integer qcSeq,
-			Integer historySeq, String connectionString, String scorerId,
-			boolean bookmarkScreenFlag, QuestionInfo questionInfo) {
+	public TranDescScoreInfo findHistoryAnswer(Integer qcSeq, Integer historySeq, String connectionString,
+			String scorerId, boolean bookmarkScreenFlag, QuestionInfo questionInfo) {
 		boolean historyScreenFlag = WebAppConst.TRUE;
 		try {
 			List historyInfoList = null;
@@ -386,40 +332,34 @@ public class ScoreServiceImpl implements ScoreService {
 			boolean qcFlag = false;
 			if (qcSeq != null) {
 				qcFlag = WebAppConst.TRUE;
-				historyInfoList = tranQualitycheckScoreDAO.findQcHistoryAnswer(
-						qcSeq, connectionString);
+				historyInfoList = tranQualitycheckScoreDAO.findQcHistoryAnswer(qcSeq, connectionString);
 			} else {
-				historyInfoList = tranDescScoreHistoryDAO.findHistoryAnswer(
-						historySeq, connectionString);
+				historyInfoList = tranDescScoreHistoryDAO.findHistoryAnswer(historySeq, connectionString);
 			}
 
 			// menuId is not needed in case of history
 			String menuId = null;
-			return buildTranDescScoreInfo(historyInfoList, scorerId,
-					historyScreenFlag, historySeq, menuId, bookmarkScreenFlag,
-					qcSeq, questionInfo);
+			return buildTranDescScoreInfo(historyInfoList, scorerId, historyScreenFlag, historySeq, menuId,
+					bookmarkScreenFlag, qcSeq, questionInfo);
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.HISTORY_SCORE_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.HISTORY_SCORE_HIBERNATE_EXCEPTION, he);
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.HISTORY_SCORE_SERVICE_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.HISTORY_SCORE_SERVICE_EXCEPTION, e);
 		}
 	}
 
 	@Override
-	public List<Double> getFirstTimeSecondTimeCheckPoints(int answerSeq,
-			QuestionInfo questionInfo, Short currentScoringState) {
+	public List<Double> getFirstTimeSecondTimeCheckPoints(int answerSeq, QuestionInfo questionInfo,
+			Short currentScoringState) {
 		Short[] latestScoringStates = null;
 
 		try {
-			if ((ArrayUtils.contains(WebAppConst.DENY_SCORING_STATES,
-					currentScoringState) || questionInfo.getMenuId().equals(
-					WebAppConst.DENY_MENU_ID))
-					&& (questionInfo.getQuestionType() == WebAppConst.SPEAKING_TYPE || questionInfo
-							.getQuestionType() == WebAppConst.WRITING_TYPE)) {
+			if ((ArrayUtils.contains(WebAppConst.DENY_SCORING_STATES, currentScoringState)
+					|| questionInfo.getMenuId().equals(WebAppConst.DENY_MENU_ID))
+					&& (questionInfo.getQuestionType() == WebAppConst.SPEAKING_TYPE
+							|| questionInfo.getQuestionType() == WebAppConst.WRITING_TYPE)) {
 
 				latestScoringStates = WebAppConst.DENY_PREVIOUS_SCORING_STATES;
 
@@ -427,18 +367,14 @@ public class ScoreServiceImpl implements ScoreService {
 				latestScoringStates = WebAppConst.MISMATCH_PREVIOUS_SCORING_STATES;
 			}
 
-			List<Double> bitValueList = tranDescScoreHistoryDAO
-					.getFirstTimeSecondTimeCheckPoints(answerSeq,
-							latestScoringStates, questionInfo,
-							currentScoringState);
+			List<Double> bitValueList = tranDescScoreHistoryDAO.getFirstTimeSecondTimeCheckPoints(answerSeq,
+					latestScoringStates, questionInfo, currentScoringState);
 
 			return bitValueList;
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.HISTORY_SCORE_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.HISTORY_SCORE_HIBERNATE_EXCEPTION, he);
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.HISTORY_SCORE_SERVICE_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.HISTORY_SCORE_SERVICE_EXCEPTION, e);
 		}
 	}
 
@@ -449,18 +385,14 @@ public class ScoreServiceImpl implements ScoreService {
 	 * java.lang.String)
 	 */
 	@Override
-	public void lockAnswer(int answerSeq, String scorerId,
-			String connectionString, Date updateDate) {
+	public void lockAnswer(int answerSeq, String scorerId, String connectionString, Date updateDate) {
 		try {
 			// Lock answer
-			tranDescScoreDAO.lockAnswer(answerSeq, scorerId, connectionString,
-					updateDate);
+			tranDescScoreDAO.lockAnswer(answerSeq, scorerId, connectionString, updateDate);
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION,
-					e);
+			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION, e);
 		}
 	}
 
@@ -471,20 +403,16 @@ public class ScoreServiceImpl implements ScoreService {
 	 * java.lang.String)
 	 */
 	@Override
-	public void unlockAnswer(int questionSeq, String lockBy,
-			String connectionString, Integer answerSeq) {
+	public void unlockAnswer(int questionSeq, String lockBy, String connectionString, Integer answerSeq) {
 		try {
 
 			// Unlock answer
-			tranDescScoreDAO.unlockAnswer(questionSeq, lockBy,
-					connectionString, answerSeq);
+			tranDescScoreDAO.unlockAnswer(questionSeq, lockBy, connectionString, answerSeq);
 
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION,
-					e);
+			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION, e);
 		}
 	}
 
@@ -495,22 +423,17 @@ public class ScoreServiceImpl implements ScoreService {
 	 * java.lang.String, java.util.Date)
 	 */
 	@Override
-	public boolean isAnswerAlreadyScored(int answerSeq,
-			String connectionString, Date infoUpdateDate) {
+	public boolean isAnswerAlreadyScored(int answerSeq, String connectionString, Date infoUpdateDate) {
 		try {
-			TranDescScore tranDescScore = tranDescScoreDAO.findById(answerSeq,
-					connectionString);
+			TranDescScore tranDescScore = tranDescScoreDAO.findById(answerSeq, connectionString);
 			// if updateDate matched it implies answer not already scored.
 			// else if updateDate not matched it implies answer already scored.
-			return !SaitenUtil.getSaitenFormatDate(
-					tranDescScore.getUpdateDate()).equals(
-					SaitenUtil.getSaitenFormatDate(infoUpdateDate));
+			return !SaitenUtil.getSaitenFormatDate(tranDescScore.getUpdateDate())
+					.equals(SaitenUtil.getSaitenFormatDate(infoUpdateDate));
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION,
-					e);
+			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION, e);
 		}
 	}
 
@@ -524,8 +447,7 @@ public class ScoreServiceImpl implements ScoreService {
 	/**
 	 * @param tranDescScoreHistoryDAO
 	 */
-	public void setTranDescScoreHistoryDAO(
-			TranDescScoreHistoryDAO tranDescScoreHistoryDAO) {
+	public void setTranDescScoreHistoryDAO(TranDescScoreHistoryDAO tranDescScoreHistoryDAO) {
 		this.tranDescScoreHistoryDAO = tranDescScoreHistoryDAO;
 	}
 
@@ -537,10 +459,9 @@ public class ScoreServiceImpl implements ScoreService {
 	 * .info.QuestionInfo, com.saiten.info.MstScorerInfo, java.util.Date,
 	 * boolean)
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unused" })
 	@Override
-	public TranDescScoreInfo findPrevOrNextHistoryAnswer(
-			QuestionInfo questionInfo, MstScorerInfo scorerInfo,
+	public TranDescScoreInfo findPrevOrNextHistoryAnswer(QuestionInfo questionInfo, MstScorerInfo scorerInfo,
 			Date updateDate, boolean isPrevious, boolean bookmarkScreenFlag) {
 		try {
 			int questionSeq = questionInfo.getQuestionSeq();
@@ -550,43 +471,34 @@ public class ScoreServiceImpl implements ScoreService {
 			char noDbUpdate = scorerInfo.getNoDbUpdate();
 			List tranDescScoreHistoryInfoList = null;
 			Character questionType = questionInfo.getQuestionType();
-			if (menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID)
-					|| menuId.equals(WebAppConst.SECOND_SCORING_MENU_ID)
+			if (menuId.equals(WebAppConst.FIRST_SCORING_MENU_ID) || menuId.equals(WebAppConst.SECOND_SCORING_MENU_ID)
 			/*
 			 * && (questionType == WebAppConst.SPEAKING_TYPE || questionType ==
 			 * WebAppConst.WRITING_TYPE)
 			 */) {
-				tranDescScoreHistoryInfoList = tranDescScoreHistoryDAO
-						.findPrevOrNextHistoryAndQcAnswer(questionSeq, menuId,
-								scorerId, connectionString,
-								getScoringStateList(menuId, noDbUpdate),
-								updateDate, isPrevious);
+				tranDescScoreHistoryInfoList = tranDescScoreHistoryDAO.findPrevOrNextHistoryAndQcAnswer(questionSeq,
+						menuId, scorerId, connectionString, getScoringStateList(menuId, noDbUpdate), updateDate,
+						isPrevious);
 
 			} else {
 
 				// Find prev or next history record based on isPrevious value
-				tranDescScoreHistoryInfoList = tranDescScoreHistoryDAO
-						.findPrevOrNextHistoryAnswer(questionSeq, menuId,
-								scorerId, connectionString,
-								getScoringStateList(menuId, noDbUpdate),
-								updateDate, isPrevious);
+				tranDescScoreHistoryInfoList = tranDescScoreHistoryDAO.findPrevOrNextHistoryAnswer(questionSeq, menuId,
+						scorerId, connectionString, getScoringStateList(menuId, noDbUpdate), updateDate, isPrevious);
 			}
 
 			// Build tranDescScoreInfo history record object to display on
 			// scoring screen
 			boolean historyScreenFlag = WebAppConst.TRUE;
 			Integer qcSeq = null;
-			return buildTranDescScoreInfo(tranDescScoreHistoryInfoList,
-					scorerId, historyScreenFlag, null, menuId,
+			return buildTranDescScoreInfo(tranDescScoreHistoryInfoList, scorerId, historyScreenFlag, null, menuId,
 					bookmarkScreenFlag, qcSeq, questionInfo);
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
+			throw new SaitenRuntimeException(ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION,
-					e);
+			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION, e);
 		}
 	}
 
@@ -601,8 +513,7 @@ public class ScoreServiceImpl implements ScoreService {
 		scoringStateKey.setNoDbUpdate(noDbUpdate);
 
 		LinkedHashMap<ScoringStateKey, List<Short>> historyScoringStatesMap = ((SaitenConfig) ServletActionContext
-				.getServletContext().getAttribute("saitenConfigObject"))
-				.getHistoryScoringStatesMap();
+				.getServletContext().getAttribute("saitenConfigObject")).getHistoryScoringStatesMap();
 
 		// Get scoringStateList based on menuId and noDbUpdate
 		// e.g 122, 123 OR 322, 323
@@ -613,14 +524,12 @@ public class ScoreServiceImpl implements ScoreService {
 	 * @param tranDescScoreHistoryInfoList
 	 * @return Integer
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unused" })
 	private Integer getHistorySeq(List tranDescScoreHistoryInfoList) {
 		Integer historySeq = null;
 		if (!tranDescScoreHistoryInfoList.isEmpty()) {
 			// Get historySeq from tranDescScoreHistoryInfoList
-			historySeq = Integer
-					.valueOf(((Object[]) tranDescScoreHistoryInfoList.get(0))[12]
-							.toString());
+			historySeq = Integer.valueOf(((Object[]) tranDescScoreHistoryInfoList.get(0))[12].toString());
 		}
 
 		return historySeq;
@@ -634,8 +543,7 @@ public class ScoreServiceImpl implements ScoreService {
 	 */
 	@SuppressWarnings("rawtypes")
 	public Integer findTestsetNumSeq(Integer answerSeq, String connectionString) {
-		List testsetnumseqList = tranDescScoreDAO.findTestsetNumSeq(answerSeq,
-				connectionString);
+		List testsetnumseqList = tranDescScoreDAO.findTestsetNumSeq(answerSeq, connectionString);
 		if (testsetnumseqList != null) {
 			return Integer.parseInt(testsetnumseqList.get(0).toString());
 		} else {
@@ -656,8 +564,7 @@ public class ScoreServiceImpl implements ScoreService {
 	 * @param tranQualitycheckScoreDAO
 	 *            the tranQualitycheckScoreDAO to set
 	 */
-	public void setTranQualitycheckScoreDAO(
-			TranQualitycheckScoreDAO tranQualitycheckScoreDAO) {
+	public void setTranQualitycheckScoreDAO(TranQualitycheckScoreDAO tranQualitycheckScoreDAO) {
 		this.tranQualitycheckScoreDAO = tranQualitycheckScoreDAO;
 	}
 

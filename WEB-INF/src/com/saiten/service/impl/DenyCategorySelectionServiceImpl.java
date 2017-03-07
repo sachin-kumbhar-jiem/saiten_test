@@ -4,14 +4,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import com.saiten.dao.MstDenyCategoryDAO;
 import com.saiten.service.DenyCategorySelectionService;
 import com.saiten.util.SaitenUtil;
 
-public class DenyCategorySelectionServiceImpl implements
-		DenyCategorySelectionService {
+public class DenyCategorySelectionServiceImpl implements DenyCategorySelectionService {
 
 	private MstDenyCategoryDAO mstDenyCategoryDAO;
 
@@ -19,8 +16,7 @@ public class DenyCategorySelectionServiceImpl implements
 	@Override
 	public Map<Short, String> findDenyCategoriesByQuestionSeq(int questionSeq) {
 		try {
-			List denyCategoryList = mstDenyCategoryDAO
-					.findDenyCategoriesByQuestionSeq(questionSeq);
+			List denyCategoryList = mstDenyCategoryDAO.findDenyCategoriesByQuestionSeq(questionSeq);
 			return buildDenyCategoryMap(denyCategoryList);
 		} catch (Exception e) {
 
@@ -32,7 +28,7 @@ public class DenyCategorySelectionServiceImpl implements
 	 * @param denyCategoryList
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unused" })
 	private Map<Short, String> buildDenyCategoryMap(List denyCategoryList) {
 		Map<Short, String> denyCategoryMap = new LinkedHashMap<Short, String>();
 

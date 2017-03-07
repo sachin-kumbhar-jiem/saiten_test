@@ -129,6 +129,8 @@
    	
    	<bean id="tranDescScoreDAO" class="com.saiten.dao.impl.TranDescScoreDAOImpl" />
    	
+   	<bean id="answerDetailDAO" class=" com.saiten.dao.impl.AnswerDetailDAOImpl" />
+   
    	<bean id="tranQualitycheckScoreDAO" class="com.saiten.dao.impl.TranQualitycheckScoreDAOImpl" />
    	
    	<bean id="answerInfo" class="com.saiten.info.AnswerInfo" scope="request" />
@@ -378,10 +380,28 @@
    	    <property name="dailyReportsInfo" ref="dailyReportsInfo" />
    	    <property name="tranScorerAccessLogDAO" ref="tranScorerAccessLogDAO" />
    	    <property name="tranDescScoreHistoryDAO" ref="tranDescScoreHistoryDAO" />
+   	    <property name="answerDetailDAO" ref="answerDetailDAO"/>
    	</bean>
    	 	
    	<bean id="dailyReportsInfo" class="com.saiten.info.DailyReportsInfo"></bean>
-  	
+   	
+   	<bean id="displayPdfDocAction" class="com.saiten.action.DisplayPdfDocAction" scope="request">
+   		<property name="displayPdfDocService" ref="displayPdfDocService"></property>
+   	</bean>
+   	
+   	<bean id="displayPdfDocService" class="com.saiten.service.impl.DisplayPdfDocServiceImpl">
+   		<property name="mstQuestionDAO" ref="mstQuestionDAO"></property>
+   	</bean>
+   	
+   	<bean id="uploadManualAction" class="com.saiten.action.UploadManualAction" scope="request">
+   		<property name="uploadManualService" ref="uploadManualService"></property>
+   		<property name="saitenTransactionManager" ref="saitenTransactionManager"></property>
+   	</bean>
+   	
+   	<bean id="uploadManualService" class="com.saiten.service.impl.UploadManualServiceImpl">
+   		<property name="mstQuestionDAO" ref="mstQuestionDAO"></property>
+   	</bean>
+   	
   	<!-- database.properties bean configuration  -->
    	<util:properties id="saitenDbProperties" location="classpath:config/database/properties/database.properties" />
    	

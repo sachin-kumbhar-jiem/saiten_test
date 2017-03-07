@@ -21,6 +21,7 @@ import com.saiten.service.ScorerLoggingService;
 import com.saiten.util.AESEncryptionDecryptionUtil;
 import com.saiten.util.ErrorCode;
 import com.saiten.util.SaitenMasterUtil;
+import com.saiten.util.SaitenUtil;
 import com.saiten.util.WebAppConst;
 
 /**
@@ -28,8 +29,7 @@ import com.saiten.util.WebAppConst;
  * @version 1.0
  * @created 05-Dec-2012 4:59:11 PM
  */
-public class LoginServiceAction extends ActionSupport implements SessionAware,
-		ServletRequestAware {
+public class LoginServiceAction extends ActionSupport implements SessionAware, ServletRequestAware {
 
 	private static Logger log = Logger.getLogger(LoginServiceAction.class);
 
@@ -46,6 +46,7 @@ public class LoginServiceAction extends ActionSupport implements SessionAware,
 	HttpServletRequest request;
 	private String loginPageUrl;
 	private ScorerLoggingService scorerLoggingService;
+
 	private void buildSessionObject() {
 		session.put("scorerInfo", scorerInfo);
 
@@ -57,50 +58,50 @@ public class LoginServiceAction extends ActionSupport implements SessionAware,
 			// will get encrypted scorerId and password.
 			String scorerId = request.getParameter("scorerId");
 			String password = request.getParameter("password");
-			Integer lmsInstanceId = Integer.valueOf(AESEncryptionDecryptionUtil
-					.decrypt(request.getParameter("instance")));
-			String lmsUrl = scorerLoggingService.getUrlById(lmsInstanceId);
+			Integer lmsInstanceId = Integer
+					.valueOf(AESEncryptionDecryptionUtil.decrypt(request.getParameter("instance")));
+			Map<String, String> configMap = SaitenUtil.getConfigMap();
+			String lmsUrl = null;
+			if (Boolean.valueOf(configMap.get("isMultipleLmsInstances"))) {
+				lmsUrl = scorerLoggingService.getUrlById(lmsInstanceId);
+			} else {
+				lmsUrl = saitenApplicationProperties.getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL);
+			}
 
 			/*
 			 * saitenLMSUrl = saitenApplicationProperties
 			 * .getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL) + "?login=" +
 			 * scorerId + "&password=" + password + "&loginError=true";
 			 */
-			saitenLMSUrl = lmsUrl + "?login=" + scorerId + "&password="
-					+ password + "&loginError=true";
+			saitenLMSUrl = lmsUrl + "?login=" + scorerId + "&password=" + password + "&loginError=true";
 
 			// decrypt scorerId and password.
 			scorerId = AESEncryptionDecryptionUtil.decrypt(scorerId);
 			password = AESEncryptionDecryptionUtil.decrypt(password);
 
-			scorerInfo = loginService.findByScorerIdAndPassword(scorerId,
-					password);
+			scorerInfo = loginService.findByScorerIdAndPassword(scorerId, password);
 			if (scorerInfo == null) {
 				this.addActionError(getText(WebAppConst.INCORRECT_USERID_PASSWORD));
 				return INPUT;
 
-			} else if ((scorerInfo != null)
-					&& (scorerInfo.getRoleId() == WebAppConst.WG_ROLE_ID && scorerInfo
-							.getNoDbUpdate() == WebAppConst.NO_DB_UPDATE_TRUE)) {
+			} else if ((scorerInfo != null) && (scorerInfo.getRoleId() == WebAppConst.WG_ROLE_ID
+					&& scorerInfo.getNoDbUpdate() == WebAppConst.NO_DB_UPDATE_TRUE)) {
 				this.addActionError(getText(WebAppConst.ERROR_WG_USER_WITH_DUMMY_ROLE));
 				return INPUT;
 			} else {
-				scorerInfo.setPassword(AESEncryptionDecryptionUtil
-						.encrypt(password));
+				scorerInfo.setPassword(AESEncryptionDecryptionUtil.encrypt(password));
 			}
 			buildSessionObject();
 
 			// update scorer logging information.
-			ApplicationContext ctx = ContextLoader
-					.getCurrentWebApplicationContext();
+			ApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
 
 			ScorerAccessLogInfo scorerAccessLogInfo = new ScorerAccessLogInfo();
 			scorerAccessLogInfo.setScorerId(scorerInfo.getScorerId());
 			scorerAccessLogInfo.setLoginTime(new Date());
 			scorerAccessLogInfo.setStatus(WebAppConst.SCORER_LOGGING_STATUS[0]);
 			// save loggedin user in tra_scorer_access_log table.
-			((SaitenMasterUtil) ctx.getBean("saitenMasterUtil"))
-					.updateUserLoggingInformation(scorerAccessLogInfo);
+			((SaitenMasterUtil) ctx.getBean("saitenMasterUtil")).updateUserLoggingInformation(scorerAccessLogInfo);
 			// put scorerAccessLogInfo into session.
 			session.put("scorerAccessLogInfo", scorerAccessLogInfo);
 			session.put("lmsInstanceId", lmsInstanceId);
@@ -110,25 +111,34 @@ public class LoginServiceAction extends ActionSupport implements SessionAware,
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(ErrorCode.LOGIN_ACTION_EXCEPTION,
-					e);
+			throw new SaitenRuntimeException(ErrorCode.LOGIN_ACTION_EXCEPTION, e);
 		}
 	}
 
 	public String redirectToLoginPage() {
-		
-		Boolean isduplicateLogout = Boolean.valueOf(request.getParameter("duplicateLogout"));
+
+		/*
+		 * Boolean isduplicateLogout =
+		 * Boolean.valueOf(request.getParameter("duplicateLogout"));
+		 */
 		String isSaitenLoginEnabled = saitenApplicationProperties
 				.getProperty(WebAppConst.IS_SAITEN_LOGIN_FUNCTINALITY_ENABLED);
 		if (isSaitenLoginEnabled.equals("true")) {
-			loginPageUrl = saitenApplicationProperties
-					.getProperty(WebAppConst.LOGIN_PAGE_URL);
-		}else{
-			if(isduplicateLogout == true){
+			loginPageUrl = saitenApplicationProperties.getProperty(WebAppConst.LOGIN_PAGE_URL);
+		} else {
+			/* if(isduplicateLogout == true){ */
+			Map<String, String> configMap = SaitenUtil.getConfigMap();
+			if (Boolean.valueOf(configMap.get("isMultipleLmsInstances"))) {
 				loginPageUrl = scorerLoggingService.getUrlById(Integer.valueOf(request.getParameter("lmsInstanceId")));
+			} else {
+				loginPageUrl = saitenApplicationProperties.getProperty(WebAppConst.SAITEN_LMS_INDEX_PAGE_URL);
 			}
+			/*
+			 * }
+			 */
+
 		}
-		
+
 		return SUCCESS;
 	}
 
@@ -144,8 +154,7 @@ public class LoginServiceAction extends ActionSupport implements SessionAware,
 		this.loginService = loginService;
 	}
 
-	public void setSaitenApplicationProperties(
-			Properties saitenApplicationProperties) {
+	public void setSaitenApplicationProperties(Properties saitenApplicationProperties) {
 		this.saitenApplicationProperties = saitenApplicationProperties;
 	}
 
@@ -189,8 +198,7 @@ public class LoginServiceAction extends ActionSupport implements SessionAware,
 	 * @param scorerLoggingService
 	 *            the scorerLoggingService to set
 	 */
-	public void setScorerLoggingService(
-			ScorerLoggingService scorerLoggingService) {
+	public void setScorerLoggingService(ScorerLoggingService scorerLoggingService) {
 		this.scorerLoggingService = scorerLoggingService;
 	}
 }

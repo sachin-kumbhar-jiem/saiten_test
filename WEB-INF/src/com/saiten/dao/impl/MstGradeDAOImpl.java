@@ -12,8 +12,7 @@ import com.saiten.util.WebAppConst;
  * @version 1.0
  * @created 05-Dec-2012 4:59:11 PM
  */
-public class MstGradeDAOImpl extends SaitenHibernateDAOSupport implements
-		MstGradeDAO {
+public class MstGradeDAOImpl extends SaitenHibernateDAOSupport implements MstGradeDAO {
 
 	/*
 	 * (non-Javadoc)
@@ -32,8 +31,7 @@ public class MstGradeDAOImpl extends SaitenHibernateDAOSupport implements
 		Object[] values = { WebAppConst.DELETE_FLAG };
 
 		try {
-			return getHibernateTemplate().findByNamedParam(query.toString(),
-					paramNames, values);
+			return getHibernateTemplate().findByNamedParam(query.toString(), paramNames, values);
 		} catch (RuntimeException re) {
 			throw re;
 		}
@@ -60,8 +58,26 @@ public class MstGradeDAOImpl extends SaitenHibernateDAOSupport implements
 		Object[] values = { questionSeq, gradeNum, WebAppConst.DELETE_FLAG };
 
 		try {
-			return getHibernateTemplate().findByNamedParam(query.toString(),
-					paramNames, values);
+			return getHibernateTemplate().findByNamedParam(query.toString(), paramNames, values);
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public List getMstGradeDetails() {
+
+		final StringBuilder query = new StringBuilder();
+		query.append(
+				"SELECT mstGrade.mstQuestion.questionSeq,mstGrade.mstGradeResult.id.gradeNum,mstGrade.bitValue FROM MstGrade as mstGrade ");
+		query.append("WHERE mstGrade.deleteFlag = :DELETE_FLAG ");
+		query.append("AND mstGrade.mstGradeResult.deleteFlag = :DELETE_FLAG");
+
+		String[] paramNames = { "DELETE_FLAG" };
+		Object[] values = { WebAppConst.DELETE_FLAG };
+
+		try {
+			return getHibernateTemplate().findByNamedParam(query.toString(), paramNames, values);
 		} catch (RuntimeException re) {
 			throw re;
 		}

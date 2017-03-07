@@ -311,3 +311,15 @@ function timechecking(){
 		return false;
 	}
 }
+
+function objectiveRep() {
+	document.getElementById("questionSeq").disabled = true;
+	document.getElementById("questionSeq").value = "";
+	document.getElementById("sysDate").disabled = true;
+	document.getElementById("sysDate").value = "";
+
+	$("#dailyReportDownload").prop('disabled', false);
+	$("#dailyReportDownload").removeClass("btn-disabled");
+
+	disableFieldsAndRemoveErrorMsg();
+}

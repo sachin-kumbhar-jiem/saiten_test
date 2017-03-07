@@ -19,8 +19,7 @@ import com.saiten.util.WebAppConst;
  */
 public class GradeSelectionAction extends ActionSupport implements SessionAware {
 
-	private static Logger log = Logger
-			.getLogger(GradeSelectionAction.class);
+	private static Logger log = Logger.getLogger(GradeSelectionAction.class);
 	/**
 	 * 
 	 */
@@ -28,7 +27,7 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 
 	private GradeSelectionService gradeSelectionService;
 
-	private Map<Integer, String> gradeMap;
+	private Map<String, String> gradeMap;
 
 	private String questionList;
 
@@ -37,59 +36,60 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 	private String subjectShortName;
 
 	private Short selectedMarkValue;
-	
+
 	private Short denyCategory;
 
 	public String onLoad() {
 		try {
-			System.out.println(denyCategory);
 			int questionSeq;
-			QuestionInfo sessionQuestionInfo = (QuestionInfo) session
-					.get("questionInfo");
+			QuestionInfo sessionQuestionInfo = (QuestionInfo) session.get("questionInfo");
 			questionSeq = sessionQuestionInfo.getQuestionSeq();
 			questionList = (String) session.get("questionList");
+
 			if (sessionQuestionInfo.getScoreType() == WebAppConst.SCORE_TYPE[3]) {
 				session.put("selectedMarkValue", selectedMarkValue);
 			}
+
 			String[] selectedQuestion = questionList.split(WebAppConst.COLON);
 			subjectShortName = selectedQuestion[1];
-			String gradeNumText = getText(WebAppConst.GRADE_NUM_TEXT);
-			gradeMap = gradeSelectionService.findGradesByQuestionSeq(
-					questionSeq, gradeNumText);
+			String gradeNumText = WebAppConst.GRADE_TEXT;
+
+			gradeMap = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText);
+
 			if (gradeMap.isEmpty()) {
 				this.addActionError(getText(WebAppConst.ERROR_NO_GRADE_AVAILABLE_FOR_SELECTED_QUESTION));
 			}
 
-			session.put("gradeMap", gradeMap);
-
 			session.put("questionList", questionList);
 			MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
-			log.info(scorerInfo.getScorerId()+"-"+sessionQuestionInfo.getMenuId()+"-"+"Loaded Grade Selection Screen."+"-{ Question Sequence: "+sessionQuestionInfo.getQuestionSeq()+"}");
+			log.info(scorerInfo.getScorerId() + "-" + sessionQuestionInfo.getMenuId() + "-"
+					+ "Loaded Grade Selection Screen." + "-{ Question Sequence: " + sessionQuestionInfo.getQuestionSeq()
+					+ "}");
+			session.put("gradeMap", gradeMap);
 			return SUCCESS;
+
 		} catch (SaitenRuntimeException we) {
 			throw we;
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.GRADE_SELECTION_ACTION_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.GRADE_SELECTION_ACTION_EXCEPTION, e);
 		}
 	}
 
-	public Map<Integer, String> getGradeMap() {
+	public Map<String, String> getGradeMap() {
 		return gradeMap;
 	}
 
 	/**
 	 * @param gradeMap
 	 */
-	public void setGradeMap(Map<Integer, String> gradeMap) {
+	public void setGradeMap(Map<String, String> gradeMap) {
 		this.gradeMap = gradeMap;
 	}
 
 	/**
 	 * @param gradeSelectionService
 	 */
-	public void setGradeSelectionService(
-			GradeSelectionService gradeSelectionService) {
+	public void setGradeSelectionService(GradeSelectionService gradeSelectionService) {
 		this.gradeSelectionService = gradeSelectionService;
 	}
 
@@ -148,5 +148,4 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 	public void setSelectedMarkValue(Short selectedMarkValue) {
 		this.selectedMarkValue = selectedMarkValue;
 	}
-
 }

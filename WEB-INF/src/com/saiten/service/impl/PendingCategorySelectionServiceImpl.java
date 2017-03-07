@@ -4,10 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.hibernate.HibernateException;
-
-import antlr.StringUtils;
 
 import com.saiten.dao.MstPendingCategoryDAO;
 import com.saiten.exception.SaitenRuntimeException;
@@ -15,8 +12,7 @@ import com.saiten.service.PendingCategorySelectionService;
 import com.saiten.util.ErrorCode;
 import com.saiten.util.SaitenUtil;
 
-public class PendingCategorySelectionServiceImpl implements
-		PendingCategorySelectionService {
+public class PendingCategorySelectionServiceImpl implements PendingCategorySelectionService {
 
 	private MstPendingCategoryDAO mstPendingCategoryDAO;
 
@@ -25,17 +21,13 @@ public class PendingCategorySelectionServiceImpl implements
 	public Map<Short, String> findPendingCategoriesByQuestionSeq(int questionSeq) {
 
 		try {
-			List pendingCategoryList = mstPendingCategoryDAO
-					.findPendingCategoriesByQuestionSeq(questionSeq);
+			List pendingCategoryList = mstPendingCategoryDAO.findPendingCategoriesByQuestionSeq(questionSeq);
 
 			return buildPendingCategoryMap(pendingCategoryList);
 		} catch (HibernateException he) {
-			throw new SaitenRuntimeException(
-					ErrorCode.PENDING_CATEGORY_SELECTION_HIBERNATE_EXCEPTION,
-					he);
+			throw new SaitenRuntimeException(ErrorCode.PENDING_CATEGORY_SELECTION_HIBERNATE_EXCEPTION, he);
 		} catch (Exception e) {
-			throw new SaitenRuntimeException(
-					ErrorCode.PENDING_CATEGORY_SELECTION_SERVICE_EXCEPTION, e);
+			throw new SaitenRuntimeException(ErrorCode.PENDING_CATEGORY_SELECTION_SERVICE_EXCEPTION, e);
 		}
 
 	}
@@ -44,7 +36,7 @@ public class PendingCategorySelectionServiceImpl implements
 	 * @param pendingCategoryList
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unused" })
 	private Map<Short, String> buildPendingCategoryMap(List pendingCategoryList) {
 		Map<Short, String> pendingCategoryMap = new LinkedHashMap<Short, String>();
 
@@ -92,8 +84,7 @@ public class PendingCategorySelectionServiceImpl implements
 	/**
 	 * @param mstPendingCategoryDAO
 	 */
-	public void setMstPendingCategoryDAO(
-			MstPendingCategoryDAO mstPendingCategoryDAO) {
+	public void setMstPendingCategoryDAO(MstPendingCategoryDAO mstPendingCategoryDAO) {
 		this.mstPendingCategoryDAO = mstPendingCategoryDAO;
 	}
 

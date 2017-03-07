@@ -31,6 +31,7 @@ public interface DailyStatusSearchService {
 	public List<DailyStatusReportListInfo> getPendingCategoryWiseAnswerDetails(
 			String questionSeq, String connectionString);
 
+	@SuppressWarnings("rawtypes")
 	public List findQuestionTypeList();
 
 	public List<DailyStatusReportListInfo> getMarkValueWiseAnswerDetails(

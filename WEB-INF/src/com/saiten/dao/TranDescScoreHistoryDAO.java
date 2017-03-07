@@ -238,6 +238,7 @@ public interface TranDescScoreHistoryDAO {
 	public List<Object[]> fetchInspectionGroupSeqAndCount(int questionSeq,
 			String scorerId, String connectionString);
 
+	@SuppressWarnings("rawtypes")
 	public List registerAnswer(RegisterScoreInfo registerScoreInfo,
 			String connectionString);
 

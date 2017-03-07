@@ -20,4 +20,7 @@ public interface MstGradeDAO {
 	 */
 	@SuppressWarnings("rawtypes")
 	List findGradeSeqList(Integer questionSeq, Integer[] gradeNum);
+
+	@SuppressWarnings("rawtypes")
+	List getMstGradeDetails();
 }
