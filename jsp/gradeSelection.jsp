@@ -80,7 +80,7 @@
 						</s:if>						
 						<%-- <s:select id="gradeNum" name="selectedGradeNum" list="#session.gradeMap" cssClass="selectList" value="%{#defaultselectedGrade}" size="18" cssStyle=" width:300px; overflow-x:auto;"/> --%>
 						
-						<s:select id="gradeNum" name="selectedGradeNum" list="#session.gradeMap" cssClass="selectList" value="%{#defaultselectedGrade}" size="10" cssStyle=" width:180px; overflow-x:auto;"/>						     																								
+						<s:select id="gradeNum" name="selectedGradeNum" list="#session.gradeMap" cssClass="selectList" value="%{#defaultselectedGrade}" size="11" />						     																								
 					  </td>
 					</tr>
 					

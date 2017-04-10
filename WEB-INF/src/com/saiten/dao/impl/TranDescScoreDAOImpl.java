@@ -458,7 +458,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 						+ ", selectedMarkValue: " + selectedMarkValue + ", date: " + date + ", roleId: " + roleId
 						+ ", qualityFromPendingMenu: " + qualityFromPendingMenu + ", qualityFromDenyMenu: "
 						+ qualityFromDenyMenu + ", secondAndThirdLatestScorerIdFlag: "
-						+ secondAndThirdLatestScorerIdFlag + ", bitValue: " + bitValue + "}");
+						+ secondAndThirdLatestScorerIdFlag + "}");
 
 				answerRecords = hibernateTemplate.findByNamedQuery("fetchAnswerPassByRandomNumber", questionSeq,
 						randomNumber, scorerId, menuIdAndScoringStateMap.get(menuId), gradeNum, inspectGroupSeq,
@@ -471,7 +471,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 						+ ", answerFormNum: " + answerFormNum + ", selectedMarkValue: " + selectedMarkValue + ", date: "
 						+ date + ", roleId: " + roleId + ", qualityFromPendingMenu: " + qualityFromPendingMenu
 						+ ", qualityFromDenyMenu: " + qualityFromDenyMenu + ", secondAndThirdLatestScorerIdFlag: "
-						+ secondAndThirdLatestScorerIdFlag + ", bitValue: " + bitValue + "}");
+						+ secondAndThirdLatestScorerIdFlag + "}");
 
 				answerRecords = hibernateTemplate.findByNamedQuery("fetchAnswerOrderByRandom", questionSeq, scorerId,
 						menuIdAndScoringStateMap.get(menuId), gradeNum, inspectGroupSeq, pendingCategory, denyCategory,
