@@ -38,6 +38,8 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 	private Short selectedMarkValue;
 
 	private Short denyCategory;
+	
+	//private List gradeList;
 
 	public String onLoad() {
 		try {
@@ -53,19 +55,27 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 			String[] selectedQuestion = questionList.split(WebAppConst.COLON);
 			subjectShortName = selectedQuestion[1];
 			String gradeNumText = WebAppConst.GRADE_TEXT;
-
+            
+			
 			gradeMap = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText);
+			
+			//List gradeList = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText);
 
 			if (gradeMap.isEmpty()) {
 				this.addActionError(getText(WebAppConst.ERROR_NO_GRADE_AVAILABLE_FOR_SELECTED_QUESTION));
 			}
+			
+			
 
 			session.put("questionList", questionList);
 			MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
 			log.info(scorerInfo.getScorerId() + "-" + sessionQuestionInfo.getMenuId() + "-"
 					+ "Loaded Grade Selection Screen." + "-{ Question Sequence: " + sessionQuestionInfo.getQuestionSeq()
 					+ "}");
+			
 			session.put("gradeMap", gradeMap);
+			//session.put("gradeList", gradeList);
+			
 			return SUCCESS;
 
 		} catch (SaitenRuntimeException we) {

@@ -463,7 +463,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 				answerRecords = hibernateTemplate.findByNamedQuery("fetchAnswerPassByRandomNumber", questionSeq,
 						randomNumber, scorerId, menuIdAndScoringStateMap.get(menuId), gradeNum, inspectGroupSeq,
 						pendingCategory, denyCategory, answerFormNum, selectedMarkValue, date, roleId,
-						qualityFromPendingMenu, qualityFromDenyMenu, secondAndThirdLatestScorerIdFlag, bitValue);
+						qualityFromPendingMenu, qualityFromDenyMenu, secondAndThirdLatestScorerIdFlag);
 			} else {
 				log.info(scorerId + "-" + menuId + "-" + "fetchAnswerOrderByRandom." + "-{ Question Sequence: "
 						+ questionSeq + ", gradeNum: " + gradeNum + ", inspectGroupSeq: " + inspectGroupSeq
@@ -476,7 +476,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 				answerRecords = hibernateTemplate.findByNamedQuery("fetchAnswerOrderByRandom", questionSeq, scorerId,
 						menuIdAndScoringStateMap.get(menuId), gradeNum, inspectGroupSeq, pendingCategory, denyCategory,
 						answerFormNum, selectedMarkValue, date, roleId, qualityFromPendingMenu, qualityFromDenyMenu,
-						secondAndThirdLatestScorerIdFlag, bitValue);
+						secondAndThirdLatestScorerIdFlag);
 			}
 			if (!answerRecords.isEmpty()) {
 				FindAnswerInfo findAnswerInfo = (FindAnswerInfo) answerRecords.get(0);

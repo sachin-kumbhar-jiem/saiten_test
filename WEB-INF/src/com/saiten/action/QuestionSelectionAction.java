@@ -49,7 +49,7 @@ public class QuestionSelectionAction extends ActionSupport implements SessionAwa
 	private String denyCategory;
 	private List<String> manualList;
 	private String selectedGradeNum;
-	private Double bitValue;
+	//private Double bitValue;
 
 	@SuppressWarnings("unused")
 	public String fetchDbInstanceInfo() {
@@ -67,7 +67,7 @@ public class QuestionSelectionAction extends ActionSupport implements SessionAwa
 			if (selectedGradeNum != null) {
 				array = selectedGradeNum.split(":");
 				gradeNum = Integer.valueOf((String) array[0]);
-				bitValue = Double.valueOf((String) array[1]);
+				//bitValue = Double.valueOf((String) array[1]);
 			}
 
 			log.info(scorerInfo.getScorerId() + "-" + sessionQuestionInfo.getMenuId() + "-"
@@ -528,11 +528,11 @@ public class QuestionSelectionAction extends ActionSupport implements SessionAwa
 		return selectedGradeNum;
 	}
 
-	public void setBitValue(Double bitValue) {
+	/*public void setBitValue(Double bitValue) {
 		this.bitValue = bitValue;
 	}
 
 	public Double getBitValue() {
 		return bitValue;
-	}
+	}*/
 }

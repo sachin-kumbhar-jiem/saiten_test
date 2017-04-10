@@ -131,7 +131,7 @@
 			<result name="success" type="redirectAction">
 				<param name="actionName">scoreAction</param>
 				<param name="gradeNum">${gradeNum}</param>
-				<param name="bitValue">${bitValue}</param>
+				<!-- <param name="bitValue">${bitValue}</param> -->
 				<param name="pendingCategory">${pendingCategory}</param>
 			</result>
 		</action>

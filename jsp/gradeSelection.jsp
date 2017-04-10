@@ -74,14 +74,14 @@
 					<%-- <td class="message">
 						<s:text name="label.questionselection.selectGradetarget" />
 					</td> --%>
-					<td>
+					  <td>
 						<s:if test="!(#session.gradeMap.isEmpty())">
 							<s:set id="defaultselectedGrade" name="defaultselectedGrade" value="%{#session.gradeMap.keySet().toArray()[0]}"/>	
-						</s:if>
+						</s:if>						
+						<%-- <s:select id="gradeNum" name="selectedGradeNum" list="#session.gradeMap" cssClass="selectList" value="%{#defaultselectedGrade}" size="18" cssStyle=" width:300px; overflow-x:auto;"/> --%>
 						
-						<s:select id="gradeNum" name="selectedGradeNum" list="#session.gradeMap" cssClass="selectList" value="%{#defaultselectedGrade}" size="18" cssStyle=" width:300px; overflow-x:auto;"/>
-																		
-					</td>
+						<s:select id="gradeNum" name="selectedGradeNum" list="#session.gradeMap" cssClass="selectList" value="%{#defaultselectedGrade}" size="10" cssStyle=" width:180px; overflow-x:auto;"/>						     																								
+					  </td>
 					</tr>
 					
 					<tr>
