@@ -188,15 +188,16 @@ public class SaitenInitializeListener extends AbstractInitializeListener {
 					// Map<ConnectionString, PlatformTransactionManager>()
 					platformTransactionManagerMap.put(saitenDbProperties.getProperty(key), platformTransactionManager);
 				} else if (keyReplica) {
+					String keyObj = key.replace("replica.", "");
 					HibernateTemplate hibernateTemplateReplica = new HibernateTemplate(
 							(SessionFactory) ctx.getBean(hibernateTemplateBeanIdReplica));
 
 					PlatformTransactionManager platformTransactionManagerReplica = (PlatformTransactionManager) ctx
 							.getBean(transactionManagerBeanIdReplica);
 
-					hibernateTemplateReplicaMap.put(saitenDbProperties.getProperty(key), hibernateTemplateReplica);
+					hibernateTemplateReplicaMap.put(saitenDbProperties.getProperty(keyObj), hibernateTemplateReplica);
 
-					platformTransactionManagerReplicaMap.put(saitenDbProperties.getProperty(key),
+					platformTransactionManagerReplicaMap.put(saitenDbProperties.getProperty(keyObj),
 							platformTransactionManagerReplica);
 					keyReplica = false;
 				}
