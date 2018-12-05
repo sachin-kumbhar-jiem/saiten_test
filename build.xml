@@ -94,6 +94,7 @@
 		<pathelement location="WEB-INF/lib/strutstestcase-2.1.4-1.2-2.4.jar" />
 		<pathelement location="WEB-INF/lib/swarmcache-1.0RC2.jar" />
 		<pathelement location="WEB-INF/lib/jsch-0.1.51.jar" />
+		<pathelement location="WEB-INF/lib/jsp-api.jar" />
 		<pathelement location="WEB-INF/classes" />
 		<pathelement location="work" />
 		<pathelement location="WEB-INF/lib/aopalliance-repackaged-2.2.0.jar" />
