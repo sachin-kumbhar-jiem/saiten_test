@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="war" name="saiten">
+	<property environment="env" />
+	<property name="ECLIPSE_HOME" value="E:/spring-tool-suite/sts-bundle/sts-3.9.5.RELEASE/" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.8" />
+	<property name="source" value="1.8" />
+	<path id="JUnit 4.libraryclasspath">
+		<pathelement location="${ECLIPSE_HOME}plugins/org.junit_4.12.0.v201504281640/junit.jar" />
+		<pathelement location="${ECLIPSE_HOME}plugins/org.hamcrest.core_1.3.0.v20180420-1519.jar" />
+	</path>
+	<path id="Apache Tomcat v8.5 [Apache Tomcat v8.5].libraryclasspath">
+		<pathelement location="../../lib/annotations-api.jar" />
+		<pathelement location="../../lib/catalina-ant.jar" />
+		<pathelement location="../../lib/catalina-ha.jar" />
+		<pathelement location="../../lib/catalina-storeconfig.jar" />
+		<pathelement location="../../lib/catalina-tribes.jar" />
+		<pathelement location="../../lib/catalina.jar" />
+		<pathelement location="../../lib/ecj-4.6.3.jar" />
+		<pathelement location="../../lib/el-api.jar" />
+		<pathelement location="../../lib/jasper-el.jar" />
+		<pathelement location="../../lib/jasper.jar" />
+		<pathelement location="../../lib/jaspic-api.jar" />
+		<pathelement location="../../lib/jsp-api.jar" />
+		<pathelement location="../../lib/servlet-api.jar" />
+		<pathelement location="../../lib/tomcat-api.jar" />
+		<pathelement location="../../lib/tomcat-coyote.jar" />
+		<pathelement location="../../lib/tomcat-dbcp.jar" />
+		<pathelement location="../../lib/tomcat-i18n-es.jar" />
+		<pathelement location="../../lib/tomcat-i18n-fr.jar" />
+		<pathelement location="../../lib/tomcat-i18n-ja.jar" />
+		<pathelement location="../../lib/tomcat-i18n-ru.jar" />
+		<pathelement location="../../lib/tomcat-jdbc.jar" />
+		<pathelement location="../../lib/tomcat-jni.jar" />
+		<pathelement location="../../lib/tomcat-util-scan.jar" />
+		<pathelement location="../../lib/tomcat-util.jar" />
+		<pathelement location="../../lib/tomcat-websocket.jar" />
+		<pathelement location="../../lib/websocket-api.jar" />
+	</path>
+	<path id="saiten.classpath">
+		<pathelement location="WEB-INF/lib/antlr-2.7.6.jar" />
+		<pathelement location="WEB-INF/lib/aspectjweaver-1.6.1.jar" />
+		<pathelement location="WEB-INF/lib/c3p0-0.9.1.jar" />
+		<pathelement location="WEB-INF/lib/cglib-2.2.jar" />
+		<pathelement location="WEB-INF/lib/cglib-nodep-2.1_3.jar" />
+		<pathelement location="WEB-INF/lib/commons-beanutils-1.7.jar" />
+		<pathelement location="WEB-INF/lib/commons-codec-1.3.jar" />
+		<pathelement location="WEB-INF/lib/commons-collections-3.1.jar" />
+		<pathelement location="WEB-INF/lib/commons-digester-1.7.jar" />
+		<pathelement location="WEB-INF/lib/commons-discovery-0.2.jar" />
+		<pathelement location="WEB-INF/lib/commons-lang-2.5.jar" />
+		<pathelement location="WEB-INF/lib/commons-lang.jar" />
+		<pathelement location="WEB-INF/lib/displaytag-1.2.jar" />
+		<pathelement location="WEB-INF/lib/displaytag-export-poi-1.2.jar" />
+		<pathelement location="WEB-INF/lib/dom4j-1.6.1.jar" />
+		<pathelement location="WEB-INF/lib/ezmorph.jar" />
+		<pathelement location="WEB-INF/lib/guice-aopalliance.jar" />
+		<pathelement location="WEB-INF/lib/hamcrest-core-1.1.jar" />
+		<pathelement location="WEB-INF/lib/hamcrest-library-1.1.jar" />
+		<pathelement location="WEB-INF/lib/hibernate-jpa-2.0-api-1.0.1.Final.jar" />
+		<pathelement location="WEB-INF/lib/hibernate3.jar" />
+		<pathelement location="WEB-INF/lib/iTextAsian.jar" />
+		<pathelement location="WEB-INF/lib/infinispan-core-4.2.1.CR1.jar" />
+		<pathelement location="WEB-INF/lib/itext-1.3.jar" />
+		<pathelement location="WEB-INF/lib/itext-2.0.2.jar" />
+		<pathelement location="WEB-INF/lib/javassist-3.11.0.GA.jar" />
+		<pathelement location="WEB-INF/lib/jaxrpc.jar" />
+		<pathelement location="WEB-INF/lib/jbosscache-core-3.2.1.GA.jar" />
+		<pathelement location="WEB-INF/lib/jmock-2.5.1.jar" />
+		<pathelement location="WEB-INF/lib/jmock-junit4-2.5.1.jar" />
+		<pathelement location="WEB-INF/lib/jmock-legacy-2.5.1.jar" />
+		<pathelement location="WEB-INF/lib/jstl-1.2.jar" />
+		<pathelement location="WEB-INF/lib/jta-1.1.jar" />
+		<pathelement location="WEB-INF/lib/log4j-1.2.16.jar" />
+		<pathelement location="WEB-INF/lib/objenesis-1.0.jar" />
+		<pathelement location="WEB-INF/lib/oscache-2.1.jar" />
+		<pathelement location="WEB-INF/lib/poi-3.2-FINAL.jar" />
+		<pathelement location="WEB-INF/lib/proxool-0.8.3.jar" />
+		<pathelement location="WEB-INF/lib/saaj.jar" />
+		<pathelement location="WEB-INF/lib/slf4j-api-1.6.1.jar" />
+		<pathelement location="WEB-INF/lib/slf4j-simple-1.6.2.jar" />
+		<pathelement location="WEB-INF/lib/spring-aspects-3.2.0.RC1.jar" />
+		<pathelement location="WEB-INF/lib/spring-jdbc-3.2.0.RC1.jar" />
+		<pathelement location="WEB-INF/lib/spring-jms-3.2.0.RC1.jar" />
+		<pathelement location="WEB-INF/lib/spring-orm-3.2.0.RC1.jar" />
+		<pathelement location="WEB-INF/lib/spring-oxm-3.2.0.RC1.jar" />
+		<pathelement location="WEB-INF/lib/spring-test-3.2.0.RC1.jar" />
+		<pathelement location="WEB-INF/lib/spring-webmvc-portlet-3.2.0.RC1.jar" />
+		<pathelement location="WEB-INF/lib/strutstestcase-2.1.4-1.2-2.4.jar" />
+		<pathelement location="WEB-INF/lib/swarmcache-1.0RC2.jar" />
+		<pathelement location="WEB-INF/lib/jsch-0.1.51.jar" />
+		<pathelement location="WEB-INF/classes" />
+		<pathelement location="work" />
+		<pathelement location="WEB-INF/lib/aopalliance-repackaged-2.2.0.jar" />
+		<pathelement location="WEB-INF/lib/asm-all-repackaged-2.2.0.jar" />
+		<pathelement location="WEB-INF/lib/hibernate-validator-4.1.0.Final.jar" />
+		<pathelement location="WEB-INF/lib/hk2-api-2.2.0.jar" />
+		<pathelement location="WEB-INF/lib/hk2-locator-2.2.0.jar" />
+		<pathelement location="WEB-INF/lib/hk2-utils-2.2.0.jar" />
+		<pathelement location="WEB-INF/lib/jackson-annotations-2.2.1.jar" />
+		<pathelement location="WEB-INF/lib/jackson-core-2.2.1.jar" />
+		<pathelement location="WEB-INF/lib/jackson-databind-2.2.1.jar" />
+		<pathelement location="WEB-INF/lib/jackson-jaxrs-base-2.2.1.jar" />
+		<pathelement location="WEB-INF/lib/jackson-jaxrs-json-provider-2.2.1.jar" />
+		<pathelement location="WEB-INF/lib/java-json.jar" />
+		<pathelement location="WEB-INF/lib/javassist-3.18.1-GA.jar" />
+		<pathelement location="WEB-INF/lib/javax.annotation-api-1.2.jar" />
+		<pathelement location="WEB-INF/lib/javax.inject-2.2.0.jar" />
+		<pathelement location="WEB-INF/lib/javax.servlet-api-3.0.1.jar" />
+		<pathelement location="WEB-INF/lib/javax.ws.rs-api-2.0.jar" />
+		<pathelement location="WEB-INF/lib/jaxb-api-2.2.7.jar" />
+		<pathelement location="WEB-INF/lib/jersey-client.jar" />
+		<pathelement location="WEB-INF/lib/jersey-common.jar" />
+		<pathelement location="WEB-INF/lib/jersey-container-servlet-core.jar" />
+		<pathelement location="WEB-INF/lib/jersey-container-servlet.jar" />
+		<pathelement location="WEB-INF/lib/jersey-guava-2.6.jar" />
+		<pathelement location="WEB-INF/lib/jersey-server.jar" />
+		<pathelement location="WEB-INF/lib/jersey-spring3-2.6.jar" />
+		<pathelement location="WEB-INF/lib/jiem-servlet.jar" />
+		<pathelement location="WEB-INF/lib/json-lib-2.2.2-jdk15.jar" />
+		<pathelement location="WEB-INF/lib/jsonic-1.2.7.jar" />
+		<pathelement location="WEB-INF/lib/mysql-connector-java-5.1.12-bin.jar" />
+		<pathelement location="WEB-INF/lib/org.osgi.core-4.2.0.jar" />
+		<pathelement location="WEB-INF/lib/osgi-resource-locator-1.0.1.jar" />
+		<pathelement location="WEB-INF/lib/persistence-api-1.0.jar" />
+		<pathelement location="WEB-INF/lib/spring-bridge-2.2.0.jar" />
+		<pathelement location="WEB-INF/lib/tiles-api-2.0.4.jar" />
+		<pathelement location="WEB-INF/lib/tiles-core-2.0.4.jar" />
+		<pathelement location="WEB-INF/lib/tiles-jsp-2.0.4.jar" />
+		<pathelement location="WEB-INF/lib/validation-api-1.1.0.Final.jar" />
+		<path refid="JUnit 4.libraryclasspath" />
+		<pathelement location="WEB-INF/lib/spring-security-config-3.2.0.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/spring-security-core-3.2.0.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/spring-security-web-3.2.0.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/cactus-12-1.4.1.jar" />
+		<pathelement location="WEB-INF/lib/commons-fileupload-1.3.1.jar" />
+		<pathelement location="WEB-INF/lib/commons-io-2.2.jar" />
+		<pathelement location="WEB-INF/lib/commons-lang3-3.2.jar" />
+		<pathelement location="WEB-INF/lib/commons-logging-1.1.3.jar" />
+		<pathelement location="WEB-INF/lib/freemarker-2.3.19.jar" />
+		<pathelement location="WEB-INF/lib/junit-4.8.2.jar" />
+		<pathelement location="WEB-INF/lib/ognl-3.0.6.jar" />
+		<pathelement location="WEB-INF/lib/oro-2.0.8.jar" />
+		<pathelement location="WEB-INF/lib/spring-aop-4.1.2.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/spring-beans-4.1.2.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/spring-context-4.1.2.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/spring-context-support-4.1.2.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/spring-core-4.1.2.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/spring-expression-4.1.2.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/spring-instrument-4.1.2.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/spring-instrument-tomcat-4.1.2.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/spring-tx-4.1.2.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/spring-web-4.1.2.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/spring-webmvc-4.1.2.RELEASE.jar" />
+		<pathelement location="WEB-INF/lib/struts2-convention-plugin-2.3.20.jar" />
+		<pathelement location="WEB-INF/lib/velocity-1.5.jar" />
+		<pathelement location="WEB-INF/lib/asm-3.3.jar" />
+		<pathelement location="WEB-INF/lib/asm-commons-3.3.jar" />
+		<pathelement location="WEB-INF/lib/asm-tree-3.3.jar" />
+		<pathelement location="WEB-INF/lib/struts2-core-2.3.16.3.jar" />
+		<pathelement location="WEB-INF/lib/struts2-json-plugin-2.3.16.3.jar" />
+		<pathelement location="WEB-INF/lib/struts2-junit-plugin-2.3.16.3.jar" />
+		<pathelement location="WEB-INF/lib/struts2-spring-plugin-2.3.16.3.jar" />
+		<pathelement location="WEB-INF/lib/struts2-tiles-plugin-2.3.16.3.jar" />
+		<pathelement location="WEB-INF/lib/xwork-core-2.3.16.3.jar" />
+		<path refid="Apache Tomcat v8.5 [Apache Tomcat v8.5].libraryclasspath" />
+	</path>
+	<target name="init">
+		<mkdir dir="WEB-INF/classes" />
+		<mkdir dir="work" />
+		<copy includeemptydirs="false" todir="WEB-INF/classes">
+			<fileset dir="WEB-INF/src">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.java" />
+				<exclude name="**/.svn" />
+				<exclude name="**/_svn" />
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="WEB-INF/classes">
+			<fileset dir="test">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.java" />
+				<exclude name="**/.svn" />
+				<exclude name="**/_svn" />
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="work">
+			<fileset dir="work">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.java" />
+				<exclude name="**/.svn" />
+				<exclude name="**/_svn" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="clean">
+		<delete dir="target" />
+		<delete dir="WEB-INF/classes" />
+	</target>
+	<target depends="clean" name="cleanall" />
+	<target depends="build-subprojects,build-project" name="build" />
+	<target name="build-subprojects" />
+	<target depends="init" name="build-project">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac nowarn="on" debug="true" debuglevel="${debuglevel}" destdir="WEB-INF/classes" includeantruntime="false" source="${source}" target="${target}">
+			<src path="WEB-INF/src" />
+			<src path="test" />
+			<exclude name="**/.svn" />
+			<exclude name="**/_svn" />
+			<exclude name="**/.svn" />
+			<exclude name="**/_svn" />
+			<classpath refid="saiten.classpath" />
+			<compilerarg value="-XDignore.symbol.file" />
+		</javac>
+		<javac debug="true" debuglevel="${debuglevel}" destdir="work" includeantruntime="false" source="${source}" target="${target}">
+			<src path="work" />
+			<exclude name="**/.svn" />
+			<exclude name="**/_svn" />
+			<classpath refid="saiten.classpath" />
+		</javac>
+	</target>
+	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects" />
+
+	<target name="war" description="Bundles the application as a WAR file" depends="clean, build">
+		<echo>${ant.version}</echo>
+		<mkdir dir="target/WEB-INF/classes" />
+		<mkdir dir="target/jsp" />
+		<mkdir dir="target/error" />
+		<mkdir dir="target/material" />
+		<copy includeemptydirs="false" todir="target/WEB-INF/classes">
+			<fileset dir="WEB-INF/classes">
+
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="target/jsp">
+			<fileset dir="jsp">
+				<include name="**/*.jsp" />
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="target/error">
+			<fileset dir="error">
+
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="target/material">
+			<fileset dir="material">
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="target/WEB-INF/lib">
+			<fileset dir="WEB-INF/lib">
+			</fileset>
+		</copy>
+		<copy file="WEB-INF/web.xml" todir="target/WEB-INF" />
+		<copy includeemptydirs="false" todir="target">
+			<fileset dir=".">
+				<include name="*.jsp*" />
+			</fileset>
+		</copy>
+		<war destfile="target/saiten.war" basedir="target" needxmlfile="false">
+		</war>
+	</target>
+	
+</project>
