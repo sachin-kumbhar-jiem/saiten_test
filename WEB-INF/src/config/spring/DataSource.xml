@@ -75,7 +75,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
     <property name="maxIdleTime" value="14400" />
  </bean>
  
- <bean id="saitenTranDb4DataSource" 
+ <!-- <bean id="saitenTranDb4DataSource" 
          class="com.mchange.v2.c3p0.ComboPooledDataSource">
 	<property name="driverClass" value="${saiten.transactiondb4.driverClassName}" />
 	<property name="jdbcUrl" value="${saiten.transactiondb4.url}?useUnicode=true&amp;characterEncoding=UTF-8&amp;noAccessToProcedureBodies=true" />
@@ -158,7 +158,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
     <property name="minPoolSize" value="2" />
     <property name="maxPoolSize" value="2" />
     <property name="maxIdleTime" value="14400" />
- </bean>
+ </bean> -->
  
  <bean id="saitenTempDb1DataSource" 
          class="com.mchange.v2.c3p0.ComboPooledDataSource">
@@ -172,7 +172,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
     <property name="maxIdleTime" value="14400" />
  </bean>
  
- <bean id="saitenTempDb2DataSource" 
+<!--  <bean id="saitenTempDb2DataSource" 
          class="com.mchange.v2.c3p0.ComboPooledDataSource">
 	<property name="driverClass" value="${saiten.tempdb2.driverClassName}" />
 	<property name="jdbcUrl" value="${saiten.tempdb2.url}?useUnicode=true&amp;characterEncoding=UTF-8&amp;noAccessToProcedureBodies=true" />
@@ -182,6 +182,6 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
     <property name="minPoolSize" value="2" />
     <property name="maxPoolSize" value="2" />
     <property name="maxIdleTime" value="14400" />
- </bean>
+ </bean> -->
  
 </beans>

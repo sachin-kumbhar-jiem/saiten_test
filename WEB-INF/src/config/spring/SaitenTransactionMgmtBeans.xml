@@ -34,7 +34,7 @@
       	<property name="sessionFactory" ref="saitenTranDb3SessionFactory" />
    	</bean>
    	
-   	<bean id="saitenTranDb4TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+   	<!-- <bean id="saitenTranDb4TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
       	<property name="sessionFactory" ref="saitenTranDb4SessionFactory" />
    	</bean>
    	
@@ -60,14 +60,14 @@
    	
    	<bean id="saitenReplicaTranDb5TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
       	<property name="sessionFactory" ref="saitenReplicaTranDb5SessionFactory" /> 
-   	</bean>
+   	</bean> -->
    	
    	<bean id="saitenTempDb1TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
    	 	 <property name="sessionFactory" ref="saitenTempDb1SessionFactory" />
   	</bean>	
    
-  	<bean id="saitenTempDb2TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+  	<!-- <bean id="saitenTempDb2TransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
       	<property name="sessionFactory" ref="saitenTempDb2SessionFactory" />
-   	</bean>
+   	</bean> -->
  
 </beans>
