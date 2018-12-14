@@ -2233,8 +2233,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 							|| menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) && (scoreStartRange != null)
 							&& (scoreEndRange != null)) {
 						query.append("INNER JOIN ");
-						query.append("tran_obj_score_percentage AS tranObjScorePercentage  ");
-						query.append("ON tranDescScore.answer_form_num = tranObjScorePercentage.answer_form_num ");
+						query.append("tran_score_percentage AS tranScorePercentage  ");
+						query.append("ON tranDescScore.answer_form_num = tranScorePercentage.answer_form_num ");
 					}
 
 					if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID))) {
@@ -4440,9 +4440,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) && (scoreStartRange != null)
 									&& (scoreEndRange != null)) {
 								query.append("INNER JOIN ");
-								query.append("tran_obj_score_percentage AS tranObjScorePercentage ");
+								query.append("tran_score_percentage AS tranScorePercentage ");
 								query.append(
-										"ON tranDescScore.answer_form_num = tranObjScorePercentage.answer_form_num ");
+										"ON tranDescScore.answer_form_num = tranScorePercentage.answer_form_num ");
 							}
 							query.append("INNER JOIN ");
 							query.append("tran_desc_score_history AS tranDescScoreHistory ");
