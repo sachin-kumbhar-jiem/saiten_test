@@ -148,12 +148,22 @@ var search_by_scorer_role_id = '<s:property value="%{@com.saiten.util.SaitenUtil
 										<tr>
 											<th class="partition">
 												<s:text name="label.scoresearch.objscorerange"></s:text>
-											</th>
+											</th>								
 											<td colspan="5">
-												<s:textfield id="objScoreStartRange" name="scoreInputInfo.objScoreStartRange" maxlength="3" size="5" value="%{#session.scoreInputInfo.objScoreStartRange}"/>
-												<s:text name="label.scoresearch.tilde"></s:text>
-												<s:textfield id="objScoreEndRange" name="scoreInputInfo.objScoreEndRange" maxlength="3" size="5" value="%{#session.scoreInputInfo.objScoreEndRange}"/>
-											</td>
+												<table >
+													<tr>
+														<td style="border: none;"><s:select id="questionType" name="scoreInputInfo.questionType" list="scoreSearchInfo.scorePercentageQuestionTypeMap" value="%{#session.scoreInputInfo.questionType}" /></td>
+														<td style="border: none;">
+															<s:textfield id="scoreStartRange" name="scoreInputInfo.scoreStartRange" maxlength="3" size="5" value="%{#session.scoreInputInfo.scoreStartRange}"/>
+															<s:text name="label.scoresearch.tilde"></s:text>
+															<s:textfield id="scoreEndRange" name="scoreInputInfo.scoreEndRange" maxlength="3" size="5" value="%{#session.scoreInputInfo.scoreEndRange}"/>
+														</td>
+														<td style="border: none;padding: 0px;">
+															<s:hidden id="scoreInputInfo.scorePercentageRange" name="scoreInputInfo.scorePercentageRange"></s:hidden>
+														</td>
+													</tr>
+												</table>
+											</td>											
 										</tr>
 									</s:if>
 									<!-- New code End -->

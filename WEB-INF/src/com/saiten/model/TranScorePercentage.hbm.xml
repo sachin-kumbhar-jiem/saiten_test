@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated 12 Dec, 2018 11:51:10 AM by Hibernate Tools 5.2.10.Final --><!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="true" default-access="property" default-cascade="none" default-lazy="true">
+    <class  dynamic-insert="false" dynamic-update="false" mutable="true" name="com.saiten.model.TranScorePercentage" optimistic-lock="version" polymorphism="implicit" select-before-update="false" table="tran_score_percentage">
+        <composite-id class="com.saiten.model.TranScorePercentageId" mapped="false" name="id" unsaved-value="undefined">
+            <key-property name="answerFormNum" type="string">
+                <column length="7" name="answer_form_num"/>
+            </key-property>
+            <key-property name="subjectCode" type="string">
+                <column length="2" name="subject_code"/>
+            </key-property>
+        </composite-id>
+        <property generated="never" lazy="false" name="objPercentage" optimistic-lock="true" type="int" unique="false">
+            <column name="obj_percentage" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="shortBatchPercentage" optimistic-lock="true" type="int" unique="false">
+            <column name="short_batch_percentage" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="shortScreenPercentage" optimistic-lock="true" type="int" unique="false">
+            <column name="short_screen_percentage" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="shortPercentage" optimistic-lock="true" type="int" unique="false">
+            <column name="short_percentage" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="longPercentage" optimistic-lock="true" type="int" unique="false">
+            <column name="long_percentage" not-null="true"/>
+        </property>
+        <property generated="never" lazy="false" name="totalPercentage" optimistic-lock="true" type="int" unique="false">
+            <column name="total_percentage" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>
