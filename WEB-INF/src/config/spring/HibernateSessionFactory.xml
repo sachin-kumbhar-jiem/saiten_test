@@ -320,7 +320,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 </bean> -->
 
 <!-- Hibernate replica transaction db1 session factory -->
-<bean id="saitenReplicaTranDb1SessionFactory" 
+<!-- <bean id="saitenReplicaTranDb1SessionFactory" 
     class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
  
     <property name="dataSource">
@@ -362,10 +362,10 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 		</list>
     </property>	
  
-</bean>
+</bean> -->
 
 <!-- Hibernate replica transaction db2 session factory -->
-<bean id="saitenReplicaTranDb2SessionFactory" 
+<!-- <bean id="saitenReplicaTranDb2SessionFactory" 
     class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
  
     <property name="dataSource">
@@ -407,10 +407,10 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 		</list>
     </property>	
  
-</bean>
+</bean> -->
 
 <!-- Hibernate replica transaction db3 session factory -->
-<bean id="saitenReplicaTranDb3SessionFactory" 
+<!-- <bean id="saitenReplicaTranDb3SessionFactory" 
     class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
  
     <property name="dataSource">
@@ -453,7 +453,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 		</list>
     </property>	
  
-</bean>
+</bean> -->
 
 <!-- Hibernate replica transaction db4 session factory -->
 <!-- <bean id="saitenReplicaTranDb4SessionFactory" 
