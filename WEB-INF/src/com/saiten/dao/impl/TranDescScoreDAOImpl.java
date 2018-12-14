@@ -733,8 +733,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 		final String menuId = questionInfo.getMenuId();
 		final String answerFormNum = scoreInputInfo.getAnswerFormNum();
 		final String subjectCode = scoreInputInfo.getSubjectCode();
-		final Integer objScoreStartRange = scoreInputInfo.getObjScoreStartRange();
-		final Integer objScoreEndRange = scoreInputInfo.getObjScoreEndRange();
+		final Integer scoreStartRange = scoreInputInfo.getScoreStartRange();
+		final Integer scoreEndRange = scoreInputInfo.getScoreEndRange();
 
 		final List<String> historyScorerIdList = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryScorerIdList()
 				: null;
@@ -787,8 +787,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 					query.append(" UPDATE tran_desc_score target, ");
 					query.append(" (SELECT distinct tranDescScore.answer_seq as answerSeq ");
 					query.append("FROM tran_desc_score AS tranDescScore ");
-					if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) && (objScoreStartRange != null)
-							&& (objScoreEndRange != null)) {
+					if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) && (scoreStartRange != null)
+							&& (scoreEndRange != null)) {
 						query.append("INNER JOIN ");
 						query.append("tran_obj_score_percentage AS tranObjScorePercentage  ");
 						query.append("ON tranDescScore.answer_form_num = tranObjScorePercentage.answer_form_num ");
@@ -818,7 +818,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 					}
 
 					if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-						if ((objScoreStartRange != null) && (objScoreEndRange != null)) {
+						if ((scoreStartRange != null) && (scoreEndRange != null)) {
 							query.append("AND tranObjScorePercentage.subject_code = :SUBJECT_CODE ");
 							query.append(
 									"AND tranObjScorePercentage.result_percentage between :OBJ_SCORE_START_RANGE and :OBJ_SCORE_END_RANGE ");
@@ -1152,10 +1152,10 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 						 */
 					}
 					if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-						if ((objScoreStartRange != null) && (objScoreEndRange != null)) {
+						if ((scoreStartRange != null) && (scoreEndRange != null)) {
 							queryObj.setParameter("SUBJECT_CODE", subjectCode);
-							queryObj.setParameter("OBJ_SCORE_START_RANGE", objScoreStartRange);
-							queryObj.setParameter("OBJ_SCORE_END_RANGE", objScoreEndRange);
+							queryObj.setParameter("OBJ_SCORE_START_RANGE", scoreStartRange);
+							queryObj.setParameter("OBJ_SCORE_END_RANGE", scoreEndRange);
 						}
 						queryObj.setParameter("INSPECT_FLAG", WebAppConst.F);
 						if (!selectAllFlag) {

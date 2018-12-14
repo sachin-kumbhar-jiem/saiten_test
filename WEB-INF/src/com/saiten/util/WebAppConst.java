@@ -1,5 +1,7 @@
 package com.saiten.util;
 
+import com.sun.corba.se.spi.orbutil.fsm.State;
+
 /**
  * @author sachin
  * @version 1.0
@@ -16,6 +18,8 @@ public interface WebAppConst {
 	public static final Character VALID_FLAG = 'T';
 
 	public static final Character ENABLE = 'T';
+
+	public static final String DISPLAY_FLAG = "T";
 
 	public static final Character F = 'F';
 
@@ -121,6 +125,10 @@ public interface WebAppConst {
 
 	public static final int ONE = 1;
 
+	public static final Integer SCORE_RANGE_START = 0;
+	
+	public static final Integer SCORE_RANGE_END = 100;
+	
 	public static final String SIDE_NINETY_EIGHT = "98";
 
 	public static final String SIDE_NINETY_NINE = "99";
@@ -620,4 +628,21 @@ public interface WebAppConst {
 	public static final String DATE_yyyyMMdd_HHmm = "yyyyMMdd_HHmm";
 
 	public static final String DOUBLE_QUOTES = "\"";
+
+	public static final String QUESTION_TYPES = "select.scoresearch.questionType";
+
+	public static final String SELECT_VALUE = "label.select";
+
+	public static final String PIPE = "|";
+	/*
+	 * Column Name Of table "tran_score_percentage" for filtering based on the
+	 * question type
+	 */
+	public static final String TOTAL_PERCENTAGE = "total_percentage";
+	public static final String OBJECT_PERCENTAGE = "obj_percentage";
+	public static final String SHORT_PERCENTAGE = "short_percentage";
+	public static final String SHORT_BATCH_PERCENTAGE = "short_batch_percentage";
+	public static final String SHORT_SCREEN_PERCENTAGE = "short_screen_percentage";
+	public static final String LONG_PERCENTAGE = "long_percentage";
+
 }

@@ -13,8 +13,9 @@ public class ScoreInputInfo {
 	private Integer resultCount;
 	private ScoreHistoryInfo scoreHistoryInfo;
 	private ScoreCurrentInfo scoreCurrentInfo;
-	private Integer objScoreStartRange;
-	private Integer objScoreEndRange;
+	private Integer scoreStartRange;
+	private Integer scoreEndRange;
+	private Integer questionType;
 
 
 	public ScoreHistoryInfo getScoreHistoryInfo() {
@@ -73,32 +74,30 @@ public class ScoreInputInfo {
 		this.samplingFlag = samplingFlag;
 	}
 	
-	/**
-	 * @return the objScoreStartRange
-	 */
-	public Integer getObjScoreStartRange() {
-		return objScoreStartRange;
+	
+	
+	public Integer getScoreStartRange() {
+		return scoreStartRange;
 	}
 
-	/**
-	 * @param objScoreStartRange the objScoreStartRange to set
-	 */
-	public void setObjScoreStartRange(Integer objScoreStartRange) {
-		this.objScoreStartRange = objScoreStartRange;
+	public void setScoreStartRange(Integer scoreStartRange) {
+		this.scoreStartRange = scoreStartRange;
 	}
 
-	/**
-	 * @return the objScoreEndRange
-	 */
-	public Integer getObjScoreEndRange() {
-		return objScoreEndRange;
+	public Integer getScoreEndRange() {
+		return scoreEndRange;
 	}
 
-	/**
-	 * @param objScoreEndRange the objScoreEndRange to set
-	 */
-	public void setObjScoreEndRange(Integer objScoreEndRange) {
-		this.objScoreEndRange = objScoreEndRange;
+	public void setScoreEndRange(Integer scoreEndRange) {
+		this.scoreEndRange = scoreEndRange;
+	}
+
+	public Integer getQuestionType() {
+		return questionType;
+	}
+
+	public void setQuestionType(Integer questionType) {
+		this.questionType = questionType;
 	}
 
 	@Override
