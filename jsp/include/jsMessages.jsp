@@ -16,6 +16,9 @@ SELECT_ATLEAST_ONE_RECORD = '<s:text name="error.select.atleast.one.record"/>';
 REQUIRED= '<s:text name="error.required"/>';
 NUMERIC_ONLY= '<s:text name="error.numeric.only"/>';
 ALPHA_NUMERIC_ONLY= '<s:text name="error.alpha.numeric.only"/>';
+SCORE_PERCENTAGE_RANGE_VALUES_REQUIRED = '<s:text name="error.score.percentage.range.values.required"/>';
+SCORE_PERCENTAGE_RANGE_INVALID = '<s:text name="error.score.percentage.range.invalid"/>'
+SCORE_PERCENTAGE_MAX_RANGE_VALUE_EXCEEDED='<s:text name="error.score.percentage.max.range.value.exceeded"/>'
 MAX_LENGTH_11= '<s:text name="error.max.length.11"/>';
 MAX_LENGTH_6= '<s:text name="error.max.length.6"/>';
 MAX_LENGTH_7= '<s:text name="error.max.length.7"/>';
