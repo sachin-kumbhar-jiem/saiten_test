@@ -28,6 +28,7 @@ import com.saiten.info.GradeInfo;
 import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.info.TranDescScoreInfo;
+import com.saiten.model.MstQuestion;
 import com.saiten.model.TranDescScore;
 import com.saiten.service.ScoreService;
 import com.saiten.util.ErrorCode;
@@ -197,6 +198,9 @@ public class ScoreServiceImpl implements ScoreService {
 				if ((String) tranDescScoreObjArray[9] != null) {
 					answerInfo.setSecondLatestScreenScorerId((String) tranDescScoreObjArray[9]);
 				}
+				if ((String) tranDescScoreObjArray[10] != null) {
+					answerInfo.setPunchText((String) tranDescScoreObjArray[10]);
+				}
 			}
 
 			if (qcSeq != null) {
@@ -237,7 +241,9 @@ public class ScoreServiceImpl implements ScoreService {
 					tranDescScoreInfo.setScoringState((Short) tranDescScoreObjArray[9]);
 					answerInfo.setQuestionSeq((Integer) tranDescScoreObjArray[10]);
 					answerInfo.setQualityCheckFlag((Character) tranDescScoreObjArray[11]);
-
+					if(tranDescScoreObjArray[12] != null){
+						answerInfo.setPunchText((String) tranDescScoreObjArray[12]);
+					}
 				} else if (!historyScreenFlag && (menuId.equals(WebAppConst.CHECKING_MENU_ID)
 						|| menuId.equals(WebAppConst.INSPECTION_MENU_ID) || menuId.equals(WebAppConst.DENY_MENU_ID)
 						|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
@@ -250,6 +256,17 @@ public class ScoreServiceImpl implements ScoreService {
 				}
 			}
 		}
+		
+		//Added code for compare question and answer text
+		if (tranDescScoreInfo.getAnswerInfo().getPunchText() != null) {
+			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = new LinkedHashMap<Integer, MstQuestion>();
+			mstQuestionMap = SaitenUtil.getSaitenConfigObject().getMstQuestionMap();
+			MstQuestion mstQuestion = mstQuestionMap.get(questionInfo.getQuestionSeq());
+			tranDescScoreInfo.setDuplicateWords(SaitenUtil.consecutiveCharacterMatch(mstQuestion.getQuestionContents(),
+					tranDescScoreInfo.getAnswerInfo().getPunchText()).toString().replaceAll("\\[", "").replaceAll("]", ""));
+
+		}
+		
 		return tranDescScoreInfo;
 	}
 

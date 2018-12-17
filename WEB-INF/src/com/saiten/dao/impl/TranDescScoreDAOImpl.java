@@ -59,7 +59,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 		query.append("tranDescScore.updateDate,  ");
 		query.append("tranDescScore.markValue, ");
 		query.append("tranDescScore.latestScreenScorerId,  ");
-		query.append("tranDescScore.secondLatestScreenScorerId  ");
+		query.append("tranDescScore.secondLatestScreenScorerId,  ");
+		query.append("tranDescScore.punchText  ");
 		query.append("FROM TranDescScore as tranDescScore WHERE ");
 		if (!(roleId == WebAppConst.ADMIN_ROLE_ID)
 				|| ((roleId == WebAppConst.ADMIN_ROLE_ID) && ((quetionSeq != null) && (!quetionSeq.isEmpty())))) {
@@ -483,7 +484,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 				Object[] objArray = { findAnswerInfo.getAnswerSeq(), findAnswerInfo.getAnswerFormNum(),
 						findAnswerInfo.getImageFileName(), findAnswerInfo.getGradeSeq(), findAnswerInfo.getBitValue(),
 						findAnswerInfo.getQuestionSeq(), findAnswerInfo.getUpdateDate(), findAnswerInfo.getMarkValue(),
-						findAnswerInfo.getLatestScreenScorerId(), findAnswerInfo.getSecondLatestScreenScorerId() };
+						findAnswerInfo.getLatestScreenScorerId(), findAnswerInfo.getSecondLatestScreenScorerId(), findAnswerInfo.getPunchText() };
 				answerRecords = new ArrayList();
 				answerRecords.add(objArray);
 			}

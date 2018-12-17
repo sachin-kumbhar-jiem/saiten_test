@@ -16,6 +16,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.ServletContext;
 
@@ -48,6 +49,10 @@ import test.com.saiten.AllTests;
 
 public class SaitenUtil {
 	private static Logger log = Logger.getLogger(SaitenUtil.class);
+	
+	private static int minlen = 4;
+
+	private static Set<String> duplicateWords = new TreeSet<String>();
 
 	public static String getSubjectNameByQuestionSequence(int questionSequence) {
 		LinkedHashMap<Integer, MstQuestion> mstQuestionMap = getSaitenConfigObject().getMstQuestionMap();
@@ -756,5 +761,31 @@ public class SaitenUtil {
 			}
 		}
 		return gradeTempMap;
+	}
+	
+	public static Set<String> consecutiveCharacterMatch(String question, String answer) {
+
+		String searchString = "";
+		
+		for (int i = 0; i < answer.length(); i++) {
+			searchString += answer.charAt(i);
+			if (!question.toLowerCase().contains(searchString.toLowerCase())) {
+
+				if(!question.toLowerCase().contains(searchString)) {
+					
+					String previousSearchString = searchString.substring(0, searchString.length() - 1);
+					if(previousSearchString.length() >= minlen) {
+						duplicateWords.add(previousSearchString);
+					}
+					searchString = answer.charAt(i) + "";
+				}
+			}
+		}
+		
+		if(searchString.length() >= minlen) {
+			duplicateWords.add(searchString);
+		}
+		
+		return duplicateWords;
 	}
 }

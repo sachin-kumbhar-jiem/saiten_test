@@ -2,13 +2,14 @@ package com.saiten.info;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author sachin
  * @version 1.0
  * @created 11-Dec-2012 12:41:32 PM
  */
-public class TranDescScoreInfo implements Serializable{
+public class TranDescScoreInfo implements Serializable {
 
 	/**
 	 * 
@@ -26,6 +27,7 @@ public class TranDescScoreInfo implements Serializable{
 	private Short pendingCategory;
 	private Integer lookAfterwardsCount;
 	private String lookAfterwardsComments;
+	private String duplicateWords;
 
 	public String getAnswerFormNumber() {
 		return answerFormNumber;
@@ -185,13 +187,32 @@ public class TranDescScoreInfo implements Serializable{
 	public void setLookAfterwardsComments(String lookAfterwardsComments) {
 		this.lookAfterwardsComments = lookAfterwardsComments;
 	}
-	
+
+	/**
+	 * @return the duplicateWords
+	 */
+	public String getDuplicateWords() {
+		return duplicateWords;
+	}
+
+	/**
+	 * @param duplicateWords
+	 *            the duplicateWords to set
+	 */
+	public void setDuplicateWords(String duplicateWords) {
+		this.duplicateWords = duplicateWords;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder data = new StringBuilder();
-		data.append("{ AnswerFormNumber: "+answerFormNumber+", HelpDocument: "+helpDocument+", ImageFileName: "+imageFileName+", GradeSequence: "+gradeSeq+", ScoringState: "+scoringState+", LatestScreenScorerId: "+latestScreenScorerId+", MarkValueList: "+markValueList+", GradeNum: "+gradeNum+", PendingCategory: "+pendingCategory+", LookAfterwardsCount: "+lookAfterwardsCount+", LookAfterwardsComments: "+lookAfterwardsComments);
+		data.append("{ AnswerFormNumber: " + answerFormNumber + ", HelpDocument: " + helpDocument + ", ImageFileName: "
+				+ imageFileName + ", GradeSequence: " + gradeSeq + ", ScoringState: " + scoringState
+				+ ", LatestScreenScorerId: " + latestScreenScorerId + ", MarkValueList: " + markValueList
+				+ ", GradeNum: " + gradeNum + ", PendingCategory: " + pendingCategory + ", LookAfterwardsCount: "
+				+ lookAfterwardsCount + ", LookAfterwardsComments: " + lookAfterwardsComments+ ", duplicateWords: " + duplicateWords);
 		data.append("\n");
-		data.append("AnswerInfo: "+answerInfo);
+		data.append("AnswerInfo: " + answerInfo);
 		data.append("}");
 		return data.toString();
 	}
