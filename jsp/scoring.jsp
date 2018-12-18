@@ -294,19 +294,23 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 	<div >
 	<!-- Swapnil work start -->
 			<s:if test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2]">
-	   		<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID">
-				<s:set id="imageHeight" name="imageHeight" value="550"/>
-			</s:if>	
-			<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID">
-				<s:set id="imageHeight" name="imageHeight" value="470"/>
-			</s:elseif>
-			<s:elseif  test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID) || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID && #session.tranDescScoreInfo.lookAfterwardsCount<=0)">
-			    <s:set id="imageHeight" name="imageHeight" value="470"/>
-			</s:elseif>
+				<s:if
+					test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID">
+					<s:set id="imageHeight" name="imageHeight" value="550" />
+				</s:if>
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID">
+			    <s:set id="imageHeight" name="imageHeight" value="467"/>
+				</s:elseif>
+				<s:elseif test="bookmarkScreenFlag == true || #session.historyScreenFlag == true">
+				 <s:set id="imageHeight" name="imageHeight" value="521"/>
+				</s:elseif>
 			<s:else>
 				<s:set id="imageHeight" name="imageHeight" value="450"/>
 			</s:else>
 			</s:if>
+			<s:elseif  test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID) || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID && #session.tranDescScoreInfo.lookAfterwardsCount>0)">
+				<s:set id="imageHeight" name="imageHeight" value="547"/>
+			</s:elseif>
 			<s:else>
 				<s:set id="imageHeight" name="imageHeight" value="530"/>
 			</s:else>
