@@ -858,6 +858,18 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 		log.info(scorerInfo.getScorerId() + "-" + questionInfo.getMenuId() + "-" + "Record loaded."
 				+ "-{ Question Sequence: " + questionInfo.getQuestionSeq() + "\n TranDescScoreInfo: "
 				+ tranDescScoreInfo + "}");
+		
+		
+		//Added code for compare question and answer text
+		if (tranDescScoreInfo.getAnswerInfo().getPunchText() != null) {
+			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = new LinkedHashMap<Integer, MstQuestion>();
+			mstQuestionMap = SaitenUtil.getSaitenConfigObject().getMstQuestionMap();
+			MstQuestion mstQuestion = mstQuestionMap.get(questionInfo.getQuestionSeq());
+			tranDescScoreInfo.setDuplicateWords(SaitenUtil.consecutiveCharacterMatch(mstQuestion.getQuestionContents(),
+					tranDescScoreInfo.getAnswerInfo().getPunchText()).toString().replaceAll("\\[", "").replaceAll("]", ""));
+
+		}
+		
 		session.put("tranDescScoreInfo", tranDescScoreInfo);
 
 		if (ArrayUtils.contains(WebAppConst.MISMATCH_STATES, tranDescScoreInfo.getScoringState())) {

@@ -308,7 +308,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 			</s:else>
 			</s:if>
 			<s:else>
-				<s:set id="imageHeight" name="imageHeight" value="530"/>
+				<s:set id="imageHeight" name="imageHeight" value="575"/>
 			</s:else>
 			
 			
@@ -329,7 +329,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 					</tr>
 					<tr >
 					<td colspan="5">
-						<s:hidden id="answer" name="answer" value="%{duplicateRecords}" />
+						<%-- <s:hidden id="answer" name="answer" value="%{duplicateRecords}" /> --%>
 						<s:if test="#session.tranDescScoreInfo.answerInfo.punchText.length() >= 0">
 						<s:textarea cssClass="HighLightText" value="%{#session.tranDescScoreInfo.answerInfo.punchText}" maxlength="512" readonly="true" cssStyle="width: 460px; height: 50px;"></s:textarea>
 						</s:if>
