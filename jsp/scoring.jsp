@@ -308,7 +308,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 			</s:else>
 			</s:if>
 			<s:else>
-				<s:set id="imageHeight" name="imageHeight" value="575"/>
+				<s:set id="imageHeight" name="imageHeight" value="530"/>
 			</s:else>
 			
 			
@@ -801,22 +801,20 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		</td>
 		</tr>
 		
+		
 		<s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID">
-			<tr><td colspan="5" >&nbsp;</td></tr>
-				<tr class="box_less_width_input">
-					<td colspan="5">
-						<span class="table_center_heading"><s:text name="label.scoring.punchtext" /></span>
-					</td>
-				</tr>
-				<tr><td colspan="5" style="border: none;">&nbsp;</td></tr>
-			<tr><td colspan="5" class="wordwrap" style="border: none;">			
-			<s:if test="!(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2])">
-			<pre style="margin-left: 5px;">
-			<s:property value="#session.tranDescScoreInfo.answerInfo.punchText"/>
-			</pre>
-			</s:if>			
-			</td></tr>
+		<tr><td colspan="5" >&nbsp;</td></tr>
+		<tr class="box_less_width_input">
+			<td colspan="5">
+				<span class="table_center_heading"><s:text name="label.scoring.punchtext" /></span>
+			</td>
+		</tr>
+		<tr><td colspan="5" style="border: none;">&nbsp;</td></tr>
+			<s:if test="!(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2])">	
+			<tr><td colspan="5" class="wordwrap" style="border: none;"><pre style="margin-left: 5px;"><s:property value="#session.tranDescScoreInfo.answerInfo.punchText"/></pre></td></tr>
+			</s:if>		
 		</s:if>
+
 	 <s:if test="!(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE || #session.questionInfo.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE)">
 		<s:if test="(bookmarkScreenFlag == true || #session.historyScreenFlag == true) || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID  && #session.tranDescScoreInfo.scoringState != @com.saiten.util.WebAppConst@MISMATCH_STATES[0]))">
 			<tr><td>&nbsp;</td></tr>
