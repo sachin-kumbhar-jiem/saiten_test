@@ -39,7 +39,7 @@ $(document).ready(function(){
 			}
 		});
 	    $("#scoreSearchForm").keydown(function (e) {
-	        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+	        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {	        	
 	        	$('#scoreSearchForm').focus();
 	            $("#search").click();
 	            return false;
@@ -984,29 +984,27 @@ this.setCurrentDateValues = function(){
 };
 
 function validateScoreRange(){	
-	
 	if ($('#scoreStartRange').prop("disabled") == false && $('#scoreEndRange').prop("disabled") == false && $("#scoreStartRange").val() == '' && $("#scoreEndRange").val() == '') {
+		$('#scoreStartRange').focus();
 		return false;
 	}else{
 		return true;
 	}
 }
 
-function validateScoreStartAndEndRange(){
-	    
+function validateScoreStartAndEndRange(){	    
 		if (($("#scoreStartRange").val() != '' && $("#scoreEndRange").val() != '') && (parseInt($("#scoreStartRange").val()) > parseInt($("#scoreEndRange").val())))
-			 {			   
+			 {
+			    $('#scoreStartRange').focus();
 				return false;
 			 }
 		return true;
 }
 
  function validateScoreRangeMaxValue(){
-	
 	if(parseInt($("#scoreStartRange").val())>100 || parseInt($("#scoreEndRange").val())>100){
-	
-		return false;	
-		
+		$('#scoreStartRange').focus();
+		return false;			
 	}
 	return true;
 }
