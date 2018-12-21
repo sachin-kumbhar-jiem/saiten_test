@@ -39,7 +39,7 @@
 			<column name="second_latest_screen_scorer_id" length="7" />
 		</property>
 		<property name="punchText" type="string">
-			<column name="punch_text" length="256" />
+			<column name="punch_text" length="1000" />
 		</property>
 
 	</class>

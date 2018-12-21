@@ -263,7 +263,7 @@ public class ScoreServiceImpl implements ScoreService {
 			mstQuestionMap = SaitenUtil.getSaitenConfigObject().getMstQuestionMap();
 			MstQuestion mstQuestion = mstQuestionMap.get(questionInfo.getQuestionSeq());
 			tranDescScoreInfo.setDuplicateWords(SaitenUtil.consecutiveCharacterMatch(mstQuestion.getQuestionContents(),
-					tranDescScoreInfo.getAnswerInfo().getPunchText()).toString().replaceAll("\\[", "").replaceAll("]", ""));
+				tranDescScoreInfo.getAnswerInfo().getPunchText()).toString().replaceAll("\\[", "").replaceAll("]", ""));
 
 		}
 		

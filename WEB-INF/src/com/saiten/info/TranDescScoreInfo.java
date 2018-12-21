@@ -2,7 +2,6 @@ package com.saiten.info;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author sachin
@@ -206,13 +205,9 @@ public class TranDescScoreInfo implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder data = new StringBuilder();
-		data.append("{ AnswerFormNumber: " + answerFormNumber + ", HelpDocument: " + helpDocument + ", ImageFileName: "
-				+ imageFileName + ", GradeSequence: " + gradeSeq + ", ScoringState: " + scoringState
-				+ ", LatestScreenScorerId: " + latestScreenScorerId + ", MarkValueList: " + markValueList
-				+ ", GradeNum: " + gradeNum + ", PendingCategory: " + pendingCategory + ", LookAfterwardsCount: "
-				+ lookAfterwardsCount + ", LookAfterwardsComments: " + lookAfterwardsComments+ ", duplicateWords: " + duplicateWords);
+		data.append("{ AnswerFormNumber: "+answerFormNumber+", HelpDocument: "+helpDocument+", ImageFileName: "+imageFileName+", GradeSequence: "+gradeSeq+", ScoringState: "+scoringState+", LatestScreenScorerId: "+latestScreenScorerId+", MarkValueList: "+markValueList+", GradeNum: "+gradeNum+", PendingCategory: "+pendingCategory+", LookAfterwardsCount: "+lookAfterwardsCount+", LookAfterwardsComments: "+lookAfterwardsComments+", duplicateWords: "+duplicateWords);
 		data.append("\n");
-		data.append("AnswerInfo: " + answerInfo);
+		data.append("AnswerInfo: "+answerInfo);
 		data.append("}");
 		return data.toString();
 	}

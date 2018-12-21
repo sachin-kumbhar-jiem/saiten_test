@@ -785,14 +785,14 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 						answerSeq);
 			}
 		}
+		
 		//Added code for compare question and answer text
 		if (tranDescScoreInfo.getAnswerInfo().getPunchText() != null) {
 			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = new LinkedHashMap<Integer, MstQuestion>();
 			mstQuestionMap = SaitenUtil.getSaitenConfigObject().getMstQuestionMap();
 			MstQuestion mstQuestion = mstQuestionMap.get(questionInfo.getQuestionSeq());
 			tranDescScoreInfo.setDuplicateWords(SaitenUtil.consecutiveCharacterMatch(mstQuestion.getQuestionContents(),
-					tranDescScoreInfo.getAnswerInfo().getPunchText()).toString().replaceAll("\\[", "").replaceAll("]", ""));
-
+							tranDescScoreInfo.getAnswerInfo().getPunchText()).toString().replaceAll("\\[", "").replaceAll("]", ""));
 		}
 		
 		session.put("tranDescScoreInfo", tranDescScoreInfo);
@@ -866,8 +866,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 			mstQuestionMap = SaitenUtil.getSaitenConfigObject().getMstQuestionMap();
 			MstQuestion mstQuestion = mstQuestionMap.get(questionInfo.getQuestionSeq());
 			tranDescScoreInfo.setDuplicateWords(SaitenUtil.consecutiveCharacterMatch(mstQuestion.getQuestionContents(),
-					tranDescScoreInfo.getAnswerInfo().getPunchText()).toString().replaceAll("\\[", "").replaceAll("]", ""));
-
+							tranDescScoreInfo.getAnswerInfo().getPunchText()).toString().replaceAll("\\[", "").replaceAll("]", ""));
 		}
 		
 		session.put("tranDescScoreInfo", tranDescScoreInfo);

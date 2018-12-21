@@ -39,7 +39,7 @@
             <column name="lock_flag" length="1" />
         </property>
         <property name="punchText" type="string">
-            <column name="punch_text" length="256" />
+            <column name="punch_text" length="1000" />
         </property>
         <property name="imageFileName" type="string">
             <column name="image_file_name" length="128" />
