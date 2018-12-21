@@ -132,7 +132,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value> 	
          	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
          	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
-         	 <value>com/saiten/model/TranObjScorePercentage.hbm.xml</value>
+         	 <value>com/saiten/model/TranScorePercentage.hbm.xml</value>
 		</list>
     </property>	
  
@@ -177,7 +177,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>
          	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
          	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
-         	 <value>com/saiten/model/TranObjScorePercentage.hbm.xml</value>
+         	 <value>com/saiten/model/TranScorePercentage.hbm.xml</value>
 		</list>
     </property>	
  
@@ -223,7 +223,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>   
          	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
          	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
-         	 <value>com/saiten/model/TranObjScorePercentage.hbm.xml</value>      	 
+         	 <value>com/saiten/model/TranScorePercentage.hbm.xml</value>      	 
 		</list>
     </property>	
  
@@ -268,7 +268,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>
          	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
          	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
-         	 <value>com/saiten/model/TranObjScorePercentage.hbm.xml</value>
+         	 <value>com/saiten/model/TranScorePercentage.hbm.xml</value>
 		</list>
     </property>	
  
@@ -313,7 +313,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>
          	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
          	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
-         	 <value>com/saiten/model/TranObjScorePercentage.hbm.xml</value>
+         	 <value>com/saiten/model/TranScorePercentage.hbm.xml</value>
 		</list>
     </property>	
  
@@ -358,7 +358,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value> 	
          	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
          	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
-         	 <value>com/saiten/model/TranObjScorePercentage.hbm.xml</value>
+         	 <value>com/saiten/model/TranScorePercentage.hbm.xml</value>
 		</list>
     </property>	
  
@@ -403,7 +403,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>
          	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
          	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
-         	 <value>com/saiten/model/TranObjScorePercentage.hbm.xml</value>
+         	 <value>com/saiten/model/TranScorePercentage.hbm.xml</value>
 		</list>
     </property>	
  
@@ -449,7 +449,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>   
          	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
          	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>  
-         	 <value>com/saiten/model/TranObjScorePercentage.hbm.xml</value>    	 
+         	 <value>com/saiten/model/TranScorePercentage.hbm.xml</value>    	 
 		</list>
     </property>	
  
@@ -494,7 +494,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>
          	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
          	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
-         	 <value>com/saiten/model/TranObjScorePercentage.hbm.xml</value>
+         	 <value>com/saiten/model/TranScorePercentage.hbm.xml</value>
 		</list>
     </property>	
  
@@ -539,7 +539,7 @@ http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
          	 <value>com/saiten/info/RegisterAnswer.hbm.xml</value>
          	 <value>com/saiten/model/TranAcceptance.hbm.xml</value> 
          	 <value>com/saiten/model/TranAcceptanceHistory.hbm.xml</value>
-         	 <value>com/saiten/model/TranObjScorePercentage.hbm.xml</value>
+         	 <value>com/saiten/model/TranScorePercentage.hbm.xml</value>
 		</list>
     </property>	
  

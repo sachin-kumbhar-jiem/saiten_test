@@ -2111,8 +2111,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 		final boolean samplingFlag = scoreInputInfo.isSamplingFlag();
 		final String answerFormNum = scoreInputInfo.getAnswerFormNum();
 		final String subjectCode = scoreInputInfo.getSubjectCode();
-		final Integer objScoreStartRange = scoreInputInfo.getObjScoreStartRange();
-		final Integer objScoreEndRange = scoreInputInfo.getObjScoreEndRange();
+		final Integer scoreStartRange = scoreInputInfo.getScoreStartRange();
+		final Integer scoreEndRange = scoreInputInfo.getScoreEndRange();
+		final Integer questionTypekey = scoreInputInfo.getQuestionType();
 
 		final List<String> historyScorerIdList = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryScorerIdList()
 				: null;
@@ -2230,11 +2231,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 					query.append("FROM tran_desc_score AS tranDescScore ");
 
 					if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
-							|| menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) && (objScoreStartRange != null)
-							&& (objScoreEndRange != null)) {
+							|| menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) && (scoreStartRange != null)
+							&& (scoreEndRange != null)) {
 						query.append("INNER JOIN ");
-						query.append("tran_obj_score_percentage AS tranObjScorePercentage  ");
-						query.append("ON tranDescScore.answer_form_num = tranObjScorePercentage.answer_form_num ");
+						query.append("tran_score_percentage AS tranScorePercentage  ");
+						query.append("ON tranDescScore.answer_form_num = tranScorePercentage.answer_form_num ");
 					}
 
 					if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) || menuId.equals(WebAppConst.FORCED_MENU_ID))) {
@@ -2271,11 +2272,12 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 					query.append("AND tranDescScore.valid_flag = :VALID_FLAG ");
 
 					if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
-							|| menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) && (objScoreStartRange != null)
-							&& (objScoreEndRange != null)) {
-						query.append("AND tranObjScorePercentage.subject_code = :SUBJECT_CODE ");
-						query.append(
-								"AND tranObjScorePercentage.result_percentage between :OBJ_SCORE_START_RANGE and :OBJ_SCORE_END_RANGE ");
+							|| menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) && (scoreStartRange != null)
+							&& (scoreEndRange != null)) {
+						query.append("AND tranScorePercentage.subject_code = :SUBJECT_CODE ");
+						String columnName = SaitenUtil.getColumnNameByQuestionType(questionTypekey);
+						query.append("AND tranScorePercentage." + columnName + " ");
+						query.append("between :SCORE_START_RANGE and :SCORE_END_RANGE ");
 					}
 
 					if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
@@ -2704,11 +2706,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 					}
 
 					if ((menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)
-							|| menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) && (objScoreStartRange != null)
-							&& (objScoreEndRange != null)) {
+							|| menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)) && (scoreStartRange != null)
+							&& (scoreEndRange != null)) {
 						queryObj.setParameter("SUBJECT_CODE", subjectCode);
-						queryObj.setParameter("OBJ_SCORE_START_RANGE", objScoreStartRange);
-						queryObj.setParameter("OBJ_SCORE_END_RANGE", objScoreEndRange);
+						queryObj.setParameter("SCORE_START_RANGE", scoreStartRange);
+						queryObj.setParameter("SCORE_END_RANGE", scoreEndRange);
 					}
 
 					if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
@@ -4320,8 +4322,9 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 		final boolean samplingFlag = scoreInputInfo.isSamplingFlag();
 		final String answerFormNum = scoreInputInfo.getAnswerFormNum();
 		final String subjectCode = scoreInputInfo.getSubjectCode();
-		final Integer objScoreStartRange = scoreInputInfo.getObjScoreStartRange();
-		final Integer objScoreEndRange = scoreInputInfo.getObjScoreEndRange();
+		final Integer scoreStartRange = scoreInputInfo.getScoreStartRange();
+		final Integer scoreEndRange = scoreInputInfo.getScoreEndRange();
+		final Integer questionTypekey = scoreInputInfo.getQuestionType();
 
 		final List<String> historyScorerIdList = scoreHistoryInfo != null ? scoreHistoryInfo.getHistoryScorerIdList()
 				: null;
@@ -4435,12 +4438,12 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 								query.append(", tranLookAfterwards.look_aft_seq AS lookAftSeq ");
 							}
 							query.append("FROM tran_desc_score AS tranDescScore ");
-							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) && (objScoreStartRange != null)
-									&& (objScoreEndRange != null)) {
+							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID) && (scoreStartRange != null)
+									&& (scoreEndRange != null)) {
 								query.append("INNER JOIN ");
-								query.append("tran_obj_score_percentage AS tranObjScorePercentage ");
+								query.append("tran_score_percentage AS tranScorePercentage ");
 								query.append(
-										"ON tranDescScore.answer_form_num = tranObjScorePercentage.answer_form_num ");
+										"ON tranDescScore.answer_form_num = tranScorePercentage.answer_form_num ");
 							}
 							query.append("INNER JOIN ");
 							query.append("tran_desc_score_history AS tranDescScoreHistory ");
@@ -4472,10 +4475,11 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 							query.append("AND tranDescScore.lock_flag = :UNLOCK ");
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								if ((objScoreStartRange != null) && (objScoreEndRange != null)) {
-									query.append("AND tranObjScorePercentage.subject_code = :SUBJECT_CODE ");
-									query.append(
-											"AND tranObjScorePercentage.result_percentage between :OBJ_SCORE_START_RANGE and :OBJ_SCORE_END_RANGE ");
+								if ((scoreStartRange != null) && (scoreEndRange != null)) {
+									query.append("AND tranScorePercentage.subject_code = :SUBJECT_CODE ");
+									String columnName = SaitenUtil.getColumnNameByQuestionType(questionTypekey);
+									query.append("AND tranScorePercentage." + columnName + " ");
+									query.append("between :SCORE_START_RANGE and :SCORE_END_RANGE ");
 								}
 								query.append("AND tranDescScore.inspect_flag = :INSPECT_FLAG ");
 								/*
@@ -4883,10 +4887,10 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 							}
 
 							if (menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
-								if ((objScoreStartRange != null) && (objScoreEndRange != null)) {
+								if ((scoreStartRange != null) && (scoreEndRange != null)) {
 									queryObj.setParameter("SUBJECT_CODE", subjectCode);
-									queryObj.setParameter("OBJ_SCORE_START_RANGE", objScoreStartRange);
-									queryObj.setParameter("OBJ_SCORE_END_RANGE", objScoreEndRange);
+									queryObj.setParameter("SCORE_START_RANGE", scoreStartRange);
+									queryObj.setParameter("SCORE_END_RANGE", scoreEndRange);
 								}
 								queryObj.setParameter("INSPECT_FLAG", WebAppConst.F);
 								/*

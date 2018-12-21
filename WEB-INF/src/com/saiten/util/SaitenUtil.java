@@ -12,20 +12,24 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
+
 import org.apache.struts2.ServletActionContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.ContextLoader;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.TextProvider;
 import com.saiten.bean.GradeNumKey;
 import com.saiten.bean.SaitenConfig;
@@ -165,10 +169,9 @@ public class SaitenUtil {
 			 */
 			/*
 			 * LinkedHashMap<String, LinkedHashMap<Integer, MstQuestion>>
-			 * mstScorerQuestionMap = (LinkedHashMap<String,
-			 * LinkedHashMap<Integer, MstQuestion>>) SaitenUtil
-			 * .getSession().get("mstScorerQuestionMap"); mstQuestionMap =
-			 * mstScorerQuestionMap.get(sessionScorerInfo .getScorerId());
+			 * mstScorerQuestionMap = (LinkedHashMap<String, LinkedHashMap<Integer,
+			 * MstQuestion>>) SaitenUtil .getSession().get("mstScorerQuestionMap");
+			 * mstQuestionMap = mstScorerQuestionMap.get(sessionScorerInfo .getScorerId());
 			 */
 			mstQuestionMap = getMstQuestionMapByScorerId(sessionScorerInfo.getScorerId());
 		}
@@ -391,8 +394,7 @@ public class SaitenUtil {
 	}
 
 	public static void updateSpecialScoringMap(/*
-												 * String subjectCode, String
-												 * answerFormNumber
+												 * String subjectCode, String answerFormNumber
 												 */) {
 		/*
 		 * Map<SpecialScoringKey, String> specialScoringMap = ((SaitenConfig)
@@ -470,8 +472,7 @@ public class SaitenUtil {
 		boolean decline = false;
 		/*
 		 * Map<SpecialScoringKey, String> specialScoringMap = ((SaitenConfig)
-		 * ServletActionContext
-		 * .getServletContext().getAttribute("saitenConfigObject"))
+		 * ServletActionContext .getServletContext().getAttribute("saitenConfigObject"))
 		 * .getSpecialScoringMap();
 		 * 
 		 * SpecialScoringKey specialScoringKey = new SpecialScoringKey();
@@ -486,12 +487,11 @@ public class SaitenUtil {
 
 		synchronized (SaitenUtil.class) {
 			/*
-			 * if (!specialScoringMap.containsKey(specialScoringKey)) { if
-			 * ((menuId == null) || ((menuId != null) && (!menuId
-			 * .equals(WebAppConst.FORCED_MENU_ID)))) {
+			 * if (!specialScoringMap.containsKey(specialScoringKey)) { if ((menuId == null)
+			 * || ((menuId != null) && (!menuId .equals(WebAppConst.FORCED_MENU_ID)))) {
 			 * specialScoringMap.put(specialScoringKey, scorerId); }
-			 * System.out.println(">>>>>>>>>>>> specialScoringMap = " +
-			 * specialScoringMap); decline = false; } else { decline = true; }
+			 * System.out.println(">>>>>>>>>>>> specialScoringMap = " + specialScoringMap);
+			 * decline = false; } else { decline = true; }
 			 */
 
 			if (!(count > 0)) {
@@ -512,8 +512,7 @@ public class SaitenUtil {
 					session.put("tranScorerSessionInfo", tranScorerSessionInfo);
 				}
 				/*
-				 * System.out.println(">>>>>>>>>>>> specialScoringMap = " +
-				 * specialScoringMap);
+				 * System.out.println(">>>>>>>>>>>> specialScoringMap = " + specialScoringMap);
 				 */
 				decline = false;
 			} else {
@@ -593,8 +592,7 @@ public class SaitenUtil {
 					+ questionInfo.getQuestionSeq() + WebAppConst.HYPHEN + questionInfo.getSubjectCode()
 					+ WebAppConst.HYPHEN + questionInfo.getQuestionNum() + "/" + imageFileName;
 			/*
-			 * String textFilePath =
-			 * "E:/saiten/processed-files/10001-A-1/"+imageFileName;
+			 * String textFilePath = "E:/saiten/processed-files/10001-A-1/"+imageFileName;
 			 */
 
 			URL url = new URL(textFilePath);
@@ -762,6 +760,58 @@ public class SaitenUtil {
 		}
 		return gradeTempMap;
 	}
+
+	public static String getColumnNameByQuestionType(Integer questionTypekey) {
+
+		String columnName = null;
+		switch (questionTypekey) {
+		case 1:
+			columnName = WebAppConst.TOTAL_PERCENTAGE;
+			break;
+		case 2:
+			columnName = WebAppConst.OBJECT_PERCENTAGE;
+			break;
+		case 3:
+			columnName = WebAppConst.LONG_PERCENTAGE;
+			break;
+		case 4:
+			columnName = WebAppConst.SHORT_PERCENTAGE;
+			break;
+		case 5:
+			columnName = WebAppConst.SHORT_BATCH_PERCENTAGE;
+			break;
+		case 6:
+			columnName = WebAppConst.SHORT_SCREEN_PERCENTAGE;
+			break;
+		}
+
+		return columnName;
+
+	}
+
+	public static Map<String, String> getQuestionType() {
+
+		Map<String, String> questionTypeMap = new LinkedHashMap<>();
+
+		ActionSupport action = (ActionSupport) ActionContext.getContext().getActionInvocation().getAction();
+
+		String selectValue = action.getText(WebAppConst.SELECT_VALUE);
+		String questionTypesAndDisplayFlagString = action.getText(WebAppConst.QUESTION_TYPES);
+		String[] questionTypeAndDisplayFlagArray = questionTypesAndDisplayFlagString
+				.split(Pattern.quote(WebAppConst.PIPE));
+		/* Add default Select into map */
+		questionTypeMap.put(String.valueOf(WebAppConst.MINUS_ONE), selectValue);
+
+		for (String questionTypeDisplayFlag : questionTypeAndDisplayFlagArray) {
+			String singleQuestionTypeAndDisplayFlagArray[] = questionTypeDisplayFlag.split(WebAppConst.COMMA);
+
+			if (Objects.equals(singleQuestionTypeAndDisplayFlagArray[2], String.valueOf(WebAppConst.DISPLAY_FLAG))) {
+				questionTypeMap.put(singleQuestionTypeAndDisplayFlagArray[0], singleQuestionTypeAndDisplayFlagArray[1]);
+			}
+		}
+
+		return questionTypeMap;
+	}
 	
 	public static Set<String> consecutiveCharacterMatch(String question, String answer) {
 
@@ -788,4 +838,5 @@ public class SaitenUtil {
 		
 		return duplicateWords;
 	}
+
 }

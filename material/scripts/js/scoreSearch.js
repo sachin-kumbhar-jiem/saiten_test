@@ -15,15 +15,31 @@ $(function () {
 		}
 	}
 	//setDefaultCB(); 
+	
+	if($("#questionType").val() == '-1'){
+		$('#scoreStartRange').prop('disabled', true);
+		$('#scoreEndRange').prop('disabled', true);
+	}
 });
 
 
 
 //Our validation script will go here.
 $(document).ready(function(){
-
+		$("#questionType").change(function() {
+			if ($(this).val() == '-1') {
+				$("#scoreStartRange").val(''); 
+				$("#scoreEndRange").val('');
+						
+				$('#scoreStartRange').prop('disabled', true);
+				$('#scoreEndRange').prop('disabled', true);
+			}else{
+				$('#scoreStartRange').prop('disabled', false);
+				$('#scoreEndRange').prop('disabled', false);
+			}
+		});
 	    $("#scoreSearchForm").keydown(function (e) {
-	        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+	        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {	        	
 	        	$('#scoreSearchForm').focus();
 	            $("#search").click();
 	            return false;
@@ -109,7 +125,9 @@ $(document).ready(function(){
 	$.validator.addMethod("checkFromDateFebruaryMonthVal", checkFromDateFebruaryMonth, DURATION_CHECK_FEBRUARY_FROM_DATE);  
 	$.validator.addMethod("checkToDateFebruaryMonthVal", checkToDateFebruaryMonth, DURATION_CHECK_FEBRUARY_TO_DATE);
 	$.validator.addMethod("questionNumValidaton", isQuestionNumValid, "");
-	
+	$.validator.addMethod("validateScoreRange", validateScoreRange, "");
+	$.validator.addMethod("validateScoreStartAndEndRange",validateScoreStartAndEndRange,"");
+	$.validator.addMethod("validateScoreRangeMaxValue",validateScoreRangeMaxValue,"");
 	
 	//$.validator.addMethod("imeModeDisabled", checkImeModeDisabled , "");
 	
@@ -134,6 +152,11 @@ $(document).ready(function(){
 				resultCountMinValidRange: true,
 				resultCountMaxValidRange: true
 			},
+			"scoreInputInfo.scorePercentageRange" :{				
+				validateScoreRange:true,
+				validateScoreStartAndEndRange:true,
+				validateScoreRangeMaxValue:true				
+			},				
 			"scoreInputInfo.scoreHistoryInfo.historyScorerId1" :{
 				alphaNumericIfNotBlank: true,
 				maxlength: 7
@@ -291,6 +314,11 @@ $(document).ready(function(){
 				resultCountMinValidRange: RESULT_COUNT_MINIMUM_RANGE,
 				resultCountMaxValidRange: RESULT_COUNT_MAXIMUM_RANGE
 	        },
+	        "scoreInputInfo.scorePercentageRange" : {	        	
+	        	validateScoreRange:SCORE_PERCENTAGE_RANGE_VALUES_REQUIRED,
+	        	validateScoreStartAndEndRange:SCORE_PERCENTAGE_RANGE_INVALID,
+	        	validateScoreRangeMaxValue:SCORE_PERCENTAGE_MAX_RANGE_VALUE_EXCEEDED
+	        },	              
 	        "scoreInputInfo.scoreHistoryInfo.historyScorerId1" :{
 	        	alphaNumericIfNotBlank: ALPHA_NUMERIC_ONLY,
 	        	maxlength: MAX_LENGTH_7
@@ -534,6 +562,14 @@ $(document).ready(function(){
 	        return true;
 	    }
 	    return false;
+	});
+	
+	$('#scoreStartRange').bind('input', function () {
+	    $(this).val($(this).val().replace(/[^0-9]/g, ''));
+	});
+
+	$('#scoreEndRange').bind('input', function () {
+	    $(this).val($(this).val().replace(/[^0-9]/g, ''));
 	});
 
 });
@@ -946,4 +982,32 @@ this.setCurrentDateValues = function(){
 	$("#currentToValidDate").val($("select#currentUpdateDateEndYear").val()+ "#" +$("select#currentUpdateDateEndMonth").val()+ "#" +$("select#currentUpdateDateEndDay").val()+ "#" +$("select#currentUpdateDateEndHours").val()+ "#" +$("select#currentUpdateDateEndMin").val());
 	$("#currentValidDate").val($("#currentFromValidDate").val()+ "/" +$("#currentToValidDate").val());
 };
+
+function validateScoreRange(){	
+	if ($('#scoreStartRange').prop("disabled") == false && $('#scoreEndRange').prop("disabled") == false && $("#scoreStartRange").val() == '' && $("#scoreEndRange").val() == '') {
+		$('#scoreStartRange').focus();
+		return false;
+	}else{
+		return true;
+	}
+}
+
+function validateScoreStartAndEndRange(){	    
+		if (($("#scoreStartRange").val() != '' && $("#scoreEndRange").val() != '') && (parseInt($("#scoreStartRange").val()) > parseInt($("#scoreEndRange").val())))
+			 {
+			    $('#scoreStartRange').focus();
+				return false;
+			 }
+		return true;
+}
+
+ function validateScoreRangeMaxValue(){
+	if(parseInt($("#scoreStartRange").val())>100 || parseInt($("#scoreEndRange").val())>100){
+		$('#scoreStartRange').focus();
+		return false;			
+	}
+	return true;
+}
+
+
 

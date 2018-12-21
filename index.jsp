@@ -6,6 +6,6 @@
 <meta http-equiv="refresh" content="1;url='<%= request.getContextPath() %>/index.action'">  
 </head>
 <body>
-
+<!-- Testing -->
 </body>
 </html>

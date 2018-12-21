@@ -49,6 +49,7 @@ import com.saiten.util.SaitenMasterUtil;
 import com.saiten.util.SaitenUtil;
 import com.saiten.util.UnlockAnswerUtil;
 import com.saiten.util.WebAppConst;
+import com.sun.glass.ui.Screen;
 
 /**
  * @author sachin
@@ -210,6 +211,8 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 				scoreSearchInfo.setDaysList(SaitenUtil.getCalendardays());
 				scoreSearchInfo.setHoursList(SaitenUtil.getClockHours());
 				scoreSearchInfo.setMinutesList(SaitenUtil.getClockMinutes());
+				scoreSearchInfo.setScorePercentageQuestionTypeMap(SaitenUtil.getQuestionType());
+
 				// Creating list for punch text
 				List<String> punchTextList = new ArrayList<String>();
 				punchTextList.add(getText(WebAppConst.PUNCH_TEXT_CONDITION_EXACT_MATCH));
@@ -259,7 +262,8 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 					+ "Search count screen loading. Search Criteria: -{ " + scoreInputInfo + " } ");
 			// adding escape character before any % in punchText
 			String tempStr = scoreInputInfo.getScoreCurrentInfo() != null
-					? scoreInputInfo.getScoreCurrentInfo().getPunchText() : null;
+					? scoreInputInfo.getScoreCurrentInfo().getPunchText()
+					: null;
 			String inputString = tempStr;
 			session.put("punchText", inputString);
 			if (tempStr != null) {
@@ -378,7 +382,8 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 					+ scoreInputInfo + "}");
 			// adding escape character before any % in punchText
 			String tempStr = scoreInputInfo.getScoreCurrentInfo() != null
-					? scoreInputInfo.getScoreCurrentInfo().getPunchText() : null;
+					? scoreInputInfo.getScoreCurrentInfo().getPunchText()
+					: null;
 			String inputString = tempStr;
 			session.put("punchText", inputString);
 			if (tempStr != null) {
@@ -414,7 +419,6 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 			if (questionSeq == null) {
 
 				sessionQuestionInfo.setQuestionSeq(WebAppConst.ZERO);
-				;
 
 				session.put("questionInfo", sessionQuestionInfo);
 				if (scoreInputInfo != null && scoreInputInfo.getScoreCurrentInfo() != null) {
@@ -466,9 +470,9 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 			fetchAnswerRecordsList(questionSeq, questionInfo, questionSeqMap, answerFormNum, historyRecordCount);
 
 			/*
-			 * if (sessionQuestionInfo.getMenuId().equals(
-			 * WebAppConst.STATE_TRAN_MENU_ID) && (scoreSamplingInfoList == null
-			 * || scoreSamplingInfoList .isEmpty())) { return SUCCESS;
+			 * if (sessionQuestionInfo.getMenuId().equals( WebAppConst.STATE_TRAN_MENU_ID)
+			 * && (scoreSamplingInfoList == null || scoreSamplingInfoList .isEmpty())) {
+			 * return SUCCESS;
 			 * 
 			 * } else
 			 */
@@ -737,8 +741,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 				|| menuId.equals(WebAppConst.FORCED_MENU_ID)) {
 
 			/*
-			 * System.out.
-			 * println(">>>>>>>>> isAnswerAlreadyScored query start: " + new
+			 * System.out. println(">>>>>>>>> isAnswerAlreadyScored query start: " + new
 			 * Date().getTime());
 			 */
 
@@ -756,8 +759,8 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 					tranDescScoreInfo.getAnswerInfo().getAnswerSeq(), questionInfo.getConnectionString(),
 					tranDescScoreInfo.getAnswerInfo().getUpdateDate());
 			/*
-			 * System.out.println(">>>>>>>>> isAnswerAlreadyScored query end: "
-			 * + new Date().getTime());
+			 * System.out.println(">>>>>>>>> isAnswerAlreadyScored query end: " + new
+			 * Date().getTime());
 			 */
 			if (!answerAlreadyScored) {
 				Date updateDate = new Date();
@@ -1191,13 +1194,12 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 			if (!(menuId.equals(WebAppConst.SPECIAL_SCORING_BLIND_TYPE_MENU_ID)
 					|| menuId.equals(WebAppConst.SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID))) {
 				/*
-				 * String subjectCode = questionInfo.getSubjectCode(); String
-				 * answerFormNumber = (String) session.get("answerFormNum");
+				 * String subjectCode = questionInfo.getSubjectCode(); String answerFormNumber =
+				 * (String) session.get("answerFormNum");
 				 */
 
 				SaitenUtil.updateSpecialScoringMap(/*
-													 * subjectCode,
-													 * answerFormNumber
+													 * subjectCode, answerFormNumber
 													 */);
 			}
 
@@ -1276,10 +1278,9 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 			 */
 			/*
 			 * LinkedHashMap<String, LinkedHashMap<Integer, MstQuestion>>
-			 * mstScorerQuestionMap = (LinkedHashMap<String,
-			 * LinkedHashMap<Integer, MstQuestion>>) SaitenUtil
-			 * .getSession().get("mstScorerQuestionMap"); mstQuestionMap =
-			 * mstScorerQuestionMap.get(scorerId);
+			 * mstScorerQuestionMap = (LinkedHashMap<String, LinkedHashMap<Integer,
+			 * MstQuestion>>) SaitenUtil .getSession().get("mstScorerQuestionMap");
+			 * mstQuestionMap = mstScorerQuestionMap.get(scorerId);
 			 */
 			mstQuestionMap = SaitenUtil.getMstQuestionMapByScorerId(scorerId);
 
@@ -1886,8 +1887,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 	}
 
 	/**
-	 * @param specialScoreInputInfo
-	 *            the specialScoreInputInfo to set
+	 * @param specialScoreInputInfo the specialScoreInputInfo to set
 	 */
 	public void setSpecialScoreInputInfo(SpecialScoreInputInfo specialScoreInputInfo) {
 		this.specialScoreInputInfo = specialScoreInputInfo;
@@ -1930,8 +1930,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 	}
 
 	/**
-	 * @param forceAndStateTransitionFlag
-	 *            the forceAndStateTransitionFlag to set
+	 * @param forceAndStateTransitionFlag the forceAndStateTransitionFlag to set
 	 */
 	public void setForceAndStateTransitionFlag(Boolean forceAndStateTransitionFlag) {
 		this.forceAndStateTransitionFlag = forceAndStateTransitionFlag;
@@ -1945,8 +1944,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 	}
 
 	/**
-	 * @param recordCount
-	 *            the recordCount to set
+	 * @param recordCount the recordCount to set
 	 */
 	public void setRecordCount(Object recordCount) {
 		this.recordCount = recordCount;
@@ -1959,8 +1957,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.apache.struts2.interceptor.ServletRequestAware#setServletRequest(
+	 * @see org.apache.struts2.interceptor.ServletRequestAware#setServletRequest(
 	 * javax.servlet.http.HttpServletRequest)
 	 */
 	public void setServletRequest(HttpServletRequest request) {
@@ -1979,8 +1976,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 	}
 
 	/**
-	 * @param scoreSamplingList
-	 *            the scoreSamplingList to set
+	 * @param scoreSamplingList the scoreSamplingList to set
 	 */
 	public void setScoreSamplingInfoList(List<ScoreSamplingInfo> scoreSamplingInfoList) {
 		this.scoreSamplingInfoList = scoreSamplingInfoList;
@@ -1994,8 +1990,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 	}
 
 	/**
-	 * @param result
-	 *            the result to set
+	 * @param result the result to set
 	 */
 	public void setResult(Map<String, Object> result) {
 		this.result = result;
@@ -2009,8 +2004,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 	}
 
 	/**
-	 * @param selectAllFlag
-	 *            the selectAllFlag to set
+	 * @param selectAllFlag the selectAllFlag to set
 	 */
 	public void setSelectAllFlag(boolean selectAllFlag) {
 		this.selectAllFlag = selectAllFlag;
@@ -2081,8 +2075,7 @@ public class ScoreSearchAction extends ActionSupport implements SessionAware, Se
 	}
 
 	/**
-	 * @param lookAfterwardsService
-	 *            the lookAfterwardsService to set
+	 * @param lookAfterwardsService the lookAfterwardsService to set
 	 */
 	public void setLookAfterwardsService(LookAfterwardsService lookAfterwardsService) {
 		this.lookAfterwardsService = lookAfterwardsService;

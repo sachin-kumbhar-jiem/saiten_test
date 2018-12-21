@@ -27,8 +27,10 @@ public class ScoreSearchInfo {
 	private Map<String, String> minutesList;
 
 	private Map<Integer, String> questionTypeMap;
-	
-	private Map <String, String> punchTextMap;
+
+	private Map<String, String> scorePercentageQuestionTypeMap;
+
+	private Map<String, String> punchTextMap;
 
 	public Map<String, String> getHoursList() {
 		return hoursList;
@@ -110,8 +112,7 @@ public class ScoreSearchInfo {
 	}
 
 	/**
-	 * @param questionTypeMap
-	 *            the questionTypeMap to set
+	 * @param questionTypeMap the questionTypeMap to set
 	 */
 	public void setQuestionTypeMap(Map<Integer, String> questionTypeMap) {
 		this.questionTypeMap = questionTypeMap;
@@ -123,6 +124,14 @@ public class ScoreSearchInfo {
 
 	public void setPunchTextMap(Map<String, String> punchTextMap) {
 		this.punchTextMap = punchTextMap;
+	}
+
+	public Map<String, String> getScorePercentageQuestionTypeMap() {
+		return scorePercentageQuestionTypeMap;
+	}
+
+	public void setScorePercentageQuestionTypeMap(Map<String, String> scorePercentageQuestionTypeMap) {
+		this.scorePercentageQuestionTypeMap = scorePercentageQuestionTypeMap;
 	}
 	
 	

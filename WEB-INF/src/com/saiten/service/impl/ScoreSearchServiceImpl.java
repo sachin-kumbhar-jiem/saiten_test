@@ -253,6 +253,20 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 			String orderByRandAttempt = new String();
 			String menuId = questionInfo.getMenuId();
 			List searchResultList = null;
+			
+			if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID) || menuId.equals(WebAppConst.STATE_TRAN_MENU_ID)) {
+				Integer scoreStartRange = scoreInputInfo.getScoreStartRange();
+				Integer scoreEndRange = scoreInputInfo.getScoreEndRange();
+				if (!(scoreInputInfo.getQuestionType().equals(Integer.valueOf(WebAppConst.MINUS_ONE)))) {
+					scoreStartRange = scoreStartRange == null && scoreEndRange != null ? WebAppConst.SCORE_RANGE_START
+							: scoreStartRange;
+					scoreEndRange = scoreEndRange == null && scoreStartRange != null ? WebAppConst.SCORE_RANGE_END
+							: scoreEndRange;
+					scoreInputInfo.setScoreStartRange(scoreStartRange);
+					scoreInputInfo.setScoreEndRange(scoreEndRange);
+				}
+			}
+			
 			if (menuId.equals(WebAppConst.REFERENCE_SAMP_MENU_ID)
 					|| menuId.equals(WebAppConst.SCORE_SAMP_MENU_ID)) {
 					searchResultList = getTranDescScoreHistoryDAO()
