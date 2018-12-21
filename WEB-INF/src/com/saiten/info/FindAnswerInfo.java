@@ -18,6 +18,7 @@ public class FindAnswerInfo implements java.io.Serializable {
 	private String markValue;
 	private String latestScreenScorerId;
 	private String secondLatestScreenScorerId;
+	private String punchText;
 
 	public int getAnswerSeq() {
 		return answerSeq;
@@ -104,6 +105,14 @@ public class FindAnswerInfo implements java.io.Serializable {
 
 	public void setSecondLatestScreenScorerId(String secondLatestScreenScorerId) {
 		this.secondLatestScreenScorerId = secondLatestScreenScorerId;
+	}
+
+	public String getPunchText() {
+		return punchText;
+	}
+
+	public void setPunchText(String punchText) {
+		this.punchText = punchText;
 	}
 
 

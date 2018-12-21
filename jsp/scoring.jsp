@@ -42,8 +42,10 @@
 <script>
 var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 </script>
+
 <script type="text/javascript" src="./material/scripts/js/enlarge_image.js"></script>
 <script type="text/javascript" src="./material/scripts/jQuery/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./material/css/jquery.highlight-within-textarea.css">
 <script type="text/javascript" src="./material/scripts/js/forward_dialog.js"></script>
 <script type="text/javascript" src="./material/scripts/js/list_action.js"></script>
 <script type="text/javascript" src="./material/scripts/js/chbox_action.js"></script>
@@ -52,6 +54,10 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 <script type="text/javascript" src="./material/scripts/js/script.js"></script>
 <script type="text/javascript" src="./material/scripts/js/scoring.js"></script>
 <script type="text/javascript" src="./material/scripts/js/modalPopLite.js"></script>
+<script type="text/javascript" src="./material/scripts/js/jquery3_2_1.min.js"></script>
+<script type="text/javascript">var jQuery_3_2_1 = $.noConflict(true);</script>
+<script type="text/javascript" src="./material/scripts/js/jquery.highlight-within-textarea.js"></script>
+
 <jsp:include page="include/jsMessages.jsp"></jsp:include>
 
 <script type="text/javascript" src="./material/scripts/js/answerImagePopup.js"></script>
@@ -93,6 +99,16 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
     <script language="JavaScript">
    		javascript:window.history.forward(1);
 	</script> 
+	<script type="text/javascript" language="javascript">
+		jQuery_3_2_1(document).ready(function($){					
+				var duplicateWords = '<s:property value="#session.tranDescScoreInfo.duplicateWords"/>';				
+			    $('.HighLightText').highlightWithinTextarea({
+				    highlight: [
+				    	duplicateWords.split(", ")
+				    ]
+				});
+			});
+		</script>
 <link href="./material/css/modalPopLite.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="./material/css/import.css" media="all">
 		
@@ -274,16 +290,195 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		<a href="#" id="original_size" onclick="setImageToDefaultSize()" style="color: black;"><img src="./material/img/default1.png" class="border">&nbsp;<s:text name="label.button.dafault.image.size"></s:text></a>
 	</div>	
 	<div >
-				<p class="score_img_top" style="overflow-x: auto;overflow-y: auto;width: 465px;height: 530px;vertical-align: top;">
+		<!-- Answer text compare - by Swapnil start -->			
+			<s:if test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2]">			
+				<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_MENU_ID && #session.historyScreenFlag == true  && bookmarkScreenFlag == false">
+				    <s:set id="imageHeight" name="imageHeight" value="521"/>
+				</s:if>				
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
+				<s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
+					 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
+					<s:set id="imageHeight" name="imageHeight" value="486"/>
+				</s:if>
+				<s:else>
+				    <s:set id="imageHeight" name="imageHeight" value="455"/>
+				</s:else>
+				</s:elseif>			
+			    <s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+			       <s:set id="imageHeight" name="imageHeight" value="552"/>
+			    </s:elseif>
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
+				<s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
+					 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
+					<s:set id="imageHeight" name="imageHeight" value="486"/>
+				</s:if>
+				<s:else>
+				    <s:set id="imageHeight" name="imageHeight" value="455"/>
+				</s:else>
+				</s:elseif>					
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+			       <s:set id="imageHeight" name="imageHeight" value="525"/>
+			    </s:elseif>
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
+				<s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
+					 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
+					<s:set id="imageHeight" name="imageHeight" value="486"/>
+				</s:if>
+				<s:else>
+				    <s:set id="imageHeight" name="imageHeight" value="455"/>
+				</s:else>
+				</s:elseif>				
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@OUT_BOUNDARY_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+			       <s:set id="imageHeight" name="imageHeight" value="525"/>
+			    </s:elseif>
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@OUT_BOUNDARY_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
+				<s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
+					 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
+					<s:set id="imageHeight" name="imageHeight" value="486"/>
+				</s:if>
+				<s:else>
+				    <s:set id="imageHeight" name="imageHeight" value="455"/>
+				</s:else>
+				</s:elseif>			
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+			       <s:set id="imageHeight" name="imageHeight" value="630"/>
+			    </s:elseif>
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
+				<s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
+					 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
+					<s:set id="imageHeight" name="imageHeight" value="596"/>
+				</s:if>
+				<s:else>
+				    <s:set id="imageHeight" name="imageHeight" value="565"/>
+				</s:else>
+				</s:elseif>			
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@PENDING_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+			       <s:set id="imageHeight" name="imageHeight" value="525"/>
+			    </s:elseif>
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@PENDING_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
+				<s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
+					 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
+					<s:set id="imageHeight" name="imageHeight" value="486"/>
+				</s:if>
+				<s:else>
+				    <s:set id="imageHeight" name="imageHeight" value="455"/>
+				</s:else>
+				</s:elseif>			
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+			       <s:set id="imageHeight" name="imageHeight" value="632"/>
+			    </s:elseif>
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
+				<s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
+					 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
+					<s:set id="imageHeight" name="imageHeight" value="595"/>
+				</s:if>
+				<s:else>
+				    <s:set id="imageHeight" name="imageHeight" value="564"/>
+				</s:else>
+				</s:elseif>			
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_QUALITY_CHECK_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+			       <s:set id="imageHeight" name="imageHeight" value="525"/>
+			    </s:elseif>
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_QUALITY_CHECK_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
+				<s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
+					 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
+					<s:set id="imageHeight" name="imageHeight" value="486"/>
+				</s:if>
+				<s:else>
+				    <s:set id="imageHeight" name="imageHeight" value="455"/>
+				</s:else>
+				</s:elseif>			
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+			    <s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
+					 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
+					<s:set id="imageHeight" name="imageHeight" value="555"/>
+				</s:if>
+				<s:else>
+				    <s:set id="imageHeight" name="imageHeight" value="552"/>
+				</s:else>
+			    </s:elseif>
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
+				<s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
+					 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
+					<s:set id="imageHeight" name="imageHeight" value="486"/>
+				</s:if>
+				<s:else>
+				    <s:set id="imageHeight" name="imageHeight" value="455"/>
+				</s:else>
+				</s:elseif>			
+				<s:elseif test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_BLIND_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID) && (#session.historyScreenFlag == true && bookmarkScreenFlag == false)">
+			       <s:set id="imageHeight" name="imageHeight" value="578"/>
+			    </s:elseif>
+				<s:elseif test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_BLIND_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID 
+				|| #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID) 
+				&& (bookmarkScreenFlag == true && #session.historyScreenFlag != true)">			
+				<s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
+				 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
+					<s:set id="imageHeight" name="imageHeight" value="540"/>
+				</s:if>
+				<s:else>
+				    <s:set id="imageHeight" name="imageHeight" value="510"/>
+				</s:else>
+				</s:elseif>			
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@NO_GRADE_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+			       <s:set id="imageHeight" name="imageHeight" value="525"/>
+			    </s:elseif>
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@NO_GRADE_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
+				<s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
+					 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
+					<s:set id="imageHeight" name="imageHeight" value="486"/>
+				</s:if>
+				<s:else>
+				    <s:set id="imageHeight" name="imageHeight" value="455"/>
+				</s:else>
+				</s:elseif>		
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID && #session.historyScreenFlag != true && bookmarkScreenFlag !=true">
+			       <s:set id="imageHeight" name="imageHeight" value="470"/>
+			    </s:elseif>		    
+			    <s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID && #session.historyScreenFlag != true && bookmarkScreenFlag !=true">
+			       <s:set id="imageHeight" name="imageHeight" value="550"/>
+			    </s:elseif>		
+				<s:else>
+				   <s:set id="imageHeight" name="imageHeight" value="450"/>
+				</s:else>				
+			</s:if>
+			<s:else>
+				<s:set id="imageHeight" name="imageHeight" value="530"/>
+			</s:else>
+			
+			
+	    		<p class="score_img_top" style="overflow-x: auto;overflow-y: auto;width: 465px;height: ${imageHeight}px;vertical-align: top;">
 					<span class="score_img">
 						<%-- <img id="answerImage" name="answerImage" src='<s:i18n name="application"><s:text name="saiten.answerimage.url" /></s:i18n>/<s:property value="%{#session.questionInfo.questionNum}" />/<s:property value="%{#session.tranDescScoreInfo.imageFileName}" />' alt="<s:text name="btn.scoring.alt.scaling" />"> --%>
 						<img id="answerImage" name="answerImage" src='<s:i18n name="application"><s:text name="saiten.answerimage.url" /></s:i18n>/<s:property value="%{#session.questionInfo.questionSeq}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.subjectCode}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.questionNum}" />/<s:property value="%{#session.tranDescScoreInfo.imageFileName}" />' alt="<s:text name="btn.scoring.alt.scaling" />">
 						<%-- <img id="answerImage" name="answerImage" src='#' alt="<s:text name="btn.scoring.alt.scaling" />"> --%>
 					</span> 
 				</p>
+				
+				<s:if test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2]">
+				<table style="width: 465px;">
+					<tr class="box_less_width_input" >
+						<td colspan="5">
+						
+							<span class="table_center_heading"><s:text name="label.answer_text" /></span>
+						</td>
+					</tr>
+					<tr >
+					<td colspan="5">						
+						<s:if test="#session.tranDescScoreInfo.answerInfo.punchText.length() >= 0">
+							<s:textarea cssClass="HighLightText" value="%{#session.tranDescScoreInfo.answerInfo.punchText}" maxlength="512" readonly="true" cssStyle="width: 460px; height: 50px;"></s:textarea>
+						</s:if>
+						<s:else>
+							<textarea class="HighLightText" maxlength="512" style="width: 460px; height: 50px;"><s:text name='label.data.not.found' /></textarea>
+						</s:else>
+					</td>
+					</tr>
+				</table>
+				</s:if>
+				<!-- Answer text compare - by Swapnil end -->
 				<s:if  test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID) || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID && #session.tranDescScoreInfo.lookAfterwardsCount>0)">
 		<table style="width: 465px;">
-		<tr><td>&nbsp;</td></tr>
+		
 		<tr class="box_less_width_input" >
 			<td colspan="5">
 				<span class="table_center_heading"><s:text name="label.look_afterwards" /></span>
@@ -740,7 +935,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		</div>
 		</td>
 		</tr>
-		
+				
 		<s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID">
 			<tr><td colspan="5" >&nbsp;</td></tr>
 				<tr class="box_less_width_input">
@@ -749,8 +944,11 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 					</td>
 				</tr>
 				<tr><td colspan="5" style="border: none;">&nbsp;</td></tr>
-			<tr><td colspan="5" class="wordwrap" style="border: none;"><pre style="margin-left: 5px;"><s:property value="#session.tranDescScoreInfo.answerInfo.punchText"/></pre></td></tr>
+				<s:if test="!(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2])">	
+					<tr><td colspan="5" class="wordwrap" style="border: none;"><pre style="margin-left: 5px;"><s:property value="#session.tranDescScoreInfo.answerInfo.punchText"/></pre></td></tr>
+				</s:if>
 		</s:if>
+
 	 <s:if test="!(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE || #session.questionInfo.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE)">
 		<s:if test="(bookmarkScreenFlag == true || #session.historyScreenFlag == true) || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || (#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID  && #session.tranDescScoreInfo.scoringState != @com.saiten.util.WebAppConst@MISMATCH_STATES[0]))">
 			<tr><td>&nbsp;</td></tr>

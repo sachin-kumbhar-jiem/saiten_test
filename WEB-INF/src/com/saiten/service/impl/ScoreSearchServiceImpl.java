@@ -210,6 +210,10 @@ public class ScoreSearchServiceImpl implements ScoreSearchService {
 					List<Short> markValueList = Arrays.asList(intMarkValues);
 					tranDescScoreInfo.setMarkValueList(markValueList);
 				}
+				if(answerRecordObjArray[10] != null){
+					answerInfo.setPunchText((String) answerRecordObjArray[10]);
+				}
+				
 				// Set lockBy for all answer records
 				answerInfo.setLockBy(scorerId);
 

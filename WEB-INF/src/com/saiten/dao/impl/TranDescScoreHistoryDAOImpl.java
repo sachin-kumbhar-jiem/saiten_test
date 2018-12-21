@@ -298,7 +298,8 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 		query.append("tranDescScoreHistory.gradeSeq, tranDescScoreHistory.bitValue, ");
 		query.append("tranDescScoreHistory.updateDate, tranDescScoreHistory.pendingCategorySeq, ");
 		query.append("tranDescScoreHistory.scoringState, tranDescScoreHistory.questionSeq, ");
-		query.append("tranDescScoreHistory.qualityCheckFlag  ");
+		query.append("tranDescScoreHistory.qualityCheckFlag, ");
+		query.append("tranDescScoreHistory.tranDescScore.punchText ");
 		query.append("FROM TranDescScoreHistory as tranDescScoreHistory ");
 		query.append("WHERE tranDescScoreHistory.historySeq = :HISTORY_SEQUENCE ");
 		query.append("AND tranDescScoreHistory.validFlag = :VALID_FLAG ");

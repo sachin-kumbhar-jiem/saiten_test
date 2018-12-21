@@ -29,6 +29,7 @@ import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
 import com.saiten.info.ScoreSearchInfo;
 import com.saiten.info.TranDescScoreInfo;
+import com.saiten.model.MstQuestion;
 import com.saiten.model.TranAcceptance;
 import com.saiten.model.TranDescScore;
 import com.saiten.service.GradeSelectionService;
@@ -577,6 +578,17 @@ public class KenshuSamplingAction extends ActionSupport implements
 			}
 			session.put("kenshuRecordInfo", kenshuRecordInfo);
 		}
+		
+		//Added code for compare question and answer text
+		if (tranDescScoreInfo.getAnswerInfo().getPunchText() != null) {
+			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = new LinkedHashMap<Integer, MstQuestion>();
+			mstQuestionMap = SaitenUtil.getSaitenConfigObject().getMstQuestionMap();
+			MstQuestion mstQuestion = mstQuestionMap.get(questionInfo.getQuestionSeq());
+			tranDescScoreInfo.setDuplicateWords(SaitenUtil.consecutiveCharacterMatch(mstQuestion.getQuestionContents(),
+							tranDescScoreInfo.getAnswerInfo().getPunchText()).toString().replaceAll("\\[", "").replaceAll("]", ""));
+
+		}
+		
 		session.put("tranDescScoreInfo", tranDescScoreInfo);
 		return SUCCESS;
 	}
