@@ -43,9 +43,9 @@
 var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 </script>
 
+<script type="text/javascript" src="./material/scripts/js/enlarge_image.js"></script>
 <script type="text/javascript" src="./material/scripts/jQuery/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="./material/css/jquery.highlight-within-textarea.css">
-<script type="text/javascript" src="./material/scripts/js/enlarge_image.js"></script>
 <script type="text/javascript" src="./material/scripts/js/forward_dialog.js"></script>
 <script type="text/javascript" src="./material/scripts/js/list_action.js"></script>
 <script type="text/javascript" src="./material/scripts/js/chbox_action.js"></script>
@@ -227,7 +227,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 			   
 			   <!-- 2nd td --> 
 			   
-			   <td class="table-center-menu-td-image tdImage">
+			   <td class="table-center-menu-td-image">
 			   <!-- Start left pane -->
 		<div id="content_left_pane">
 		  <div class="box_content_left_pane_input_normal">
@@ -450,7 +450,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 	    		<p class="score_img_top" style="overflow-x: auto;overflow-y: auto;width: 465px;height: ${imageHeight}px;vertical-align: top;">
 					<span class="score_img">
 						<%-- <img id="answerImage" name="answerImage" src='<s:i18n name="application"><s:text name="saiten.answerimage.url" /></s:i18n>/<s:property value="%{#session.questionInfo.questionNum}" />/<s:property value="%{#session.tranDescScoreInfo.imageFileName}" />' alt="<s:text name="btn.scoring.alt.scaling" />"> --%>
-						<img id="answerImage" name="answerImage"  src='<s:i18n name="application"><s:text name="saiten.answerimage.url" /></s:i18n>/<s:property value="%{#session.questionInfo.questionSeq}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.subjectCode}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.questionNum}" />/<s:property value="%{#session.tranDescScoreInfo.imageFileName}" />' alt="<s:text name="btn.scoring.alt.scaling" />">
+						<img id="answerImage" name="answerImage" src='<s:i18n name="application"><s:text name="saiten.answerimage.url" /></s:i18n>/<s:property value="%{#session.questionInfo.questionSeq}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.subjectCode}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.questionNum}" />/<s:property value="%{#session.tranDescScoreInfo.imageFileName}" />' alt="<s:text name="btn.scoring.alt.scaling" />">
 						<%-- <img id="answerImage" name="answerImage" src='#' alt="<s:text name="btn.scoring.alt.scaling" />"> --%>
 					</span> 
 				</p>
@@ -935,19 +935,18 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		</div>
 		</td>
 		</tr>
-		
-		
+				
 		<s:if  test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@KENSHU_SAMPLING_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID">
-		<tr><td colspan="5" >&nbsp;</td></tr>
-		<tr class="box_less_width_input">
-			<td colspan="5">
-				<span class="table_center_heading"><s:text name="label.scoring.punchtext" /></span>
-			</td>
-		</tr>
-		<tr><td colspan="5" style="border: none;">&nbsp;</td></tr>
-			<s:if test="!(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2])">	
-			<tr><td colspan="5" class="wordwrap" style="border: none;"><pre style="margin-left: 5px;"><s:property value="#session.tranDescScoreInfo.answerInfo.punchText"/></pre></td></tr>
-			</s:if>		
+			<tr><td colspan="5" >&nbsp;</td></tr>
+				<tr class="box_less_width_input">
+					<td colspan="5">
+						<span class="table_center_heading"><s:text name="label.scoring.punchtext" /></span>
+					</td>
+				</tr>
+				<tr><td colspan="5" style="border: none;">&nbsp;</td></tr>
+				<s:if test="!(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2])">	
+					<tr><td colspan="5" class="wordwrap" style="border: none;"><pre style="margin-left: 5px;"><s:property value="#session.tranDescScoreInfo.answerInfo.punchText"/></pre></td></tr>
+				</s:if>
 		</s:if>
 
 	 <s:if test="!(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@SPEAKING_TYPE || #session.questionInfo.questionType == @com.saiten.util.WebAppConst@WRITING_TYPE)">
