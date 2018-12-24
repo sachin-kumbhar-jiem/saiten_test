@@ -466,10 +466,10 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 					<tr >
 					<td colspan="5">						
 						<s:if test="#session.tranDescScoreInfo.answerInfo.punchText.length() >= 0">
-							<s:textarea cssClass="HighLightText" value="%{#session.tranDescScoreInfo.answerInfo.punchText}" maxlength="512" readonly="true" cssStyle="width: 460px; height: 50px;"></s:textarea>
+							<s:textarea cssClass="HighLightText" value="%{#session.tranDescScoreInfo.answerInfo.punchText}" maxlength="1000" readonly="true" cssStyle="width: 460px; height: 50px;"></s:textarea>
 						</s:if>
 						<s:else>
-							<textarea class="HighLightText" maxlength="512" style="width: 460px; height: 50px;"><s:text name='label.data.not.found' /></textarea>
+							<textarea class="HighLightText" maxlength="1000" style="width: 460px; height: 50px;" readonly="readonly"><s:text name='label.data.not.found' /></textarea>
 						</s:else>
 					</td>
 					</tr>

@@ -16,6 +16,9 @@ $(window).bind("load", function() {
 });
 
 function setImageToDefaultSize(){
+	$('#answerImage').css('max-width','100%');
+	$('#answerImage').css('max-height','100%');
+	
 	calculateActualWidthHeight();
 
 	$('#answerImage').css('width',actualWidth);
@@ -31,6 +34,9 @@ function setAnswerImageSize(){
 	$('#answerImage').css('height',actualHeight);
 }
 function enlargeImage(){
+	$('#answerImage').css('max-width','none');
+	$('#answerImage').css('max-height','none');
+	
 	calculateActualWidthHeight();
 	
 	width=$('#answerImage').width();
@@ -54,6 +60,9 @@ function dropImage(){
 		$('#answerImage').css('width',width-increaseBy);
 		$('#answerImage').css('height',(width-increaseBy)/heightWidthRatio);
 		increamentSeq = increamentSeq - 1;
+	}else{
+		$('#answerImage').css('max-width','100%');
+		$('#answerImage').css('max-height','100%');
 	}
 }
 function calculateActualWidthHeight(){
