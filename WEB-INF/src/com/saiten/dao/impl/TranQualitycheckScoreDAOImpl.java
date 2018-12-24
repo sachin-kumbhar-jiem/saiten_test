@@ -165,7 +165,7 @@ public class TranQualitycheckScoreDAOImpl extends SaitenHibernateDAOSupport
 		query.append("tranQualitycheckScore.scorerComment, ");
 		query.append("tranQualitycheckScore.gradeSeq, tranQualitycheckScore.bitValue, ");
 		query.append("tranQualitycheckScore.updateDate, tranQualitycheckScore.pendingCategorySeq, ");
-		query.append("tranQualitycheckScore.scoringState, tranQualitycheckScore.questionSeq ");
+		query.append("tranQualitycheckScore.scoringState, tranQualitycheckScore.questionSeq, tranQualitycheckScore.tranDescScore.punchText ");
 		query.append("FROM TranQualitycheckScore as tranQualitycheckScore ");
 		query.append("WHERE tranQualitycheckScore.qcSeq = :QC_SEQUENCE ");
 		query.append("AND tranQualitycheckScore.validFlag = :VALID_FLAG ");

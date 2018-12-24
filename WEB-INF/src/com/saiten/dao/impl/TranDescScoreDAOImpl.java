@@ -386,7 +386,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 		query.append("tranDescScore.updateDate,  ");
 		query.append("tranDescScore.markValue, ");
 		query.append("tranDescScore.latestScreenScorerId,  ");
-		query.append("tranDescScore.secondLatestScreenScorerId  ");
+		query.append("tranDescScore.secondLatestScreenScorerId, ");
+		query.append("tranDescScore.punchText  ");
 		query.append("FROM TranDescScore as tranDescScore  ");
 		query.append("WHERE tranDescScore.answerSeq = :ANSWER_SEQUENCE ");
 		List<String> paramNameList = new ArrayList<String>();
