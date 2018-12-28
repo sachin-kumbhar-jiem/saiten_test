@@ -11,6 +11,7 @@ import com.saiten.dao.TranDescScoreDAO;
 import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.service.GradeSelectionService;
 import com.saiten.util.ErrorCode;
+import com.saiten.util.WebAppConst;
 
 /**
  * @author kailash
@@ -58,13 +59,27 @@ public class GradeSelectionServiceImpl implements GradeSelectionService {
 	private Map<String, String> buildGradeMap(List gradeList, String gradeNumText) {
 		Map<String, String> gradeMap = new LinkedHashMap<String, String>();
 
-		if (!gradeList.isEmpty()) {
+	/*	if (!gradeList.isEmpty()) {
 			for (Object gradeListObj : gradeList) {
 				// String gradeNum = (String) gradeListObj;
 				String gradeNum = String.valueOf(gradeListObj);
 				gradeMap.put(gradeNum, gradeNumText + gradeNum);
 			}
+		}*/
+		
+		
+		if (!gradeList.isEmpty()) {
+			for (Object gradeListObj : gradeList) {
+				Object[] gradeObj = (Object[]) gradeListObj;
+
+				String gradeNum = String.valueOf(gradeObj[0]);
+				String answerCount = String.valueOf(gradeObj[1]);
+
+				gradeMap.put(gradeNum, gradeNumText + gradeNum + WebAppConst.SINGLE_SPACE + WebAppConst.OPENING_BRACKET
+						+ answerCount + WebAppConst.CLOSING_BRACKET);
+			}
 		}
+		
 		return gradeMap;
 	}
 

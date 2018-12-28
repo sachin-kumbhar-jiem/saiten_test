@@ -2133,13 +2133,14 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 	@Override
 	public List findGradesWithCountByQuestionSeq(int questionSeq, Short latestScoringState, String connectionString) {
 		StringBuilder query = new StringBuilder();
-		query.append("SELECT tranDescScore.gradeNum ");
+		query.append("SELECT tranDescScore.gradeNum , COUNT(tranDescScore.answerSeq) as answerRecordCount ");
 		query.append("FROM TranDescScore as tranDescScore ");
 		query.append("WHERE tranDescScore.questionSeq = :QUESTION_SEQ ");
 		query.append("AND tranDescScore.latestScoringState = :LATEST_SCORING_STATE ");
 		query.append("AND tranDescScore.lockFlag = :UNLOCK ");
 		query.append("AND tranDescScore.validFlag = :VALID_FLAG ");
 		query.append("GROUP BY tranDescScore.gradeNum, tranDescScore.latestScoringState ");
+		query.append("HAVING COUNT(tranDescScore.answerSeq) > 0 ");
 		query.append("ORDER BY tranDescScore.gradeNum ");
 
 		String[] paramNames = { "QUESTION_SEQ", "LATEST_SCORING_STATE", "UNLOCK", "VALID_FLAG" };
