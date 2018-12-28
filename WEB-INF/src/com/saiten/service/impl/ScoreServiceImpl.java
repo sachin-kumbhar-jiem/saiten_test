@@ -214,6 +214,7 @@ public class ScoreServiceImpl implements ScoreService {
 				answerInfo.setPendingCategorySeq((Integer) tranDescScoreObjArray[7]);
 				tranDescScoreInfo.setScoringState((Short) tranDescScoreObjArray[8]);
 				answerInfo.setQuestionSeq((Integer) tranDescScoreObjArray[9]);
+				answerInfo.setPunchText((String) tranDescScoreObjArray[10]);
 
 			} else {
 
@@ -227,8 +228,16 @@ public class ScoreServiceImpl implements ScoreService {
 						} else {
 							answerInfo.setHistorySeq(seq);
 						}
+						
+						if(tranDescScoreObjArray[14] != null){
+							answerInfo.setPunchText((String) tranDescScoreObjArray[14]);
+						}
 					} else {
 						answerInfo.setHistorySeq(historySeq);
+						
+						if(tranDescScoreObjArray[12] != null){
+							answerInfo.setPunchText((String) tranDescScoreObjArray[12]);
+						}
 					}
 					answerInfo.setBookMarkFlag((Character) tranDescScoreObjArray[3]);
 					answerInfo.setScorerComment((String) tranDescScoreObjArray[4]);
@@ -241,9 +250,9 @@ public class ScoreServiceImpl implements ScoreService {
 					tranDescScoreInfo.setScoringState((Short) tranDescScoreObjArray[9]);
 					answerInfo.setQuestionSeq((Integer) tranDescScoreObjArray[10]);
 					answerInfo.setQualityCheckFlag((Character) tranDescScoreObjArray[11]);
-					if(tranDescScoreObjArray[12] != null){
+					/*if(tranDescScoreObjArray[12] != null){
 						answerInfo.setPunchText((String) tranDescScoreObjArray[12]);
-					}
+					}*/
 				} else if (!historyScreenFlag && (menuId.equals(WebAppConst.CHECKING_MENU_ID)
 						|| menuId.equals(WebAppConst.INSPECTION_MENU_ID) || menuId.equals(WebAppConst.DENY_MENU_ID)
 						|| menuId.equals(WebAppConst.NO_GRADE_MENU_ID)
@@ -258,12 +267,14 @@ public class ScoreServiceImpl implements ScoreService {
 		}
 		
 		//Added code for compare question and answer text
-		if (tranDescScoreInfo.getAnswerInfo().getPunchText() != null) {
+		if (tranDescScoreInfo != null && tranDescScoreInfo.getAnswerInfo().getPunchText() != null) {
 			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = new LinkedHashMap<Integer, MstQuestion>();
 			mstQuestionMap = SaitenUtil.getSaitenConfigObject().getMstQuestionMap();
 			MstQuestion mstQuestion = mstQuestionMap.get(questionInfo.getQuestionSeq());
-			tranDescScoreInfo.setDuplicateWords(SaitenUtil.consecutiveCharacterMatch(mstQuestion.getQuestionContents(),
-				tranDescScoreInfo.getAnswerInfo().getPunchText()).toString().replaceAll("\\[", "").replaceAll("]", ""));
+			tranDescScoreInfo.setDuplicateWords(SaitenUtil
+					.consecutiveCharacterMatch(mstQuestion.getQuestionContents(),
+							tranDescScoreInfo.getAnswerInfo().getPunchText())
+					.toString().replaceAll("\\[", "").replaceAll("]", ""));
 
 		}
 		
