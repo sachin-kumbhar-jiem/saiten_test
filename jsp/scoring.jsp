@@ -98,17 +98,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
     </script>   
     <script language="JavaScript">
    		javascript:window.history.forward(1);
-	</script> 
-	<script type="text/javascript" language="javascript">
-		jQuery_3_2_1(document).ready(function($){					
-				var duplicateWords = '<s:property value="#session.tranDescScoreInfo.duplicateWords"/>';				
-			    $('.HighLightText').highlightWithinTextarea({
-				    highlight: [
-				    	duplicateWords.split(", ")
-				    ]
-				});
-			});
-		</script>
+	</script>
 <link href="./material/css/modalPopLite.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="./material/css/import.css" media="all">
 		
@@ -455,6 +445,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 					</span> 
 				</p>
 				
+				<s:hidden id="hidDuplicateWords" name="hidDuplicateWords" value="%{#session.tranDescScoreInfo.duplicateWords}"></s:hidden>
 				<s:if test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2]">
 				<table style="width: 465px;">
 					<tr class="box_less_width_input" >

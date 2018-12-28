@@ -5,6 +5,13 @@
  * @github  https://github.com/lonekorean/highlight-within-textarea
  */
 
+jQuery_3_2_1(document).ready(function($) {
+	var duplicateWords = $("#hidDuplicateWords").val();
+	$('.HighLightText').highlightWithinTextarea({
+		highlight : [ duplicateWords.split(", ") ]
+	});
+});
+
 (function($) {
 	let ID = 'hwt';
 
