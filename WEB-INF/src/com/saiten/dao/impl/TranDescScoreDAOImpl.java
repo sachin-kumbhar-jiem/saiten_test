@@ -2129,4 +2129,27 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List findGradesWithCountByQuestionSeq(int questionSeq, Short latestScoringState, String connectionString) {
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT tranDescScore.gradeNum ");
+		query.append("FROM TranDescScore as tranDescScore ");
+		query.append("WHERE tranDescScore.questionSeq = :QUESTION_SEQ ");
+		query.append("AND tranDescScore.latestScoringState = :LATEST_SCORING_STATE ");
+		query.append("AND tranDescScore.lockFlag = :UNLOCK ");
+		query.append("AND tranDescScore.validFlag = :VALID_FLAG ");
+		query.append("GROUP BY tranDescScore.gradeNum, tranDescScore.latestScoringState ");
+		query.append("ORDER BY tranDescScore.gradeNum ");
+
+		String[] paramNames = { "QUESTION_SEQ", "LATEST_SCORING_STATE", "UNLOCK", "VALID_FLAG" };
+		Object[] values = { questionSeq, latestScoringState, WebAppConst.UNLOCK, WebAppConst.VALID_FLAG };
+
+		try {
+			return getHibernateTemplate(connectionString).findByNamedParam(query.toString(), paramNames, values);
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
+
 }

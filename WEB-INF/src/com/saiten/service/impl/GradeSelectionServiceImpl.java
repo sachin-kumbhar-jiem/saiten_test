@@ -7,6 +7,7 @@ import java.util.Map;
 import org.hibernate.HibernateException;
 
 import com.saiten.dao.MstGradeResultDAO;
+import com.saiten.dao.TranDescScoreDAO;
 import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.service.GradeSelectionService;
 import com.saiten.util.ErrorCode;
@@ -18,6 +19,8 @@ import com.saiten.util.ErrorCode;
 public class GradeSelectionServiceImpl implements GradeSelectionService {
 
 	private MstGradeResultDAO mstGradeResultDAO;
+	
+	private TranDescScoreDAO tranDescScoreDAO;
 
 	/*
 	 * (non-Javadoc)
@@ -25,14 +28,15 @@ public class GradeSelectionServiceImpl implements GradeSelectionService {
 	 * @see
 	 * com.saiten.service.GradeSelectionService#findGradesByQuestionSeq(int)
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
-	public Map<String, String> findGradesByQuestionSeq(int questionSeq, String gradeNumText) {
+	public Map<String, String> findGradesByQuestionSeq(int questionSeq, String gradeNumText, Short latestScoringState, String connectionString) {
 
 		// Map<String, String> map;
 
 		try {
 
-			List gradeList = mstGradeResultDAO.findGradesByQuestionSeq(questionSeq);
+			List gradeList = tranDescScoreDAO.findGradesWithCountByQuestionSeq(questionSeq, latestScoringState, connectionString);
 
 			// map = SaitenUtil.getGradeMapByQuestionSeq(questionSeq,
 			// gradeNumText);
@@ -69,6 +73,13 @@ public class GradeSelectionServiceImpl implements GradeSelectionService {
 	 */
 	public void setMstGradeResultDAO(MstGradeResultDAO mstGradeResultDAO) {
 		this.mstGradeResultDAO = mstGradeResultDAO;
+	}
+
+	/**
+	 * @param tranDescScoreDAO the tranDescScoreDAO to set
+	 */
+	public void setTranDescScoreDAO(TranDescScoreDAO tranDescScoreDAO) {
+		this.tranDescScoreDAO = tranDescScoreDAO;
 	}
 
 	/**

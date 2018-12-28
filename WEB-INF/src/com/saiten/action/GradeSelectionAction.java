@@ -1,11 +1,14 @@
 package com.saiten.action;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.SessionAware;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.saiten.bean.SaitenConfig;
 import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.info.MstScorerInfo;
 import com.saiten.info.QuestionInfo;
@@ -56,8 +59,12 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 			subjectShortName = selectedQuestion[1];
 			String gradeNumText = WebAppConst.GRADE_TEXT;
             
+			// Get menuIdAndScoringStateMap from saitenConfigObject
+			LinkedHashMap<String, Short> menuIdAndScoringStateMap = ((SaitenConfig) ServletActionContext
+					.getServletContext().getAttribute("saitenConfigObject")).getMenuIdAndScoringStateMap();
+
 			
-			gradeMap = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText);
+			gradeMap = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText, menuIdAndScoringStateMap.get(sessionQuestionInfo.getMenuId()), sessionQuestionInfo.getConnectionString());
 			
 			//List gradeList = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText);
 
