@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.hibernate.HibernateException;
 
-import com.saiten.dao.MstGradeResultDAO;
 import com.saiten.dao.TranDescScoreDAO;
 import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.service.GradeSelectionService;
@@ -18,8 +17,6 @@ import com.saiten.util.WebAppConst;
  * 
  */
 public class GradeSelectionServiceImpl implements GradeSelectionService {
-
-	private MstGradeResultDAO mstGradeResultDAO;
 	
 	private TranDescScoreDAO tranDescScoreDAO;
 
@@ -31,13 +28,13 @@ public class GradeSelectionServiceImpl implements GradeSelectionService {
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Map<String, String> findGradesByQuestionSeq(int questionSeq, String gradeNumText, Short latestScoringState, String connectionString) {
+	public Map<String, String> findGradesByQuestionSeq(int questionSeq, String gradeNumText, Short latestScoringState, Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString) {
 
 		// Map<String, String> map;
 
 		try {
 
-			List gradeList = tranDescScoreDAO.findGradesWithCountByQuestionSeq(questionSeq, latestScoringState, connectionString);
+			List gradeList = tranDescScoreDAO.findGradesWithCountByQuestionSeq(questionSeq, latestScoringState, selectedMarkValue, denyCategory, inspectionGroupSeq, connectionString);
 
 			// map = SaitenUtil.getGradeMapByQuestionSeq(questionSeq,
 			// gradeNumText);
@@ -59,35 +56,16 @@ public class GradeSelectionServiceImpl implements GradeSelectionService {
 	private Map<String, String> buildGradeMap(List gradeList, String gradeNumText) {
 		Map<String, String> gradeMap = new LinkedHashMap<String, String>();
 
-	/*	if (!gradeList.isEmpty()) {
-			for (Object gradeListObj : gradeList) {
-				// String gradeNum = (String) gradeListObj;
-				String gradeNum = String.valueOf(gradeListObj);
-				gradeMap.put(gradeNum, gradeNumText + gradeNum);
-			}
-		}*/
-		
-		
 		if (!gradeList.isEmpty()) {
 			for (Object gradeListObj : gradeList) {
 				Object[] gradeObj = (Object[]) gradeListObj;
-
 				String gradeNum = String.valueOf(gradeObj[0]);
 				String answerCount = String.valueOf(gradeObj[1]);
-
 				gradeMap.put(gradeNum, gradeNumText + gradeNum + WebAppConst.SINGLE_SPACE + WebAppConst.OPENING_BRACKET
 						+ answerCount + WebAppConst.CLOSING_BRACKET);
 			}
 		}
-		
 		return gradeMap;
-	}
-
-	/**
-	 * @param mstGradeResultDAO
-	 */
-	public void setMstGradeResultDAO(MstGradeResultDAO mstGradeResultDAO) {
-		this.mstGradeResultDAO = mstGradeResultDAO;
 	}
 
 	/**

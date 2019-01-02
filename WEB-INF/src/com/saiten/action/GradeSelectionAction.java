@@ -51,7 +51,8 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 			questionSeq = sessionQuestionInfo.getQuestionSeq();
 			questionList = (String) session.get("questionList");
 
-			if (sessionQuestionInfo.getScoreType() == WebAppConst.SCORE_TYPE[3]) {
+			//added null checking for selectedMarkValue-By Swapnil
+			if (selectedMarkValue != null && sessionQuestionInfo.getScoreType() == WebAppConst.SCORE_TYPE[3]) {
 				session.put("selectedMarkValue", selectedMarkValue);
 			}
 
@@ -62,9 +63,13 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 			// Get menuIdAndScoringStateMap from saitenConfigObject
 			LinkedHashMap<String, Short> menuIdAndScoringStateMap = ((SaitenConfig) ServletActionContext
 					.getServletContext().getAttribute("saitenConfigObject")).getMenuIdAndScoringStateMap();
-
 			
-			gradeMap = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText, menuIdAndScoringStateMap.get(sessionQuestionInfo.getMenuId()), sessionQuestionInfo.getConnectionString());
+			gradeMap = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText,
+					menuIdAndScoringStateMap.get(sessionQuestionInfo.getMenuId()),
+					session.get("selectedMarkValue") != null ? (Short) session.get("selectedMarkValue")
+							: selectedMarkValue,
+					denyCategory, sessionQuestionInfo.getInspectionGroupSeq(),
+					sessionQuestionInfo.getConnectionString());
 			
 			//List gradeList = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText);
 

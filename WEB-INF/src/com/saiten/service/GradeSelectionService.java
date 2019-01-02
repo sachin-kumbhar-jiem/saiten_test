@@ -11,7 +11,8 @@ public interface GradeSelectionService {
 	 * @param questionSeq
 	 * @return
 	 */
-	public Map<String, String> findGradesByQuestionSeq(int questionSeq, String gradeNumText, Short latestScoringState, String connectionString);
+	public Map<String, String> findGradesByQuestionSeq(int questionSeq, String gradeNumText, Short latestScoringState,
+			Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString);
 	
 	//public List findGradesByQuestionSeq(int questionSeq, String gradeNumText);
 }

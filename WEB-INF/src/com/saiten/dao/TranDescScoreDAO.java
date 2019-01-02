@@ -198,6 +198,6 @@ public interface TranDescScoreDAO {
 	public List questionSeqWiseCountWherePendingCategorySet(String connectionString);
 
 	@SuppressWarnings("rawtypes")
-	public List findGradesWithCountByQuestionSeq(int questionSeq, Short latestScoringState, String connectionString);
+	public List findGradesWithCountByQuestionSeq(int questionSeq, Short latestScoringState, Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString);
 
 }

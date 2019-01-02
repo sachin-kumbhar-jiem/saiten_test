@@ -92,7 +92,6 @@
    	</bean>
    	
    	<bean id="gradeSelectionService" class="com.saiten.service.impl.GradeSelectionServiceImpl">
-		<property name="mstGradeResultDAO" ref="mstGradeResultDAO" />
 		<property name="tranDescScoreDAO" ref="tranDescScoreDAO" />
    	</bean>
    	
