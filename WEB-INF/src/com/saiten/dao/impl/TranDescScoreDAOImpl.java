@@ -2162,6 +2162,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 		valueList.add(questionSeq);
 		paramNameList.add("LATEST_SCORING_STATE");
 		valueList.add(latestScoringState);
+		
 		if(selectedMarkValue != null){
 			paramNameList.add("MARK_VALUE");
 			valueList.add(selectedMarkValue.toString());

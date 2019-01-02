@@ -64,12 +64,11 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 			LinkedHashMap<String, Short> menuIdAndScoringStateMap = ((SaitenConfig) ServletActionContext
 					.getServletContext().getAttribute("saitenConfigObject")).getMenuIdAndScoringStateMap();
 			
+			Short selectedMarkValue = (Short) session.get("selectedMarkValue");
+			
 			gradeMap = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText,
-					menuIdAndScoringStateMap.get(sessionQuestionInfo.getMenuId()),
-					session.get("selectedMarkValue") != null ? (Short) session.get("selectedMarkValue")
-							: selectedMarkValue,
-					denyCategory, sessionQuestionInfo.getInspectionGroupSeq(),
-					sessionQuestionInfo.getConnectionString());
+					menuIdAndScoringStateMap.get(sessionQuestionInfo.getMenuId()), selectedMarkValue, denyCategory,
+					sessionQuestionInfo.getInspectionGroupSeq(), sessionQuestionInfo.getConnectionString());
 			
 			//List gradeList = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText);
 
