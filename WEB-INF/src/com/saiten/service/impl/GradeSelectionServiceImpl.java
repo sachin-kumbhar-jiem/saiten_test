@@ -6,18 +6,19 @@ import java.util.Map;
 
 import org.hibernate.HibernateException;
 
-import com.saiten.dao.MstGradeResultDAO;
+import com.saiten.dao.TranDescScoreDAO;
 import com.saiten.exception.SaitenRuntimeException;
 import com.saiten.service.GradeSelectionService;
 import com.saiten.util.ErrorCode;
+import com.saiten.util.WebAppConst;
 
 /**
  * @author kailash
  * 
  */
 public class GradeSelectionServiceImpl implements GradeSelectionService {
-
-	private MstGradeResultDAO mstGradeResultDAO;
+	
+	private TranDescScoreDAO tranDescScoreDAO;
 
 	/*
 	 * (non-Javadoc)
@@ -25,14 +26,15 @@ public class GradeSelectionServiceImpl implements GradeSelectionService {
 	 * @see
 	 * com.saiten.service.GradeSelectionService#findGradesByQuestionSeq(int)
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
-	public Map<String, String> findGradesByQuestionSeq(int questionSeq, String gradeNumText) {
+	public Map<String, String> findGradesByQuestionSeq(int questionSeq, String gradeNumText, Short latestScoringState, Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString) {
 
 		// Map<String, String> map;
 
 		try {
 
-			List gradeList = mstGradeResultDAO.findGradesByQuestionSeq(questionSeq);
+			List gradeList = tranDescScoreDAO.findGradesWithCountByQuestionSeq(questionSeq, latestScoringState, selectedMarkValue, denyCategory, inspectionGroupSeq, connectionString);
 
 			// map = SaitenUtil.getGradeMapByQuestionSeq(questionSeq,
 			// gradeNumText);
@@ -56,19 +58,21 @@ public class GradeSelectionServiceImpl implements GradeSelectionService {
 
 		if (!gradeList.isEmpty()) {
 			for (Object gradeListObj : gradeList) {
-				// String gradeNum = (String) gradeListObj;
-				String gradeNum = String.valueOf(gradeListObj);
-				gradeMap.put(gradeNum, gradeNumText + gradeNum);
+				Object[] gradeObj = (Object[]) gradeListObj;
+				String gradeNum = String.valueOf(gradeObj[0]);
+				String answerCount = String.valueOf(gradeObj[1]);
+				gradeMap.put(gradeNum, gradeNumText + gradeNum + WebAppConst.SINGLE_SPACE + WebAppConst.OPENING_BRACKET
+						+ answerCount + WebAppConst.CLOSING_BRACKET);
 			}
 		}
 		return gradeMap;
 	}
 
 	/**
-	 * @param mstGradeResultDAO
+	 * @param tranDescScoreDAO the tranDescScoreDAO to set
 	 */
-	public void setMstGradeResultDAO(MstGradeResultDAO mstGradeResultDAO) {
-		this.mstGradeResultDAO = mstGradeResultDAO;
+	public void setTranDescScoreDAO(TranDescScoreDAO tranDescScoreDAO) {
+		this.tranDescScoreDAO = tranDescScoreDAO;
 	}
 
 	/**
