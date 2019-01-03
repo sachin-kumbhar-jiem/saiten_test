@@ -280,9 +280,9 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		<a href="#" id="original_size" onclick="setImageToDefaultSize()" style="color: black;"><img src="./material/img/default1.png" class="border">&nbsp;<s:text name="label.button.dafault.image.size"></s:text></a>
 	</div>	
 	<div >
-		<!-- Answer text compare - by Swapnil start -->			
+		<!-- Answer text compare - by Swapnil start -->		
 			<s:if test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2]">			
-				<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_MENU_ID && #session.historyScreenFlag == true  && bookmarkScreenFlag == false">
+				<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_MENU_ID && ((#session.historyScreenFlag == true  && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 				    <s:set id="imageHeight" name="imageHeight" value="521"/>
 				</s:if>				
 				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
@@ -294,7 +294,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				    <s:set id="imageHeight" name="imageHeight" value="455"/>
 				</s:else>
 				</s:elseif>			
-			    <s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+			    <s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID && ((#session.historyScreenFlag == true && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 			       <s:set id="imageHeight" name="imageHeight" value="552"/>
 			    </s:elseif>
 				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@CHECKING_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
@@ -306,7 +306,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				    <s:set id="imageHeight" name="imageHeight" value="455"/>
 				</s:else>
 				</s:elseif>					
-				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID && ((#session.historyScreenFlag == true && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 			       <s:set id="imageHeight" name="imageHeight" value="525"/>
 			    </s:elseif>
 				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@DENY_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
@@ -318,7 +318,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				    <s:set id="imageHeight" name="imageHeight" value="455"/>
 				</s:else>
 				</s:elseif>				
-				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@OUT_BOUNDARY_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@OUT_BOUNDARY_MENU_ID && ((#session.historyScreenFlag == true && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 			       <s:set id="imageHeight" name="imageHeight" value="525"/>
 			    </s:elseif>
 				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@OUT_BOUNDARY_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
@@ -330,7 +330,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				    <s:set id="imageHeight" name="imageHeight" value="455"/>
 				</s:else>
 				</s:elseif>			
-				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID && ((#session.historyScreenFlag == true && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 			       <s:set id="imageHeight" name="imageHeight" value="630"/>
 			    </s:elseif>
 				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SCORE_SAMP_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
@@ -342,7 +342,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				    <s:set id="imageHeight" name="imageHeight" value="565"/>
 				</s:else>
 				</s:elseif>			
-				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@PENDING_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@PENDING_MENU_ID && ((#session.historyScreenFlag == true && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 			       <s:set id="imageHeight" name="imageHeight" value="525"/>
 			    </s:elseif>
 				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@PENDING_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
@@ -354,7 +354,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				    <s:set id="imageHeight" name="imageHeight" value="455"/>
 				</s:else>
 				</s:elseif>			
-				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID && ((#session.historyScreenFlag == true && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 			       <s:set id="imageHeight" name="imageHeight" value="632"/>
 			    </s:elseif>
 				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
@@ -366,7 +366,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				    <s:set id="imageHeight" name="imageHeight" value="564"/>
 				</s:else>
 				</s:elseif>			
-				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_QUALITY_CHECK_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_QUALITY_CHECK_MENU_ID && ((#session.historyScreenFlag == true && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 			       <s:set id="imageHeight" name="imageHeight" value="525"/>
 			    </s:elseif>
 				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_QUALITY_CHECK_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
@@ -378,7 +378,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				    <s:set id="imageHeight" name="imageHeight" value="455"/>
 				</s:else>
 				</s:elseif>			
-				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@INSPECTION_MENU_ID && ((#session.historyScreenFlag == true && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 			    <s:if test="(@org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@APROVE_STATES, #session.tranDescScoreInfo.scoringState)
 					 || @org.apache.commons.lang.ArrayUtils@contains(@com.saiten.util.WebAppConst@DENY_STATES, #session.tranDescScoreInfo.scoringState)) ">
 					<s:set id="imageHeight" name="imageHeight" value="555"/>
@@ -396,7 +396,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				    <s:set id="imageHeight" name="imageHeight" value="455"/>
 				</s:else>
 				</s:elseif>			
-				<s:elseif test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_BLIND_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID) && (#session.historyScreenFlag == true && bookmarkScreenFlag == false)">
+				<s:elseif test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_BLIND_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID) && ((#session.historyScreenFlag == true && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 			       <s:set id="imageHeight" name="imageHeight" value="578"/>
 			    </s:elseif>
 				<s:elseif test="(#session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_BLIND_TYPE_MENU_ID || #session.questionInfo.menuId == @com.saiten.util.WebAppConst@SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID 
@@ -410,7 +410,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				    <s:set id="imageHeight" name="imageHeight" value="510"/>
 				</s:else>
 				</s:elseif>			
-				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@NO_GRADE_MENU_ID && #session.historyScreenFlag == true && bookmarkScreenFlag == false">
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@NO_GRADE_MENU_ID && ((#session.historyScreenFlag == true && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 			       <s:set id="imageHeight" name="imageHeight" value="525"/>
 			    </s:elseif>
 				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@NO_GRADE_MENU_ID && bookmarkScreenFlag == true && #session.historyScreenFlag != true">
