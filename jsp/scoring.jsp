@@ -280,7 +280,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		<a href="#" id="original_size" onclick="setImageToDefaultSize()" style="color: black;"><img src="./material/img/default1.png" class="border">&nbsp;<s:text name="label.button.dafault.image.size"></s:text></a>
 	</div>	
 	<div >
-		<!-- Answer text compare - by Swapnil start -->		
+		<!-- Answer text compare - by Swapnil start -->			
 			<s:if test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2]">			
 				<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_MENU_ID && ((#session.historyScreenFlag == true  && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 				    <s:set id="imageHeight" name="imageHeight" value="521"/>
