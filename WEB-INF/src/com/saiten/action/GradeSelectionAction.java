@@ -51,7 +51,7 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 			questionSeq = sessionQuestionInfo.getQuestionSeq();
 			questionList = (String) session.get("questionList");
 
-			//added null checking for selectedMarkValue-By Swapnil
+			//added null checking for selectedMarkValue-By Swapnil 02-01-2019
 			if (selectedMarkValue != null && sessionQuestionInfo.getScoreType() == WebAppConst.SCORE_TYPE[3]) {
 				session.put("selectedMarkValue", selectedMarkValue);
 			}
