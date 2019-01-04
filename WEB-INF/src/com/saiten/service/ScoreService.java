@@ -106,5 +106,12 @@ public interface ScoreService {
 	 * @return testSetnum_seq
 	 */
 	public Integer findTestsetNumSeq(Integer answerSeq, String connectionString);
+	
+	
+	
+	public List<TranDescScoreInfo> findBulkAnswer(int questionSeq, String menuId, String scorerId, String connectionString,
+			Integer gradeNum, Short pendingCategory, Short denyCategory, String answerFormNum,
+			Integer historyRecordCount, int roleId, Short selectedMarkValue, QuestionInfo questionInfo,
+			Double bitValue);
 
 }

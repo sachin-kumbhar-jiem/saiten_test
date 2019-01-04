@@ -29,7 +29,7 @@ public interface TranDescScoreDAO {
 			LinkedHashMap<String, Short> menuIdAndScoringStateMap, String connectionString, Integer gradeNum,
 			Short pendingCategory, Short denyCategory, String answerFormNum, Integer historyRecordCount,
 			Integer randomNumberRange, boolean passByRandomFlag, String selectedMarkValue, int roleId,
-			boolean qualityFromPendingMenu, Integer inspectGroupSeq, Double bitValue);
+			boolean qualityFromPendingMenu, Integer inspectGroupSeq, Double bitValue,Integer recordLimit);
 
 	/**
 	 * @param answerSeq

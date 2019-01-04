@@ -44,6 +44,7 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 	private ScoreService scoreService;
 	private Properties saitenGlobalProperties;
 	private TranDescScoreInfo tranDescScoreInfo;
+	private List<TranDescScoreInfo> tranDescInfoList;
 	private Map<String, Object> session;
 	private Integer historySequence;
 	private String connectionString;
@@ -63,11 +64,28 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 	private Integer qcSeq;
 	private Integer answerSequence;
 	private Double bitValue;
+	private Integer columnSize;
+	/*delete*/
+	private List<String> numbers = new ArrayList<String>();
+	
+	public String imageViewTest() {
+		System.out.println("Method Start");
+		numbers.add("Number 1");
+		numbers.add("Number 2");		
+		System.out.println("Method End");
+		return SUCCESS;
+	}
+	
+	
 
 	@SuppressWarnings({ "unchecked" })
 	public String findAnswer() {
 		MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
 		QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
+		
+		
+		
+		
 		try {
 			Date logActionStartTime = new Date();
 			String denyCategoryStr = null;
@@ -150,8 +168,8 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 			 * .equals(WebAppConst.OUT_BOUNDARY_MENU_ID)
 			 */) && (roleId == WebAppConst.SCORER_ROLE_ID || roleId == WebAppConst.SV_ROLE_ID)
 			/*
-			 * && (questionInfo.getQuestionType() == WebAppConst.SPEAKING_TYPE
-			 * || questionInfo .getQuestionType() == WebAppConst.WRITING_TYPE)
+			 * && (questionInfo.getQuestionType() == WebAppConst.SPEAKING_TYPE ||
+			 * questionInfo .getQuestionType() == WebAppConst.WRITING_TYPE)
 			 */) {
 				List<Integer> qcAnswerSeqList = new ArrayList<Integer>();
 				qcAnswerSeqList = (List<Integer>) session.get("qcAnswerSeqList");
@@ -385,6 +403,43 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 					+ tranDescScoreInfo + "}");
 			return FAILURE;
 		}
+	}
+
+	public String findBulkAnswer() {
+		
+		try {
+			/* Read Value from session */
+			MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
+			QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
+			Short selectedMarkValue = (Short) session.get("selectedMarkValue");
+			/* Select all the value is required for further operation */
+
+			String menuId = questionInfo.getMenuId();
+			Integer historyRecordCount = null;
+			int roleId = scorerInfo.getRoleId();
+			int questionSeq = questionInfo.getQuestionSeq();
+			/* To Set latest selected value */
+			resetGradeNumAndPendingCategory();
+
+			tranDescInfoList = scoreService.findBulkAnswer(questionInfo.getQuestionSeq(), menuId,
+					scorerInfo.getScorerId(), questionInfo.getConnectionString(), gradeNum, pendingCategory,
+					denyCategory, answerFormNum, historyRecordCount, roleId, selectedMarkValue, questionInfo, bitValue);
+
+			gradeInfo = scoreService.buildGradeInfo(tranDescInfoList.get(0).getGradeSeq(), questionSeq);
+			
+			if(tranDescInfoList != null && !(tranDescInfoList.isEmpty())) {
+			/*Record found*/
+			columnSize=4;	
+			return SUCCESS;
+			}
+			
+			return null;
+		} catch (SaitenRuntimeException we) {
+			throw we;
+		} catch (Exception e) {
+			throw new SaitenRuntimeException(ErrorCode.SCORE_ACTION_EXCEPTION, e);
+		}
+		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -677,13 +732,12 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 		try {
 			QuestionInfo questionInfo = (QuestionInfo) session.get("questionInfo");
 			/*
-			 * ApplicationContext ctx = ContextLoader
-			 * .getCurrentWebApplicationContext();
+			 * ApplicationContext ctx = ContextLoader .getCurrentWebApplicationContext();
 			 */
 			MstScorerInfo mstScorerInfo = (MstScorerInfo) session.get("scorerInfo");
 			/*
-			 * TranScorerSessionInfo tranScorerSessionInfo =
-			 * (TranScorerSessionInfo) session .get("tranScorerSessionInfo");
+			 * TranScorerSessionInfo tranScorerSessionInfo = (TranScorerSessionInfo) session
+			 * .get("tranScorerSessionInfo");
 			 */
 
 			if (questionInfo != null) {
@@ -705,11 +759,10 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 				if (menuId.equals(WebAppConst.SPECIAL_SCORING_OMR_READ_FAIL_MENU_ID)
 						|| menuId.equals(WebAppConst.SPECIAL_SCORING_ENLARGE_TYPE_MENU_ID)) {
 					/*
-					 * String answerFormNumber = (String) session
-					 * .get("answerFormNum");
+					 * String answerFormNumber = (String) session .get("answerFormNum");
 					 * 
-					 * SaitenUtil.updateSpecialScoringMap(
-					 * questionInfo.getSubjectCode(), answerFormNumber);
+					 * SaitenUtil.updateSpecialScoringMap( questionInfo.getSubjectCode(),
+					 * answerFormNumber);
 					 */
 
 					/*
@@ -718,31 +771,29 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 					 */
 
 					/*
-					 * Map<SpecialScoringKey, String> specialScoringMap =
-					 * ((SaitenConfig) ServletActionContext
-					 * .getServletContext().getAttribute( "saitenConfigObject"))
-					 * .getSpecialScoringMap();
+					 * Map<SpecialScoringKey, String> specialScoringMap = ((SaitenConfig)
+					 * ServletActionContext .getServletContext().getAttribute(
+					 * "saitenConfigObject")) .getSpecialScoringMap();
 					 * 
 					 * Set<SpecialScoringKey> set = specialScoringMap.keySet();
 					 * 
-					 * for (SpecialScoringKey specialScoringKey : set) {
-					 * System.out .println(">>>>>>>>>>>>>>> getAnswerFormNum = "
-					 * + specialScoringKey.getAnswerFormNum());
+					 * for (SpecialScoringKey specialScoringKey : set) { System.out
+					 * .println(">>>>>>>>>>>>>>> getAnswerFormNum = " +
+					 * specialScoringKey.getAnswerFormNum());
 					 * System.out.println(">>>>>>>>>>>>>>> getSubjectCode = " +
 					 * specialScoringKey.getSubjectCode()); }
 					 * 
-					 * System.out.println(">>>>>>>>>>>>>> specialScoringMap = "
-					 * + specialScoringMap);
+					 * System.out.println(">>>>>>>>>>>>>> specialScoringMap = " +
+					 * specialScoringMap);
 					 */
 				}
 				/*
-				 * tranScorerSessionInfo.setUpdateDate(new Date()); // Clear
-				 * questionSeq, AnswerFormNum, SubjectCoed from //
-				 * tran_scorer_session_info. ((SaitenMasterUtil)
-				 * ctx.getBean("saitenMasterUtil"))
+				 * tranScorerSessionInfo.setUpdateDate(new Date()); // Clear questionSeq,
+				 * AnswerFormNum, SubjectCoed from // tran_scorer_session_info.
+				 * ((SaitenMasterUtil) ctx.getBean("saitenMasterUtil"))
 				 * .updateUserSessionInfo(tranScorerSessionInfo); // put updated
-				 * tranScorerSessionInfo into session.
-				 * session.put("tranScorerSessionInfo", tranScorerSessionInfo);
+				 * tranScorerSessionInfo into session. session.put("tranScorerSessionInfo",
+				 * tranScorerSessionInfo);
 				 */
 			}
 		} catch (SaitenRuntimeException we) {
@@ -1052,8 +1103,7 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 	}
 
 	/**
-	 * @param request
-	 *            the request to set
+	 * @param request the request to set
 	 */
 	public void setRequest(HttpServletRequest request) {
 		this.request = request;
@@ -1109,8 +1159,7 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 	}
 
 	/**
-	 * @param answerFormNum
-	 *            the answerFormNum to set
+	 * @param answerFormNum the answerFormNum to set
 	 */
 	public void setAnswerFormNum(String answerFormNum) {
 		this.answerFormNum = answerFormNum;
@@ -1132,8 +1181,7 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 	}
 
 	/**
-	 * @param answerFlag
-	 *            the answerFlag to set
+	 * @param answerFlag the answerFlag to set
 	 */
 	public void setAnswerFlag(String answerFlag) {
 		this.answerFlag = answerFlag;
@@ -1147,8 +1195,7 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 	}
 
 	/**
-	 * @param specialScoreInputInfo
-	 *            the specialScoreInputInfo to set
+	 * @param specialScoreInputInfo the specialScoreInputInfo to set
 	 */
 	public void setSpecialScoreInputInfo(SpecialScoreInputInfo specialScoreInputInfo) {
 		this.specialScoreInputInfo = specialScoreInputInfo;
@@ -1162,8 +1209,7 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 	}
 
 	/**
-	 * @param qcSeq
-	 *            the qcSeq to set
+	 * @param qcSeq the qcSeq to set
 	 */
 	public void setQcSeq(Integer qcSeq) {
 		this.qcSeq = qcSeq;
@@ -1184,5 +1230,27 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 	public Double getBitValue() {
 		return bitValue;
 	}
+	
+	public List<String> getNumbers() {
+		return numbers;
+	}
+
+	public void setNumbers(List<String> numbers) {
+		this.numbers = numbers;
+	}
+
+
+
+	public List<TranDescScoreInfo> getTranDescInfoList() {
+		return tranDescInfoList;
+	}
+
+
+
+	public void setTranDescInfoList(List<TranDescScoreInfo> tranDescInfoList) {
+		this.tranDescInfoList = tranDescInfoList;
+	}
+	
+	
 
 }

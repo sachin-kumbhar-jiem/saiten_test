@@ -420,7 +420,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 			LinkedHashMap<String, Short> menuIdAndScoringStateMap, String connectionString, Integer gradeNum,
 			Short pendingCategory, Short denyCategory, String answerFormNum, Integer historyRecordCount,
 			Integer randomNumberRange, boolean passByRandomFlag, String selectedMarkValue, int roleId,
-			boolean qualityFromPendingMenu, Integer inspectGroupSeq, Double bitValue) {
+			boolean qualityFromPendingMenu, Integer inspectGroupSeq, Double bitValue,Integer recordLimit ) {
 		List answerRecords;
 		String questionSeq = null;
 		/* String gradeSeq = null; */
@@ -429,7 +429,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 		Date date = new Date();
 		try {
 			hibernateTemplate = getHibernateTemplate(connectionString);
-			hibernateTemplate.setMaxResults(WebAppConst.ZERO);
+			//hibernateTemplate.setMaxResults(WebAppConst.ZERO);
 			if (!(quetionSeq == null) && !(quetionSeq.isEmpty())) {
 				questionSeq = StringUtils.join(quetionSeq, ",");
 			}
@@ -452,6 +452,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 			if (passByRandomFlag == true) {
 				Random randomGenerator = new Random();
 				randomNumber = randomGenerator.nextInt(randomNumberRange);
+				
 				log.info(scorerId + "-" + menuId + "-" + "fetchAnswerPassByRandomNumber." + "-{ Question Sequence: "
 						+ questionSeq + ", randomNumber: " + randomNumber + ", gradeNum: " + gradeNum
 						+ ", inspectGroupSeq: " + inspectGroupSeq + ", pendingCategory: " + pendingCategory
@@ -460,11 +461,11 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 						+ ", qualityFromPendingMenu: " + qualityFromPendingMenu + ", qualityFromDenyMenu: "
 						+ qualityFromDenyMenu + ", secondAndThirdLatestScorerIdFlag: "
 						+ secondAndThirdLatestScorerIdFlag + "}");
-
+                
 				answerRecords = hibernateTemplate.findByNamedQuery("fetchAnswerPassByRandomNumber", questionSeq,
 						randomNumber, scorerId, menuIdAndScoringStateMap.get(menuId), gradeNum, inspectGroupSeq,
 						pendingCategory, denyCategory, answerFormNum, selectedMarkValue, date, roleId,
-						qualityFromPendingMenu, qualityFromDenyMenu, secondAndThirdLatestScorerIdFlag);
+						qualityFromPendingMenu, qualityFromDenyMenu, secondAndThirdLatestScorerIdFlag,recordLimit);
 			} else {
 				log.info(scorerId + "-" + menuId + "-" + "fetchAnswerOrderByRandom." + "-{ Question Sequence: "
 						+ questionSeq + ", gradeNum: " + gradeNum + ", inspectGroupSeq: " + inspectGroupSeq
@@ -477,16 +478,25 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 				answerRecords = hibernateTemplate.findByNamedQuery("fetchAnswerOrderByRandom", questionSeq, scorerId,
 						menuIdAndScoringStateMap.get(menuId), gradeNum, inspectGroupSeq, pendingCategory, denyCategory,
 						answerFormNum, selectedMarkValue, date, roleId, qualityFromPendingMenu, qualityFromDenyMenu,
-						secondAndThirdLatestScorerIdFlag);
+						secondAndThirdLatestScorerIdFlag,recordLimit);
 			}
 			if (!answerRecords.isEmpty()) {
-				FindAnswerInfo findAnswerInfo = (FindAnswerInfo) answerRecords.get(0);
-				Object[] objArray = { findAnswerInfo.getAnswerSeq(), findAnswerInfo.getAnswerFormNum(),
-						findAnswerInfo.getImageFileName(), findAnswerInfo.getGradeSeq(), findAnswerInfo.getBitValue(),
-						findAnswerInfo.getQuestionSeq(), findAnswerInfo.getUpdateDate(), findAnswerInfo.getMarkValue(),
-						findAnswerInfo.getLatestScreenScorerId(), findAnswerInfo.getSecondLatestScreenScorerId(), findAnswerInfo.getPunchText() };
-				answerRecords = new ArrayList();
-				answerRecords.add(objArray);
+
+				List answerRecordList = new ArrayList();
+				for (int i = 0; i < answerRecords.size(); i++) {
+
+					FindAnswerInfo findAnswerInfo = (FindAnswerInfo) answerRecords.get(i);
+					Object[] objArray = { findAnswerInfo.getAnswerSeq(), findAnswerInfo.getAnswerFormNum(),
+							findAnswerInfo.getImageFileName(), findAnswerInfo.getGradeSeq(),
+							findAnswerInfo.getBitValue(), findAnswerInfo.getQuestionSeq(),
+							findAnswerInfo.getUpdateDate(), findAnswerInfo.getMarkValue(),
+							findAnswerInfo.getLatestScreenScorerId(), findAnswerInfo.getSecondLatestScreenScorerId(),
+							findAnswerInfo.getPunchText() };
+
+					answerRecordList.add(objArray);
+				}
+				return answerRecordList;
+
 			}
 			return answerRecords;
 

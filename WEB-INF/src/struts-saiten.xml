@@ -139,6 +139,11 @@
 		<action name="scoreAction" class="scoreAction" method="findAnswer">
 			<result name="success">/jsp/scoring.jsp</result>
 			<result name="failure">/error/answerNotAvailable.jsp</result>
+			<result name="loadTestimage" type="redirect">testImageView</result>
+		</action>
+		<!-- remove it is for testing only -->
+		<action name="testImageView" class="scoreAction" method="imageViewTest">
+			<result name="success">/jsp/test2.jsp</result>			
 		</action>
 		
 		<action name="historyScoreAction" class="scoreAction" method="findHistoryAnswer">

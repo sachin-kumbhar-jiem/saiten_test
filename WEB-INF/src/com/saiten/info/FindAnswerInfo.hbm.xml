@@ -59,7 +59,7 @@
 			<return-property name="punchText" column="punch_text"></return-property>	
 		</return>
 		{ CALL
-		fetch_answer_pass_by_random_number(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}
+		fetch_answer_pass_by_random_number(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}
 
 
 		<!-- <return alias="tranDescScore" class="com.saiten.model.TranDescScore"/> 
@@ -80,7 +80,7 @@
 				column="second_latest_screen_scorer_id"></return-property>
 			<return-property name="punchText" column="punch_text"></return-property>
 		</return>
-		{ CALL fetch_answer_order_by_random(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}
+		{ CALL fetch_answer_order_by_random(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}
 
 
 		<!-- <return alias="tranDescScore" class="com.saiten.model.TranDescScore"/> 

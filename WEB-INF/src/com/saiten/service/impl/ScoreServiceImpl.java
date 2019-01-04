@@ -65,16 +65,15 @@ public class ScoreServiceImpl implements ScoreService {
 					.getServletContext().getAttribute("saitenConfigObject")).getMenuIdAndScoringStateMap();
 
 			/*
-			 * List<Integer> gradeSeqList = new ArrayList<Integer>(); if
-			 * (gradeNum != null) { gradeSeqList = SaitenUtil
-			 * .getGradeSeqListByQuestionSeqAndGradeNum(questionSeq, gradeNum);
-			 * }
+			 * List<Integer> gradeSeqList = new ArrayList<Integer>(); if (gradeNum != null)
+			 * { gradeSeqList = SaitenUtil
+			 * .getGradeSeqListByQuestionSeqAndGradeNum(questionSeq, gradeNum); }
 			 */
 
 			List<Integer> questionSequenceList = new ArrayList<Integer>();
 			questionSequenceList.add(questionSeq);
 			List tranDescScoreInfoList = null;
-
+            Integer recordFetchLimit=null;
 			// Fetch answer corresponding to selected question
 			if (!(menuId.equals(WebAppConst.SPECIAL_SCORING_BLIND_TYPE_MENU_ID)
 					|| menuId.equals(WebAppConst.SPECIAL_SCORING_LANGUAGE_SUPPORT_MENU_ID)
@@ -105,7 +104,7 @@ public class ScoreServiceImpl implements ScoreService {
 							menuIdAndScoringStateMap, connectionString, gradeNum, pendingCategory, denyCategory,
 							answerFormNum, historyRecordCount, randomNumberRange, passByRandomFlag,
 							selectedMarkValueObj, roleId, qualityFromPendingMenu, questionInfo.getInspectionGroupSeq(),
-							bitValue);
+							bitValue,recordFetchLimit);
 					if (!tranDescScoreInfoList.isEmpty()) {
 						break;
 					}
@@ -136,6 +135,77 @@ public class ScoreServiceImpl implements ScoreService {
 		}
 	}
 
+	
+	
+	
+	@Override
+	public List<TranDescScoreInfo> findBulkAnswer(int questionSeq, String menuId, String scorerId, String connectionString,
+			Integer gradeNum, Short pendingCategory, Short denyCategory, String answerFormNum,
+			Integer historyRecordCount, int roleId, Short selectedMarkValue, QuestionInfo questionInfo,
+			Double bitValue) {
+
+		try {
+			// Get menuIdAndScoringStateMap from saitenConfigObject
+			LinkedHashMap<String, Short> menuIdAndScoringStateMap = ((SaitenConfig) ServletActionContext
+					.getServletContext().getAttribute("saitenConfigObject")).getMenuIdAndScoringStateMap();
+			List<Integer> questionSequenceList = new ArrayList<Integer>();
+			questionSequenceList.add(questionSeq);
+			List tranDescScoreInfoList = null;
+
+			Map<String, String> configMap = SaitenUtil.getConfigMap();
+			boolean qualityFromPendingMenu = Boolean.valueOf(configMap.get("qualityFromPendingMenu"));
+			Integer randomNumberRange = null;
+            Integer recordFetchLimit=null;
+			/*To find multiple answer*/
+			for (int count = 0; count <= 5; count++) {
+				boolean passByRandomFlag = false;
+
+				if (count < 5) {
+					randomNumberRange = Integer.valueOf(saitenGlobalProperties.getProperty(WebAppConst.RANDOM_NUMBER));
+					passByRandomFlag = true;
+				}
+
+				String selectedMarkValueObj = null;
+				if (selectedMarkValue != null) {
+					selectedMarkValueObj = new String();
+					if (selectedMarkValue == -1) {
+						selectedMarkValueObj = "OTHER";
+					} else {
+						selectedMarkValueObj = selectedMarkValue.toString();
+					}
+				}
+
+				tranDescScoreInfoList = tranDescScoreDAO.findAnswer(questionSequenceList, menuId, scorerId,
+						menuIdAndScoringStateMap, connectionString, gradeNum, pendingCategory, denyCategory,
+						answerFormNum, historyRecordCount, randomNumberRange, passByRandomFlag, selectedMarkValueObj,
+						roleId, qualityFromPendingMenu, questionInfo.getInspectionGroupSeq(), bitValue,
+						recordFetchLimit);
+				if (!tranDescScoreInfoList.isEmpty()) {
+					break;
+				}
+			}
+
+			// Build tranDescScoreInfo object to display on scoring screen
+			boolean historyScreenFlag = WebAppConst.FALSE;
+			Integer historySeq = null;
+			boolean bookmarkScreenFlag = WebAppConst.FALSE;
+			Integer qcSeq = null;
+			if (!tranDescScoreInfoList.isEmpty()) {			
+				buildTranDescScoreInfoList(tranDescScoreInfoList, scorerId, bookmarkScreenFlag);
+			} else {				
+				return null;
+			}
+		} catch (HibernateException he) {
+			throw new SaitenRuntimeException(ErrorCode.SCORE_HIBERNATE_EXCEPTION, he);
+		} catch (SaitenRuntimeException we) {
+			throw we;
+		} catch (Exception e) {
+			throw new SaitenRuntimeException(ErrorCode.SCORE_SERVICE_EXCEPTION, e);
+		}
+
+		return null;
+
+	}
 	/**
 	 * @param tranDescScoreInfoList
 	 * @param scorerId
@@ -241,7 +311,7 @@ public class ScoreServiceImpl implements ScoreService {
 					tranDescScoreInfo.setScoringState((Short) tranDescScoreObjArray[9]);
 					answerInfo.setQuestionSeq((Integer) tranDescScoreObjArray[10]);
 					answerInfo.setQualityCheckFlag((Character) tranDescScoreObjArray[11]);
-					if(tranDescScoreObjArray[12] != null){
+					if (tranDescScoreObjArray[12] != null) {
 						answerInfo.setPunchText((String) tranDescScoreObjArray[12]);
 					}
 				} else if (!historyScreenFlag && (menuId.equals(WebAppConst.CHECKING_MENU_ID)
@@ -256,18 +326,73 @@ public class ScoreServiceImpl implements ScoreService {
 				}
 			}
 		}
-		
-		//Added code for compare question and answer text
+
+		// Added code for compare question and answer text
 		if (tranDescScoreInfo.getAnswerInfo().getPunchText() != null) {
 			LinkedHashMap<Integer, MstQuestion> mstQuestionMap = new LinkedHashMap<Integer, MstQuestion>();
 			mstQuestionMap = SaitenUtil.getSaitenConfigObject().getMstQuestionMap();
 			MstQuestion mstQuestion = mstQuestionMap.get(questionInfo.getQuestionSeq());
-			tranDescScoreInfo.setDuplicateWords(SaitenUtil.consecutiveCharacterMatch(mstQuestion.getQuestionContents(),
-				tranDescScoreInfo.getAnswerInfo().getPunchText()).toString().replaceAll("\\[", "").replaceAll("]", ""));
+			tranDescScoreInfo.setDuplicateWords(SaitenUtil
+					.consecutiveCharacterMatch(mstQuestion.getQuestionContents(),
+							tranDescScoreInfo.getAnswerInfo().getPunchText())
+					.toString().replaceAll("\\[", "").replaceAll("]", ""));
 
 		}
-		
+
 		return tranDescScoreInfo;
+	}
+
+	
+	private List<TranDescScoreInfo>  buildTranDescScoreInfoList(List<Object[]> tranDescScoreInfoList, String scorerId,
+			boolean bookmarkScreenFlag) {
+
+		List<TranDescScoreInfo> tranDescScoreInfoList1 = null;
+
+		if (tranDescScoreInfoList != null && !(tranDescScoreInfoList.isEmpty())) {
+
+			tranDescScoreInfoList1 = new ArrayList<>();
+
+			for (Object[] tranDescScoreObjArray : tranDescScoreInfoList) {
+
+				TranDescScoreInfo tranDescScoreInfo = null;
+				// Get current WebApp Context
+				ApplicationContext ctx = ContextLoader.getCurrentWebApplicationContext();
+
+				AnswerInfo answerInfo = (AnswerInfo) ctx.getBean("answerInfo");
+				tranDescScoreInfo = (TranDescScoreInfo) ctx.getBean("tranDescScoreInfo");
+
+				tranDescScoreInfo.setAnswerInfo(answerInfo);
+				if (tranDescScoreObjArray[0] != null) {
+					answerInfo.setAnswerSeq(Integer.valueOf(tranDescScoreObjArray[0].toString()));
+				}
+
+				if (!bookmarkScreenFlag) {
+					// Set lockBy for new answer and history answer record, except
+					// bookmark answer.
+					answerInfo.setLockBy(scorerId);
+				}
+
+				tranDescScoreInfo.setAnswerFormNumber((String) tranDescScoreObjArray[1]);
+				tranDescScoreInfo.setImageFileName((String) tranDescScoreObjArray[2]);
+				tranDescScoreInfo.setGradeSeq((Integer) tranDescScoreObjArray[3]);
+				answerInfo.setBitValue((Double) tranDescScoreObjArray[4]);
+				answerInfo.setQuestionSeq((Integer) tranDescScoreObjArray[5]);
+				answerInfo.setUpdateDate((Date) tranDescScoreObjArray[6]);
+				if ((String) tranDescScoreObjArray[8] != null) {
+					answerInfo.setLatestScreenScorerId((String) tranDescScoreObjArray[8]);
+				}
+				if ((String) tranDescScoreObjArray[9] != null) {
+					answerInfo.setSecondLatestScreenScorerId((String) tranDescScoreObjArray[9]);
+				}
+				if ((String) tranDescScoreObjArray[10] != null) {
+					answerInfo.setPunchText((String) tranDescScoreObjArray[10]);
+				}
+				tranDescScoreInfoList1.add(tranDescScoreInfo);
+			}
+		}
+
+		return tranDescScoreInfoList1;
+
 	}
 
 	@SuppressWarnings({ "unchecked" })
@@ -314,8 +439,7 @@ public class ScoreServiceImpl implements ScoreService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.saiten.service.ScoreService#buildGradeInfo(java.lang.Integer,
-	 * int)
+	 * @see com.saiten.service.ScoreService#buildGradeInfo(java.lang.Integer, int)
 	 */
 	public GradeInfo buildGradeInfo(Integer gradeSeq, int questionSeq) {
 		GradeInfo gradeInfo = (GradeInfo) SaitenUtil.getApplicationContext().getBean("gradeInfo");
@@ -471,10 +595,8 @@ public class ScoreServiceImpl implements ScoreService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.saiten.service.ScoreService#findPrevOrNextHistoryAnswer(com.saiten
-	 * .info.QuestionInfo, com.saiten.info.MstScorerInfo, java.util.Date,
-	 * boolean)
+	 * @see com.saiten.service.ScoreService#findPrevOrNextHistoryAnswer(com.saiten
+	 * .info.QuestionInfo, com.saiten.info.MstScorerInfo, java.util.Date, boolean)
 	 */
 	@SuppressWarnings({ "rawtypes", "unused" })
 	@Override
@@ -570,16 +692,14 @@ public class ScoreServiceImpl implements ScoreService {
 	}
 
 	/**
-	 * @param saitenGlobalProperties
-	 *            the saitenGlobalProperties to set
+	 * @param saitenGlobalProperties the saitenGlobalProperties to set
 	 */
 	public void setSaitenGlobalProperties(Properties saitenGlobalProperties) {
 		this.saitenGlobalProperties = saitenGlobalProperties;
 	}
 
 	/**
-	 * @param tranQualitycheckScoreDAO
-	 *            the tranQualitycheckScoreDAO to set
+	 * @param tranQualitycheckScoreDAO the tranQualitycheckScoreDAO to set
 	 */
 	public void setTranQualitycheckScoreDAO(TranQualitycheckScoreDAO tranQualitycheckScoreDAO) {
 		this.tranQualitycheckScoreDAO = tranQualitycheckScoreDAO;

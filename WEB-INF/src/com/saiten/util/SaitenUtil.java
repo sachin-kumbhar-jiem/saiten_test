@@ -839,4 +839,19 @@ public class SaitenUtil {
 		return duplicateWords;
 	}
 
+	public static Integer findRecordCount(Integer totalRecords, Integer columnSize, Integer indexStart) {
+		
+		Integer fetchedRecords = columnSize * indexStart;
+		Integer recordCount= totalRecords - fetchedRecords == 0 ? 1
+				: totalRecords - fetchedRecords >= columnSize ? columnSize : totalRecords - fetchedRecords;
+        return recordCount;
+	}
+	
+	public static Integer getRowSize(Integer totalRecords,Integer columnSize) {
+		return totalRecords%columnSize==0?totalRecords/columnSize:totalRecords/columnSize+1;
+	}
+	
+	
+	
+
 }
