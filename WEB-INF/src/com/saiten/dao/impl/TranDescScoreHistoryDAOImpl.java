@@ -387,7 +387,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 		query.append("tranDescScoreHistory.gradeSeq, tranDescScoreHistory.bitValue, ");
 		query.append("tranDescScoreHistory.updateDate, tranDescScoreHistory.pendingCategorySeq, ");
 		query.append("tranDescScoreHistory.scoringState, tranDescScoreHistory.questionSeq, ");
-		query.append("tranDescScoreHistory.qualityCheckFlag, tranDescScoreHistory.historySeq, 0 as tb1  ");
+		query.append("tranDescScoreHistory.qualityCheckFlag, tranDescScoreHistory.historySeq, 0 as tb1, tranDescScoreHistory.tranDescScore.punchText  ");
 		query.append("FROM TranDescScoreHistory as tranDescScoreHistory ");
 		query.append("WHERE tranDescScoreHistory.questionSeq = :QUESTION_SEQUENCE ");
 		query.append("AND tranDescScoreHistory.validFlag = :VALID_FLAG ");
@@ -473,13 +473,13 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 		query.append("SELECT unr.seq,unr.answer_form_num,unr.image_file_name,unr.flag, ");
 		query.append("unr.scorer_comment,unr.grade_seq,unr.bit_value,unr.update_date, ");
 		query.append("unr.pending_category_seq,unr.scoring_state,unr.question_seq, ");
-		query.append("unr.flag1,unr.seq1, tbl FROM ");
+		query.append("unr.flag1,unr.seq1, tbl, unr.punch_text FROM ");
 		query.append("(SELECT th.answer_seq As seq,th.answer_form_num, ");
 		query.append("ts.image_file_name,th.book_mark_flag As flag, ");
 		query.append("th.scorer_comment,th.grade_seq,th.bit_value, ");
 		query.append("th.update_date,th.pending_category_seq,");
 		query.append("th.scoring_state,th.question_seq,th.quality_check_flag As flag1, ");
-		query.append("th.history_seq As seq1,0 As tbl ");
+		query.append("th.history_seq As seq1,0 As tbl, ts.punch_text ");
 		query.append("FROM tran_desc_score_history th join tran_desc_score ts ");
 		query.append("ON th.answer_seq = ts.answer_seq ");
 		query.append("WHERE th.scorer_id = :SCORER_ID AND th.question_seq = :QUESTION_SEQUENCE ");
@@ -507,7 +507,7 @@ public class TranDescScoreHistoryDAOImpl extends SaitenHibernateDAOSupport imple
 																							// from
 																							// tran_qualitycheck
 																							// table
-		query.append("tq.scoring_state,tq.question_seq,tq.ref_flag As flag1,tq.qc_seq As seq1,1 As tbl ");
+		query.append("tq.scoring_state,tq.question_seq,tq.ref_flag As flag1,tq.qc_seq As seq1,1 As tbl,ts.punch_text ");
 		query.append("FROM tran_qualitycheck_score tq  join tran_desc_score ts ");
 		query.append("ON tq.answer_seq = ts.answer_seq ");
 		query.append("WHERE tq.scorer_id = :SCORER_ID AND tq.question_seq = :QUESTION_SEQUENCE ");

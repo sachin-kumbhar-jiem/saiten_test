@@ -386,7 +386,8 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 		query.append("tranDescScore.updateDate,  ");
 		query.append("tranDescScore.markValue, ");
 		query.append("tranDescScore.latestScreenScorerId,  ");
-		query.append("tranDescScore.secondLatestScreenScorerId  ");
+		query.append("tranDescScore.secondLatestScreenScorerId, ");
+		query.append("tranDescScore.punchText  ");
 		query.append("FROM TranDescScore as tranDescScore  ");
 		query.append("WHERE tranDescScore.answerSeq = :ANSWER_SEQUENCE ");
 		List<String> paramNameList = new ArrayList<String>();
@@ -2123,6 +2124,71 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 				}
 			});
 
+		} catch (RuntimeException re) {
+			throw re;
+		}
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public List findGradesWithCountByQuestionSeq(int questionSeq, Short latestScoringState, Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString) {
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT tranDescScore.gradeNum , COUNT(tranDescScore.answerSeq) as answerRecordCount ");
+		query.append("FROM TranDescScore as tranDescScore ");
+		query.append("WHERE tranDescScore.questionSeq = :QUESTION_SEQ ");
+		query.append("AND tranDescScore.latestScoringState = :LATEST_SCORING_STATE ");
+		
+		if(selectedMarkValue != null){
+			query.append("AND tranDescScore.markValue = :MARK_VALUE ");
+		}
+		
+		if(denyCategory != null){
+			query.append("AND tranDescScore.denyCategory = :DENY_CATEGORY ");
+		}
+		if(inspectionGroupSeq != null){
+			query.append("AND tranDescScore.inspectionGroupSeq = :INSPECTION_GROUP_SEQ ");
+		}
+	
+		query.append("AND tranDescScore.lockFlag = :UNLOCK ");
+		query.append("AND tranDescScore.validFlag = :VALID_FLAG ");
+		query.append("GROUP BY tranDescScore.gradeNum, tranDescScore.latestScoringState ");
+		query.append("HAVING COUNT(tranDescScore.answerSeq) > 0 ");
+		query.append("ORDER BY tranDescScore.gradeNum ");
+		
+		List<String> paramNameList = new ArrayList<String>(); 
+		List valueList = new ArrayList();
+		
+		paramNameList.add("QUESTION_SEQ");
+		valueList.add(questionSeq);
+		paramNameList.add("LATEST_SCORING_STATE");
+		valueList.add(latestScoringState);
+		
+		if(selectedMarkValue != null){
+			paramNameList.add("MARK_VALUE");
+			valueList.add(selectedMarkValue.toString());
+		}
+		if(denyCategory != null){
+			paramNameList.add("DENY_CATEGORY");
+			valueList.add(denyCategory);
+		}
+		if(inspectionGroupSeq != null){
+			paramNameList.add("INSPECTION_GROUP_SEQ");
+			valueList.add(inspectionGroupSeq);
+		}
+	
+		paramNameList.add("UNLOCK");
+		valueList.add(WebAppConst.UNLOCK);
+		paramNameList.add("VALID_FLAG");
+		valueList.add(WebAppConst.VALID_FLAG);
+		
+		/*String[] paramNames = { "QUESTION_SEQ", "LATEST_SCORING_STATE", "UNLOCK", "VALID_FLAG" };
+		Object[] values = { questionSeq, latestScoringState, WebAppConst.UNLOCK, WebAppConst.VALID_FLAG };*/
+		
+		String[] paramNames = paramNameList.toArray(new String[paramNameList.size()]); 
+		Object[] values = valueList.toArray(new Object[valueList.size()]);
+
+		try {
+			return getHibernateTemplate(connectionString).findByNamedParam(query.toString(), paramNames, values);
 		} catch (RuntimeException re) {
 			throw re;
 		}

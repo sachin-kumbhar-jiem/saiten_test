@@ -465,6 +465,8 @@ public class ScoreAction extends ActionSupport implements SessionAware, ServletR
 							+ ", \n TranDescScoreInfo: " + tranDescScoreInfo + "}");
 				}
 
+			} else {
+				tranDescScoreInfo = (TranDescScoreInfo) session.get("tranDescScoreInfo");
 			}
 
 			return tranDescScoreInfo != null ? SUCCESS : FAILURE;
