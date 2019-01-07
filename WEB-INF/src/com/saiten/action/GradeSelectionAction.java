@@ -42,6 +42,8 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 
 	private Short denyCategory;
 	
+	private String gradeNum;
+	
 	//private List gradeList;
 
 	public String onLoad() {
@@ -85,8 +87,13 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 					+ "}");
 			
 			session.put("gradeMap", gradeMap);
-			//session.put("gradeList", gradeList);
+			//session.put("gradeList", gradeList);			
 			
+			if(gradeMap.size() == 1){
+				setDenyCategory(denyCategory);
+				setGradeNum((String) gradeMap.keySet().toArray()[0]);
+				return "skip-grade-selection";
+			}
 			return SUCCESS;
 
 		} catch (SaitenRuntimeException we) {
@@ -169,4 +176,14 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 	public void setSelectedMarkValue(Short selectedMarkValue) {
 		this.selectedMarkValue = selectedMarkValue;
 	}
+
+	public String getGradeNum() {
+		return gradeNum;
+	}
+
+	public void setGradeNum(String gradeNum) {
+		this.gradeNum = gradeNum;
+	}
+
+	
 }
