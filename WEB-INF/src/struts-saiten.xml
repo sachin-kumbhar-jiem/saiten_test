@@ -118,6 +118,7 @@
 		
 		<action name="gradeSelection" class="gradeSelection" method="onLoad">
 			<result name="success">/jsp/gradeSelection.jsp</result>
+			
 		</action>
 		
 		<action name="pendingCategorySelection" class="pendingCategorySelection" method="onLoad">
