@@ -50,6 +50,7 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 			QuestionInfo sessionQuestionInfo = (QuestionInfo) session.get("questionInfo");
 			questionSeq = sessionQuestionInfo.getQuestionSeq();
 			questionList = (String) session.get("questionList");
+			MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
 
 			//added null checking for selectedMarkValue-By Swapnil 02-01-2019
 			if (selectedMarkValue != null && sessionQuestionInfo.getScoreType() == WebAppConst.SCORE_TYPE[3]) {
@@ -68,7 +69,7 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 			
 			gradeMap = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText,
 					menuIdAndScoringStateMap.get(sessionQuestionInfo.getMenuId()), selectedMarkValue, denyCategory,
-					sessionQuestionInfo.getInspectionGroupSeq(), sessionQuestionInfo.getConnectionString());
+					sessionQuestionInfo.getInspectionGroupSeq(), sessionQuestionInfo.getConnectionString(), scorerInfo.getScorerId());
 			
 			//List gradeList = gradeSelectionService.findGradesByQuestionSeq(questionSeq, gradeNumText);
 
@@ -79,7 +80,6 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 			
 
 			session.put("questionList", questionList);
-			MstScorerInfo scorerInfo = ((MstScorerInfo) session.get("scorerInfo"));
 			log.info(scorerInfo.getScorerId() + "-" + sessionQuestionInfo.getMenuId() + "-"
 					+ "Loaded Grade Selection Screen." + "-{ Question Sequence: " + sessionQuestionInfo.getQuestionSeq()
 					+ "}");

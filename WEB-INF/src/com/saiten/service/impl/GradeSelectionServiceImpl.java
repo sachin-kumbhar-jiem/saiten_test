@@ -28,13 +28,13 @@ public class GradeSelectionServiceImpl implements GradeSelectionService {
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Map<String, String> findGradesByQuestionSeq(int questionSeq, String gradeNumText, Short latestScoringState, Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString) {
+	public Map<String, String> findGradesByQuestionSeq(int questionSeq, String gradeNumText, Short latestScoringState, Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString, String scorerId) {
 
 		// Map<String, String> map;
 
 		try {
 
-			List gradeList = tranDescScoreDAO.findGradesWithCountByQuestionSeq(questionSeq, latestScoringState, selectedMarkValue, denyCategory, inspectionGroupSeq, connectionString);
+			List gradeList = tranDescScoreDAO.findGradesWithCountByQuestionSeq(questionSeq, latestScoringState, selectedMarkValue, denyCategory, inspectionGroupSeq, connectionString, scorerId);
 
 			// map = SaitenUtil.getGradeMapByQuestionSeq(questionSeq,
 			// gradeNumText);

@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
  pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %> 
@@ -422,6 +422,9 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				    <s:set id="imageHeight" name="imageHeight" value="455"/>
 				</s:else>
 				</s:elseif>		
+				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FORCED_MENU_ID && #session.tranDescScoreInfo.lookAfterwardsCount>0">
+			    	<s:set id="imageHeight" name="imageHeight" value="468"/>
+			    </s:elseif>	   
 				<s:elseif test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@REFERENCE_SAMP_MENU_ID && #session.historyScreenFlag != true && bookmarkScreenFlag !=true">
 			       <s:set id="imageHeight" name="imageHeight" value="470"/>
 			    </s:elseif>		    
