@@ -118,6 +118,11 @@
 		
 		<action name="gradeSelection" class="gradeSelection" method="onLoad">
 			<result name="success">/jsp/gradeSelection.jsp</result>
+			<result name="skip-grade-selection" type="redirectAction">
+				<param name="actionName">showScoringPage</param>
+				<param name="denyCategory">${denyCategory}</param>
+				<param name="gradeNum">${gradeNum}</param>
+			</result>
 		</action>
 		
 		<action name="pendingCategorySelection" class="pendingCategorySelection" method="onLoad">
