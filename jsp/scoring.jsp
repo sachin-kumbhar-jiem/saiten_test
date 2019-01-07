@@ -281,7 +281,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 	</div>	
 	<div >
 		<!-- Answer text compare - by Swapnil start -->			
-			<s:if test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2]">			
+			<s:if test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && (#session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2] || #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[3])">			
 				<s:if test="#session.questionInfo.menuId == @com.saiten.util.WebAppConst@FIRST_SCORING_MENU_ID && ((#session.historyScreenFlag == true  && bookmarkScreenFlag == false) || #parameters['prevOrNextFlag'][0] != null)">
 				    <s:set id="imageHeight" name="imageHeight" value="521"/>
 				</s:if>				
@@ -449,7 +449,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				</p>
 				
 				<s:hidden id="hidDuplicateWords" name="hidDuplicateWords" value="%{#session.tranDescScoreInfo.duplicateWords}"></s:hidden>
-				<s:if test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2]">
+				<s:if test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && (#session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2] || #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[3])">
 				<table style="width: 465px;">
 					<tr class="box_less_width_input" >
 						<td colspan="5">
@@ -938,7 +938,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 					</td>
 				</tr>
 				<tr><td colspan="5" style="border: none;">&nbsp;</td></tr>
-				<s:if test="!(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2])">	
+				<s:if test="!(#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && (#session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2] || #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[3]))">	
 					<tr><td colspan="5" class="wordwrap" style="border: none;"><pre style="margin-left: 5px;"><s:property value="#session.tranDescScoreInfo.answerInfo.punchText"/></pre></td></tr>
 				</s:if>
 		</s:if>
