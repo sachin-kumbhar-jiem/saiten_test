@@ -12,7 +12,7 @@ public interface GradeSelectionService {
 	 * @return
 	 */
 	public Map<String, String> findGradesByQuestionSeq(int questionSeq, String gradeNumText, Short latestScoringState,
-			Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString);
+			Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString, String scorerId);
 	
 	//public List findGradesByQuestionSeq(int questionSeq, String gradeNumText);
 }

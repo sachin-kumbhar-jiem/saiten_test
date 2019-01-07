@@ -2131,64 +2131,64 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public List findGradesWithCountByQuestionSeq(int questionSeq, Short latestScoringState, Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString) {
+	public List findGradesWithCountByQuestionSeq(int questionSeq, Short latestScoringState, Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString, String scorerId) {
 		StringBuilder query = new StringBuilder();
-		query.append("SELECT tranDescScore.gradeNum , COUNT(tranDescScore.answerSeq) as answerRecordCount ");
-		query.append("FROM TranDescScore as tranDescScore ");
-		query.append("WHERE tranDescScore.questionSeq = :QUESTION_SEQ ");
-		query.append("AND tranDescScore.latestScoringState = :LATEST_SCORING_STATE ");
+		query.append("SELECT tranDescScore.grade_num , COUNT(tranDescScore.answer_seq) as answerRecordCount ");
+		query.append("FROM tran_desc_score as tranDescScore ");
+		query.append("LEFT JOIN (SELECT history.answer_seq from tran_desc_score_history history ");
+		query.append("WHERE history.scorer_id = :SCORER_ID ");
+		query.append("AND history.question_seq = :QUESTION_SEQ) temp ");
+		query.append("ON tranDescScore.answer_seq = temp.answer_seq ");
+		query.append("WHERE temp.answer_seq IS NULL ");
+		query.append("AND (tranDescScore.latest_screen_scorer_id != :SCORER_ID ");
+		query.append("OR tranDescScore.latest_screen_scorer_id IS NULL) ");
+		query.append("AND tranDescScore.question_seq = :QUESTION_SEQ ");
+		query.append("AND tranDescScore.latest_scoring_state = :LATEST_SCORING_STATE ");
 		
 		if(selectedMarkValue != null){
-			query.append("AND tranDescScore.markValue = :MARK_VALUE ");
+			query.append("AND tranDescScore.mark_value = :MARK_VALUE ");
 		}
 		
 		if(denyCategory != null){
-			query.append("AND tranDescScore.denyCategory = :DENY_CATEGORY ");
+			query.append("AND tranDescScore.deny_category = :DENY_CATEGORY ");
 		}
 		if(inspectionGroupSeq != null){
-			query.append("AND tranDescScore.inspectionGroupSeq = :INSPECTION_GROUP_SEQ ");
+			query.append("AND tranDescScore.inspect_group_seq = :INSPECTION_GROUP_SEQ ");
 		}
 	
-		query.append("AND tranDescScore.lockFlag = :UNLOCK ");
-		query.append("AND tranDescScore.validFlag = :VALID_FLAG ");
-		query.append("GROUP BY tranDescScore.gradeNum, tranDescScore.latestScoringState ");
-		query.append("HAVING COUNT(tranDescScore.answerSeq) > 0 ");
-		query.append("ORDER BY tranDescScore.gradeNum ");
-		
-		List<String> paramNameList = new ArrayList<String>(); 
-		List valueList = new ArrayList();
-		
-		paramNameList.add("QUESTION_SEQ");
-		valueList.add(questionSeq);
-		paramNameList.add("LATEST_SCORING_STATE");
-		valueList.add(latestScoringState);
-		
-		if(selectedMarkValue != null){
-			paramNameList.add("MARK_VALUE");
-			valueList.add(selectedMarkValue.toString());
-		}
-		if(denyCategory != null){
-			paramNameList.add("DENY_CATEGORY");
-			valueList.add(denyCategory);
-		}
-		if(inspectionGroupSeq != null){
-			paramNameList.add("INSPECTION_GROUP_SEQ");
-			valueList.add(inspectionGroupSeq);
-		}
-	
-		paramNameList.add("UNLOCK");
-		valueList.add(WebAppConst.UNLOCK);
-		paramNameList.add("VALID_FLAG");
-		valueList.add(WebAppConst.VALID_FLAG);
-		
-		/*String[] paramNames = { "QUESTION_SEQ", "LATEST_SCORING_STATE", "UNLOCK", "VALID_FLAG" };
-		Object[] values = { questionSeq, latestScoringState, WebAppConst.UNLOCK, WebAppConst.VALID_FLAG };*/
-		
-		String[] paramNames = paramNameList.toArray(new String[paramNameList.size()]); 
-		Object[] values = valueList.toArray(new Object[valueList.size()]);
+		query.append("AND tranDescScore.lock_flag = :UNLOCK ");
+		query.append("AND tranDescScore.valid_flag = :VALID_FLAG ");
+		query.append("GROUP BY tranDescScore.grade_num ");
+		query.append("HAVING COUNT(tranDescScore.answer_seq) > 0 ");
+		query.append("ORDER BY tranDescScore.grade_num ");		
 
-		try {
-			return getHibernateTemplate(connectionString).findByNamedParam(query.toString(), paramNames, values);
+		try {			
+
+			return getHibernateTemplate(connectionString).execute(new HibernateCallback<List>() {
+				public List doInHibernate(Session session) throws HibernateException {
+					SQLQuery queryObj = session.createSQLQuery(query.toString());
+
+					queryObj.setParameter("SCORER_ID", scorerId);
+					queryObj.setParameter("QUESTION_SEQ", questionSeq);
+					queryObj.setParameter("LATEST_SCORING_STATE",latestScoringState);
+					if(selectedMarkValue != null){
+						queryObj.setParameter("MARK_VALUE",selectedMarkValue.toString());
+					}
+					if(denyCategory != null){
+						queryObj.setParameter("DENY_CATEGORY",denyCategory);
+					}
+					if(inspectionGroupSeq != null){
+						queryObj.setParameter("INSPECTION_GROUP_SEQ",inspectionGroupSeq);
+					}
+				
+					queryObj.setParameter("UNLOCK",WebAppConst.UNLOCK);
+					queryObj.setParameter("VALID_FLAG",WebAppConst.VALID_FLAG);
+					
+					return queryObj.list();
+				}
+
+			});
+
 		} catch (RuntimeException re) {
 			throw re;
 		}
