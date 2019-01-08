@@ -89,6 +89,7 @@ public class GradeSelectionAction extends ActionSupport implements SessionAware 
 			session.put("gradeMap", gradeMap);
 			//session.put("gradeList", gradeList);			
 			
+			//Skip grade selection screen if single grade answer data is available
 			if(gradeMap.size() == 1){
 				setDenyCategory(denyCategory);
 				setGradeNum((String) gradeMap.keySet().toArray()[0]);
