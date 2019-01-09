@@ -14,8 +14,8 @@ jQuery_3_2_1(document).ready(function($) {
 	}
 	
 	var punchTextHighlightedWords = $("#hidpunchTextHighlightedWords").val();
-	var wordsWithColor = punchTextHighlightedWords.split(",")
-	var inputString = ""
+	var wordsWithColor = punchTextHighlightedWords.split(",");
+	var inputString = "";
 
 	if(punchTextHighlightedWords!=''){
 		inputString = "[";
