@@ -1,4 +1,4 @@
-﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
  pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %> 
@@ -449,6 +449,8 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				</p>
 				
 				<s:hidden id="hidDuplicateWords" name="hidDuplicateWords" value="%{#session.tranDescScoreInfo.duplicateWords}"></s:hidden>
+				<c:set var="punchTextHighlightedWords" value="${applicationScope['saitenConfigObject'].mstQuestionMap[sessionScope.questionInfo.questionSeq].punchTextHighlightedWords}"/>
+			    <s:hidden id="hidpunchTextHighlightedWords" name="hidpunchTextHighlightedWords" value="%{#attr.saitenConfigObject.mstQuestionMap[#session.questionInfo.questionSeq].punchTextHighlightedWords}"></s:hidden>
 				<s:if test="#session.questionInfo.questionType == @com.saiten.util.WebAppConst@LONG_TYPE && (#session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[2] || #session.questionInfo.scoreType == @com.saiten.util.WebAppConst@SCORE_TYPE[3])">
 				<table style="width: 465px;">
 					<tr class="box_less_width_input" >

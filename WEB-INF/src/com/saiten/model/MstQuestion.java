@@ -21,6 +21,7 @@ public class MstQuestion implements java.io.Serializable {
 	private MstDbInstance mstDbInstance;
 	private Short questionNum;
 	private String questionContents;
+    private String punchTextHighlightedWords;
 	private Character side;
 	private Short imageHeight;
 	private Short imageWidth;
@@ -50,7 +51,7 @@ public class MstQuestion implements java.io.Serializable {
 
 	public MstQuestion(int questionSeq, MstSubject mstSubject,
 			MstEvaluation mstEvaluation, MstDbInstance mstDbInstance,
-			Short questionNum, String questionContents, Character side,
+			Short questionNum, String questionContents, String punchTextHighlightedWords, Character side,
 			Short imageHeight, Short imageWidth, String manualFileName,
 			String questionFileName, Short objectiveMax, Character deleteFlag,
 			String updatePersonId, Date updateDate, Date createDate,
@@ -65,6 +66,7 @@ public class MstQuestion implements java.io.Serializable {
 		this.mstDbInstance = mstDbInstance;
 		this.questionNum = questionNum;
 		this.questionContents = questionContents;
+       	this.punchTextHighlightedWords = punchTextHighlightedWords;
 		this.side = side;
 		this.imageHeight = imageHeight;
 		this.imageWidth = imageWidth;
@@ -130,7 +132,12 @@ public class MstQuestion implements java.io.Serializable {
 	public void setQuestionContents(String questionContents) {
 		this.questionContents = questionContents;
 	}
-
+   	public String getPunchTextHighlightedWords() {
+   	       return this.punchTextHighlightedWords;
+        }
+    public void setPunchTextHighlightedWords(String punchTextHighlightedWords) {
+        	this.punchTextHighlightedWords = punchTextHighlightedWords;
+        }
 	public Character getSide() {
 		return this.side;
 	}
