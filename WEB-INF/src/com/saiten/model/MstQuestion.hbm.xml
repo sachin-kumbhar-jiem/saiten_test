@@ -23,6 +23,12 @@
         <property name="questionContents" type="string">
             <column name="question_contents" length="256" />
         </property>
+        <property
+            name="punchTextHighlightedWords"
+	    type="string"
+        >
+        <column name="punch_text_highlighted_words" length="100" />
+         </property>
         <property name="side" type="java.lang.Character">
             <column name="side" length="1" />
         </property>

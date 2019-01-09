@@ -133,11 +133,11 @@ public class MstQuestion implements java.io.Serializable {
 		this.questionContents = questionContents;
 	}
    	public String getPunchTextHighlightedWords() {
-   	       return this.punchTextHighlightedWords;
-        }
+   	    return this.punchTextHighlightedWords;
+    }
     public void setPunchTextHighlightedWords(String punchTextHighlightedWords) {
-        	this.punchTextHighlightedWords = punchTextHighlightedWords;
-        }
+        this.punchTextHighlightedWords = punchTextHighlightedWords;
+    }
 	public Character getSide() {
 		return this.side;
 	}
