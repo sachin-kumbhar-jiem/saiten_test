@@ -7,8 +7,38 @@
 
 jQuery_3_2_1(document).ready(function($) {
 	var duplicateWords = $("#hidDuplicateWords").val();
+	if(duplicateWords!=''){
+		duplicateWords = duplicateWords.split(", ");
+	}else{
+		duplicateWords = "";
+	}
+	
+	var punchTextHighlightedWords = $("#hidpunchTextHighlightedWords").val();
+	var wordsWithColor = punchTextHighlightedWords.split(",");
+	var inputString = "";
+
+	if(punchTextHighlightedWords!=''){
+		inputString = "[";
+		var i = 0;
+	
+		for(var part in wordsWithColor){
+			if( i > 0 ){
+				inputString +=",";
+			}
+			
+			var wordColorStr = wordsWithColor[part].split(":");
+			inputString +="{";
+			inputString += "\""+"highlight"+"\""+":"+"\""+wordColorStr[0].trim()+"\","+"\""+"bgColor"+"\""+":"+"\""+wordColorStr[1].trim()+"\"";
+			inputString +="}";
+			i++;
+		}
+		inputString += "]";
+		
+		inputString = $.parseJSON(inputString);
+	}
+	
 	$('.HighLightText').highlightWithinTextarea({
-		highlight : [ duplicateWords.split(", ") ]
+		highlight : [ inputString , duplicateWords ]
 	});
 });
 
@@ -224,13 +254,13 @@ jQuery_3_2_1(document).ready(function($) {
 
 		getCustomRanges: function(input, custom) {
 			let ranges = this.getRanges(input, custom.highlight);
-			if (custom.className) {
+			if (custom.bgColor) {
 				ranges.forEach(function(range) {
 					// persist class name as a property of the array
-					if (range.className) {
-						range.className = custom.className + ' ' + range.className;
+					if (range.bgColor) {
+						range.bgColor = custom.bgColor + ' ' + range.bgColor;
 					} else {
-						range.className = custom.className;
+						range.bgColor = custom.bgColor;
 					}
 				});
 			}
@@ -259,7 +289,7 @@ jQuery_3_2_1(document).ready(function($) {
 				boundaries.push({
 					type: 'start',
 					index: range[0],
-					className: range.className
+					bgColor: range.bgColor
 				});
 				boundaries.push({
 					type: 'stop',
@@ -311,9 +341,9 @@ jQuery_3_2_1(document).ready(function($) {
 
 			// replace start tokens with opening <mark> tags with class name
 			input = input.replace(/\{\{hwt-mark-start\|(\d+)\}\}/g, function(match, submatch) {
-				var className = boundaries[+submatch].className;
-				if (className) {
-					return '<mark class="' + className + '">';
+				var bgColor = boundaries[+submatch].bgColor;
+				if (bgColor) {
+					return '<mark style="background-color: ' + bgColor + '">';
 				} else {
 					return '<mark>';
 				}

@@ -461,7 +461,7 @@ public class SaitenMasterUtil {
 		MstQuestion mstQuestionObj = new MstQuestion(
 				mstQuestion.getQuestionSeq(), mstSubject, mstEvaluation,
 				mstDbInstance, mstQuestion.getQuestionNum(),
-				mstQuestion.getQuestionContents(), mstQuestion.getSide(),
+				mstQuestion.getQuestionContents(), mstQuestion.getPunchTextHighlightedWords(), mstQuestion.getSide(),
 				mstQuestion.getImageHeight(), mstQuestion.getImageWidth(),
 				mstQuestion.getManualFileName(),
 				mstQuestion.getQuestionFileName(),
