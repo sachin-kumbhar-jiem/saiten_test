@@ -56,8 +56,6 @@ public class SaitenUtil {
 	
 	private static int minlen = 4;
 
-	private static Set<String> duplicateWords = new TreeSet<String>();
-
 	public static String getSubjectNameByQuestionSequence(int questionSequence) {
 		LinkedHashMap<Integer, MstQuestion> mstQuestionMap = getSaitenConfigObject().getMstQuestionMap();
 		MstQuestion mstQuestion = mstQuestionMap.get((Integer) questionSequence);
@@ -816,6 +814,7 @@ public class SaitenUtil {
 	public static Set<String> consecutiveCharacterMatch(String question, String answer) {
 
 		String searchString = "";
+		Set<String> duplicateWords = new TreeSet<String>();
 		
 		for (int i = 0; i < answer.length(); i++) {
 			searchString += answer.charAt(i);
