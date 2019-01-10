@@ -61,6 +61,7 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 <jsp:include page="include/jsMessages.jsp"></jsp:include>
 
 <script type="text/javascript" src="./material/scripts/js/answerImagePopup.js"></script>
+<script type="text/javascript" src="./material/scripts/js/imagePopUp.js"></script>
 <script type="text/javascript">
 		
 		var shortcutkeysmap = '<s:property value="%{@com.saiten.util.SaitenUtil@getConfigMap().get('checkpoints.numlockshortcutkeys.data')}"/>';
@@ -110,11 +111,14 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 			});
 		</script>
 <link href="./material/css/modalPopLite.css" rel="stylesheet" type="text/css" />
+<link href="./material/css/modelPopUp.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="./material/css/import.css" media="all">
 		
 <style type="text/css">
  label { width: auto; float: none; color: red;  display: block;   }
  td{border: 1px solid #000;}
+ 
+}
 </style>
 </head>
 
@@ -138,15 +142,12 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 		<div id="contents" class="text14">
 		<div></div>
 			<form  name="scoreActionForm" id="scoreActionForm" method="post">
-			<s:hidden id="answerSeq" value="%{answerSequence}"></s:hidden>
-					
-					
 					
 	<!-- updated table  -->				
-	             <table  style="background-color: white;height:600px;width: auto;border: 1px solid #000;">
-						<tr>
-							<td rowspan=3 class="table-side-menu-td" width="6%" style="text-align: center;">
-						  <div id="side_menu"> <!-- 1st td --> 
+	           <table  style="background-color: white;height: 100%;width: 100%;border: 1px solid #000;">
+			<tr>
+				<td rowspan=3 class="table-side-menu-td" width="6%" style="text-align: center;">
+					 <div id="side_menu"> <!-- 1st td --> 
 				     <div class="side_menu_top_margin">
 					  <p class="side_menu_heading_color">
 							<s:property value="#session.scorerInfo.roleDescription" /><br>
@@ -228,31 +229,55 @@ var questionType = '<s:property value="#session.questionInfo.questionType"/>';
 				</div>
 			   </div>
 		    
-							</td>
+					     </td>
 							<td style="background-color: #4a6c9a; height: 25px;"></td>
-							<td style="background-color: #4a6c9a; height: 25px;">41sth</td>
+							<td style="background-color: #4a6c9a; height: 25px;">
+							<div class="div_center_heading">
+							<span class="box_content_right_pane_links"> <span
+									class="partition">|</span> <a
+									href="javascript:openHelpDocWindow();">Help Manual</a> <span
+									class="partition">|</span> <a
+									href="javascript:openManualDocWindow();">Detail Manual</a> <span
+									class="partition">|</span>
+							</span>
+							</div>
+						   </td>
 						</tr>
 						<tr>
-							<td colspan=2 >
-								<table style="margin-left: 10px;">
-									<tbody>
-										<tr>
-											<td style="border-color: green; width: 200px; height: 260px;" align="center">11111</td>
-											<td style="border-color: green; width: 200px; height: 260px;" align="center">11111</td>
 
-											<td style="border-color: green; width: 200px; height: 260px;" align="center">11111</td>
-											<td style="border-color: green; width: 200px; height: 260px;" align="center">11111</td>
-										</tr>
+							<s:set var="columnSize" value="imageDisplayProperies.columnSize" />
+							<s:set var="tdWidth" value="imageDisplayProperies.tdWidth"></s:set>
+							<s:set var="tdHeigth" value="imageDisplayProperies.tdHeigth"></s:set>
+							<s:set var="totalRecords" value="tranDescInfoList.size()" />
+							<s:set var="startValue" value="0" />
+							<td colspan=2 style="text-align:left;vertical-align:top;padding:0">
+								<table style="margin-left:5px;" id="imageDisplay">
+									<tbody>																			
+									  <s:iterator begin="1" end="%{@com.saiten.util.SaitenUtil@getRowSize(#totalRecords,#columnSize)}" status="rowStatus">
 										<tr>
-											<td style="border-color: green; width: 200px; height: 260px;" align="center">2222</td>
-											<td style="border-color: green; width: 200px; height: 260px;" align="center">22222</td>
-											<td style="border-color: green; width: 200px; height: 260px;" align="center">22222</td>
-											<td style="border-color: green; width: 200px; height: 260px;" align="center">222222</td>
-										</tr>
+									
+											<s:set var="startValue"
+													value="%{ #rowStatus.index==0 ? #rowStatus.index:#rowStatus.index * #columnSize }" />
+												<s:subset source="tranDescInfoList" start="%{#startValue}"
+													count="%{@com.saiten.util.SaitenUtil@findRecordCount(#totalRecords,#columnSize,#rowStatus.index)}">
+													<s:iterator var="tranDescScoreInfo">
+													    
+													    <s:hidden id="answerSeq" name="" value="%{tranDescScoreInfo.answerInfo.answerSeq}"></s:hidden>
+														<td
+															style="border-color: green; width:<s:property value="#tdWidth"/>px;height:<s:property value="#tdHeigth"/>px;"
+															align="center">
+															<a href='<s:i18n name="application"><s:text name="saiten.answerimage.url" /></s:i18n>/<s:property value="%{#session.questionInfo.questionSeq}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.subjectCode}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.questionNum}" />/<s:property value="%{#tranDescScoreInfo.imageFileName}" />' data-lightbox="roadtrip"><img id="answerImage1" name="answerImage1"
+																	src='<s:i18n name="application"><s:text name="saiten.answerimage.url" /></s:i18n>/<s:property value="%{#session.questionInfo.questionSeq}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.subjectCode}" /><s:text name="label.hyphen"/><s:property value="%{#session.questionInfo.questionNum}" />/<s:property value="%{#tranDescScoreInfo.imageFileName}" />'
+																	alt="<s:text name="btn.scoring.alt.scaling" />" style="vertical-align: bottom;" width="100%" height="100%" ></a>
+														    <span style="float:left;"><input type="checkbox" id="historyGradeNum" name="scoreInputInfo.scoreHistoryInfo.historyGradeNum" value="0" ></span> 
+														</td>
+
+													</s:iterator>
+												</s:subset> 
+											</tr>	
+										 </s:iterator>									
 									</tbody>
 								</table>
-
-
 							</td>
 						</tr>
 						<tr>
