@@ -2147,8 +2147,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 		
 		if(selectedMarkValue != null){
 			if (selectedMarkValue == WebAppConst.MINUS_ONE) {
-				query.append(
-						"AND ((tranDescScore.mark_value is null) OR (tranDescScore.mark_value = 0) OR (tranDescScore.mark_value like :COMMASEPERATED)) ");
+				query.append("AND ((tranDescScore.mark_value is null) OR (tranDescScore.mark_value = 0) OR (tranDescScore.mark_value like :COMMASEPERATED)) ");
 			} else {
 				query.append("AND tranDescScore.mark_value = :MARK_VALUE ");
 			}
