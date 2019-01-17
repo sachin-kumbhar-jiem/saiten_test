@@ -2129,7 +2129,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List findGradesWithCountByQuestionSeq(int questionSeq, Short latestScoringState, Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString, String scorerId) {
 		StringBuilder query = new StringBuilder();
