@@ -2129,7 +2129,7 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public List findGradesWithCountByQuestionSeq(int questionSeq, Short latestScoringState, Short selectedMarkValue, Short denyCategory, Integer inspectionGroupSeq, String connectionString, String scorerId) {
 		StringBuilder query = new StringBuilder();
@@ -2146,7 +2146,12 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 		query.append("AND tranDescScore.latest_scoring_state = :LATEST_SCORING_STATE ");
 		
 		if(selectedMarkValue != null){
-			query.append("AND tranDescScore.mark_value = :MARK_VALUE ");
+			if (selectedMarkValue == WebAppConst.MINUS_ONE) {
+				query.append(
+						"AND ((tranDescScore.mark_value is null) OR (tranDescScore.mark_value = 0) OR (tranDescScore.mark_value like :COMMASEPERATED)) ");
+			} else {
+				query.append("AND tranDescScore.mark_value = :MARK_VALUE ");
+			}
 		}
 		
 		if(denyCategory != null){
@@ -2172,7 +2177,11 @@ public class TranDescScoreDAOImpl extends SaitenHibernateDAOSupport implements T
 					queryObj.setParameter("QUESTION_SEQ", questionSeq);
 					queryObj.setParameter("LATEST_SCORING_STATE",latestScoringState);
 					if(selectedMarkValue != null){
-						queryObj.setParameter("MARK_VALUE",selectedMarkValue.toString());
+						if (selectedMarkValue == WebAppConst.MINUS_ONE) {
+							queryObj.setParameter("COMMASEPERATED", WebAppConst.PERCENTAGE_CHARACTER + WebAppConst.COMMA + WebAppConst.PERCENTAGE_CHARACTER);
+						} else {
+							queryObj.setParameter("MARK_VALUE", selectedMarkValue.toString());
+						}
 					}
 					if(denyCategory != null){
 						queryObj.setParameter("DENY_CATEGORY",denyCategory);
